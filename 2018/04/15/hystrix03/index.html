@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 请求合并技术前面的两篇文章讲解了hystrix的入门，以及它的原理和执行流程。 之前我们有提到Request Cache，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。">
+<meta name="keywords" content="spring-cloud,hystrix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hystrix高级进阶">
+<meta property="og:url" content="http://www.saily.top/2018/04/15/hystrix03/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 请求合并技术前面的两篇文章讲解了hystrix的入门，以及它的原理和执行流程。 之前我们有提到Request Cache，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-25T08:18:19.559Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hystrix高级进阶">
+<meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 请求合并技术前面的两篇文章讲解了hystrix的入门，以及它的原理和执行流程。 之前我们有提到Request Cache，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2018/04/15/hystrix03/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hystrix高级进阶 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/04/15/hystrix03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hystrix高级进阶
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+                
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T10:33:01+08:00">4月 15 2018</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hystrix/" itemprop="url" rel="index"><span itemprop="name">hystrix</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>此为龙果学院课程学习笔记，记录以后翻看</p>
+<h2 id="请求合并技术"><a href="#请求合并技术" class="headerlink" title="请求合并技术"></a>请求合并技术</h2><p>前面的两篇文章讲解了hystrix的入门，以及它的原理和执行流程。</p>
+<p>之前我们有提到<a href="http://www.saily.top/2018/03/26/hystrix02/#Request-Cache">Request Cache</a>，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。<br><a id="more"></a></p>
+<p>但是如果获取多个商品，需要发送多次网络请求，调用多次接口才能拿到结果。Hystrix还为我们提供了一种叫做请求合并的技术，可以使用HystrixCollapser将多个HystrixCommand合并到一起，多个command放在一个command里面去执行，发送一次网络请求，就拉取到多条数据。用请求合并技术，将多个请求合并起来，可以减少高并发访问下需要使用的线程数量以及网络连接数量，可以提升性能。</p>
+<h3 id="请求合并有多种级别"><a href="#请求合并有多种级别" class="headerlink" title="请求合并有多种级别"></a>请求合并有多种级别</h3><ol>
+<li>global context，tomcat所有调用线程，对一个依赖服务的任何一个command调用都可以被合并在一起，hystrix就传递一个HystrixRequestContext</li>
+<li>user request context，tomcat内某一个调用线程，将某一个tomcat线程对某个依赖服务的多个command调用合并在一起</li>
+<li>object modeling，基于对象的请求合并，如果有几百个对象，遍历后依次调用每个对象的某个方法，可能导致发起几百次网络请求，基于hystrix可以自动将对多个对象模型的调用合并到一起</li>
+</ol>
+<h3 id="请求合并技术的开销有多大"><a href="#请求合并技术的开销有多大" class="headerlink" title="请求合并技术的开销有多大"></a>请求合并技术的开销有多大</h3><p>使用请求合并技术的开销就是导致延迟大幅度增加，因为需要一定的时间将多个请求合并起来。比如发送过来10个请求，每个请求本来大概是2ms可以返回，要把10个请求合并在一个command内，统一一起执行，先后等待一下，可能就需要5ms（延时翻N倍了）。</p>
+<p>所以说，要考量一下使用请求合并技术是否合适，如果一个请求本来耗费的时间就比较长，那么进行请求合并，增加一些延迟影响并不大，这样可以大幅度削减你的线程池的资源耗费，也可以减少后端服务的网络资源开销。如果一个请求本来就很快，用请求合并后反而还变慢了很多倍了，那就没有必要了。</p>
+<blockquote>
+<p>每个请求就2ms，batch，8~10ms，延迟增加了4~5倍</p>
+</blockquote>
+<blockquote>
+<p>每个请求本来就30ms~50ms，batch，35ms~55ms，延迟增加不太明显</p>
+</blockquote>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>批量查询本质上我们还是采用HystrixObservableCommand，HystrixCommand+request cache，依然每个商品发起一次网络请求。</p>
+<p>什么意思？就是一个批量的商品过来以后，我们还是多个command的方式去执行，request collapser+request cache，相同的商品还是就查询一次，不同的商品合并到一起通过一个网络请求得到结果，我们结合之前的request cache开发。</p>
+<p>我们需要开发合并请求的命令，还需要开发一个批量查询商品的接口。</p>
+<h4 id="collapser开发"><a href="#collapser开发" class="headerlink" title="collapser开发"></a>collapser开发</h4><p><a href="https://github.com/sail-y/eshop-cache-ha/blob/master/src/main/java/com/roncoo/eshop/cache/ha/hystrix/command/GetProductInfosCollapser.java" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache-ha/blob/master/src/main/java/com/roncoo/eshop/cache/ha/hystrix/command/GetProductInfosCollapser.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/04/15</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfosCollapser</span> <span class="keyword">extends</span> <span class="title">HystrixCollapser</span>&lt;<span class="title">List</span>&lt;<span class="title">ProductInfo</span>&gt;, <span class="title">ProductInfo</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfosCollapser</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">getRequestArgument</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> HystrixCommand&lt;List&lt;ProductInfo&gt;&gt; createCommand(Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests) &#123;</span><br><span class="line">        String params = requests.stream().map(CollapsedRequest::getArgument).map(Object::toString).collect(Collectors.joining(<span class="string">","</span>));</span><br><span class="line">        System.out.println(<span class="string">"createCommand方法执行，params="</span> + params);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BatchCommand(requests);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">mapResponseToRequests</span><span class="params">(List&lt;ProductInfo&gt; batchResponse, Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (CollapsedRequest&lt;ProductInfo, Long&gt; request : requests) &#123;</span><br><span class="line">            request.setResponse(batchResponse.get(count++));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">BatchCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">List</span>&lt;<span class="title">ProductInfo</span>&gt;&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">BatchCommand</span><span class="params">(Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"ProductInfoService"</span>))</span><br><span class="line">                    .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfosCollapserBatchCommand"</span>)));</span><br><span class="line">            <span class="keyword">this</span>.requests = requests;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> List&lt;ProductInfo&gt; <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将一个批次内的商品id给拼接到了一起</span></span><br><span class="line">            String params = requests.stream().map(CollapsedRequest::getArgument).map(Object::toString).collect(Collectors.joining(<span class="string">","</span>));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将多个商品id合并到一个batch内，直接发送一次网络请求，获取所有的商品</span></span><br><span class="line">            String url = <span class="string">"http://localhost:8082/getProductInfos?productIds="</span> + params;</span><br><span class="line"></span><br><span class="line">            String response = HttpUtil.get(url);</span><br><span class="line"></span><br><span class="line">            List&lt;ProductInfo&gt; productInfos = JSONArray.parseArray(response, ProductInfo.class);</span><br><span class="line">            <span class="keyword">for</span> (ProductInfo productInfo : productInfos) &#123;</span><br><span class="line">                System.out.println(<span class="string">"BatchCommand内部， productInfo="</span> + JSON.toJSONString(productInfo));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> productInfos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="批量查询接口开发"><a href="#批量查询接口开发" class="headerlink" title="批量查询接口开发"></a>批量查询接口开发</h4><p><a href="https://github.com/sail-y/eshop-product-ha/blob/master/src/main/java/com/roncoo/esjop/product/ha/controller/ProductController.java" target="_blank" rel="noopener">https://github.com/sail-y/eshop-product-ha/blob/master/src/main/java/com/roncoo/esjop/product/ha/controller/ProductController.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/getProductInfos"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getProductInfos</span><span class="params">(String productIds)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">"getProductInfos接收到一次请求，productIds="</span> + productIds);</span><br><span class="line"></span><br><span class="line">    JSONArray jsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (String productId : productIds.split(<span class="string">","</span>)) &#123;</span><br><span class="line">        String json = <span class="string">"&#123;\"id\": "</span> + productId + <span class="string">", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 2, \"modifiedTime\": \"2018-02-21 21:11:34\", \"cityId\": 1&#125;"</span>;</span><br><span class="line">        jsonArray.add(JSON.parse(json));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> jsonArray.toJSONString();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 请求合并测试</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestCollapserTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        HttpUtil.get(<span class="string">"http://localhost:8081/getProductInfos?productIds=1,2,3,4,5,6,7"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GetProductInfosCollapser getProductInfosCollapser = <span class="keyword">new</span> GetProductInfosCollapser(Long.valueOf(productId));</span><br><span class="line">            futures.add(getProductInfosCollapser.queue());</span><br></pre></td></tr></table></figure>
+<p>把所有需要查询的商品通过HystrixCollapser发送，HystrixCollapser会为自动为我们讲请求合并以后访问。可能第一次访问的时候会超时，因为开发环境项目刚启动，第一次访问比较慢，第二次就好了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">createCommand方法执行，params=1,2,3,4,5,6,7</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:1,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:2,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:3,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:4,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:5,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:6,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:7,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">CacheController结果：ProductInfo(id=1, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=2, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=3, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=4, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=5, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=6, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=7, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br></pre></td></tr></table></figure>
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>HystrixCollapser提供了一些配置：</p>
+<ol>
+<li><p>maxRequestsInBatch</p>
+<p> 控制一个Batch中最多允许多少个request被合并，然后才会触发一个batch的执行</p>
+</li>
+<li><p>timerDelayInMilliseconds</p>
+<p> 控制一个batch创建之后，多长时间以后就自动触发batch的执行，默认是10毫秒</p>
+</li>
+</ol>
+<h2 id="fail-fast和fail-silent"><a href="#fail-fast和fail-silent" class="headerlink" title="fail-fast和fail-silent"></a>fail-fast和fail-silent</h2><p>HystrixCommand如果命令执行执行中出错了，或者抛异常了它有两种方式后续逻辑：</p>
+<ul>
+<li>fail-fast，就是不给fallback降级逻辑，HystrixCommand.run()，会直接从Hystrix的线程池中抛出异常，打印出日志，无法在调用方捕获</li>
+<li>fail-silent，给一个fallback降级逻辑，如果HystrixCommand.run()，报错了，会走fallback降级，但是降级逻辑返回一个null值</li>
+</ul>
+<p>很少会用fail-fast模式，比较常用的可能还是fail-silent，不过既然都到了fallback里面，肯定要做点降级的事情。</p>
+<h3 id="stubbed-fallback"><a href="#stubbed-fallback" class="headerlink" title="stubbed fallback"></a>stubbed fallback</h3><p>stubbed fallback: 残缺的降级</p>
+<p>用请求中的部分数据拼装成结果，然后再填充一些默认值返回。比如说你发起了一个请求，然后请求中可能本身就附带了一些信息，如果主请求失败了，走到降级逻辑。在降级逻辑里面，可以将这个请求中的数据，以及部分本地缓存有的数据拼装在一起，再给数据填充一些简单的默认值<br>然后尽可能将自己有的数据返回到请求方。</p>
+<h3 id="多级降级"><a href="#多级降级" class="headerlink" title="多级降级"></a>多级降级</h3><p>先降一级，尝试用一个备用方案去执行，如果备用方案失败了，再用最后下一个备用方案去执行。</p>
+<p>hystrix command fallback语义，很容易就可以实现多级降级的策略，command嵌套command就可以达到多级降级的效果，第二个command其实是第一级降级策略。常见的多级降级的做法有一个操作，如果访问MySQL数据库，mysql数据库访问报错，降级，去redis中获取数据，如果说redis又挂了，然后就去从本地ehcache缓存中获取数据。</p>
+<p>伪代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected ProductInfo getFallback() &#123;</span><br><span class="line">	return new FirstLevelFallbackCommand(productId).execute();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static class FirstLevelFallbackCommand extends HystrixCommand&lt;ProductInfo&gt; &#123;</span><br><span class="line"></span><br><span class="line">	private Long productId;</span><br><span class="line">	</span><br><span class="line">	public FirstLevelFallbackCommand(Long productId) &#123;</span><br><span class="line">		// 第一级的降级策略，因为这个command是运行在fallback中的</span><br><span class="line">		// 所以至关重要的一点是，在做多级降级的时候，要将降级command的线程池单独做一个出来</span><br><span class="line">		// 如果主流程的command都失败了，可能线程池都已经被占满了</span><br><span class="line">		// 降级command必须用自己的独立的线程池</span><br><span class="line">		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(&quot;ProductInfoService&quot;))</span><br><span class="line">					.andCommandKey(HystrixCommandKey.Factory.asKey(&quot;FirstLevelFallbackCommand&quot;))</span><br><span class="line">					.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(&quot;FirstLevelFallbackPool&quot;))</span><br><span class="line">		);  </span><br><span class="line">		this.productId = productId;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	protected ProductInfo run() throws Exception &#123;</span><br><span class="line">		// 这里，因为是第一级降级的策略，所以说呢，其实是要从备用机房的机器去调用接口</span><br><span class="line">		// 但是，我们这里没有所谓的备用机房，所以说还是调用同一个服务来模拟</span><br><span class="line">		if(productId.equals(-2L)) &#123;</span><br><span class="line">			throw new Exception();</span><br><span class="line">		&#125;</span><br><span class="line">		String url = &quot;http://127.0.0.1:8082/getProductInfo?productId=&quot; + productId;</span><br><span class="line">		String response = HttpClientUtils.sendGetRequest(url);</span><br><span class="line">		return JSONObject.parseObject(response, ProductInfo.class);  </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	protected ProductInfo getFallback() &#123;</span><br><span class="line">		// 第二级降级策略，第一级降级策略，都失败了</span><br><span class="line">		ProductInfo productInfo = new ProductInfo();</span><br><span class="line">		// 从请求参数中获取到的唯一条数据</span><br><span class="line">		productInfo.setId(productId); </span><br><span class="line">		// 从本地缓存中获取一些数据</span><br><span class="line">		productInfo.setBrandId(BrandCache.getBrandId(productId));</span><br><span class="line">		productInfo.setBrandName(BrandCache.getBrandName(productInfo.getBrandId()));  </span><br><span class="line">		productInfo.setCityId(LocationCache.getCityId(productId)); </span><br><span class="line">		productInfo.setCityName(LocationCache.getCityName(productInfo.getCityId()));  </span><br><span class="line">		// 手动填充一些默认的数据</span><br><span class="line">		productInfo.setColor(&quot;默认颜色&quot;);  </span><br><span class="line">		productInfo.setModifiedTime(new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date()));</span><br><span class="line">		productInfo.setName(&quot;默认商品&quot;);  </span><br><span class="line">		productInfo.setPictureList(&quot;default.jpg&quot;);  </span><br><span class="line">		productInfo.setPrice(0.0);  </span><br><span class="line">		productInfo.setService(&quot;默认售后服务&quot;);  </span><br><span class="line">		productInfo.setShopId(-1L);  </span><br><span class="line">		productInfo.setSize(&quot;默认大小&quot;);  </span><br><span class="line">		productInfo.setSpecification(&quot;默认规格&quot;);   </span><br><span class="line">		return productInfo;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="手动降级"><a href="#手动降级" class="headerlink" title="手动降级"></a>手动降级</h3><ul>
+<li>手动降级实现方式是写一个command，在这个command它的主流程中，根据一个标识位，判断要执行哪个流程，可以执行主流程，也可以执行一个备用降级的command。</li>
+</ul>
+<ul>
+<li><p>它的使用场景：一般来说都是去执行一个主流程的command，如果说你现在知道主流程有问题了，希望能够手动降级的话，动态给服务发送个请求。在请求中修改标识位，自动就让command以后都直接过来执行备用command。</p>
+</li>
+<li><p>一般会嵌套3个command，套在最外面的command，是用semaphore信号量做限流和资源隔离的，因为这个command不用去care timeout的问题，嵌套调用的command会自己去管理timeout超时的</p>
+</li>
+</ul>
+<p>代码片段如下，通过<code>IsDegrade.isDegrade()</code>可以设置是否手动降级。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/04/15</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoFacadeCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoFacadeCommand</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"ProductInfoService"</span>))</span><br><span class="line">                .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoFacadeCommand"</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                        .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.SEMAPHORE)</span><br><span class="line">                        .withExecutionIsolationSemaphoreMaxConcurrentRequests(<span class="number">15</span>)));</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!IsDegrade.isDegrade()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> GetProductInfoCommand(productId).execute();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> GetProductInfoFromMySQLCommand(productId).execute();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProductInfo();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看了这么多Hystrix的配置和使用方式，我们在生产环境里最需要关注的点是什么？</p>
+<ol>
+<li>线程池大小设置</li>
+<li>timeout时长设置</li>
+</ol>
+<p>这个配置也没有说固定是多少，但是有一些规律可循。一般一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量。然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
+<ol>
+<li>一开始先不要设置timeout超时时长，默认就是1000ms，也就是1s</li>
+<li>一开始也不要设置线程池大小，默认就是10</li>
+<li>直接部署hystrix到生产环境，如果运行的很良好，那么就让它这样运行好了</li>
+<li>让hystrix应用，24小时运行在生产环境中</li>
+<li>依赖标准的监控和报警机制来捕获到系统的异常运行情况</li>
+<li>在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字</li>
+<li>直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控<br>8 看看修改配置后的系统表现有没有改善</li>
+</ol>
+<p><strong>最佳方案：</strong></p>
+<ol>
+<li>线程池大小：假设一个请求200ms，QPS30。那么每秒的高峰访问次数 <em> 99%的访问延时 + buffer = 30 </em> 0.2 + 4 = 10线程，10个线程每秒处理30次访问应该足够了，每个线程处理3次访问</li>
+<li>timeout：合理的timeout设置应该为300ms，也就是99.5%的访问延时，计算方法是，因为判断每次访问延时最多在250ms（TP99如果是200ms的话），再加一次重试时间50ms，就是300ms，感觉也应该足够了</li>
+</ol>
+<p>如果线程池设置得比较死，那么如果某个服务高峰期来了线程不够用，别的服务又占着线程池不用，这样就很不合理了，所以Hystrix也为我们提供了动态调整线程池的方案。</p>
+<ol>
+<li><p>coreSize</p>
+<p> 设置线程池的大小，默认是10</p>
+<p> HystrixThreadPoolProperties.Setter()</p>
+<pre><code>.withCoreSize(int value)
+</code></pre></li>
+<li><p>maximumSize</p>
+<p> 设置线程池的最大大小，只有在设置allowMaximumSizeToDivergeFromCoreSize的时候才能生效</p>
+<p> 默认是10</p>
+<p> HystrixThreadPoolProperties.Setter()</p>
+<pre><code>.withMaximumSize(int value)
+</code></pre></li>
+<li><p>keepAliveTimeMinutes</p>
+<p> 设置保持存活的时间，单位是分钟，默认是1</p>
+<p> 如果设置allowMaximumSizeToDivergeFromCoreSize为true，那么coreSize就不等于maxSize，此时线程池大小是可以动态调整的，可以获取新的线程，也可以释放一些线程</p>
+<p> 如果coreSize &lt; maxSize，那么这个参数就设置了一个线程多长时间空闲之后，就会被释放掉</p>
+<p> HystrixThreadPoolProperties.Setter()</p>
+<pre><code>.withKeepAliveTimeMinutes(int value)
+</code></pre></li>
+<li><p>allowMaximumSizeToDivergeFromCoreSize</p>
+<p> 允许线程池大小自动动态调整，设置为true之后，maxSize就生效了，此时如果一开始是coreSize个线程，随着并发量上来，那么就会自动获取新的线程，但是如果线程在keepAliveTimeMinutes内空闲，就会被自动释放掉</p>
+<p> 默认是false</p>
+<p> HystrixThreadPoolProperties.Setter()</p>
+<pre><code>.withAllowMaximumSizeToDivergeFromCoreSize(boolean value)
+</code></pre></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+          
+            <a href="/tags/hystrix/" rel="tag"># hystrix</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/14/spring-cloud-gray/" rel="next" title="Spring Cloud 不停机发布服务(0-downtime Blue/Green deployments)">
+                <i class="fa fa-chevron-left"></i> Spring Cloud 不停机发布服务(0-downtime Blue/Green deployments)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/03/elasticSearch01/" rel="prev" title="ElasticSearch01-介绍">
+                ElasticSearch01-介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/sail-y" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://weibo.com/338632221" target="_blank" title="微博"><i class="fa fa-fw fa-globe"></i>微博</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#请求合并技术"><span class="nav-number">1.</span> <span class="nav-text">请求合并技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#请求合并有多种级别"><span class="nav-number">1.1.</span> <span class="nav-text">请求合并有多种级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求合并技术的开销有多大"><span class="nav-number">1.2.</span> <span class="nav-text">请求合并技术的开销有多大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实战"><span class="nav-number">1.3.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#collapser开发"><span class="nav-number">1.3.1.</span> <span class="nav-text">collapser开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#批量查询接口开发"><span class="nav-number">1.3.2.</span> <span class="nav-text">批量查询接口开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试代码"><span class="nav-number">1.3.3.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置项"><span class="nav-number">1.4.</span> <span class="nav-text">配置项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fail-fast和fail-silent"><span class="nav-number">2.</span> <span class="nav-text">fail-fast和fail-silent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stubbed-fallback"><span class="nav-number">2.1.</span> <span class="nav-text">stubbed fallback</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多级降级"><span class="nav-number">2.2.</span> <span class="nav-text">多级降级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手动降级"><span class="nav-number">2.3.</span> <span class="nav-text">手动降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.1.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
