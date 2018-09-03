@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="Java程序最初是通过解释器进行解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为『热点代码』。为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器称为即时编译器。 HotSpot虚拟机内的即时编译器解释器与编译器HotSpot虚拟机是采用解释器与编译器并存的架构。解释器和编译器各有优势：当程">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-02-05T03:54:37.000Z">
+<meta property="og:updated_time" content="2018-08-28T04:16:44.412Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM10-运行期优化">
 <meta name="twitter:description" content="Java程序最初是通过解释器进行解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为『热点代码』。为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器称为即时编译器。 HotSpot虚拟机内的即时编译器解释器与编译器HotSpot虚拟机是采用解释器与编译器并存的架构。解释器和编译器各有优势：当程">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2月 5 2017 11:54:37" itemprop="dateModified" datetime="2017-02-05T11:54:37+08:00">2月 5 2017</time>
+                <time title="修改时间：8月 28 2018 12:16:44" itemprop="dateModified" datetime="2018-08-28T12:16:44+08:00">8月 28 2018</time>
               
             
           </span>
@@ -461,13 +461,14 @@
 
       
         <p>Java程序最初是通过解释器进行解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为『热点代码』。为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器称为即时编译器。</p>
-<h2 id="HotSpot虚拟机内的即时编译器"><a href="#HotSpot虚拟机内的即时编译器" class="headerlink" title="HotSpot虚拟机内的即时编译器"></a>HotSpot虚拟机内的即时编译器</h2><h3 id="解释器与编译器"><a href="#解释器与编译器" class="headerlink" title="解释器与编译器"></a>解释器与编译器</h3><p>HotSpot虚拟机是采用解释器与编译器并存的架构。解释器和编译器各有优势：当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序运行后，随着时间的推移，编译器初见发挥作用，把越来越多的代码编译成本地代码之后，可以获取更高的执行效率。</p>
+<h2 id="HotSpot虚拟机内的即时编译器"><a href="#HotSpot虚拟机内的即时编译器" class="headerlink" title="HotSpot虚拟机内的即时编译器"></a>HotSpot虚拟机内的即时编译器</h2><h3 id="解释器与编译器"><a href="#解释器与编译器" class="headerlink" title="解释器与编译器"></a>解释器与编译器</h3><p>HotSpot虚拟机是采用解释器与编译器并存的架构。解释器和编译器各有优势：当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序运行后，随着时间的推移，编译器逐渐发挥作用，把越来越多的代码编译成本地代码之后，可以获取更高的执行效率。</p>
 <h3 id="编译对象与触发条件"><a href="#编译对象与触发条件" class="headerlink" title="编译对象与触发条件"></a>编译对象与触发条件</h3><p>在运行过程中被即时编译器编译的『热点代码』有两类：</p>
 <ul>
 <li>被多次调用的方法</li>
-<li>被多次执行的循环体<a id="more"></a>
-前者很好理解，一个方法被调用得多了，方法体内代码执行的次数自然就多，他成为”热点代码”也是理所当然。而后者则是为了解决一个方法只被调用过一次或者少量的几次，但是方法体内部存在循环次数较多的循环体问题，这样循环体的代码也被重复执行多次，因此这些代码也应该认为是”热点代码”。</li>
+<li>被多次执行的循环体</li>
 </ul>
+<a id="more"></a>
+<p>前者很好理解，一个方法被调用得多了，方法体内代码执行的次数自然就多，他成为”热点代码”也是理所当然。而后者则是为了解决一个方法只被调用过一次或者少量的几次，但是方法体内部存在循环次数较多的循环体问题，这样循环体的代码也被重复执行多次，因此这些代码也应该认为是”热点代码”。</p>
 <p>判断一段代码是不是热点代码，是不是需要触发即时编译，这样的行为称为热点探测，目前主要有两种方式：</p>
 <ul>
 <li>基于采样的热点探测</li>
@@ -498,15 +499,15 @@
 <li>最重要的优化技术之一：方法内联</li>
 <li>最前沿的优化技术之一：逃逸分析</li>
 </ul>
-<h4 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h4><p>公共子表达式消除的含义是：如果一个个表达式E已经计算过了，并且从先前的计算到现在E中所有变量的值都没有发生变化，那么E的这次出现就成了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面的计算结果代替E就可以了。如果这种优化仅限于程序的基本块内，便称为局部公共子表达式消除，如果这种优化的范围涵盖了多个基本块，那就称为全局公共子表达式消除。下面举例说明：</p>
+<h4 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h4><p>公共子表达式消除的含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有变量的值都没有发生变化，那么E的这次出现就成了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面的计算结果代替E就可以了。如果这种优化仅限于程序的基本块内，便称为局部公共子表达式消除，如果这种优化的范围涵盖了多个基本块，那就称为全局公共子表达式消除。下面举例说明：</p>
 <pre><code>int d = (c * b) * 12 + a + (a + b * c);
 </code></pre><p>如果这段代码交给javac编译器则不会进行任何优化，但进入虚拟机即时编译器后，它将会进行如下优化：<strong>编译器检测到“c*b”与“b*c”是一样的表达式，而且在计算期间b与c的值是不会变的。</strong>因此这条表达式就可能被视为：</p>
 <pre><code>int d = E * 12 + a + (a + E)
 </code></pre><p>还有可能进行代数简化：</p>
 <pre><code>int d = E * 13 + a * 2
 </code></pre><p>表达式进行交换之后，再计算起来就可以节省一些时间了。</p>
-<h4 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h4><p>我们知道Java语言是一门动态安全的语言，对数组的读写访问也不像C、C++那样在本质上是裸指针操作。如果有一个数组foo[]，在Java语言中访问数组元素foo[i]的时候系统将会自动进行上下界的范围检查，即检查i必须满足i&gt;=0&amp;&amp;i&lt;foo.length这个条件，否则将抛出一个运行时异常：java.lang.ArrayIndexOutOfBoundsException。这对软件开发者来说是一件很好的事情，即时程序员没有专门编写防御代码，也可以避免大部分的溢出攻击。但是对于虚拟机的执行子系统来说，每次数组元素的读写都带有一次隐含的判定条件，对于拥有大量数组访问的程序代码，这无疑也是一种性能负担。</p>
-<p>无论如何，为了安全，数组边界检查肯定是必须做的，但数组边界检查则不一定。例如：数组下标是一个常量，如foo[3]，只要在编译期根据数据流分析来确定foo.length的值，并判断下表“3”没有越界，执行的时候就无须判断了。更加常见的情况是数组访问发生在循环之中，如果编译器只要通过数据流分析就可以判定循环变量的取值范围永远在区间[0,foo.length])内，那在整个循环中就可以把数组的上下界检查消除，这可以节省很多次的条件判断操作。</p>
+<h4 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h4><p>我们知道Java语言是一门动态安全的语言，对数组的读写访问也不像C、C++那样在本质上是裸指针操作。如果有一个数组foo[]，在Java语言中访问数组元素foo[i]的时候系统将会自动进行上下界的范围检查，即检查i必须满足i&gt;=0&amp;&amp;i&lt;foo.length这个条件，否则将抛出一个运行时异常：java.lang.ArrayIndexOutOfBoundsException。这对软件开发者来说是一件很好的事情，即使程序员没有专门编写防御代码，也可以避免大部分的溢出攻击。但是对于虚拟机的执行子系统来说，每次数组元素的读写都带有一次隐含的判定条件，对于拥有大量数组访问的程序代码，这无疑也是一种性能负担。</p>
+<p>无论如何，为了安全，数组边界检查肯定是必须做的，但数组边界检查是不是在运行时每次都做则不一定。例如：数组下标是一个常量，如foo[3]，只要在编译期根据数据流分析来确定foo.length的值，并判断下表“3”没有越界，执行的时候就无须判断了。更加常见的情况是数组访问发生在循环之中，如果编译器只要通过数据流分析就可以判定循环变量的取值范围永远在区间[0,foo.length])内，那在整个循环中就可以把数组的上下界检查消除，这可以节省很多次的条件判断操作。</p>
 <h4 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h4><p>它是编译器最重要的优化手段之一，除了消除方法调用的成本之外，它更重要的意义是为其他优化手段建立良好的基础。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(obj!=<span class="keyword">null</span>) &#123;</span><br><span class="line">		System.out.println(<span class="string">"do something"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testInline</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	Object = <span class="keyword">null</span>;</span><br><span class="line">	foo(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>采用方法内联后大致成这样</p>
