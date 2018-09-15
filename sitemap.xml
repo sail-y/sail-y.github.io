@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.saily.top/2018/07/19/redis-install/</loc>
+    
+    <lastmod>2018-09-15T15:24:23.075Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.saily.top/2018/02/22/cache04-3/</loc>
     
     <lastmod>2018-09-15T15:17:27.198Z</lastmod>
@@ -236,13 +243,6 @@
     <loc>http://www.saily.top/2018/08/16/understandjvm-1/</loc>
     
     <lastmod>2018-08-16T09:00:47.488Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.saily.top/2018/07/19/redis-install/</loc>
-    
-    <lastmod>2018-07-20T13:37:42.773Z</lastmod>
     
   </url>
   
