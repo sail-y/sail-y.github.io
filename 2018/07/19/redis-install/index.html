@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="下载直奔主题，官网下载redis最新版本（2018年07月19日） http://download.redis.io/releases/redis-4.0.10.tar.gz 环境准备安装tcl 1yum install tcl">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-15T15:24:23.075Z">
+<meta property="og:updated_time" content="2018-09-15T15:27:07.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7安装redis4.0.10并进行生产环境部署">
 <meta name="twitter:description" content="下载直奔主题，官网下载redis最新版本（2018年07月19日） http://download.redis.io/releases/redis-4.0.10.tar.gz 环境准备安装tcl 1yum install tcl">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：9月 15 2018 23:24:23" itemprop="dateModified" datetime="2018-09-15T23:24:23+08:00">9月 15 2018</time>
+                <time title="修改时间：9月 15 2018 23:27:07" itemprop="dateModified" datetime="2018-09-15T23:27:07+08:00">9月 15 2018</time>
               
             
           </span>
@@ -482,7 +482,7 @@
 </ol>
 <ol start="6">
 <li><p>修改redis.conf中的部分配置为生产环境</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 让redis以daemon进程运行</span></span><br><span class="line">daemonize	yes							</span><br><span class="line"><span class="comment"># 设置redis的pid文件位置</span></span><br><span class="line">pidfile		/var/run/redis_6370.pid </span><br><span class="line"><span class="comment"># 设置redis的监听端口号</span></span><br><span class="line">port		6370						</span><br><span class="line"><span class="comment"># 设置持久化文件的存储位置</span></span><br><span class="line">dir 		/var/redis/6370				</span><br><span class="line"><span class="comment"># 打开数据持久化</span></span><br><span class="line">appendonly  yes	 						</span><br><span class="line"><span class="comment"># 设置密码</span></span><br><span class="line">requirepass yourpass	 	  			</span><br><span class="line"><span class="comment"># 设置连接Redis的地址</span></span><br><span class="line"><span class="built_in">bind</span>   		127.0.0.1</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 让redis以daemon进程运行</span></span><br><span class="line">daemonize	yes							</span><br><span class="line"><span class="comment"># 设置redis的pid文件位置</span></span><br><span class="line">pidfile		/var/run/redis_6370.pid </span><br><span class="line"><span class="comment"># 设置redis的监听端口号</span></span><br><span class="line">port		6370						</span><br><span class="line"><span class="comment"># 设置持久化文件的存储位置</span></span><br><span class="line">dir 		/var/redis/6370				</span><br><span class="line"><span class="comment"># 打开数据持久化</span></span><br><span class="line">appendonly  yes	 						</span><br><span class="line"><span class="comment"># 设置密码</span></span><br><span class="line">requirepass yourpass	 	  			</span><br><span class="line"><span class="comment"># 设置连接Redis的地址</span></span><br><span class="line"><span class="comment"># 如果提供给其他机器访问，请在此处设置IP为机器IP</span></span><br><span class="line"><span class="built_in">bind</span>  127.0.0.1</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>启动redis</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">chmod 777 redis_6370</span><br><span class="line">./redis_6370 start</span><br></pre></td></tr></table></figure>
@@ -492,12 +492,11 @@
 </li>
 <li><p>让redis跟随系统启动自动启动，在<code>/etc/init.d/redis_6370</code>脚本中，最上面，加入两行注释</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line"># chkconfig:   2345 90 10</span><br><span class="line"># description:  Redis is a persistent key-value database</span><br></pre></td></tr></table></figure>
+<p> 然后执行命令:</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig redis_6370 on</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<pre><code>然后执行命令:
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig redis_6370 on</span><br></pre></td></tr></table></figure>
-</code></pre><h1 id="redis-cli测试"><a href="#redis-cli测试" class="headerlink" title="redis-cli测试"></a>redis-cli测试</h1><h2 id="PING"><a href="#PING" class="headerlink" title="PING"></a>PING</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6370 -a yourpass PING</span><br><span class="line">PONG</span><br></pre></td></tr></table></figure>
+<h1 id="redis-cli测试"><a href="#redis-cli测试" class="headerlink" title="redis-cli测试"></a>redis-cli测试</h1><h2 id="PING"><a href="#PING" class="headerlink" title="PING"></a>PING</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6370 -a yourpass PING</span><br><span class="line">PONG</span><br></pre></td></tr></table></figure>
 <h2 id="停机"><a href="#停机" class="headerlink" title="停机"></a>停机</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 -p 6370 SHUTDOWN</span><br></pre></td></tr></table></figure>
 <h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6370 </span><br><span class="line">127.0.0.1:6370&gt; auth yourpass</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6370&gt; PING</span><br><span class="line">PONG</span><br><span class="line">127.0.0.1:6370&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6370&gt; get k1</span><br><span class="line"><span class="string">"v1"</span></span><br></pre></td></tr></table></figure>
 <p>是不是很简单明了？文章到此结束。。。</p>
