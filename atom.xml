@@ -46,14 +46,13 @@
     <link href="http://www.saily.top/2018/08/16/understandjvm-1/"/>
     <id>http://www.saily.top/2018/08/16/understandjvm-1/</id>
     <published>2018-08-16T07:55:41.000Z</published>
-    <updated>2018-08-16T09:00:47.488Z</updated>
+    <updated>2018-09-15T15:36:28.990Z</updated>
     
-    <content type="html"><![CDATA[<p>此为学习张龙老师的课程笔记，记录以供后续翻看。</p><h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p><ol><li>类加载常见的行为是将磁盘上的class文件加载到内存中</li><li>连接将是类与类之间的关系处理好</li><li>初始化对一些静态的变量进行赋值</li></ol><a id="more"></a><p>这提供了更大的灵活性，增加了更多的可能性。</p><h2 id="类加载深入剖析"><a href="#类加载深入剖析" class="headerlink" title="类加载深入剖析"></a>类加载深入剖析</h2><p>加载类的工具，叫做类加载器</p><h3 id="Java虚拟机的生命周期"><a href="#Java虚拟机的生命周期" class="headerlink" title="Java虚拟机的生命周期"></a>Java虚拟机的生命周期</h3><p>在如下几种情况，Java虚拟机将结束生命周期</p><ul><li>执行了System.exit()方法</li><li>程序正常执行结束</li><li>程序在执行过程中遇到了异常或错误而异常终止</li><li>由于操作系统出现错误而导致Java虚拟机进程终止</li></ul><h2 id="类的加载、连续、与初始化"><a href="#类的加载、连续、与初始化" class="headerlink" title="类的加载、连续、与初始化"></a>类的加载、连续、与初始化</h2><ul><li>加载：查找并加载类的二进制数据</li><li><p>连接</p><ul><li>验证：确保被加载的类的正确性</li><li>准备：为类的静态变量分配内存，并将其初始化为默认值</li><li>解析：把类中的符号引用转换为直接引用</li></ul></li><li>初始化：为类的静态变量赋予正确的初始值。</li></ul><h2 id="类的使用和卸载"><a href="#类的使用和卸载" class="headerlink" title="类的使用和卸载"></a>类的使用和卸载</h2>]]></content>
+    <content type="html"><![CDATA[<h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p><ol><li>类加载常见的行为是将磁盘上的class文件加载到内存中</li><li>连接将是类与类之间的关系处理好</li><li>初始化对一些静态的变量进行赋值</li></ol><a id="more"></a><p>这提供了更大的灵活性，增加了更多的可能性。</p><h2 id="类加载深入剖析"><a href="#类加载深入剖析" class="headerlink" title="类加载深入剖析"></a>类加载深入剖析</h2><p>加载类的工具，叫做类加载器</p><h3 id="Java虚拟机的生命周期"><a href="#Java虚拟机的生命周期" class="headerlink" title="Java虚拟机的生命周期"></a>Java虚拟机的生命周期</h3><p>在如下几种情况，Java虚拟机将结束生命周期</p><ul><li>执行了System.exit()方法</li><li>程序正常执行结束</li><li>程序在执行过程中遇到了异常或错误而异常终止</li><li>由于操作系统出现错误而导致Java虚拟机进程终止</li></ul><h2 id="类的加载、连续、与初始化"><a href="#类的加载、连续、与初始化" class="headerlink" title="类的加载、连续、与初始化"></a>类的加载、连续、与初始化</h2><ul><li>加载：查找并加载类的二进制数据</li><li><p>连接</p><ul><li>验证：确保被加载的类的正确性</li><li>准备：为类的静态变量分配内存，并将其初始化为默认值</li><li>解析：把类中的符号引用转换为直接引用</li></ul></li><li>初始化：为类的静态变量赋予正确的初始值。</li></ul><h2 id="类的使用和卸载"><a href="#类的使用和卸载" class="headerlink" title="类的使用和卸载"></a>类的使用和卸载</h2>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;此为学习张龙老师的课程笔记，记录以供后续翻看。&lt;/p&gt;
-&lt;h1 id=&quot;类加载&quot;&gt;&lt;a href=&quot;#类加载&quot; class=&quot;headerlink&quot; title=&quot;类加载&quot;&gt;&lt;/a&gt;类加载&lt;/h1&gt;&lt;p&gt;在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。&lt;/p&gt;
+      &lt;h1 id=&quot;类加载&quot;&gt;&lt;a href=&quot;#类加载&quot; class=&quot;headerlink&quot; title=&quot;类加载&quot;&gt;&lt;/a&gt;类加载&lt;/h1&gt;&lt;p&gt;在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;类加载常见的行为是将磁盘上的class文件加载到内存中&lt;/li&gt;
 &lt;li&gt;连接将是类与类之间的关系处理好&lt;/li&gt;
