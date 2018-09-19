@@ -119,7 +119,7 @@
 <meta property="og:image" content="http://www.saily.top/img/cache/缓存雪崩的过程和后果.png">
 <meta property="og:image" content="http://www.saily.top/img/cache/缓存雪崩的事前事中事后的解决方案.png">
 <meta property="og:image" content="http://www.saily.top/img/cache/缓存穿透的现象.png">
-<meta property="og:updated_time" content="2018-08-25T08:01:21.014Z">
+<meta property="og:updated_time" content="2018-09-19T10:32:53.914Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高可用缓存架构实战6-缓存雪崩及解决方案">
 <meta name="twitter:description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存雪崩缓存雪崩这种场景，缓存架构中非常重要的一个环节，应对缓存雪崩的解决方案，避免缓存雪崩的时候，造成整个系统崩溃，带来巨大的经济损失">
@@ -405,7 +405,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：8月 25 2018 16:01:21" itemprop="dateModified" datetime="2018-08-25T16:01:21+08:00">8月 25 2018</time>
+                <time title="修改时间：9月 19 2018 18:32:53" itemprop="dateModified" datetime="2018-09-19T18:32:53+08:00">9月 19 2018</time>
               
             
           </span>
@@ -501,7 +501,7 @@
 <p><a href="http://www.saily.top/categories/hystrix/">Hystrix系列文章</a></p>
 <p><img src="/img/cache/缓存雪崩的事前事中事后的解决方案.png" alt="缓存雪崩的事前事中事后的解决方案"></p>
 <h1 id="使用Hystrix对Redis进行资源隔离"><a href="#使用Hystrix对Redis进行资源隔离" class="headerlink" title="使用Hystrix对Redis进行资源隔离"></a>使用Hystrix对Redis进行资源隔离</h1><p>接下来就要对redis的访问这一块加上保护措施，给商品服务的访问加上限流的保护措施。redis这一块，全都用hystrix的command进行封装，做资源隔离，确保redis的访问只能在固定的线程池内的资源来进行访问，哪怕是redis访问的很慢，有等待和超时，也不要紧，只有少量额线程资源用来访问，缓存服务不会被拖垮。</p>
-<p>找到之前的缓存项目<a href="https://github.com/sail-y/eshop-cache，引入Hystrix的依赖" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache，引入Hystrix的依赖</a></p>
+<p>找到之前的缓存项目<a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a> ，引入Hystrix的依赖</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>在CacheServiceImpl里有几处用到redis的地方，我们就需要开发几个相应的command。</p>
 <h2 id="SaveProductInfo2RedisCacheCommand"><a href="#SaveProductInfo2RedisCacheCommand" class="headerlink" title="SaveProductInfo2RedisCacheCommand"></a>SaveProductInfo2RedisCacheCommand</h2><p><strong>SaveProductInfo2RedisCacheCommand.java</strong></p>
@@ -548,14 +548,14 @@
 <p>我们应该根据我们自己的平时的访问流量去设置，而不是用默认值，比如，我们认为平时一般的时候，流量也可以在每秒在QPS 100，10秒的滑动窗口就是1000，一般可以设置600或者800一个值，需要根据自己的系统的流量去设置。假如你设置的太少了，或者太多了，都不太合适。举个例子，你设置一个20，结果在晚上最低峰的时候，刚好是30，可能晚上的时候因为访问不频繁，大量的找不到缓存，可能超时频繁了一些，结果直接就给短路了。</p>
 <h3 id="circuitBreaker-errorThresholdPercentage"><a href="#circuitBreaker-errorThresholdPercentage" class="headerlink" title="circuitBreaker.errorThresholdPercentage"></a>circuitBreaker.errorThresholdPercentage</h3><p>设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter()</span><br><span class="line">   .withCircuitBreakerErrorThresholdPercentage(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
-<p>我们最好还是自己定制，自己设置，如果是要50%的时候才短路的话，会有什么情况呢?10%短路，也不太靠谱，90%异常，才短路也不行。这个值可以稍微高一些，如果redis集群彻底崩溃，那么基本上就是所有的请求，100%都会异常，所以一般设置60%，70%。也有可能偶然出现网络的抖动，导致比如说就这10秒钟，访问延时高了一些，其实可能并不需要立即就短路，可能下个10秒马上就恢复了。</p>
+<p>我们最好还是自己定制，自己设置，如果是要50%的时候才短路的话，会有什么情况呢?10%短路，也不太靠谱，90%异常，才短路也不行。这个值可以稍微高一些，如果redis集群彻底崩溃，那么基本上就是所有的请求，100%都会异常，所以一般设置60%，70%。也有可能偶然出现网络的抖动，导致比如就这10秒钟，访问延时高了一些，其实可能并不需要立即就短路，可能下个10秒马上就恢复了。</p>
 <p>金融支付类的接口，可能这个比例就会设置的很低，因为对异常系统必须要很敏感，可能就是10%异常了，就直接短路了，不让继续访问了。金融支付类的接口是很重要的，而且必须是很稳定，我们不能容忍任何的延迟或者是报错。一旦支付类的接口，有10%的异常的话，我们基本就可以认为这个接口已经出问题了，再继续访问的话，也许访问的就是有问题的接口，可能造成资金的错乱，给公司造成损失。所以直接熔断吧，不让访问了，走降级策略，这就是对整个系统的一个安全性保障。</p>
 <h3 id="circuitBreaker-sleepWindowInMilliseconds"><a href="#circuitBreaker-sleepWindowInMilliseconds" class="headerlink" title="circuitBreaker.sleepWindowInMilliseconds"></a>circuitBreaker.sleepWindowInMilliseconds</h3><p>设置在短路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新导half-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter()</span><br><span class="line">   .withCircuitBreakerSleepWindowInMilliseconds(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
 <p>如果redis集群崩溃了，会在5s内就直接恢复。</p>
 <h1 id="Hystrix保护源服务，防止Mysql崩溃"><a href="#Hystrix保护源服务，防止Mysql崩溃" class="headerlink" title="Hystrix保护源服务，防止Mysql崩溃"></a>Hystrix保护源服务，防止Mysql崩溃</h1><p>做缓存服务，redis集群彻底崩溃的时候，除了对redis本身做资源隔离、超时控制、熔断策略。还要保护源服务，因为Redis集群崩溃后，大量的请求会高并发会去访问源服务-商品服务（提供商品数据）。如果QPS10000去访问商品服务，基于mysql去查询，那mysql肯定会挂掉，商品服务也就死掉了。</p>
 <p>所以要对商品服务这种源服务的访问施加限流的措施，限流怎么限，hystrix本身就是提供了两种机制，线程池（内部做了异步化处理，可以处理超时），semaphore（信号量，让tomcat线程执行运行逻辑，没有内部的异步化处理，一旦超时，会导致tomcat线程就hang住了）。</p>
-<p>一般推荐线程池用来做有网络访问的这种资源隔离，因为涉及到网络，就很容易超时；sempahore是用来做对服务纯内存的一些复杂业务逻辑的操作进行限流，因为不涉及网络访问，就是纯粹为了避免说对内存内的复杂业务逻辑进行太高并发的访问，造成系统本身的故障。semaphore在以下情况是很合适的：比如一些推荐、搜索，有部分算法，复杂的算法，是放在服务内部纯内存去运行的，一个服务暴露出来的就是某个算法的执行。</p>
+<p>一般推荐线程池用来做有网络访问的这种资源隔离，因为涉及到网络，就很容易超时；sempahore是用来做对服务纯内存的一些复杂业务逻辑的操作进行限流，因为不涉及网络访问，就是纯粹为了避免对内存内的复杂业务逻辑进行太高并发的访问，造成系统本身的故障。semaphore在以下情况是很合适的：比如一些推荐、搜索，有部分算法，复杂的算法，是放在服务内部纯内存去运行的，一个服务暴露出来的就是某个算法的执行。</p>
 <p>我们这里是访问外部的商品服务，所以还是用线程池做限流，需要算一下，要限多少，怎么限？</p>
 <p>假设每次商品服务的访问性能在200ms，1个线程一秒可以执行5次访问，假设我们一个缓存服务实例对这个商品服务的访问每秒在150次。所以这个时候，我们就需要30个线程，每个线程每秒可以访问5次，总共每秒30个线程可以访问150次。</p>
 <p>我们算的这个每秒150次访问时正常情况下，如果是非正常情况下，每秒1000次，甚至1w次，此时就可以自然限流，因为我们的线程池就30个。在非正常情况下，直接线程池+等待队列全满，此时就会出现大量的reject操作，然后就会去调用降级逻辑。接着我们要做限流，设置的就是线程池的大小，还有等待队列的大小，30个线程可以每秒处理150个请求，但是偶尔会多一些出来，同时30个线程处理150个请求会快一些，不用花费1秒钟，等待队列给一些buffer，不要偶尔1秒钟来了200条请求，50条直接给reject掉了。等待队列设置150个，30个线程直接500ms处理完了，等待队列中的50个请求就可以继续处理。</p>
@@ -572,10 +572,10 @@
 </ol>
 <h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><p>如果一直访问的根本不存在的时候，那么就会导致缓存穿透，所有的这种请求都会直接到mysql这边来。</p>
 <p><img src="/img/cache/缓存穿透的现象.png" alt="缓存穿透的现象"></p>
-<p>缓存穿透的解决方案其实非常简单，就是如果从源服务（商品服务）查询到的数据是空，就说明这个数据根本就不存在。那么如果这个数据不存在的话，我们也往redis和ehcache等缓存中写入一个数据，可以写入一个空的数据，比如说空的productInfo的json串，给nginx也是，返回一个空的productInfo的json串。</p>
+<p>缓存穿透的解决方案其实非常简单，就是如果从源服务（商品服务）查询到的数据是空，就说明这个数据根本就不存在。那么如果这个数据不存在的话，我们也往redis和ehcache等缓存中写入一个数据，可以写入一个空的数据，比如空的productInfo的json串，给nginx也是，返回一个空的productInfo的json串。</p>
 <p>我们有异步监听数据变更的机制在里面，如果数据变更的话，某个数据本来是没有的，可能会导致缓存穿透，所以我们给了个空数据，但是现在这个数据有了，我们接收到这个变更的消息过后，就可以将数据再次从源服务中查询出来，然后设置到各级缓存中去了。</p>
 <h1 id="缓存失效"><a href="#缓存失效" class="headerlink" title="缓存失效"></a>缓存失效</h1><p>之前在nginx中设置本地的缓存的时候，给了一个过期的时间（10分钟）。10分钟以后自动过期，过期了以后，就会重新从redis中去获取数据。10分钟到期自动过期，就叫做缓存的失效。如果缓存失效以后，那么实际上此时，就会有大量的请求回到redis中去查询。</p>
-<p>如果说同一时间来了1000个请求，都将缓存cache在了nginx自己的本地，缓存失效的时间都设置了10分钟，那么是不是可能导致10分钟过后，这些数据，就自动全部在同一时间失效了。如果同一时间全部失效，会不会导致说同一时间大量的请求过来，在nginx里找不到缓存数据，全部高并发走到redis上去了。加重大量的网络请求，网络负载也会加重。</p>
+<p>如果同一时间来了1000个请求，都将缓存cache在了nginx自己的本地，缓存失效的时间都设置了10分钟，那么是不是可能导致10分钟过后，这些数据，就自动全部在同一时间失效了。如果同一时间全部失效，会不会导致同一时间大量的请求过来，在nginx里找不到缓存数据，全部高并发走到redis上去了。加重大量的网络请求，网络负载也会加重。</p>
 <p>解决方案很简单，就是把10分钟的时间改成一个随机数,随机一个失效的时间。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">math.randomseed(tostring(os.time()):reverse():sub(1, 7))</span><br><span class="line"><span class="built_in">local</span> expireTime = math.random(600, 1200)</span><br></pre></td></tr></table></figure>
 
