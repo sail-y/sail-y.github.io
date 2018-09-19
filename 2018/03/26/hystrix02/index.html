@@ -117,7 +117,7 @@
 <meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 Hystrix流程讲解创建Command一个HystrixCommand或一个HystrixObservableCommand对象，代表了对某个依赖服务发起的一次请求或者调用，构造的时候，可以在构造函数中传入任何需要的参数。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix执行时的8大流程以及内部原理.png">
-<meta property="og:updated_time" content="2018-08-25T08:18:13.809Z">
+<meta property="og:updated_time" content="2018-09-19T08:06:43.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hystrix流程和原理讲解">
 <meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 Hystrix流程讲解创建Command一个HystrixCommand或一个HystrixObservableCommand对象，代表了对某个依赖服务发起的一次请求或者调用，构造的时候，可以在构造函数中传入任何需要的参数。">
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：8月 25 2018 16:18:13" itemprop="dateModified" datetime="2018-08-25T16:18:13+08:00">8月 25 2018</time>
+                <time title="修改时间：9月 19 2018 16:06:43" itemprop="dateModified" datetime="2018-09-19T16:06:43+08:00">9月 19 2018</time>
               
             
           </span>
@@ -490,13 +490,15 @@
 <p>对于HystrixCommand，会返回一个Observable对象，其中会发返回对应的结果<br>对于HystrixObservableCommand，会返回一个原始的Observable对象</p>
 <p>如果没有实现fallback，或者是fallback抛出了异常，Hystrix会返回一个Observable，但是不会返回任何数据</p>
 <p>不同的command执行方式，其fallback为空或者异常时的返回结果不同</p>
-<p>对于execute()，直接抛出异常<br>对于queue()，返回一个Future，调用get()时抛出异常<br>对于observe()，返回一个Observable对象，但是调用subscribe()方法订阅它时，理解抛出调用者的onError方法<br>对于toObservable()，返回一个Observable对象，但是调用subscribe()方法订阅它时，理解抛出调用者的onError方法。</p>
-<h3 id="不同执行方式走的流程"><a href="#不同执行方式走的流程" class="headerlink" title="不同执行方式走的流程"></a>不同执行方式走的流程</h3><p>execute()，获取一个Future.get()，然后拿到单个结果<br>queue()，返回一个Future<br>observer()，立即订阅Observable，然后启动8大执行步骤，返回一个拷贝的Observable，订阅时理解回调给你结果<br>toObservable()，返回一个原始的Observable，必须手动订阅才会去执行8大步骤</p>
+<p>对于execute()，直接抛出异常<br>对于queue()，返回一个Future，调用get()时抛出异常<br>对于observe()，返回一个Observable对象，但是调用subscribe()方法订阅它时，立即抛出调用者的onError方法<br>对于toObservable()，返回一个Observable对象，但是调用subscribe()方法订阅它时，立即抛出调用者的onError方法。</p>
+<h3 id="不同执行方式走的流程"><a href="#不同执行方式走的流程" class="headerlink" title="不同执行方式走的流程"></a>不同执行方式走的流程</h3><p>execute()，获取一个Future.get()，然后拿到单个结果<br>queue()，返回一个Future<br>observer()，立即订阅Observable，然后启动8大执行步骤，返回一个拷贝的Observable，订阅时立即回调给你结果<br>toObservable()，返回一个原始的Observable，必须手动订阅才会去执行8大步骤</p>
 <p><img src="/img/hystrix/hystrix执行时的8大流程以及内部原理.png" alt="hystrix执行时的8大流程以及内部原理"></p>
 <h2 id="Request-Cache"><a href="#Request-Cache" class="headerlink" title="Request Cache"></a>Request Cache</h2><p>首先有一个概念，叫做reqeust context–请求上下文，一般来说在一个web应用中，会使用hystrix在一个filter里面，对每一个请求都施加一个请求上下文，在tomcat容器内，每一次请求就是一次请求上下文。</p>
 <p>然后在这次请求上下文中，我们会去执行N多代码，调用N多依赖服务，有的依赖服务可能还会调用好几次，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。</p>
 <p>那么这个时候，我们就可以让第一次command执行返回的结果被缓存在内存中，然后这个请求上下文中后续的其他对这个依赖的调用全部从内存中取用缓存结果就可以了。不用在一次请求上下文中反复多次的执行一样的command，提升整个请求的性能。</p>
 <p>HystrixCommand和HystrixObservableCommand都可以指定一个缓存key，然后hystrix会自动进行缓存，接着在同一个request context内，再次访问的时候，就会直接取用缓存。用请求缓存，可以避免重复执行网络请求，多次调用一个command，那么只会执行一次，后面都是直接取缓存。</p>
+<p>指定缓存key，只需要实现一个<code>getCacheKey</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> String <span class="title">getCacheKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"product_info_"</span> + productId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>对于请求缓存（request caching），请求合并（request collapsing），请求日志（request log），等等技术，都必须自己管理HystrixReuqestContext的生命周期。</p>
 <p>在一个请求执行之前，都必须先初始化一个request context</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixRequestContext context = HystrixRequestContext.initializeContext();</span><br></pre></td></tr></table></figure>
@@ -507,7 +509,7 @@
 <p>注册Filter</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> FilterRegistrationBean <span class="title">filterRegistrationBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FilterRegistrationBean registration = <span class="keyword">new</span> FilterRegistrationBean&lt;&gt;(<span class="keyword">new</span> HystrixRequestContextFilter());</span><br><span class="line">    registration.addUrlPatterns(<span class="string">"/*"</span>);</span><br><span class="line">    <span class="keyword">return</span> registration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="手动清理缓存"><a href="#手动清理缓存" class="headerlink" title="手动清理缓存"></a>手动清理缓存</h3><p>有时候可能需要手动清理缓存，Hystrix提供了方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        HystrixRequestCache.getInstance(KEY,</span><br><span class="line">                HystrixConcurrencyStrategyDefault.getInstance()).clear(String.valueOf(productId));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">    HystrixRequestCache.getInstance(KEY,</span><br><span class="line">            HystrixConcurrencyStrategyDefault.getInstance()).clear(String.valueOf(productId));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="FallBack降级"><a href="#FallBack降级" class="headerlink" title="FallBack降级"></a>FallBack降级</h2><p>hystrix在3种情况下会调用降级方法。</p>
 <ol>
 <li>运行的程序报错了，error。</li>
@@ -594,16 +596,14 @@
 <li><p>execution.isolation.thread.timeoutInMilliseconds</p>
 <p> 手动设置timeout时长，一个command运行超出这个时间，就被认为是timeout，然后将hystrix command标识为timeout，同时执行fallback降级逻辑</p>
 <p> 默认是1000，也就是1000毫秒</p>
-<p> HystrixCommandProperties.Setter()</p>
-<pre><code>.withExecutionTimeoutInMilliseconds(int value)
+<pre><code>`HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(int value)`
 </code></pre></li>
 <li><p>execution.timeout.enabled</p>
 </li>
 </ol>
 <pre><code>控制是否要打开timeout机制，默认是true
 
-HystrixCommandProperties.Setter()
-   .withExecutionTimeoutEnabled(boolean value)
+`HystrixCommandProperties.Setter().withExecutionTimeoutEnabled(boolean value)`
 </code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>hystrix的核心知识</p>
 <ol>
 <li>hystrix内部工作原理：8大执行步骤和流程</li>
@@ -754,7 +754,7 @@ HystrixCommandProperties.Setter()
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-count">108</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
