@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="Google Protobufhttps://developers.google.com/protocol-buffers/ 接下来看一下Google Protobuf的使用方式。Protobuf的主要作用是用来进行RPC的传输。它跟Apache Thrift属于同一个领域的框架，都可以用来序列化和反序列化数据进行传输。 RMI介绍目前Java中有一门比较成熟，同时也是EJB的标准的技术叫做RMI">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-12-12T03:39:57.907Z">
+<meta property="og:updated_time" content="2018-09-22T14:45:19.151Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty-Google Protobuf介绍和使用">
 <meta name="twitter:description" content="Google Protobufhttps://developers.google.com/protocol-buffers/ 接下来看一下Google Protobuf的使用方式。Protobuf的主要作用是用来进行RPC的传输。它跟Apache Thrift属于同一个领域的框架，都可以用来序列化和反序列化数据进行传输。 RMI介绍目前Java中有一门比较成熟，同时也是EJB的标准的技术叫做RMI">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：12月 12 2017 11:39:57" itemprop="dateModified" datetime="2017-12-12T11:39:57+08:00">12月 12 2017</time>
+                <time title="修改时间：9月 22 2018 22:45:19" itemprop="dateModified" datetime="2018-09-22T22:45:19+08:00">9月 22 2018</time>
               
             
           </span>
@@ -477,12 +477,12 @@
 <h2 id="Protocol-Buffers"><a href="#Protocol-Buffers" class="headerlink" title="Protocol Buffers"></a>Protocol Buffers</h2><blockquote>
 <p>Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.</p>
 </blockquote>
-<p>Protocol buffers是谷歌提供的语言中立、平台中立，用于序列化结构数据的可扩展的机制，就像XML一样，但是它的体积更小，它的速度更快、更简单。数据结构你只需要定义一次就可以了<br>，然后就可以使用生成的各种语言源代码去轻松的读写你的各种结构化数据。</p>
+<p>Protocol buffers是谷歌提供的语言中立、平台中立，用于序列化结构数据的可扩展的机制，就像XML一样，但是它的体积更小，它的速度更快、更简单。数据结构你只需要定义一次就可以了，然后就可以使用生成的各种语言源代码去轻松的读写你的各种结构化数据。</p>
 <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://github.com/google/protobuf/releases" target="_blank" rel="noopener">https://github.com/google/protobuf/releases</a></p>
-<p>先下载环境，注意不要下错了，我这里下载<code>protoc-3.3.0-osx-x86_64.zip</code>，配置好环境后可执行protoc命令。</p>
+<p>先下载环境，注意不要下错了，因为我是MAC，所以我这里下载<code>protoc-3.3.0-osx-x86_64.zip</code>，配置好环境变量后可执行protoc命令。</p>
 <h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://developers.google.com/protocol-buffers/docs/javatutorial" target="_blank" rel="noopener">https://developers.google.com/protocol-buffers/docs/javatutorial</a></p>
 <p>然后我们照着官方的demo来写一个。</p>
-<p>首先需要编写一个<code>.proto</code>文件。</p>
+<p>首先需要编写一个<code>Student.proto</code>文件。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto2&quot;;</span><br><span class="line"></span><br><span class="line">package com.sail.protobuf;</span><br><span class="line"></span><br><span class="line">option optimize_for = SPEED;</span><br><span class="line">option java_package = &quot;com.sail.protobuf&quot;;</span><br><span class="line">option java_outer_classname = &quot;DataInfo&quot;;</span><br><span class="line"></span><br><span class="line">message Student &#123;</span><br><span class="line">    required string name = 1;</span><br><span class="line">    optional int32 age = 2;</span><br><span class="line">    optional string address = 3;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然后执行命令生成代码，就得到一个<code>DataInfo.java</code></p>
 <pre><code>protoc --java_out=src/main/java src/main/protobuf/Student.proto
@@ -649,7 +649,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">108</span>
+                    <span class="site-state-item-count">110</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

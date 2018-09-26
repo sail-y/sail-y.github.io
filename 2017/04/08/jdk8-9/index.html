@@ -120,7 +120,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/CarpenterLee/JavaLambdaInternals/master/Figures/Java_stream_pipeline_classes.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/CarpenterLee/JavaLambdaInternals/master/Figures/Stream_pipeline_example.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/CarpenterLee/JavaLambdaInternals/master/Figures/Stream_pipeline_Sink.png">
-<meta property="og:updated_time" content="2017-04-08T08:25:44.000Z">
+<meta property="og:updated_time" content="2018-09-22T10:18:52.661Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK8-Stream流底层原理和实现[转]">
 <meta name="twitter:description" content="这篇文章发现别人写的好货，直接转过来看看。http://www.cnblogs.com/CarpenterLee/archive/2017/03/28/6637118.html Stream Pipelines前面我们已经学会如何使用Stream API，用起来真的很爽，但简洁的方法下面似乎隐藏着无尽的秘密，如此强大的API是如何实现的呢？比如Pipeline是怎么执行的，每次方法调用都会导致一次">
@@ -389,12 +389,24 @@
                 
               
 
-              <time title="创建时间：4月 8 2017 11:11:34 / 修改时间：16:25:44" itemprop="dateCreated datePublished" datetime="2017-04-08T11:11:34+08:00">4月 8 2017</time>
+              <time title="创建时间：4月 8 2017 11:11:34" itemprop="dateCreated datePublished" datetime="2017-04-08T11:11:34+08:00">4月 8 2017</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 22 2018 18:18:52" itemprop="dateModified" datetime="2018-09-22T18:18:52+08:00">9月 22 2018</time>
               
             
           </span>
@@ -515,15 +527,15 @@
 <p>上述代码首先调用wrappedSink.begin()方法告诉Sink数据即将到来，然后调用spliterator.forEachRemaining()方法对数据进行迭代（Spliterator是容器的一种迭代器，<a href="https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/3-Lambda%20and%20Collections.md#spliterator" target="_blank" rel="noopener">参阅</a>），最后调用wrappedSink.end()方法通知Sink数据处理结束。逻辑如此清晰。</p>
 <h3 id="gt-gt-执行后的结果在哪里"><a href="#gt-gt-执行后的结果在哪里" class="headerlink" title="&gt;&gt; 执行后的结果在哪里"></a>&gt;&gt; 执行后的结果在哪里</h3><p>最后一个问题是流水线上所有操作都执行后，用户所需要的结果（如果有）在哪里？首先要说明的是不是所有的Stream结束操作都需要返回结果，有些操作只是为了使用其副作用(<em>Side-effects</em>)，比如使用<code>Stream.forEach()</code>方法将结果打印出来就是常见的使用副作用的场景（事实上，除了打印之外其他场景都应避免使用副作用），对于真正需要返回结果的结束操作结果存在哪里呢？</p>
 <blockquote>
-<p>特别说明：副作用不应该被滥用，也许你会觉得在Stream.forEach()里进行元素收集是个不错的选择，就像下面代码中那样，但遗憾的是这样使用的正确性和效率都无法保证，因为Stream可能会并行执行。大多数使用副作用的地方都可以使用<a href="./5-Streams%20API(II">归约操作</a>.md)更安全和有效的完成。</p>
+<p>特别说明：副作用不应该被滥用，也许你会觉得在Stream.forEach()里进行元素收集是个不错的选择，就像下面代码中那样，但遗憾的是这样使用的正确性和效率都无法保证，因为Stream可能会并行执行。大多数使用副作用的地方都可以使用<a href="https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II" target="_blank" rel="noopener">归约操作</a>.md)更安全和有效的完成。</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误的收集方式</span></span><br><span class="line">ArrayList&lt;String&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">      .forEach(s -&gt; results.add(s));  <span class="comment">// Unnecessary use of side-effects!</span></span><br><span class="line"><span class="comment">// 正确的收集方式</span></span><br><span class="line">List&lt;String&gt;results =</span><br><span class="line">     stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">             .collect(Collectors.toList());  <span class="comment">// No side-effects!</span></span><br></pre></td></tr></table></figure>
 <p>回到流水线执行结果的问题上来，需要返回结果的流水线结果存在哪里呢？这要分不同的情况讨论，下表给出了各种有返回结果的Stream结束操作。</p>
 <table width="350px"><tr><td align="center">返回类型</td><td align="center">对应的结束操作</td></tr><tr><td>boolean</td><td>anyMatch() allMatch() noneMatch()</td></tr><tr><td>Optional</td><td>findFirst() findAny()</td></tr><tr><td>归约结果</td><td>reduce() collect()</td></tr><tr><td>数组</td><td>toArray()</td></tr></table>
 
 <ol>
-<li>对于表中返回boolean或者Optional的操作（Optional是存放 一个 值的容器）的操作，由于值返回一个值，只需要在对应的Sink中记录这个值，等到执行结束时返回就可以了。</li>
-<li>对于归约操作，最终结果放在用户调用时指定的容器中（容器类型通过<a href="./5-Streams%20API(II">收集器</a>.md#收集器)指定）。collect(), reduce(), max(), min()都是归约操作，虽然max()和min()也是返回一个Optional，但事实上底层是通过调用<a href="./5-Streams%20API(II">reduce()</a>.md#多面手reduce)方法实现的。</li>
+<li>对于表中返回boolean或者Optional的操作（Optional是存放 一个 值的容器）的操作，由于只返回一个值，只需要在对应的Sink中记录这个值，等到执行结束时返回就可以了。</li>
+<li>对于归约操作，最终结果放在用户调用时指定的容器中（容器类型通过<a href="https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II" target="_blank" rel="noopener">收集器</a>.md#收集器)指定）。collect(), reduce(), max(), min()都是归约操作，虽然max()和min()也是返回一个Optional，但事实上底层是通过调用<a href="https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II" target="_blank" rel="noopener">reduce()</a>.md#多面手reduce)方法实现的。</li>
 <li>对于返回是数组的情况，毫无疑问的结果会放在数组当中。这么说当然是对的，但在最终返回数组之前，结果其实是存储在一种叫做<em>Node</em>的数据结构中的。Node是一种多叉树结构，元素存储在树的叶子当中，并且一个叶子节点可以存放多个元素。这样做是为了并行执行方便。关于Node的具体结构，我们会在下一节探究Stream如何并行执行时给出详细说明。</li>
 </ol>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文详细介绍了Stream流水线的组织方式和执行过程，学习本文将有助于理解原理并写出正确的Stream代码，同时打消你对Stream API效率方面的顾虑。如你所见，Stream API实现如此巧妙，即使我们使用外部迭代手动编写等价代码，也未必更加高效。</p>
@@ -653,7 +665,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">108</span>
+                    <span class="site-state-item-count">110</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
