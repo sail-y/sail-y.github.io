@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.saily.top/"/>
-  <updated>2018-09-22T06:24:06.330Z</updated>
+  <updated>2018-09-27T02:49:08.299Z</updated>
   <id>http://www.saily.top/</id>
   
   <author>
@@ -18,20 +18,17 @@
   
   <entry>
     <title>ElasticSearch07-索引管理</title>
-    <link href="http://www.saily.top/2018/09/22/elasticSearch07/"/>
-    <id>http://www.saily.top/2018/09/22/elasticSearch07/</id>
-    <published>2018-09-22T03:48:13.000Z</published>
-    <updated>2018-09-22T06:24:06.330Z</updated>
+    <link href="http://www.saily.top/2018/09/27/elasticSearch07/"/>
+    <id>http://www.saily.top/2018/09/27/elasticSearch07/</id>
+    <published>2018-09-27T03:48:13.000Z</published>
+    <updated>2018-09-27T02:49:08.299Z</updated>
     
-    <content type="html"><![CDATA[<p># </p>]]></content>
+    <content type="html"><![CDATA[<p>此为龙果学院课程学习笔记，记录以后翻看</p><h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="手动创建索引"><a href="#手动创建索引" class="headerlink" title="手动创建索引"></a>手动创建索引</h2><p>之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。</p><a id="more"></a><p><strong>创建索引的语法</strong></p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">    <span class="attr">"number_of_shards"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"number_of_replicas"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_field"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="修改索引"><a href="#修改索引" class="headerlink" title="修改索引"></a>修改索引</h2><p><code>number_of_shards</code>是不能修改的，修改一下<code>number_of_replicas</code>试试。</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_settings</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"number_of_replicas"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DELETE /my_index</span><br><span class="line">DELETE /index_one,index_two</span><br><span class="line">DELETE /index_*</span><br><span class="line">DELETE /_all</span><br></pre></td></tr></table></figure><p><code>DELETE /_all</code>是很危险的操作，可以在ES的配置文件里禁用掉。</p><p><strong>elasticsearch.yml</strong></p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">action.destructive_requires_name:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
     
-      
-      
-        &lt;p&gt;# &lt;/p&gt;
-
-      
+      &lt;p&gt;此为龙果学院课程学习笔记，记录以后翻看&lt;/p&gt;
+&lt;h1 id=&quot;索引&quot;&gt;&lt;a href=&quot;#索引&quot; class=&quot;headerlink&quot; title=&quot;索引&quot;&gt;&lt;/a&gt;索引&lt;/h1&gt;&lt;h2 id=&quot;手动创建索引&quot;&gt;&lt;a href=&quot;#手动创建索引&quot; class=&quot;headerlink&quot; title=&quot;手动创建索引&quot;&gt;&lt;/a&gt;手动创建索引&lt;/h2&gt;&lt;p&gt;之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。&lt;/p&gt;
     
     </summary>
     

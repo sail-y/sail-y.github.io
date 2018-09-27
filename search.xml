@@ -2,8 +2,8 @@
 <search>
   <entry>
     <title><![CDATA[ElasticSearch07-索引管理]]></title>
-    <url>%2F2018%2F09%2F22%2FelasticSearch07%2F</url>
-    <content type="text"><![CDATA[#]]></content>
+    <url>%2F2018%2F09%2F27%2FelasticSearch07%2F</url>
+    <content type="text"><![CDATA[此为龙果学院课程学习笔记，记录以后翻看 索引手动创建索引之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。 创建索引的语法 12345678910111213141516PUT /my_index&#123; "settings": &#123; "number_of_shards": 1, "number_of_replicas": 0 &#125;, "mappings": &#123; "my_type": &#123; "properties": &#123; "my_field": &#123; "type": "text" &#125; &#125; &#125; &#125;&#125; 修改索引number_of_shards是不能修改的，修改一下number_of_replicas试试。 1234PUT /my_index/_settings&#123; "number_of_replicas": 1&#125; 删除索引1234DELETE /my_indexDELETE /index_one,index_twoDELETE /index_*DELETE /_all DELETE /_all是很危险的操作，可以在ES的配置文件里禁用掉。 elasticsearch.yml 1action.destructive_requires_name: true]]></content>
       <categories>
         <category>ElasticSearch</category>
       </categories>
