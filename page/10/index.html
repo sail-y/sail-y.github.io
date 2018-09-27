@@ -341,6 +341,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/07/15/Spring-cloudt-EnableOAuth2Client/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/07/15/Spring-cloudt-EnableOAuth2Client/" itemprop="url">
+                  Spring cloud @EnableOAuth2Client
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：7月 15 2016 13:55:11" itemprop="dateCreated datePublished" datetime="2016-07-15T13:55:11+08:00">7月 15 2016</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Spring Cloud oauth2 开启客户端功能，并启用LoadBalanced</p>
+<p>如果不添加以下配置，只添加<code>@EnableOAuth2Client</code>注解，spring cloud默认是在web环境下使用的<code>AuthorizationCodeResourceDetails</code>。</p>
+<p>具体代码在<code>OAuth2RestOperationsConfiguration</code>类中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@ConditionalOnBean(OAuth2ClientConfiguration.class)</span><br><span class="line">@ConditionalOnWebApplication</span><br><span class="line">protected static class SessionScopedConfiguration &#123;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	@ConfigurationProperties(&quot;security.oauth2.client&quot;)</span><br><span class="line">	@Primary</span><br><span class="line">	public AuthorizationCodeResourceDetails oauth2RemoteResource() &#123;</span><br><span class="line">		AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();</span><br><span class="line">		return details;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public FilterRegistrationBean oauth2ClientFilterRegistration(</span><br><span class="line">			OAuth2ClientContextFilter filter, SecurityProperties security) &#123;</span><br><span class="line">		FilterRegistrationBean registration = new FilterRegistrationBean();</span><br><span class="line">		registration.setFilter(filter);</span><br><span class="line">		registration.setOrder(security.getFilterOrder() - 10);</span><br><span class="line">		return registration;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Configuration</span><br><span class="line">	protected static class ClientContextConfiguration &#123;</span><br><span class="line"></span><br><span class="line">		@Resource</span><br><span class="line">		@Qualifier(&quot;accessTokenRequest&quot;)</span><br><span class="line">		protected AccessTokenRequest accessTokenRequest;</span><br><span class="line"></span><br><span class="line">		@Bean</span><br><span class="line">		@Scope(value = &quot;session&quot;, proxyMode = ScopedProxyMode.INTERFACES)</span><br><span class="line">		public DefaultOAuth2ClientContext oauth2ClientContext() &#123;</span><br><span class="line">			return new DefaultOAuth2ClientContext(this.accessTokenRequest);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/07/15/Spring-cloudt-EnableOAuth2Client/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/04/21/spring-cloud-OAuth2RestTemplate-loadBalanced/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1935,186 +2112,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/10/29/gitlab替换nginx服务/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/10/29/gitlab替换nginx服务/" itemprop="url">
-                  gitlab替换nginx服务
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 29 2015 16:29:10" itemprop="dateCreated datePublished" datetime="2015-10-29T16:29:10+08:00">10月 29 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>之前在自己服务器上搭建服务器，这是之前的文章<br><a href="http://sail-y.github.io/2015/02/06/centos-6-5-%E5%AE%89%E8%A3%85gitlab%E5%AE%89%E8%A3%85%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener">gitlab安装需要注意的问题</a></p>
-<p>后来在按照官网上替换自带服务器上的nginx的时候出现了一点问题。也是找了很久才找到这么一篇帖子，我在这里把nginx的部分转载过来一下。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/10/29/gitlab替换nginx服务/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2161,7 +2163,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">110</span>
+                    <span class="site-state-item-count">111</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
