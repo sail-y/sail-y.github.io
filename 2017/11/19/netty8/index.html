@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="源码分析(三）前面我们已经了解了Netty的启动流程，以及各个组件之间的关系，接下来要看看Netty的数据容器（ByteBuf)。 回顾Java NIO先回顾一下Java NIO的Buffer使用方式。 使用NIO进行文件读取所涉及的步骤：  从FileInputStream对象获取到Channel对象。 创建Buffer. 将数据从Channel中读取到Buffer对象中。  0 &amp;lt;= m">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-12-12T03:39:29.084Z">
+<meta property="og:updated_time" content="2018-09-28T04:52:16.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty-源码分析(三）">
 <meta name="twitter:description" content="源码分析(三）前面我们已经了解了Netty的启动流程，以及各个组件之间的关系，接下来要看看Netty的数据容器（ByteBuf)。 回顾Java NIO先回顾一下Java NIO的Buffer使用方式。 使用NIO进行文件读取所涉及的步骤：  从FileInputStream对象获取到Channel对象。 创建Buffer. 将数据从Channel中读取到Buffer对象中。  0 &amp;lt;= m">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：12月 12 2017 11:39:29" itemprop="dateModified" datetime="2017-12-12T11:39:29+08:00">12月 12 2017</time>
+                <time title="修改时间：9月 28 2018 12:52:16" itemprop="dateModified" datetime="2018-09-28T12:52:16+08:00">9月 28 2018</time>
               
             
           </span>
@@ -497,7 +497,7 @@
 <li>composite buffer（复合缓冲区）</li>
 </ol>
 <p>堆上的ByteBuf，这是最常用的类型，ByteBuf将数据存储到JVM的堆空间中， 并且将实际的数据存放到byte array中来实现。        </p>
-<p>优点：由于数据是存储在JVM的堆红，因此可以快速的创建与快速的释放，并且它提供了直接访问内部字节数组的方法。</p>
+<p>优点：由于数据是存储在JVM的堆中，因此可以快速的创建与快速的释放，并且它提供了直接访问内部字节数组的方法。</p>
 <p>缺点：每次读写数据时，都需要先将数据复制到直接缓冲区中再进行网络传输。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteBufTest1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ByteBuf byteBuf = Unpooled.copiedBuffer(<span class="string">"hello world"</span>, Charset.forName(<span class="string">"utf-8"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 表示是堆上的缓冲，是用字节数组存放的</span></span><br><span class="line">        <span class="keyword">if</span> (byteBuf.hasArray()) &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] content = byteBuf.array();</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="keyword">new</span> String(content, Charset.forName(<span class="string">"utf-8"</span>)));</span><br><span class="line"></span><br><span class="line">            System.out.println(byteBuf);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>DirectBuffer（直接缓冲区）</p>
@@ -506,7 +506,7 @@
 <p>缺点：因为Direct Buffer是直接在操作系统内存中的，所以内存空间的分配与释放要比堆空间更加复杂，而且速度要慢一些。Netty通过提供内存池来解决这个问题。直接缓冲区并不支持通过字节数组方式来访问数据。</p>
 <p><strong>重点：对于后端的业务消息的编解码来说，推荐使用HeapByteBuf；对于I/O通信线程在读写缓冲区时，推荐使用DirectByteBuf。</strong></p>
 <p>Composite Buffer（复合缓冲区）</p>
-<p>复合缓冲区为多个ByteBuf提供一个聚合视图。在这里你可以根据需要添加或者删除ByteBuf实例， 是一个JDK的ByteBuffer实全缺失的特性。</p>
+<p>复合缓冲区为多个ByteBuf提供一个聚合视图。在这里你可以根据需要添加或者删除ByteBuf实例， 是一个JDK的ByteBuffer实现缺失的特性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteBufTest2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CompositeByteBuf compositeByteBuf = Unpooled.compositeBuffer();</span><br><span class="line"></span><br><span class="line">        ByteBuf heapBuf = Unpooled.buffer(<span class="number">10</span>);</span><br><span class="line">        ByteBuf directBuf = Unpooled.directBuffer(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">        compositeByteBuf.addComponents(heapBuf, directBuf);</span><br><span class="line"></span><br><span class="line"><span class="comment">//        compositeByteBuf.removeComponent(0);</span></span><br><span class="line"></span><br><span class="line">        Iterator&lt;ByteBuf&gt; iterator = compositeByteBuf.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(iterator.next());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        compositeByteBuf.forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="JDK的ByteBuffer与Netty的ByteBuf之间的差异比对"><a href="#JDK的ByteBuffer与Netty的ByteBuf之间的差异比对" class="headerlink" title="JDK的ByteBuffer与Netty的ByteBuf之间的差异比对"></a>JDK的ByteBuffer与Netty的ByteBuf之间的差异比对</h3><ol>
 <li>Netty的ByteBuf采用了读写索引分离的策略（readerIndex与writerIndex），一个初始化（里面尚未有任何数据）的ByteBuf的readerIndex和writerIndex值都为0。</li>
@@ -536,7 +536,7 @@
 <li>更新器更新的必须是int类型变量，不能是其包装类型。</li>
 <li>更新器更新的必须是volatile类型变量，确保线程之间共享变量值的立即<strong><a href="http://www.saily.top/2016/12/05/concurrency3/#可见性">可见性</a></strong>。</li>
 <li>变量不能是static的，必须是实例变量。因为Unsafe.objectFieldOffset()方法不支持静态变量（CAS操作本质上是通过对象实例的偏移量来直接进行赋值）。</li>
-<li>更新器只能修改它课件范围内的变量，因为更新器是通过反射来得到这个变量，如果变量不可见就会报错。</li>
+<li>更新器只能修改它可见范围内的变量，因为更新器是通过反射来得到这个变量，如果变量不可见就会报错。</li>
 </ol>
 <p>如果要更新的变量是包装类型，我们可以使用AtomicReferenceFieldUpdater来进行更新。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (fieldt != int.class)</span><br><span class="line">    throw new IllegalArgumentException(<span class="string">"Must be integer type"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!Modifier.isVolatile(modifiers))</span><br><span class="line">    throw new IllegalArgumentException(<span class="string">"Must be volatile type"</span>);</span><br></pre></td></tr></table></figure>

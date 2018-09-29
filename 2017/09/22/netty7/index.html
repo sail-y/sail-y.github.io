@@ -120,7 +120,7 @@
 <meta property="og:image" content="http://www.saily.top/img/netty/netty7-1.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty7-2.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty7-3.png">
-<meta property="og:updated_time" content="2018-09-28T04:29:38.897Z">
+<meta property="og:updated_time" content="2018-09-28T04:34:19.285Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty-源码分析(二)">
 <meta name="twitter:description" content="源码分析(二)在理解了Reactor模式后，因为Netty框架本身就是基于Reactor模式的一种实现，所以回过头来再看源码，才能更好的理解代码中一些类的角色和意义。 ServerBootStrap在调用bind()方法后，通过channelFactory反射的方式创建了我们指定的Channel（NioServerSocketChannel.class）对象，然后调用了init(channel)方">
@@ -406,7 +406,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：9月 28 2018 12:29:38" itemprop="dateModified" datetime="2018-09-28T12:29:38+08:00">9月 28 2018</time>
+                <time title="修改时间：9月 28 2018 12:34:19" itemprop="dateModified" datetime="2018-09-28T12:34:19+08:00">9月 28 2018</time>
               
             
           </span>
@@ -483,7 +483,7 @@
 <p>继续看init()代码，上一篇文章也提到了Netty在pipeline里添加了一个处理器，将<code>ocnfig.handler</code>也就是代码中的<code>LoggingHandler</code>添加到了channelPipeline中(注意这个是通过handler()方法注册的，也就是提供给BossGroup使用的)。然后紧接着添加了一个<strong>ServerBootstrapAcceptor</strong>，在看完Reactor模式后，这个类是不是觉得很眼熟，它的角色也就是Reactor模式当中的<strong>Acceptor</strong>。</p>
 <h2 id="ChannelHandler"><a href="#ChannelHandler" class="headerlink" title="ChannelHandler"></a>ChannelHandler</h2><p>  接受连接或创建他们只是你的应用程序的一部分，虽然这些任务很重要，但是一个网络应用程序往往是更复杂的，需要更多的代码编写，如处理传入和传出的数据。Netty提供了一个强大的处理这些事情的功能，允许用户自定义ChannelHandler的实现来处理数据。使得ChannelHandler更强大的是可以连接每个ChannelHandler来实现任务，这有助于代码的整洁和重用。但是处理数据只是ChannelHandler所做的事情之一，也可以压制I/O操作，例如写请求。所有这些都可以动态实现。<br>ChannelHandler就是入站(InBound)和出站(OutBound)处理器。</p>
 <h2 id="ChannelInitializer"><a href="#ChannelInitializer" class="headerlink" title="ChannelInitializer"></a>ChannelInitializer</h2><p>ChannelInitializer本身也是一个特殊的Inbound处理器，用来初始化channel。</p>
-<h2 id="ChannelHandlerContext"><a href="#ChannelHandlerContext" class="headerlink" title="ChannelHandlerContext"></a>ChannelHandlerContext</h2><p>每创建一个ChannelHandler，随之也会闯进一个ChannelHandlerContext。</p>
+<h2 id="ChannelHandlerContext"><a href="#ChannelHandlerContext" class="headerlink" title="ChannelHandlerContext"></a>ChannelHandlerContext</h2><p>每创建一个ChannelHandler，随之也会创建一个ChannelHandlerContext。</p>
 <p>ChannelPipeline里面真实存放的对象实际上是<strong>ChannelHandlerContext</strong>，ChannelHandlerContext里又维护了ChannelHannlder。所以ChannelHandlerContext实际上是ChannelPipeline和ChannelHandler的桥梁，它提供了api可以获取Channel对象，和与之关联的ChannelHandler对象、ChannelPipeline对象。</p>
 <h2 id="Reactor模式在Netty中的体现"><a href="#Reactor模式在Netty中的体现" class="headerlink" title="Reactor模式在Netty中的体现"></a>Reactor模式在Netty中的体现</h2><p><img src="/img/netty/netty7-1.png" alt=""></p>
 <p>通过这个图我们可以看到，客户端向BossGroup发起连接请求，BossGroup本身监听的是一个<code>OP_ACCEPT</code>事件（NioServerSocketChannel的构造方法中可以找到注册事件的代码），一旦<code>OP_ACCEPT</code>事件产生之后，<code>select()</code>方法就会返回<strong>SelectionKey</strong>的集合，那么<strong>SelectionKey</strong>本身也是包装了<strong>SocketChannel</strong>对象，就是与客户端真正建立连接的<strong>SocketChannel</strong>对象。对于Netty来说，会将<strong>SocketChannel</strong>包装成<strong>NIOSocketChannel</strong>，接着又将<strong>NIOSocketChannel</strong>注册到了<strong>WorkerGroup</strong>的<strong>selector</strong>中。<strong>WorkerGroup</strong>的<strong>Selector</strong>监听的是<code>OP_READ</code>，所以当数据发送过来的时候，就不再跟<strong>BossGroup</strong>打交道了，转而和<strong>WorkerGroup</strong>进行数据的传递。</p>
