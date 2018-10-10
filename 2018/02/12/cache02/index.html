@@ -116,13 +116,13 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="此为龙果学院课程笔记，记录以供以后翻看 Redis企业应用实战上一篇说了redis的持久化的原理和操作，但是在企业中，持久化到底是怎么去用的呢？企业级的数据备份和各种灾难下的数据恢复，是怎么做的呢？ 企业级的持久化的配置策略在企业中，RDB的生成策略，用默认的配置也差不多。 save 60 10000：如果你希望尽可能确保，RDB最多丢1分钟的数据，那么尽量就是每隔1分钟都生成一个快照，但是低峰期">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://images2015.cnblogs.com/blog/631180/201603/631180-20160310114352444-1976154985.png">
-<meta property="og:image" content="https://images2015.cnblogs.com/blog/631180/201603/631180-20160310164439163-353212676.png">
-<meta property="og:updated_time" content="2018-09-10T13:28:12.526Z">
+<meta property="og:image" content="http://www.saily.top/img/cache/cache02_1.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/cache02_2.png">
+<meta property="og:updated_time" content="2018-10-10T05:03:47.257Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高可用缓存架构实战2-Redis企业级应用实战">
 <meta name="twitter:description" content="此为龙果学院课程笔记，记录以供以后翻看 Redis企业应用实战上一篇说了redis的持久化的原理和操作，但是在企业中，持久化到底是怎么去用的呢？企业级的数据备份和各种灾难下的数据恢复，是怎么做的呢？ 企业级的持久化的配置策略在企业中，RDB的生成策略，用默认的配置也差不多。 save 60 10000：如果你希望尽可能确保，RDB最多丢1分钟的数据，那么尽量就是每隔1分钟都生成一个快照，但是低峰期">
-<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/631180/201603/631180-20160310114352444-1976154985.png">
+<meta name="twitter:image" content="http://www.saily.top/img/cache/cache02_1.png">
 
 
 
@@ -404,7 +404,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：9月 10 2018 21:28:12" itemprop="dateModified" datetime="2018-09-10T21:28:12+08:00">9月 10 2018</time>
+                <time title="修改时间：10月 10 2018 13:03:47" itemprop="dateModified" datetime="2018-10-10T13:03:47+08:00">10月 10 2018</time>
               
             
           </span>
@@ -523,7 +523,7 @@
 <p>读写分离：</p>
 <pre><code>主从架构 -&gt; 读写分离 -&gt; 支撑10万+读QPS的架构
 </code></pre><p>架构做成主从架构，一主多从，主负责写，并且将数据同步复制到其他的slave节点，从节点负责读，所有的读请求全部走从节点。</p>
-<h3 id="Redis-Replication"><a href="#Redis-Replication" class="headerlink" title="Redis Replication"></a>Redis Replication</h3><p><img src="https://images2015.cnblogs.com/blog/631180/201603/631180-20160310114352444-1976154985.png" alt=""></p>
+<h3 id="Redis-Replication"><a href="#Redis-Replication" class="headerlink" title="Redis Replication"></a>Redis Replication</h3><p><img src="/img/cache/cache02_1.png" alt=""></p>
 <p>Redis 支持简单且易用的主从复制（master-slave replication）功能，当主Redis服务器更新数据时能将数据同步到从Redis服务器。</p>
 <h4 id="Redis-Replication的核心机制"><a href="#Redis-Replication的核心机制" class="headerlink" title="Redis Replication的核心机制"></a>Redis Replication的核心机制</h4><ol>
 <li>redis采用异步方式复制数据到slave节点，不过redis 2.8开始，slave node会周期性地确认自己每次复制的数据量</li>
@@ -536,7 +536,7 @@
 <h5 id="master持久化对于主从架构的安全保障的意义"><a href="#master持久化对于主从架构的安全保障的意义" class="headerlink" title="master持久化对于主从架构的安全保障的意义"></a>master持久化对于主从架构的安全保障的意义</h5><p>如果采用了主从架构，那么必须开启master node的持久化。不建议用slave node作为master node的数据热备，因为那样的话，如果你关掉master的持久化，可能在master宕机重启的时候数据是空的，然后可能一经过复制，salve node数据也丢了。</p>
 <pre><code>master -&gt; RDB和AOF都关闭了 -&gt; 全部在内存中
 </code></pre><p>master宕机，重启，是没有本地数据可以恢复的，然后就会直接认为自己的数据是空的，master就会将空的数据集同步到slave上去，所有slave的数据全部清空，100%的数据丢失，所以master节点必须要使用持久化机制。</p>
-<h5 id="主从架构的核心原理"><a href="#主从架构的核心原理" class="headerlink" title="主从架构的核心原理"></a>主从架构的核心原理</h5><p><img src="https://images2015.cnblogs.com/blog/631180/201603/631180-20160310164439163-353212676.png" alt=""></p>
+<h5 id="主从架构的核心原理"><a href="#主从架构的核心原理" class="headerlink" title="主从架构的核心原理"></a>主从架构的核心原理</h5><p><img src="/img/cache/cache02_2.png" alt=""></p>
 <ul>
 <li><p>当启动一个slave node的时候，它会发送一个PSYNC命令给master node</p>
 </li>
