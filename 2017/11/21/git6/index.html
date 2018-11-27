@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="裸库通常我们在本地初始化仓库的时候，都是用git init。如果我们不借助github，如何自己建立一个中心仓库呢，这个就是裸库的概念。 git init --bare &amp;lt;repo&amp;gt; 这个命令执行后，将在本地创建一个名为 repo 的文件夹， 里面包含着 Git 的基本目录， 我们一般会将这个文件夹命名为后面加 .git 的形式，如 repo.git （这也是为什么我们从 GitHub">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git-裸库和submodule、substree">
+<meta property="og:url" content="http://www.saily.top/2017/11/21/git6/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="裸库通常我们在本地初始化仓库的时候，都是用git init。如果我们不借助github，如何自己建立一个中心仓库呢，这个就是裸库的概念。 git init --bare &amp;lt;repo&amp;gt; 这个命令执行后，将在本地创建一个名为 repo 的文件夹， 里面包含着 Git 的基本目录， 我们一般会将这个文件夹命名为后面加 .git 的形式，如 repo.git （这也是为什么我们从 GitHub">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/git/git6-1.png">
+<meta property="og:image" content="http://www.saily.top/img/git/git6-2.png">
+<meta property="og:image" content="http://www.saily.top/img/git/git6-3.png">
+<meta property="og:updated_time" content="2017-12-13T14:14:10.329Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git-裸库和submodule、substree">
+<meta name="twitter:description" content="裸库通常我们在本地初始化仓库的时候，都是用git init。如果我们不借助github，如何自己建立一个中心仓库呢，这个就是裸库的概念。 git init --bare &amp;lt;repo&amp;gt; 这个命令执行后，将在本地创建一个名为 repo 的文件夹， 里面包含着 Git 的基本目录， 我们一般会将这个文件夹命名为后面加 .git 的形式，如 repo.git （这也是为什么我们从 GitHub">
+<meta name="twitter:image" content="http://www.saily.top/img/git/git6-1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2017/11/21/git6/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Git-裸库和submodule、substree | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/11/21/git6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Git-裸库和submodule、substree
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2017 8:46:13" itemprop="dateCreated datePublished" datetime="2017-11-21T08:46:13+08:00">11月 21 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 13 2017 22:14:10" itemprop="dateModified" datetime="2017-12-13T22:14:10+08:00">12月 13 2017</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="裸库"><a href="#裸库" class="headerlink" title="裸库"></a>裸库</h2><p>通常我们在本地初始化仓库的时候，都是用<code>git init</code>。如果我们不借助github，如何自己建立一个中心仓库呢，这个就是裸库的概念。</p>
+<p><code>git init --bare &lt;repo&gt;</code></p>
+<p>这个命令执行后，将在本地创建一个名为 repo 的文件夹， 里面包含着 Git 的基本目录， 我们一般会将这个文件夹命名为后面加 .git 的形式，如 repo.git （这也是为什么我们从 GitHub clone 仓库的时候，地址都是 xxx.git 这样的形式的原因）.使用 –bare 参数初始化的仓库，我们一般称之为裸仓库， 因为这样创建的仓库并不包含 工作区 ， 也就是说，我们并不能在这个目录下执行我们一般使用的 Git 命令。</p>
+<a id="more"></a>
+<h2 id="submodule"><a href="#submodule" class="headerlink" title="submodule"></a>submodule</h2><p>有种情况我们经常会遇到：某个工作中的项目需要包含并使用另一个项目。 也许是第三方库，或者你独立开发的，用于多个父项目的库。 现在问题来了：你想要把它们当做两个独立的项目，同时又想在一个项目中使用另一个。</p>
+<p>一般在Java中，我们会打包成jar包放入nexus中，可是如果是频繁更新的库，这样做会比较麻烦。那么如果我们将代码直接包含在项目中呢，这里就可以使用submodule。Git 通过子模块来解决这个问题。 子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。 它能让你将另一个仓库克隆到自己的项目中，同时还保持提交的独立。</p>
+<p>先在github上创建2个仓库：</p>
+<p><a href="https://github.com/sail-y/git_parent.git" target="_blank" rel="noopener">https://github.com/sail-y/git_parent.git</a><br><a href="https://github.com/sail-y/git\_child.git" target="_blank" rel="noopener">https://github.com/sail-y/git\_child.git</a>        </p>
+<p>在本地也分别创建2个仓库并与之关联。</p>
+<p>那么我们如何在一个仓库中包含另外一个仓库呢？</p>
+<p>命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) git submodule add git@github.com:sail-y/git_child.git mymodule</span><br><span class="line">Cloning into <span class="string">'/Users/xiaomai/code/zhanglong/git/git_parent/mymodule'</span>...</span><br><span class="line">remote: Counting objects: 6, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 6 (delta 0), reused 6 (delta 0), pack-reused 0</span><br><span class="line">Receiving objects: 100% (6/6), <span class="keyword">done</span>.</span><br></pre></td></tr></table></figure>
+<p>我们在git_parent仓库中执行这个命令，表示将git_child作为submodule拉取到mymodule目录中，注意这里mymodule是不能事先存在的，否则会报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) ✗ git st</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up-to-date with <span class="string">'origin/master'</span>.</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">"git reset HEAD &lt;file&gt;..."</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   .gitmodules</span><br><span class="line">	new file:   mymodule</span><br></pre></td></tr></table></figure>
+<p>多出来一个文件和一个目录，目录里面就包含了另一个仓库里的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) ✗ <span class="built_in">cd</span> mymodule </span><br><span class="line">➜  mymodule git:(master) ls</span><br><span class="line">hello.txt     submodule.txt</span><br></pre></td></tr></table></figure>
+<p>如果子仓库更新了，只需要在mymodule中执行<code>git pull</code>就可以拉取变更。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) <span class="built_in">cd</span> mymodule </span><br><span class="line">➜  mymodule git:(master) git pull</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_child</span><br><span class="line">   5fc54e6..5adf3e0  master     -&gt; origin/master</span><br><span class="line">Updating 5fc54e6..5adf3e0</span><br><span class="line">Fast-forward</span><br><span class="line"> hello.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+<p>如果包含的submodule比较多的话，也可以使用命令将仓库包含的所有submodule都进行更新。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) ✗ git submodule foreach git pull</span><br><span class="line">Entering <span class="string">'mymodule'</span></span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_child</span><br><span class="line">   5adf3e0..19a2793  master     -&gt; origin/master</span><br><span class="line">Updating 5adf3e0..19a2793</span><br><span class="line">Fast-forward</span><br><span class="line"> welcome.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 welcome.txt</span><br></pre></td></tr></table></figure>
+<p>当子模块发生变更的时候，父模块也会检测到，需要重新提交。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">➜  git_parent git:(master) ✗ git st</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up-to-date with <span class="string">'origin/master'</span>.</span><br><span class="line">Changes not staged <span class="keyword">for</span> commit:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to update what will be committed)</span><br><span class="line">  (use <span class="string">"git checkout -- &lt;file&gt;..."</span> to discard changes <span class="keyword">in</span> working directory)</span><br><span class="line"></span><br><span class="line">	modified:   mymodule (new commits)</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">"git add"</span> and/or <span class="string">"git commit -a"</span>)</span><br><span class="line">➜  git_parent git:(master) ✗ git add .</span><br><span class="line">➜  git_parent git:(master) ✗ git cm <span class="string">'update submodule'</span> </span><br><span class="line">[master a5cec07] update submodule</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line">➜  git_parent git:(master) git push</span><br><span class="line">Counting objects: 2, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (2/2), 311 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 2 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:sail-y/git_parent.git</span><br><span class="line">   d0bc606..a5cec07  master -&gt; master</span><br></pre></td></tr></table></figure>
+<h3 id="拉取submodule"><a href="#拉取submodule" class="headerlink" title="拉取submodule"></a>拉取submodule</h3><p>如果我们拉取了一个新的项目，它包含了submodule，直接clone仓库的时候，submodule里面是没有内容的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  git git <span class="built_in">clone</span> git@github.com:sail-y/git_parent.git git_parent2</span><br><span class="line">Cloning into <span class="string">'git_parent2'</span>...</span><br><span class="line">remote: Counting objects: 8, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (6/6), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 8 (delta 0), reused 8 (delta 0), pack-reused 0</span><br><span class="line">Receiving objects: 100% (8/8), <span class="keyword">done</span>.</span><br><span class="line">➜  git <span class="built_in">cd</span> git_parent2/mymodule </span><br><span class="line">➜  mymodule git:(master) ls</span><br><span class="line">➜  mymodule git:(master)</span><br></pre></td></tr></table></figure>
+<p>我们需要执行2个命令来更新submodule的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mymodule git:(master) git submodule init</span><br><span class="line">Submodule <span class="string">'mymodule'</span> (git@github.com:sail-y/git_child.git) registered <span class="keyword">for</span> path <span class="string">'./'</span></span><br><span class="line">➜  mymodule git:(master) git submodule update --recursive </span><br><span class="line">Cloning into <span class="string">'/Users/xiaomai/code/zhanglong/git/git_parent2/mymodule'</span>...</span><br><span class="line">Submodule path <span class="string">'./'</span>: checked out <span class="string">'19a2793acc723c501f7422a9fdd810e46a528381'</span></span><br></pre></td></tr></table></figure>
+<p>这样做有3步操作，稍微麻烦了一点，实际上clone有一个参数可以一键完成。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  git git <span class="built_in">clone</span> git@github.com:sail-y/git_parent.git git_parent3 --recursive          </span><br><span class="line">Cloning into <span class="string">'git_parent3'</span>...</span><br><span class="line">remote: Counting objects: 8, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (6/6), <span class="keyword">done</span>.</span><br><span class="line">Receiving objects: 100% (8/8), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 8 (delta 0), reused 8 (delta 0), pack-reused 0</span><br><span class="line">Submodule <span class="string">'mymodule'</span> (git@github.com:sail-y/git_child.git) registered <span class="keyword">for</span> path <span class="string">'mymodule'</span></span><br><span class="line">Cloning into <span class="string">'/Users/xiaomai/code/zhanglong/git/git_parent3/mymodule'</span>...</span><br><span class="line">remote: Counting objects: 12, <span class="keyword">done</span>.        </span><br><span class="line">remote: Compressing objects: 100% (7/7), <span class="keyword">done</span>.        </span><br><span class="line">remote: Total 12 (delta 1), reused 11 (delta 0), pack-reused 0        </span><br><span class="line">Receiving objects: 100% (12/12), <span class="keyword">done</span>.</span><br><span class="line">Resolving deltas: 100% (1/1), <span class="keyword">done</span>.</span><br><span class="line">Submodule path <span class="string">'mymodule'</span>: checked out <span class="string">'19a2793acc723c501f7422a9fdd810e46a528381'</span></span><br></pre></td></tr></table></figure>
+<h2 id="subtree"><a href="#subtree" class="headerlink" title="subtree"></a>subtree</h2><p>因为submodule在使用过程存在一些弊端，比如在父工程中修改了被依赖的项目的代码（因为代码就在项目中），然后推送后，在子模块本身的项目再拉取，实际上这样是有很多问题的。所以就出现了subtree这么一个开源功能，被git团队纳入了git中，它更加优秀，使用起来也很简单。</p>
+<p>官方也是建议用substree来替代submodule。</p>
+<p>下面开始演示，在github新建两个仓库。</p>
+<p><a href="https://github.com/sail-y/git\_substree\_parent.git" target="_blank" rel="noopener">https://github.com/sail-y/git\_substree\_parent.git</a>    </p>
+<p><a href="https://github.com/sail-y/git\_substree\_child.git" target="_blank" rel="noopener">https://github.com/sail-y/git\_substree\_child.git</a></p>
+<p>准备工作需要在父项目里先添加一个远程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git remote add subtree-origin git@github.com:sail-y/git_substree_child.git</span><br><span class="line">➜  git_substree_parent git:(master) git remote show </span><br><span class="line">origin</span><br><span class="line">subtree-origin</span><br></pre></td></tr></table></figure>
+<p>然后再添加subtree</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git subtree add --prefix=substree subtree-origin master --squash</span><br><span class="line">git fetch subtree-origin master</span><br><span class="line">warning: no common commits</span><br><span class="line">remote: Counting objects: 6, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 6 (delta 0), reused 6 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (6/6), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_substree_child</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line"> * [new branch]      master     -&gt; subtree-origin/master</span><br><span class="line">Added dir <span class="string">'substree'</span></span><br></pre></td></tr></table></figure>
+<p><code>git subtree add</code>这个命令将subtree-origin的master分支拉取到了substree这个目录下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) ls</span><br><span class="line">parent.txt substree</span><br></pre></td></tr></table></figure>
+<p>实际上这个命令会将child的commit合并过来，并将作者改了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">commit 8f08b4edbb537806f4a34feb8f773b97aa898d10 (HEAD -&gt; master, origin/master)</span><br><span class="line">Merge: 3c75631 5090ac2</span><br><span class="line">Author: 张三 &lt;zhangsan@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:16:59 2017 +0800</span><br><span class="line"></span><br><span class="line">    Merge commit <span class="string">'5090ac20e7c71524697e762276f924343c0bed54'</span> as <span class="string">'substree'</span></span><br><span class="line"></span><br><span class="line">commit 5090ac20e7c71524697e762276f924343c0bed54</span><br><span class="line">Author: 张三 &lt;zhangsan@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:16:59 2017 +0800</span><br><span class="line"></span><br><span class="line">    Squashed <span class="string">'substree/'</span> content from commit 1112351</span><br><span class="line">    </span><br><span class="line">    git-subtree-dir: substree</span><br><span class="line">    git-subtree-split: 1112351e504917e6fed1c6decee6bb81e931d647</span><br><span class="line"></span><br><span class="line">commit 3c75631cda4535d854e9ff7629aab2c9afcdebe6</span><br><span class="line">Author: 张三 &lt;zhangsan@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:01:28 2017 +0800</span><br><span class="line"></span><br><span class="line">    initial commit</span><br><span class="line">(END)</span><br></pre></td></tr></table></figure>
+<p>它与submodule最显著的区别就是，submodule是保存的对子模块的一个引用，一个指针，而subtree是直接保存的文件。</p>
+<p>在子模块新增一次提交，添加一个<strong>world.txt</strong>文件。</p>
+<p>在父模块更新的命令是：<br><code>git subtree pull --prefix=substree subtree-origin master --squash</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git subtree pull --prefix=substree subtree-origin master --squash</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_substree_child</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">   1112351..844d9fd  master     -&gt; subtree-origin/master</span><br><span class="line">Merge made by the <span class="string">'recursive'</span> strategy.</span><br><span class="line"> substree/world.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 substree/world.txt</span><br></pre></td></tr></table></figure>
+<p>看一下<code>git log</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit d7fbb7665c6d1af3cbdd4f5cf1977d682d6aa054 (HEAD -&gt; master)</span><br><span class="line">Merge: 8f08b4e 64dcef5</span><br><span class="line">Author: 张三 &lt;zhangsan@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:29:03 2017 +0800</span><br><span class="line"></span><br><span class="line">    Merge commit <span class="string">'64dcef57bc7eea0fda072d53628b9464040a6072'</span></span><br><span class="line"></span><br><span class="line">commit 64dcef57bc7eea0fda072d53628b9464040a6072</span><br><span class="line">Author: 张三 &lt;zhangsan@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:29:03 2017 +0800</span><br><span class="line"></span><br><span class="line">    Squashed <span class="string">'substree/'</span> changes from 1112351..844d9fd</span><br><span class="line">    </span><br><span class="line">    844d9fd add world</span><br><span class="line">    </span><br><span class="line">    git-subtree-dir: substree</span><br><span class="line">    git-subtree-split: 844d9fdb772f8e2c57218176b40b064f618523a4</span><br></pre></td></tr></table></figure>
+<p>并没有出现李四的提交，844d9fd add world，被修改成了张三。</p>
+<p>再child里再提交一个<strong>hellworld.txt</strong>文件，然后更新。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git subtree pull --prefix=substree subtree-origin master         </span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_substree_child</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">   844d9fd..a940bda  master     -&gt; subtree-origin/master</span><br><span class="line">fatal: refusing to merge unrelated histories</span><br></pre></td></tr></table></figure>
+<p>注意这次没有<strong>–squash</strong>参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit a940bdaf1c8dd5048782c7179c62d93b1bc03d80 (subtree-origin/master)</span><br><span class="line">Author: 李四 &lt;lisi@git.com&gt;</span><br><span class="line">Date:   Thu Nov 23 09:31:47 2017 +0800</span><br><span class="line"></span><br><span class="line">    add helloworld</span><br></pre></td></tr></table></figure>
+<p>这次就出现了李四的提交信息，<strong>–squash</strong>会将要合并的分支所有的提交全部合并成一个提交信息。</p>
+<p>接下来我们在parent的项目里修改child.txt，并push。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) <span class="built_in">cd</span> subtree </span><br><span class="line">➜  subtree git:(master) vi child.txt</span><br></pre></td></tr></table></figure>
+<p>可以看到github上parent项目中的child.txt是有新增的内容的，但是child项目里面却没有。</p>
+<p><img src="/img/git/git6-1.png" alt=""></p>
+<p><img src="/img/git/git6-2.png" alt=""></p>
+<p>实际上在父项目中，还需要单独执行一次push。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  git_substree_parent git:(master) git subtree push --prefix=subtree subtree-origin master</span><br><span class="line">git push using:  subtree-origin master</span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 347 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:sail-y/git_substree_child.git</span><br><span class="line">   a940bda..0c887fa  0c887fa4eb23fe282551d1368e72d31a177182e6 -&gt; master</span><br></pre></td></tr></table></figure>
+<p><img src="/img/git/git6-3.png" alt=""></p>
+<h3 id="–squash"><a href="#–squash" class="headerlink" title="–squash"></a>–squash</h3><p><code>--squash</code>会将subtree的所有提交信息合并成parent的一个提交，然后会将这一次合并的提交和parent再次合并，那么就产生了2次合并。<code>--squash</code>是为了防止主仓库的提交历史被污染，但是它的使用也有一些问题。</p>
+<p>所以在使用<code>--squash</code>的时候，我们需要保证要么一直使用，要么一直不使用。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/19/netty8/" rel="next" title="Netty-源码分析(三）">
+                <i class="fa fa-chevron-left"></i> Netty-源码分析(三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/30/git7/" rel="prev" title="Git-cherry-pick、rebase">
+                Git-cherry-pick、rebase <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#裸库"><span class="nav-number">1.</span> <span class="nav-text">裸库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#submodule"><span class="nav-number">2.</span> <span class="nav-text">submodule</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#拉取submodule"><span class="nav-number">2.1.</span> <span class="nav-text">拉取submodule</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#subtree"><span class="nav-number">3.</span> <span class="nav-text">subtree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#–squash"><span class="nav-number">3.1.</span> <span class="nav-text">–squash</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/11/21/git6/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="转载：http://www.dengchuanhua.com/132.html 在分布式系统中，需要生成全局UID的场合还是比较多的，twitter的snowflake解决了这种需求，实现也还是很简单的，除去配置信息，核心代码就是毫秒级时间41位+机器ID 10位+毫秒内序列12位。 该项目地址为：https://github.com/twitter/snowflake是用Scala实现的。 py">
+<meta name="keywords" content="分布式自增ID算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版">
+<meta property="og:url" content="http://www.saily.top/2015/04/22/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="转载：http://www.dengchuanhua.com/132.html 在分布式系统中，需要生成全局UID的场合还是比较多的，twitter的snowflake解决了这种需求，实现也还是很简单的，除去配置信息，核心代码就是毫秒级时间41位+机器ID 10位+毫秒内序列12位。 该项目地址为：https://github.com/twitter/snowflake是用Scala实现的。 py">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-12-01T08:46:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版">
+<meta name="twitter:description" content="转载：http://www.dengchuanhua.com/132.html 在分布式系统中，需要生成全局UID的场合还是比较多的，twitter的snowflake解决了这种需求，实现也还是很简单的，除去配置信息，核心代码就是毫秒级时间41位+机器ID 10位+毫秒内序列12位。 该项目地址为：https://github.com/twitter/snowflake是用Scala实现的。 py">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2015/04/22/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/04/22/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：4月 22 2015 9:47:54" itemprop="dateCreated datePublished" datetime="2015-04-22T09:47:54+08:00">4月 22 2015</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转载：<a href="http://www.dengchuanhua.com/132.html" target="_blank" rel="noopener">http://www.dengchuanhua.com/132.html</a></p>
+<p>在分布式系统中，需要生成全局UID的场合还是比较多的，twitter的snowflake解决了这种需求，实现也还是很简单的，除去配置信息，核心代码就是毫秒级时间41位+机器ID 10位+毫秒内序列12位。</p>
+<p>该项目地址为：<a href="https://github.com/twitter/snowflake是用Scala实现的。" target="_blank" rel="noopener">https://github.com/twitter/snowflake是用Scala实现的。</a></p>
+<p>python版详见开源项目<a href="https://github.com/erans/pysnowflake。" target="_blank" rel="noopener">https://github.com/erans/pysnowflake。</a></p>
+<p>核心代码为其IdWorker这个类实现，其原理结构如下，我分别用一个0表示一位，用—分割开部分的作用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0---0000000000 0000000000 0000000000 0000000000 0 --- 00000 ---00000 ---0000000000 00</span><br></pre></td></tr></table></figure>
+<p>在上面的字符串中，第一位为未使用（实际上也可作为long的符号位），接下来的41位为毫秒级时间，然后5位datacenter标识位，5位机器ID（并不算标识符，实际是为线程标识），然后12位该毫秒内的当前毫秒内的计数，加起来刚好64位，为一个Long型。</p>
+<p>这样的好处是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞（由datacenter和机器ID作区分），并且效率较高，经测试，snowflake每秒能够产生26万ID左右，完全满足需要。<br><a id="more"></a><br>且看其核心代码：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">&lt;/pre&gt;</span><br><span class="line"><span class="comment">/** Copyright 2010-2012 Twitter, Inc.*/</span></span><br><span class="line"><span class="keyword">package</span> com.twitter.service.snowflake</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.twitter.ostrich.stats.<span class="type">Stats</span></span><br><span class="line"><span class="keyword">import</span> com.twitter.service.snowflake.gen._</span><br><span class="line"><span class="keyword">import</span> java.util.<span class="type">Random</span></span><br><span class="line"><span class="keyword">import</span> com.twitter.logging.<span class="type">Logger</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An object that generates IDs.</span></span><br><span class="line"><span class="comment"> * This is broken into a separate class in case</span></span><br><span class="line"><span class="comment"> * we ever want to support multiple worker threads</span></span><br><span class="line"><span class="comment"> * per process</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IdWorker</span>(<span class="params">val workerId: <span class="type">Long</span>, val datacenterId: <span class="type">Long</span>, private val reporter: <span class="type">Reporter</span>, var sequence: <span class="type">Long</span> = 0L</span>)</span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">Snowflake</span>.<span class="title">Iface</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="function"><span class="keyword">def</span> <span class="title">genCounter</span></span>(agent: <span class="type">String</span>) = &#123;</span><br><span class="line">    <span class="type">Stats</span>.incr(<span class="string">"ids_generated"</span>)</span><br><span class="line">    <span class="type">Stats</span>.incr(<span class="string">"ids_generated_%s"</span>.format(agent))</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> exceptionCounter = <span class="type">Stats</span>.getCounter(<span class="string">"exceptions"</span>)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> log = <span class="type">Logger</span>.get</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> rand = <span class="keyword">new</span> <span class="type">Random</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> twepoch = <span class="number">1288834974657</span>L</span><br><span class="line"></span><br><span class="line"> <span class="comment">//机器标识位数</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> workerIdBits = <span class="number">5</span>L</span><br><span class="line"></span><br><span class="line"><span class="comment">//数据中心标识位数</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> datacenterIdBits = <span class="number">5</span>L</span><br><span class="line"></span><br><span class="line"><span class="comment">//机器ID最大值</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> maxWorkerId = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; workerIdBits)</span><br><span class="line"></span><br><span class="line"><span class="comment">//数据中心ID最大值</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> maxDatacenterId = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; datacenterIdBits)</span><br><span class="line"></span><br><span class="line"><span class="comment">//毫秒内自增位</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> sequenceBits = <span class="number">12</span>L</span><br><span class="line"></span><br><span class="line"><span class="comment">//机器ID偏左移12位</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> workerIdShift = sequenceBits</span><br><span class="line"></span><br><span class="line"><span class="comment">//数据中心ID左移17位</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> datacenterIdShift = sequenceBits + workerIdBits</span><br><span class="line"></span><br><span class="line"><span class="comment">//时间毫秒左移22位</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> sequenceMask = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; sequenceBits)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">var</span> lastTimestamp = <span class="number">-1</span>L</span><br><span class="line"></span><br><span class="line">  <span class="comment">// sanity check for workerId</span></span><br><span class="line">  <span class="keyword">if</span> (workerId &gt; maxWorkerId || workerId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">"worker Id can't be greater than %d or less than 0"</span>.format(maxWorkerId))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (datacenterId &gt; maxDatacenterId || datacenterId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">"datacenter Id can't be greater than %d or less than 0"</span>.format(maxDatacenterId))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  log.info(<span class="string">"worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d"</span>,</span><br><span class="line">    timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_id</span></span>(useragent: <span class="type">String</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (!validUseragent(useragent)) &#123;</span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">InvalidUserAgentError</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> id = nextId()</span><br><span class="line">    genCounter(useragent)</span><br><span class="line"></span><br><span class="line">    reporter.report(<span class="keyword">new</span> <span class="type">AuditLogEntry</span>(id, useragent, rand.nextLong))</span><br><span class="line">    id</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_worker_id</span></span>(): <span class="type">Long</span> = workerId</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_datacenter_id</span></span>(): <span class="type">Long</span> = datacenterId</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_timestamp</span></span>() = <span class="type">System</span>.currentTimeMillis</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span>[snowflake] <span class="function"><span class="keyword">def</span> <span class="title">nextId</span></span>(): <span class="type">Long</span> = synchronized &#123;</span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line"></span><br><span class="line"> <span class="comment">//时间错误</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">      log.error(<span class="string">"clock is moving backwards.  Rejecting requests until %d."</span>, lastTimestamp);</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">InvalidSystemClock</span>(<span class="string">"Clock moved backwards.  Refusing to generate id for %d milliseconds"</span>.format(</span><br><span class="line">        lastTimestamp - timestamp))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastTimestamp == timestamp) &#123;</span><br><span class="line"><span class="comment">//当前毫秒内，则+1</span></span><br><span class="line">      sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask</span><br><span class="line">      <span class="keyword">if</span> (sequence == <span class="number">0</span>) &#123;</span><br><span class="line"><span class="comment">//当前毫秒内计数满了，则等待下一秒</span></span><br><span class="line">        timestamp = tilNextMillis(lastTimestamp)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      sequence = <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastTimestamp = timestamp</span><br><span class="line"><span class="comment">//ID偏移组合生成最终的ID，并返回ID   </span></span><br><span class="line"></span><br><span class="line">((timestamp - twepoch) &lt;&lt; timestampLeftShift) |</span><br><span class="line">      (datacenterId &lt;&lt; datacenterIdShift) |</span><br><span class="line">      (workerId &lt;&lt; workerIdShift) |</span><br><span class="line">      sequence</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//等待下一个毫秒的到来 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">tilNextMillis</span></span>(lastTimestamp: <span class="type">Long</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line">    <span class="keyword">while</span> (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">      timestamp = timeGen()</span><br><span class="line">    &#125;</span><br><span class="line">    timestamp</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">timeGen</span></span>(): <span class="type">Long</span> = <span class="type">System</span>.currentTimeMillis()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> <span class="type">AgentParser</span> = <span class="string">""</span><span class="string">"([a-zA-Z][a-zA-Z\-0-9]*)"</span><span class="string">""</span>.r</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">validUseragent</span></span>(useragent: <span class="type">String</span>): <span class="type">Boolean</span> = useragent <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">AgentParser</span>(_) =&gt; <span class="literal">true</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;pre&gt;</span><br></pre></td></tr></table></figure>
+<p>上述为twitter的实现，下面且看一个Java实现，貌似为淘宝的朋友写的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IdWorker</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> workerId;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> twepoch = <span class="number">1361753741828L</span>;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">long</span> sequence = <span class="number">0L</span>;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> workerIdBits = <span class="number">4L</span>;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> maxWorkerId = -<span class="number">1L</span> ^ -<span class="number">1L</span> &lt;&lt; workerIdBits;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> sequenceBits = <span class="number">10L</span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> workerIdShift = sequenceBits;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> timestampLeftShift = sequenceBits + workerIdBits;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> sequenceMask = -<span class="number">1L</span> ^ -<span class="number">1L</span> &lt;&lt; sequenceBits;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">long</span> lastTimestamp = -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">IdWorker</span><span class="params">(<span class="keyword">final</span> <span class="keyword">long</span> workerId)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>();</span><br><span class="line">  <span class="keyword">if</span> (workerId &gt; <span class="keyword">this</span>.maxWorkerId || workerId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(</span><br><span class="line">     <span class="string">"worker Id can't be greater than %d or less than 0"</span>,</span><br><span class="line">     <span class="keyword">this</span>.maxWorkerId));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.workerId = workerId;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">nextId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">long</span> timestamp = <span class="keyword">this</span>.timeGen();</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.lastTimestamp == timestamp) &#123;</span><br><span class="line">   <span class="keyword">this</span>.sequence = (<span class="keyword">this</span>.sequence + <span class="number">1</span>) &amp; <span class="keyword">this</span>.sequenceMask;</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">this</span>.sequence == <span class="number">0</span>) &#123;</span><br><span class="line">    System.out.println(<span class="string">"###########"</span> + sequenceMask);</span><br><span class="line">    timestamp = <span class="keyword">this</span>.tilNextMillis(<span class="keyword">this</span>.lastTimestamp);</span><br><span class="line">   &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">this</span>.sequence = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (timestamp &lt; <span class="keyword">this</span>.lastTimestamp) &#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> Exception(</span><br><span class="line">      String.format(</span><br><span class="line">        <span class="string">"Clock moved backwards.  Refusing to generate id for %d milliseconds"</span>,</span><br><span class="line">        <span class="keyword">this</span>.lastTimestamp - timestamp));</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.lastTimestamp = timestamp;</span><br><span class="line">  <span class="keyword">long</span> nextId = ((timestamp - twepoch &lt;&lt; timestampLeftShift))</span><br><span class="line">    | (<span class="keyword">this</span>.workerId &lt;&lt; <span class="keyword">this</span>.workerIdShift) | (<span class="keyword">this</span>.sequence);</span><br><span class="line"><span class="comment">//  System.out.println("timestamp:" + timestamp + ",timestampLeftShift:"</span></span><br><span class="line"><span class="comment">//    + timestampLeftShift + ",nextId:" + nextId + ",workerId:"</span></span><br><span class="line"><span class="comment">//    + workerId + ",sequence:" + sequence);</span></span><br><span class="line">  <span class="keyword">return</span> nextId;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">tilNextMillis</span><span class="params">(<span class="keyword">final</span> <span class="keyword">long</span> lastTimestamp)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">long</span> timestamp = <span class="keyword">this</span>.timeGen();</span><br><span class="line">  <span class="keyword">while</span> (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">   timestamp = <span class="keyword">this</span>.timeGen();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> timestamp;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">timeGen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> System.currentTimeMillis();</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">  IdWorker worker2 = <span class="keyword">new</span> IdWorker(<span class="number">2</span>);</span><br><span class="line">  System.out.println(worker2.nextId());</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再来看一个php的实现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Idwork</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"><span class="keyword">const</span> debug = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">static</span> $workerId;</span><br><span class="line"><span class="keyword">static</span> $twepoch = <span class="number">1361775855078</span>;</span><br><span class="line"><span class="keyword">static</span> $sequence = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> workerIdBits = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">static</span> $maxWorkerId = <span class="number">15</span>;</span><br><span class="line"><span class="keyword">const</span> sequenceBits = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">static</span> $workerIdShift = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">static</span> $timestampLeftShift = <span class="number">14</span>;</span><br><span class="line"><span class="keyword">static</span> $sequenceMask = <span class="number">1023</span>;</span><br><span class="line"><span class="keyword">private</span>  <span class="keyword">static</span> $lastTimestamp = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($workId)</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>($workId &gt; <span class="keyword">self</span>::$maxWorkerId || $workId&lt; <span class="number">0</span> )</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Exception</span>(<span class="string">"worker Id can't be greater than 15 or less than 0"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">self</span>::$workerId=$workId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;__construct()-&gt;self::$workerId:'</span>.<span class="keyword">self</span>::$workerId;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timeGen</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="comment">//获得当前时间戳</span></span><br><span class="line">$time = explode(<span class="string">' '</span>, microtime());</span><br><span class="line">$time2= substr($time[<span class="number">0</span>], <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">$timestramp = $time[<span class="number">1</span>].$time2;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;timeGen()-&gt;$timestramp:'</span>.$time[<span class="number">1</span>].$time2;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line"><span class="keyword">return</span>  $time[<span class="number">1</span>].$time2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>  <span class="title">tilNextMillis</span><span class="params">($lastTimestamp)</span> </span>&#123;</span><br><span class="line">$timestamp = <span class="keyword">$this</span>-&gt;timeGen();</span><br><span class="line"><span class="keyword">while</span> ($timestamp &lt;= $lastTimestamp) &#123;</span><br><span class="line">$timestamp = <span class="keyword">$this</span>-&gt;timeGen();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;tilNextMillis()-&gt;$timestamp:'</span>.$timestamp;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line"><span class="keyword">return</span> $timestamp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span>  <span class="title">nextId</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">$timestamp=<span class="keyword">$this</span>-&gt;timeGen();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;nextId()-&gt;self::$lastTimestamp1:'</span>.<span class="keyword">self</span>::$lastTimestamp;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">self</span>::$lastTimestamp == $timestamp) &#123;</span><br><span class="line"><span class="keyword">self</span>::$sequence = (<span class="keyword">self</span>::$sequence + <span class="number">1</span>) &amp; <span class="keyword">self</span>::$sequenceMask;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">self</span>::$sequence == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"###########"</span>.<span class="keyword">self</span>::$sequenceMask;</span><br><span class="line">    $timestamp = <span class="keyword">$this</span>-&gt;tilNextMillis(<span class="keyword">self</span>::$lastTimestamp);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'logdebug-&gt;nextId()-&gt;self::$lastTimestamp2:'</span>.<span class="keyword">self</span>::$lastTimestamp;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="keyword">self</span>::$sequence  = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'logdebug-&gt;nextId()-&gt;self::$sequence:'</span>.<span class="keyword">self</span>::$sequence;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($timestamp &lt; <span class="keyword">self</span>::$lastTimestamp) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> Excwption(<span class="string">"Clock moved backwards.  Refusing to generate id for "</span>.(<span class="keyword">self</span>::$lastTimestamp-$timestamp).<span class="string">" milliseconds"</span>);</span><br><span class="line">   &#125;</span><br><span class="line"><span class="keyword">self</span>::$lastTimestamp  = $timestamp;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;nextId()-&gt;self::$lastTimestamp3:'</span>.<span class="keyword">self</span>::$lastTimestamp;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'logdebug-&gt;nextId()-&gt;(($timestamp - self::$twepoch &lt;&lt; self::$timestampLeftShift )):'</span>.((sprintf(<span class="string">'%.0f'</span>, $timestamp) - sprintf(<span class="string">'%.0f'</span>, <span class="keyword">self</span>::$twepoch) ));</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;</span><br><span class="line">$nextId = ((sprintf(<span class="string">'%.0f'</span>, $timestamp) - sprintf(<span class="string">'%.0f'</span>, <span class="keyword">self</span>::$twepoch)  )) | ( <span class="keyword">self</span>::$workerId &lt;&lt; <span class="keyword">self</span>::$workerIdShift ) | <span class="keyword">self</span>::$sequence;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'timestamp:'</span>.$timestamp.<span class="string">'-----'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'twepoch:'</span>.sprintf(<span class="string">'%.0f'</span>, <span class="keyword">self</span>::$twepoch).<span class="string">'-----'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'timestampLeftShift ='</span>.<span class="keyword">self</span>::$timestampLeftShift.<span class="string">'-----'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'nextId:'</span>.$nextId.<span class="string">'----'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'workId:'</span>.<span class="keyword">self</span>::$workerId.<span class="string">'-----'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'workerIdShift:'</span>.<span class="keyword">self</span>::$workerIdShift.<span class="string">'-----'</span>;</span><br><span class="line"><span class="keyword">return</span> $nextId;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">$Idwork = <span class="keyword">new</span> Idwork(<span class="number">1</span>);</span><br><span class="line">$a= $Idwork-&gt;nextId();</span><br><span class="line">$Idwork = <span class="keyword">new</span> Idwork(<span class="number">2</span>);</span><br><span class="line">$a= $Idwork-&gt;nextId();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式自增ID算法/" rel="tag"># 分布式自增ID算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/31/Spring-MVC-接口版本管理/" rel="next" title="Spring MVC 接口版本管理">
+                <i class="fa fa-chevron-left"></i> Spring MVC 接口版本管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/29/gitlab替换nginx服务/" rel="prev" title="gitlab替换nginx服务">
+                gitlab替换nginx服务 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2015/04/22/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

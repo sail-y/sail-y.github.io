@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Netty处理器编解码器本质上也是ChannelHandler的特殊实现，Netty本身为我们提供了很多处理器。 Netty处理器重要概念：  Netty的处理器可以分为两类：入站处理器与出站处理器。 入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。 数据处理时常用的各种编解码器本质上都是处理器。 编解码器：无论我们向网">
+<meta name="keywords" content="java,Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty-编解码器&amp;处理器">
+<meta property="og:url" content="http://www.saily.top/2017/12/12/netty9/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="Netty处理器编解码器本质上也是ChannelHandler的特殊实现，Netty本身为我们提供了很多处理器。 Netty处理器重要概念：  Netty的处理器可以分为两类：入站处理器与出站处理器。 入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。 数据处理时常用的各种编解码器本质上都是处理器。 编解码器：无论我们向网">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://waylau.gitbooks.io/essential-netty-in-action/images/Figure%207.2%20IntegerToStringDecoder.jpg">
+<meta property="og:updated_time" content="2018-09-28T04:55:57.142Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty-编解码器&amp;处理器">
+<meta name="twitter:description" content="Netty处理器编解码器本质上也是ChannelHandler的特殊实现，Netty本身为我们提供了很多处理器。 Netty处理器重要概念：  Netty的处理器可以分为两类：入站处理器与出站处理器。 入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。 数据处理时常用的各种编解码器本质上都是处理器。 编解码器：无论我们向网">
+<meta name="twitter:image" content="https://waylau.gitbooks.io/essential-netty-in-action/images/Figure%207.2%20IntegerToStringDecoder.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2017/12/12/netty9/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Netty-编解码器&处理器 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/12/12/netty9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netty-编解码器&处理器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：12月 12 2017 20:38:16" itemprop="dateCreated datePublished" datetime="2017-12-12T20:38:16+08:00">12月 12 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 28 2018 12:55:57" itemprop="dateModified" datetime="2018-09-28T12:55:57+08:00">9月 28 2018</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Netty处理器"><a href="#Netty处理器" class="headerlink" title="Netty处理器"></a>Netty处理器</h1><p>编解码器本质上也是ChannelHandler的特殊实现，Netty本身为我们提供了很多处理器。</p>
+<p>Netty处理器重要概念：</p>
+<ol>
+<li>Netty的处理器可以分为两类：入站处理器与出站处理器。</li>
+<li>入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。</li>
+<li>数据处理时常用的各种编解码器本质上都是处理器。</li>
+<li>编解码器：无论我们向网络中写入的数据是什么类型（int、char、String、二进制等），数据在网络中传递时，其都是以字节流的形式呈现的；将数据由原本的形式转换为字节流的操作称为编码（encode），将数据由字节转换为它原本的格式或是其他格式的操作称为解码（decode），编解码统一称为codec。</li>
+<li>编码：本质上是一种出站处理器，因此，编码是一种ChannelOutboundHandler。</li>
+<li>解码：本质上是一种入站处理器，因此，解码是一种ChannelInboundHandler。</li>
+<li>在Netty中，编码器通常以XXXEncoder命名；解码器通常以XXXDecoder命名。</li>
+</ol>
+<a id="more"></a>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>回顾一个之前写的<a href="https://github.com/sail-y/netty/blob/master/src/main/java/com/sail/netty/secondexample/MyServerInitializer.java" target="_blank" rel="noopener">例子</a>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line">    pipeline.addLast(<span class="keyword">new</span> LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, <span class="number">0</span>,<span class="number">4</span>,<span class="number">0</span>,<span class="number">4</span>));</span><br><span class="line">    pipeline.addLast(<span class="keyword">new</span> LengthFieldPrepender(<span class="number">4</span>));</span><br><span class="line">    pipeline.addLast(<span class="keyword">new</span> StringDecoder(CharsetUtil.UTF_8));</span><br><span class="line">    pipeline.addLast(<span class="keyword">new</span> StringEncoder(CharsetUtil.UTF_8));</span><br><span class="line">    <span class="comment">// 最后添加我们自己的处理器</span></span><br><span class="line">    pipeline.addLast(<span class="keyword">new</span> MyServerHandler());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>学习到现在，我们已经很清楚的知道ChannelInitializer的职责，他本身是一个特殊的ChannelHandler，是用来初始化添加处理器的，在添加完成后，它自己会被销毁。</p>
+<p>在这个例子中，根据命名或者他的继承类可以看出来，这里一共有4个入站处理器，1个出站处理器，虽然添加的时候代码都写在一起，实际上数据的流向却是两条线，从上往下进行解码，最后我们自定义的处理器拿到的时候就已经是字符串了，写出数据的时候也一样，写出的是String，但是通过StringEncoder转换成了字节。</p>
+<h2 id="自定义实现"><a href="#自定义实现" class="headerlink" title="自定义实现"></a>自定义实现</h2><p>在io.netty.handler.codec包中，包含了Netty为我们提供的很多编解码器。</p>
+<p>下面我们自己实现一个。</p>
+<p>要实现的效果：当客户端的channelActive事件触发的时候，客户端向服务端发送一个Long类型的数据，服务端也返回一个Long类型的数据。</p>
+<p><strong>MyServerInitializer.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServerInitializer</span> <span class="keyword">extends</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line">        <span class="comment">// 需要将字节转换为Long</span></span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> MyServerHandler());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们需要一个解码器，来将字节转换Long类型的数据，然后MyServerHandler才能处理。</p>
+<p>Netty为我们提供了一个抽象类<strong>ByteToMessageDecoder</strong>，它是一个ChannelInboundHandlerAdapter，它的作用是将ByteBuf转换成另外一种消息类型，这个消息类型是我们自己来定的。</p>
+<h2 id="MessageToByteEncoder-amp-ByteToMessageDecoder"><a href="#MessageToByteEncoder-amp-ByteToMessageDecoder" class="headerlink" title="MessageToByteEncoder&amp;ByteToMessageDecoder"></a>MessageToByteEncoder&amp;ByteToMessageDecoder</h2><p>Netty为我们提供了一个<strong>MessageToByteEncoder</strong>，基本大多数的解码器都直接或间接的实现了这个抽象类，我们也实现这个类，是需要实现它的encode方法。<br>相对应的，编码器是<strong>ByteToMessageDecoder</strong>，需要实现它的decode方法。</p>
+<h3 id="自定义解码器"><a href="#自定义解码器" class="headerlink" title="自定义解码器"></a>自定义解码器</h3><p>将字节转换成一个Long类型的数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyByteToLongDecoder</span> <span class="keyword">extends</span> <span class="title">ByteToMessageDecoder</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"decode invoked"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(in.readableBytes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Long是8个字节</span></span><br><span class="line">        <span class="keyword">if</span> (in.readableBytes() &gt;=<span class="number">8</span> ) &#123;</span><br><span class="line">            out.add(in.readLong());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义编码器"><a href="#自定义编码器" class="headerlink" title="自定义编码器"></a>自定义编码器</h3><p>将Long转换为字节写入，编码器是有泛型的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyLongToByteEncoder</span> <span class="keyword">extends</span> <span class="title">MessageToByteEncoder</span>&lt;<span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">encode</span><span class="params">(ChannelHandlerContext ctx, Long msg, ByteBuf out)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        out.writeLong(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上完整实例代码在：<a href="https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler" target="_blank" rel="noopener">https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler</a></p>
+<p>数据执行流程：</p>
+<p>客户端先编码发送数据，然后服务端解码，收到数据后再编码写出一个数据，客户端最后再解码。</p>
+<p>客户端MyLongToByteEncoder -&gt; 服务端MyByteToLongDecoder -&gt; 服务端MyServerHandler -&gt; 服务端MyLongToByteEncoder -&gt; 客户端MyByteToLongDecoder -&gt; 客户端MyClientHandler</p>
+<p>如果客户端再返回一个字符串，那么客户端的MyLongToByteEncoder就已经执行失败了，所以数据不会发送给服务端。</p>
+<h2 id="ReplayingDecoder"><a href="#ReplayingDecoder" class="headerlink" title="ReplayingDecoder"></a>ReplayingDecoder</h2><p>ReplayingDecoder 是 byte-to-message 解码的一种特殊的抽象基类，读取缓冲区的数据之前需要检查缓冲区是否有足够的字节，使用ReplayingDecoder就无需自己检查；若ByteBuf中有足够的字节，则会正常读取；若没有足够的字节则会停止解码。</p>
+<blockquote>
+<p>The biggest difference between ReplayingDecoder and ByteToMessageDecoder is that ReplayingDecoder allows you to implement the decode() and decodeLast() methods just like all required bytes were received already, rather than checking the availability of the required bytes. </p>
+</blockquote>
+<p>意思是我们在使用ReplayingDecoder的时候，就像数据已经全部接受到了一样，不用再去检测数据是否已经接受足够可以解码了。如果数据够了，它就直接读取，如果数据不够，它就抛出一个Error，ReplayingDecoder会捕获这个错误，然后ReplayingDecoder继续处理，并重置buffer的readerIndex，直到处理成功为止。</p>
+<p>ReplayingDecoder的限制：</p>
+<ol>
+<li>某些buffer操作是被禁止的</li>
+<li>如果网络很慢，消息也很复杂，可能性能比较差</li>
+<li>一个消息的decode方法可能会被调用很多次</li>
+</ol>
+<h3 id="自定义实现-1"><a href="#自定义实现-1" class="headerlink" title="自定义实现"></a>自定义实现</h3><p>继承<strong>ReplayingDecoder</strong>实现一个解码器，替换之前的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyByteToLongDecoder2</span> <span class="keyword">extends</span> <span class="title">ReplayingDecoder</span>&lt;<span class="title">Void</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"decode invoked"</span>);</span><br><span class="line">        out.add(in.readLong());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="MessageToMessageDecoder"><a href="#MessageToMessageDecoder" class="headerlink" title="MessageToMessageDecoder"></a>MessageToMessageDecoder</h2><p>用于从一种消息解码为另外一种消息（例如，POJO 到 POJO）,将 Integer 转为 String，我们提供了 IntegerToStringDecoder，继承自 MessageToMessageDecoder。</p>
+<p><img src="https://waylau.gitbooks.io/essential-netty-in-action/images/Figure%207.2%20IntegerToStringDecoder.jpg" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyLongToStringDecoder</span> <span class="keyword">extends</span> <span class="title">MessageToMessageDecoder</span>&lt;<span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, Long msg, List&lt;Object&gt; out)</span> </span>&#123;</span><br><span class="line">        out.add(msg.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="LengthFieldBasedFrameDecoder"><a href="#LengthFieldBasedFrameDecoder" class="headerlink" title="LengthFieldBasedFrameDecoder"></a>LengthFieldBasedFrameDecoder</h2><p>LengthFieldBasedFrameDecoder是一个非常常用的解码器，它会将ByteBuf根据消息里长度的值进行分割，这对有消息头里有长度的二进制消息特别有用。</p>
+<p>关于LengthFieldBasedFrameDecoder的具体使用，和它的应用场景在文章后面的<a href="#TCP粘包和拆包">TCP粘包和拆包</a>有演示。</p>
+<h2 id="关于Netty编解码器的重要结论："><a href="#关于Netty编解码器的重要结论：" class="headerlink" title="关于Netty编解码器的重要结论："></a>关于Netty编解码器的重要结论：</h2><ol>
+<li>无论是编码器还是解码器，其所接收的消息类型必须要与待处理的参数类型一致，否则该编码器或解码器并不会被执行。</li>
+<li>在解码器进行数据解码时，一定要记得判断缓冲（ByteBuf）中的数据是否足够，否则将会产生一些问题。</li>
+</ol>
+<h2 id="TCP粘包和拆包"><a href="#TCP粘包和拆包" class="headerlink" title="TCP粘包和拆包"></a>TCP粘包和拆包</h2><p>TCP是个“流”协议，所谓流，就是没有界限的一串数据。大家可以想想河里的流水，是连成一片的，其间并没有分界线。TCP底层并不了解上层业务数据的具体含义，它会根据TCP缓冲区的实际情况进行包的划分，所以在业务上认为，一个完整的包可能会被TCP拆分成多个包进行发送，也有可能把多个小的包封装成一个大的数据包发送，这就是所谓的TCP粘包和拆包问题。</p>
+<h3 id="粘包演示"><a href="#粘包演示" class="headerlink" title="粘包演示"></a>粘包演示</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClientHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">ByteBuf</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, ByteBuf msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[msg.readableBytes()];</span><br><span class="line">        msg.readBytes(buffer);</span><br><span class="line"></span><br><span class="line">        String message = <span class="keyword">new</span> String(buffer, CharsetUtil.UTF_8);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"客户端接收到的消息内容："</span> + message);</span><br><span class="line">        System.out.println(<span class="string">"客户端接收到的消息数量："</span> + ++count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果不重写这个方法，运行程序后并不会触发数据的传输，因为双方都在等待read，所以要先发送一次消息。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            ByteBuf buffer = Unpooled.copiedBuffer(<span class="string">"send from client"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            ctx.writeAndFlush(buffer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端接收到的消息内容：496faaef-6ed7-4802-bdd7-d4e9</span><br><span class="line">客户端接收到的消息数量：1</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">ByteBuf</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, ByteBuf msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[msg.readableBytes()];</span><br><span class="line"></span><br><span class="line">        msg.readBytes(buffer);</span><br><span class="line">        String message = <span class="keyword">new</span> String(buffer, CharsetUtil.UTF_8);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"服务端接收到的消息内容："</span> + message);</span><br><span class="line">        System.out.println(<span class="string">"服务器接收到的消息数量："</span> + (++count));</span><br><span class="line"></span><br><span class="line">        ByteBuf responseByteBuf = Unpooled.copiedBuffer(UUID.randomUUID().toString(), CharsetUtil.UTF_8);</span><br><span class="line">        ctx.writeAndFlush(responseByteBuf);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果出现异常，关闭连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制条输出的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：1</span><br></pre></td></tr></table></figure>
+<p>如果再重启几次客户端，服务端的结果还会发生如下变化，这是没有什么规律的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：1</span><br><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：2</span><br><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：3</span><br><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：1</span><br><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：2</span><br><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：3</span><br><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：4</span><br><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：1</span><br><span class="line">服务端接收到的消息内容：send from client</span><br><span class="line">服务器接收到的消息数量：2</span><br><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：3</span><br><span class="line">服务端接收到的消息内容：send from clientsend from client</span><br><span class="line">服务器接收到的消息数量：4</span><br><span class="line">服务端接收到的消息内容：send from clientsend from clientsend from client</span><br><span class="line">服务器接收到的消息数量：5</span><br></pre></td></tr></table></figure>
+<p>完整可运行的代码在这里：<a href="https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler2" target="_blank" rel="noopener">https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler2</a></p>
+<h3 id="解决粘包-gt-拆包演示"><a href="#解决粘包-gt-拆包演示" class="headerlink" title="解决粘包-&gt;拆包演示"></a>解决粘包-&gt;拆包演示</h3><p>自定义一个协议，它包含了长度和内容两个字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonProtocol</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> length;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] content;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLength</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLength</span><span class="params">(<span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] getContent() &#123;</span><br><span class="line">        <span class="keyword">return</span> content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContent</span><span class="params">(<span class="keyword">byte</span>[] content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解码器继承自ReplayingDecoder，好处是不需要去判断消息长度是否已经足够。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPersonDecoder</span> <span class="keyword">extends</span> <span class="title">ReplayingDecoder</span>&lt;<span class="title">Void</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"MyPersonDecoder decode invoked!"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> length = in.readInt();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] content = <span class="keyword">new</span> <span class="keyword">byte</span>[length];</span><br><span class="line">        in.readBytes(content);</span><br><span class="line"></span><br><span class="line">        PersonProtocol personProtocol = <span class="keyword">new</span> PersonProtocol();</span><br><span class="line">        personProtocol.setLength(length);</span><br><span class="line">        personProtocol.setContent(content);</span><br><span class="line"></span><br><span class="line">        out.add(personProtocol);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编码器就要简单很多了，需要将PersonProtocol输出为bytes。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPersonEncoder</span> <span class="keyword">extends</span> <span class="title">MessageToByteEncoder</span>&lt;<span class="title">PersonProtocol</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">encode</span><span class="params">(ChannelHandlerContext ctx, PersonProtocol msg, ByteBuf out)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"MyPersonEncoder encode invoked!"</span>);</span><br><span class="line"></span><br><span class="line">        out.writeInt(msg.getLength());</span><br><span class="line">        out.writeBytes(msg.getContent());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以及ServerHandler：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">PersonProtocol</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, PersonProtocol msg)</span> <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> length = msg.getLength();</span><br><span class="line">        <span class="keyword">byte</span>[] content = msg.getContent();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"服务端接收到的数据："</span>);</span><br><span class="line">        System.out.println(<span class="string">"长度；"</span> + length);</span><br><span class="line">        System.out.println(<span class="string">"内容："</span> + <span class="keyword">new</span> String(content, CharsetUtil.UTF_8));</span><br><span class="line">        System.out.println(<span class="string">"服务端接受到的消息数量："</span> + ++count);</span><br><span class="line"></span><br><span class="line">        String responseMessage = UUID.randomUUID().toString();</span><br><span class="line">        <span class="keyword">int</span> responseLength = responseMessage.getBytes(<span class="string">"utf-8"</span>).length;</span><br><span class="line">        <span class="keyword">byte</span>[] responseContent = responseMessage.getBytes(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        PersonProtocol personProtocol = <span class="keyword">new</span> PersonProtocol();</span><br><span class="line">        personProtocol.setLength(responseLength);</span><br><span class="line">        personProtocol.setContent(responseContent);</span><br><span class="line"></span><br><span class="line">        ctx.writeAndFlush(personProtocol);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>篇幅有限，剩余的代码文章就不贴完了，代码都在：<a href="https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler3" target="_blank" rel="noopener">https://github.com/sail-y/netty/tree/master/src/main/java/com/sail/netty/handler3</a></p>
+<p>客户端输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：3726cb1a-163f-498c-82b2-9731aeff94e0</span><br><span class="line">客户端接受到的消息数量：1</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：7cbb68f4-bdfd-4cf8-8de6-e18f78d58770</span><br><span class="line">客户端接受到的消息数量：2</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：463d503d-873f-4a4e-8a62-f3c1ccedd6ce</span><br><span class="line">客户端接受到的消息数量：3</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：6d8b8361-18e5-402c-8977-3ba4316633f4</span><br><span class="line">客户端接受到的消息数量：4</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：eccdc204-d589-4e24-8585-36d4c07f8ce8</span><br><span class="line">客户端接受到的消息数量：5</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：3dd02117-3a8b-4d2e-8c9c-e0a356cb54e1</span><br><span class="line">客户端接受到的消息数量：6</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：5db00fcc-1e07-4ac1-bb61-f514049d1643</span><br><span class="line">客户端接受到的消息数量：7</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：b306c7f5-790e-45f8-8031-f7fd74a54b07</span><br><span class="line">客户端接受到的消息数量：8</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：386acc20-986a-441a-a265-849a45c28119</span><br><span class="line">客户端接受到的消息数量：9</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">客户端接收到的数据：</span><br><span class="line">长度；36</span><br><span class="line">内容：24c13a50-60c4-4d34-9d8e-fde19beda657</span><br><span class="line">客户端接受到的消息数量：10</span><br></pre></td></tr></table></figure>
+<p>先是发送了10条消息，然后再接收到了10条消息。</p>
+<p>服务端也是收到了10条消息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：1</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：2</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：3</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：4</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：5</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：6</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：7</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：8</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：9</span><br><span class="line">MyPersonEncoder encode invoked!</span><br><span class="line">MyPersonDecoder decode invoked!</span><br><span class="line">服务端接收到的数据：</span><br><span class="line">长度；17</span><br><span class="line">内容：sent from client </span><br><span class="line">服务端接受到的消息数量：10</span><br><span class="line">MyPersonEncoder encode invoked!</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/08/mongo1/" rel="next" title="MongoDB1-安装和增删改查">
+                <i class="fa fa-chevron-left"></i> MongoDB1-安装和增删改查
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/13/基金定投/" rel="prev" title="如何理财？基金定投！">
+                如何理财？基金定投！ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Netty处理器"><span class="nav-number">1.</span> <span class="nav-text">Netty处理器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#回顾"><span class="nav-number">1.1.</span> <span class="nav-text">回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义实现"><span class="nav-number">1.2.</span> <span class="nav-text">自定义实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MessageToByteEncoder-amp-ByteToMessageDecoder"><span class="nav-number">1.3.</span> <span class="nav-text">MessageToByteEncoder&amp;ByteToMessageDecoder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义解码器"><span class="nav-number">1.3.1.</span> <span class="nav-text">自定义解码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义编码器"><span class="nav-number">1.3.2.</span> <span class="nav-text">自定义编码器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReplayingDecoder"><span class="nav-number">1.4.</span> <span class="nav-text">ReplayingDecoder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义实现-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">自定义实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MessageToMessageDecoder"><span class="nav-number">1.5.</span> <span class="nav-text">MessageToMessageDecoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LengthFieldBasedFrameDecoder"><span class="nav-number">1.6.</span> <span class="nav-text">LengthFieldBasedFrameDecoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Netty编解码器的重要结论："><span class="nav-number">1.7.</span> <span class="nav-text">关于Netty编解码器的重要结论：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP粘包和拆包"><span class="nav-number">1.8.</span> <span class="nav-text">TCP粘包和拆包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#粘包演示"><span class="nav-number">1.8.1.</span> <span class="nav-text">粘包演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决粘包-gt-拆包演示"><span class="nav-number">1.8.2.</span> <span class="nav-text">解决粘包-&gt;拆包演示</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/12/12/netty9/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 索引管理手动创建索引之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。">
+<meta name="keywords" content="ElasticSearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch07-索引管理">
+<meta property="og:url" content="http://www.saily.top/2018/09/27/elasticSearch07/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 索引管理手动创建索引之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-27T07:12:43.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch07-索引管理">
+<meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 索引管理手动创建索引之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2018/09/27/elasticSearch07/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ElasticSearch07-索引管理 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/09/27/elasticSearch07/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch07-索引管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：9月 27 2018 11:48:13 / 修改时间：15:12:43" itemprop="dateCreated datePublished" datetime="2018-09-27T11:48:13+08:00">9月 27 2018</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>此为龙果学院课程学习笔记，记录以后翻看</p>
+<h1 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h1><h2 id="手动创建索引"><a href="#手动创建索引" class="headerlink" title="手动创建索引"></a>手动创建索引</h2><p>之前都是直接插入document，ES为我们自动创建索引。其实在大部分情况下，我们是需要自己先手动创建mapping的，就像数据库建表一样，你可能需要设置primary shard的数量，字段的分词器，具体的数据类型等等。</p>
+<a id="more"></a>
+<p><strong>创建索引的语法</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">    <span class="attr">"number_of_shards"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"number_of_replicas"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_field"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="修改索引"><a href="#修改索引" class="headerlink" title="修改索引"></a>修改索引</h2><p><code>number_of_shards</code>是不能修改的，修改一下<code>number_of_replicas</code>试试。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_settings</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"number_of_replicas"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DELETE /my_index</span><br><span class="line">DELETE /index_one,index_two</span><br><span class="line">DELETE /index_*</span><br><span class="line">DELETE /_all</span><br></pre></td></tr></table></figure>
+<p><code>DELETE /_all</code>是很危险的操作，可以在ES的配置文件里禁用掉。</p>
+<p><strong>elasticsearch.yml</strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">action.destructive_requires_name:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置分词器"><a href="#配置分词器" class="headerlink" title="配置分词器"></a>配置分词器</h2><p>分词器是用于将全文字符串转换为适合搜索的倒排索引。</p>
+<p>standard 分析器是用于全文字段的默认分析器， 对于大部分西方语系来说是一个不错的选择。 它包括了以下几点：</p>
+<ul>
+<li>standard tokenizer：以单词边界进行切分</li>
+<li>standard token filter：什么都不做</li>
+<li>lowercase token filter：将所有字母转换为小写</li>
+<li>stop token filter（默认被禁用）：移除停用词，比如a the it等等</li>
+</ul>
+<h2 id="修改分词器"><a href="#修改分词器" class="headerlink" title="修改分词器"></a>修改分词器</h2><p>启用english停用词token filter</p>
+<p>在下面的例子中，我们创建了一个新的分析器，叫做 <code>es_std</code> ， 并使用预定义的英语停用词列表：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">    <span class="attr">"analysis"</span>: &#123;</span><br><span class="line">      <span class="attr">"analyzer"</span>: &#123;</span><br><span class="line">        <span class="attr">"es_std"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"standard"</span>,</span><br><span class="line">          <span class="attr">"stopwords"</span>: <span class="string">"_english_"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET /my_index/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"analyzer"</span>: <span class="string">"standard"</span>, </span><br><span class="line">  <span class="attr">"text"</span>: <span class="string">"a dog is in the house"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tokens"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"a"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"dog"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"is"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">8</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">2</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"in"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">9</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">11</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">3</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"the"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">12</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">15</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">4</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"house"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">16</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">21</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">5</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">GET /my_index/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"analyzer"</span>: <span class="string">"es_std"</span>,</span><br><span class="line">  <span class="attr">"text"</span>:<span class="string">"a dog is in the house"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tokens"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"dog"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"house"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">16</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">21</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">5</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义分词器"><a href="#自定义分词器" class="headerlink" title="自定义分词器"></a>自定义分词器</h2><p>虽然Elasticsearch带有一些现成的分析器，然而在分析器上Elasticsearch真正的强大之处在于，你可以通过在一个适合你的特定数据的设置之中组合字符过滤器、分词器、词汇单元过滤器来创建自定义的分析器。</p>
+<p>一个分词器就是在一个包里面组合了三种函数的一个包装器， 三种函数按照顺序被执行:</p>
+<ul>
+<li><p>字符过滤器<br>  字符过滤器 用来 整理 一个尚未被分词的字符串。例如，如果我们的文本是HTML格式的，它会包含像 <code>&lt;p&gt;</code> 或者 <code>&lt;div&gt;</code> 这样的HTML标签，这些标签是我们不想索引的。我们可以使用 html清除 字符过滤器 来移除掉所有的HTML标签，并且像把 <code>&amp;Aacute;</code> 转换为相对应的Unicode字符 Á 这样，转换HTML实体。</p>
+<p>  一个分析器可能有0个或者多个字符过滤器。</p>
+</li>
+<li><p>分词器<br>  一个分析器 必须 有一个唯一的分词器。 分词器把字符串分解成单个词条或者词汇单元。 standard 分析器里使用的 standard 分词器 把一个字符串根据单词边界分解成单个词条，并且移除掉大部分的标点符号，然而还有其他不同行为的分词器存在。</p>
+</li>
+<li><p>词单元过滤器<br>  经过分词，作为结果的 词单元流 会按照指定的顺序通过指定的词单元过滤器 。<br><strong>举例</strong>：</p>
+</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">    <span class="attr">"analysis"</span>: &#123;</span><br><span class="line">      <span class="attr">"char_filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"&amp;_to_and"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"mapping"</span>,</span><br><span class="line">          <span class="attr">"mappings"</span>: [<span class="string">"&amp;=&gt; and"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_stopwords"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"stop"</span>,</span><br><span class="line">          <span class="attr">"stopwords"</span>: [<span class="string">"the"</span>, <span class="string">"a"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"analyzer"</span>: &#123;</span><br><span class="line">        <span class="attr">"my_analyzer"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"custom"</span>,</span><br><span class="line">          <span class="attr">"char_filter"</span>: [<span class="string">"html_strip"</span>, <span class="string">"&amp;_to_and"</span>],</span><br><span class="line">          <span class="attr">"tokenizer"</span>: <span class="string">"standard"</span>,</span><br><span class="line">          <span class="attr">"filter"</span>: [<span class="string">"lowercase"</span>, <span class="string">"my_stopwords"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里创建了一个<code>my_analyzer</code>分析器，分词用的standard，字符过滤器用了<code>html_strip</code>和<code>&amp;_to_and</code>，词过滤器用了<code>lowercase</code>和<code>my_stopwords</code>。</p>
+<p>测试一下分词器的效果：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"text"</span>: <span class="string">"tom&amp;jerry are a friend in the house, &lt;a&gt;, HAHA!!"</span>,</span><br><span class="line">  <span class="attr">"analyzer"</span>: <span class="string">"my_analyzer"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tokens"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"tomandjerry"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">9</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"are"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">13</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"friend"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">16</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">22</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">3</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"in"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">23</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">25</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">4</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"house"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">30</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">35</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">6</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"token"</span>: <span class="string">"haha"</span>,</span><br><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">42</span>,</span><br><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">46</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">      <span class="attr">"position"</span>: <span class="number">7</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>如何在索引中使用我们自定义的分词器？</strong></p>
+<p>创建一个mapping，为content设置我们自定义的分词器</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"properties"</span>: &#123;</span><br><span class="line">    <span class="attr">"content"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">      <span class="attr">"analyzer"</span>: <span class="string">"my_analyzer"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h1><p>type，是一个index中用来区分类似的文档。类似的文档可能有不同的fields，而且有不同的属性来控制索引建立、分词器。就像数据库中的 schema ，描述了文档可能具有的字段或 属性 、 每个字段的数据类型—比如 string, integer 或 date —以及Lucene是如何索引和存储这些字段的。</p>
+<p>field的value，在底层的lucene中建立索引的时候，全部是opaque bytes类型，是不区分类型的。</p>
+<p>Lucene 没有文档类型的概念，每个文档的类型名被存储在一个叫 <code>_type</code> 的元数据字段上。 当我们要检索某个类型的文档时, Elasticsearch 通过在 <code>_type</code> 字段上使用过滤器限制只返回这个类型的文档。</p>
+<p>Lucene 也没有映射的概念。 映射是 Elasticsearch 将复杂 JSON 文档 映射 成 Lucene 需要的扁平化数据的方式。</p>
+<p>一个index中的多个type，实际上是放在一起存储的，因此一个index下，不能有多个type重名，而类型或者其他设置不同的，因为那样是无法处理的。</p>
+<p>比如有个映射和文档：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"ecommerce"</span>: &#123;</span><br><span class="line">      <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">         <span class="attr">"elactronic_goods"</span>: &#123;</span><br><span class="line">            <span class="attr">"properties"</span>: &#123;</span><br><span class="line">               <span class="attr">"name"</span>: &#123;</span><br><span class="line">                  <span class="attr">"type"</span>: <span class="string">"string"</span>,</span><br><span class="line">               &#125;,</span><br><span class="line">               <span class="attr">"price"</span>: &#123;</span><br><span class="line">                  <span class="attr">"type"</span>: <span class="string">"double"</span></span><br><span class="line">               &#125;,</span><br><span class="line">	       <span class="attr">"service_period"</span>: &#123;</span><br><span class="line">		  <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">	       &#125;			</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;,</span><br><span class="line">         <span class="attr">"fresh_goods"</span>: &#123;</span><br><span class="line">            <span class="attr">"properties"</span>: &#123;</span><br><span class="line">               <span class="attr">"name"</span>: &#123;</span><br><span class="line">                  <span class="attr">"type"</span>: <span class="string">"string"</span>,</span><br><span class="line">               &#125;,</span><br><span class="line">               <span class="attr">"price"</span>: &#123;</span><br><span class="line">                  <span class="attr">"type"</span>: <span class="string">"double"</span></span><br><span class="line">               &#125;,</span><br><span class="line">	       <span class="attr">"eat_period"</span>: &#123;</span><br><span class="line">		  <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">	       &#125;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"geli kongtiao"</span>,</span><br><span class="line">  <span class="attr">"price"</span>: <span class="number">1999.0</span>,</span><br><span class="line">  <span class="attr">"service_period"</span>: <span class="string">"one year"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"aozhou dalongxia"</span>,</span><br><span class="line">  <span class="attr">"price"</span>: <span class="number">199.0</span>,</span><br><span class="line">  <span class="attr">"eat_period"</span>: <span class="string">"one week"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际在Lucene里的数据可能是：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"ecommerce"</span>: &#123;</span><br><span class="line">      <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">        <span class="attr">"_type"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"string"</span>,</span><br><span class="line">          <span class="attr">"index"</span>: <span class="string">"not_analyzed"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"name"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"price"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"double"</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"service_period"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"eat_period"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"_type"</span>: <span class="string">"elactronic_goods"</span>,</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"geli kongtiao"</span>,</span><br><span class="line">  <span class="attr">"price"</span>: <span class="number">1999.0</span>,</span><br><span class="line">  <span class="attr">"service_period"</span>: <span class="string">"one year"</span>,</span><br><span class="line">  <span class="attr">"eat_period"</span>: <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"_type"</span>: <span class="string">"fresh_goods"</span>,</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"aozhou dalongxia"</span>,</span><br><span class="line">  <span class="attr">"price"</span>: <span class="number">199.0</span>,</span><br><span class="line">  <span class="attr">"service_period"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="attr">"eat_period"</span>: <span class="string">"one week"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以最佳实践是，将类似结构的type放在一个index下，这些type应该有多个field是相同的。<br><strong>假如你将两个type的field完全不同，放在一个index下，那么就每条数据都至少有一半的field在底层的lucene中是空值，会有严重的性能问题</strong>。</p>
+<h1 id="根对象"><a href="#根对象" class="headerlink" title="根对象"></a>根对象</h1><p>映射的最高一层被称为 根对象 ，它可能包含下面几项：</p>
+<ul>
+<li>一个 properties 节点，列出了文档中可能包含的每个字段的映射</li>
+<li>各种元数据字段，它们都以一个下划线开头，例如 <code>_type</code> 、 <code>_id</code> 和 <code>_source</code></li>
+<li>设置项，控制如何动态处理新的字段，例如 <code>analyzer</code> 、 <code>dynamic_date_formats</code> 和 <code>dynamic_templates</code></li>
+<li>其他设置，可以同时应用在根对象和其他 <code>object</code> 类型的字段上，例如 <code>enabled</code> 、 <code>dynamic</code> 和 <code>include_in_all</code></li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="properties"><a href="#properties" class="headerlink" title="properties"></a>properties</h2><p>文档的字段描述，包含type，index，analyzer</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"properties"</span>: &#123;</span><br><span class="line">    <span class="attr">"title"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="source"><a href="#source" class="headerlink" title="_source"></a>_source</h2><p>Elasticsearch 在 <code>_source</code> 字段存储代表文档体的JSON字符串。和所有被存储的字段一样， <code>_source</code> 字段在被写入磁盘之前先会被压缩。</p>
+<p>好处：</p>
+<ol>
+<li>查询的时候，直接可以拿到完整的document，不需要先拿document id，再发送一次请求拿document</li>
+<li>partial update基于_source实现</li>
+<li>reindex时，直接基于_source实现，不需要从数据库（或者其他外部存储）查询数据再修改</li>
+<li>可以基于_source定制返回field</li>
+<li>debug query更容易，因为可以直接看到_source</li>
+</ol>
+<p>不需要的话，也可以禁用_source，不保存原始对象</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type2</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"_source"</span>: &#123;<span class="attr">"enabled"</span>: <span class="literal">false</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="all"><a href="#all" class="headerlink" title="_all"></a>_all</h2><p>前面说过，将所有field打包在一起，作为一个_all field，建立索引。没指定任何field进行搜索时，就是使用_all field在搜索。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type3</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"_all"</span>: &#123;<span class="attr">"enabled"</span>: <span class="literal">false</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以在field级别设置<code>include_in_all</code> field，设置是否要将field的值包含在<code>_all</code> field中&gt;</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type4</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"properties"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_field"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">      <span class="attr">"include_in_all"</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="标识性metadata"><a href="#标识性metadata" class="headerlink" title="标识性metadata"></a>标识性metadata</h2><ul>
+<li>_id<br>  文档的 ID 字符串</li>
+<li>_type<br>  文档的类型名</li>
+<li>_index<br>  文档所在的索引</li>
+<li>_uid<br>  <code>_type</code> 和 <code>_id</code> 连接在一起构造成 type#id</li>
+</ul>
+<h1 id="定制dynamic策略"><a href="#定制dynamic策略" class="headerlink" title="定制dynamic策略"></a>定制dynamic策略</h1><p>ES在数据遇到新的字段时候，会为我们自动mapping，但是我们也可以定制化这个策略：</p>
+<ul>
+<li>true：遇到陌生字段，就进行dynamic mapping</li>
+<li>false：遇到陌生字段，就忽略</li>
+<li>strict：遇到陌生字段，就报错</li>
+</ul>
+<p>修改策略为<code>strict</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"dynamic"</span>: <span class="string">"strict"</span>,</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"title"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"address"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"object"</span>,</span><br><span class="line">          <span class="attr">"dynamic"</span>: <span class="string">"true"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试添加数据，这里多了一个mapping里没有的content字段，因为是<code>strict</code>策略，所以ES报错了：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/my_type/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"my article"</span>,</span><br><span class="line">  <span class="attr">"content"</span>: <span class="string">"this is my article"</span>,</span><br><span class="line">  <span class="attr">"address"</span>: &#123;</span><br><span class="line">    <span class="attr">"province"</span>: <span class="string">"guangdong"</span>,</span><br><span class="line">    <span class="attr">"city"</span>: <span class="string">"guangzhou"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"error"</span>: &#123;</span><br><span class="line">    <span class="attr">"root_cause"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"strict_dynamic_mapping_exception"</span>,</span><br><span class="line">        <span class="attr">"reason"</span>: <span class="string">"mapping set to strict, dynamic introduction of [content] within [my_type] is not allowed"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"strict_dynamic_mapping_exception"</span>,</span><br><span class="line">    <span class="attr">"reason"</span>: <span class="string">"mapping set to strict, dynamic introduction of [content] within [my_type] is not allowed"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"status"</span>: <span class="number">400</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="date-detection"><a href="#date-detection" class="headerlink" title="date_detection"></a>date_detection</h2><p>默认会按照一定格式识别date，比如yyyy-MM-dd。但是如果某个field先过来一个2017-01-01的值，就会被自动dynamic mapping成date，后面如果再来一个”hello world”之类的值，就会报错。可以手动关闭某个type的date_detection，如果有需要，自己手动指定某个field为date类型。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"date_detection"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义dynamic-mapping-template（type-level）"><a href="#自定义dynamic-mapping-template（type-level）" class="headerlink" title="自定义dynamic mapping template（type level）"></a>自定义dynamic mapping template（type level）</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"dynamic_templates"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">"en"</span>: &#123;</span><br><span class="line">            <span class="attr">"match"</span>: <span class="string">"*_en"</span>,</span><br><span class="line">            <span class="attr">"match_mapping_type"</span>: <span class="string">"string"</span>,</span><br><span class="line">            <span class="attr">"mapping"</span>: &#123;</span><br><span class="line">              <span class="attr">"type"</span>: <span class="string">"string"</span>,</span><br><span class="line">              <span class="attr">"analyzer"</span>: <span class="string">"english"</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">"long_to_date"</span>: &#123;</span><br><span class="line">            <span class="attr">"match"</span>: <span class="string">"*time"</span>,</span><br><span class="line">            <span class="attr">"match_mapping_type"</span>: <span class="string">"long"</span>,</span><br><span class="line">            <span class="attr">"mapping"</span>: &#123;</span><br><span class="line">              <span class="attr">"type"</span>: <span class="string">"date"</span>,</span><br><span class="line">              <span class="attr">"index"</span>: <span class="string">"not_analyzed"</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试一下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/my_type/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"this is my first article"</span>,</span><br><span class="line">  <span class="attr">"title_en"</span>: <span class="string">"this is my first article"</span>,</span><br><span class="line">  <span class="attr">"create_time"</span>: <span class="number">1538031023000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看看ES为我们创建的mapping，<code>create_time</code>成功被映射成了date类型，<code>title_en</code>设置了english为分词器。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/my_type/_mapping</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"my_index"</span>: &#123;</span><br><span class="line">    <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">      <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">        <span class="attr">"dynamic_templates"</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">"en"</span>: &#123;</span><br><span class="line">              <span class="attr">"match"</span>: <span class="string">"*_en"</span>,</span><br><span class="line">              <span class="attr">"match_mapping_type"</span>: <span class="string">"string"</span>,</span><br><span class="line">              <span class="attr">"mapping"</span>: &#123;</span><br><span class="line">                <span class="attr">"analyzer"</span>: <span class="string">"english"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"string"</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">"long_to_date"</span>: &#123;</span><br><span class="line">              <span class="attr">"match"</span>: <span class="string">"*time"</span>,</span><br><span class="line">              <span class="attr">"match_mapping_type"</span>: <span class="string">"long"</span>,</span><br><span class="line">              <span class="attr">"mapping"</span>: &#123;</span><br><span class="line">                <span class="attr">"index"</span>: <span class="string">"not_analyzed"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"date"</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"properties"</span>: &#123;</span><br><span class="line">          <span class="attr">"create_time"</span>: &#123;</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"date"</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">"title"</span>: &#123;</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">            <span class="attr">"fields"</span>: &#123;</span><br><span class="line">              <span class="attr">"keyword"</span>: &#123;</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"keyword"</span>,</span><br><span class="line">                <span class="attr">"ignore_above"</span>: <span class="number">256</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">"title_en"</span>: &#123;</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">            <span class="attr">"analyzer"</span>: <span class="string">"english"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义dynamic-mapping-template（index-level）"><a href="#自定义dynamic-mapping-template（index-level）" class="headerlink" title="自定义dynamic mapping template（index level）"></a>自定义dynamic mapping template（index level）</h2><p><code>_default_</code>就是设置这个index下所有的模板，type自己的配置可以覆盖<code>_default_</code>的配置。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">        <span class="attr">"_default_"</span>: &#123;</span><br><span class="line">            <span class="attr">"_all"</span>: &#123; <span class="attr">"enabled"</span>:  <span class="literal">false</span> &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"blog"</span>: &#123;</span><br><span class="line">            <span class="attr">"_all"</span>: &#123; <span class="attr">"enabled"</span>:  <span class="literal">true</span>  &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="重建索引"><a href="#重建索引" class="headerlink" title="重建索引"></a>重建索引</h1><p>一个field的设置是不能被修改的，如果要修改一个Field，那么应该重新按照新的mapping，建立一个index，然后将数据批量查询出来，重新用bulk api写入index中。</p>
+<p>批量查询的时候，建议采用scroll api，并且采用多线程并发的方式来reindex数据，每次scoll就查询指定日期的一段数据，交给一个线程即可。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>一开始，依靠dynamic mapping，插入数据，但是不小心有些数据是2017-01-01这种日期格式的，所以title这种field被自动映射为了date类型，实际上它应该是string类型的。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/my_type/3</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"2017-01-03"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"my_index"</span>: &#123;</span><br><span class="line">    <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">      <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">        <span class="attr">"properties"</span>: &#123;</span><br><span class="line">          <span class="attr">"title"</span>: &#123;</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"date"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当后期向索引中加入string类型的title值的时候，就会报错</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/my_type/4</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"my first article"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"error"</span>: &#123;</span><br><span class="line">    <span class="attr">"root_cause"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"mapper_parsing_exception"</span>,</span><br><span class="line">        <span class="attr">"reason"</span>: <span class="string">"failed to parse [title]"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"mapper_parsing_exception"</span>,</span><br><span class="line">    <span class="attr">"reason"</span>: <span class="string">"failed to parse [title]"</span>,</span><br><span class="line">    <span class="attr">"caused_by"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">      <span class="attr">"reason"</span>: <span class="string">"Invalid format: \"my first article\""</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"status"</span>: <span class="number">400</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果此时想修改title的类型，是不可能的</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping/my_type</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"properties"</span>: &#123;</span><br><span class="line">    <span class="attr">"title"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"error"</span>: &#123;</span><br><span class="line">    <span class="attr">"root_cause"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">        <span class="attr">"reason"</span>: <span class="string">"mapper [title] of different type, current_type [date], merged_type [text]"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">    <span class="attr">"reason"</span>: <span class="string">"mapper [title] of different type, current_type [date], merged_type [text]"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"status"</span>: <span class="number">400</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时，唯一的办法就是进行reindex。重新建立一个索引，将旧索引的数据查询出来，再导入新索引。</p>
+<p>比如旧索引的名字，是<code>old_index</code>，新索引的名字是<code>new_index</code>，终端是java应用，已经在使用<code>old_index</code>在操作了，难道还要去停止java应用，修改使用的index为new_index，才重新启动java应用吗？这个过程中，就会导致java应用停机，可用性降低，这样肯定不好。</p>
+<p>那么在我们的例子中先给旧索引一个别名，客户端先用<code>goods_index</code>这个别名来操作，此时实际指向的是旧的<code>my_index</code>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_alias/goods_index</span><br></pre></td></tr></table></figure>
+<p>然后新建一个index，调整其title的类型为string</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index_new</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"my_type"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"title"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用scroll api将数据批量查询出来</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/_search?scroll=1m</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>: &#123;</span><br><span class="line">        <span class="attr">"match_all"</span>: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"sort"</span>: [<span class="string">"_doc"</span>],</span><br><span class="line">    <span class="attr">"size"</span>:  <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"_scroll_id"</span>: <span class="string">"DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAwhlFkxyT3g1eWVVUVFhWWJGNEwxM3o1WncAAAAAAAMIZhZMck94NXllVVFRYVliRjRMMTN6NVp3AAAAAAADCGQWTHJPeDV5ZVVRUWFZYkY0TDEzejVadwAAAAAAAwhnFkxyT3g1eWVVUVFhWWJGNEwxM3o1WncAAAAAAAMIaBZMck94NXllVVFRYVliRjRMMTN6NVp3"</span>,</span><br><span class="line">  <span class="attr">"took"</span>: <span class="number">38</span>,</span><br><span class="line">  <span class="attr">"timed_out"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">"_shards"</span>: &#123;</span><br><span class="line">    <span class="attr">"total"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="attr">"successful"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="attr">"failed"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"hits"</span>: &#123;</span><br><span class="line">    <span class="attr">"total"</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">"max_score"</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">"hits"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"_index"</span>: <span class="string">"my_index"</span>,</span><br><span class="line">        <span class="attr">"_type"</span>: <span class="string">"my_type"</span>,</span><br><span class="line">        <span class="attr">"_id"</span>: <span class="string">"2"</span>,</span><br><span class="line">        <span class="attr">"_score"</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="attr">"_source"</span>: &#123;</span><br><span class="line">          <span class="attr">"title"</span>: <span class="string">"2017-01-02"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"sort"</span>: [</span><br><span class="line">          <span class="number">0</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>采用bulk api将scoll查出来的一批数据，批量写入新索引。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POST /_bulk</span><br><span class="line">&#123; <span class="attr">"index"</span>:&#123; <span class="attr">"_index"</span>: <span class="string">"my_index_new"</span>, <span class="attr">"_type"</span>: <span class="string">"my_type"</span>, <span class="attr">"_id"</span>: <span class="string">"2"</span> &#125;&#125;</span><br><span class="line">&#123; <span class="attr">"title"</span>:<span class="string">"2017-01-02"</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>反复循环，查询一批又一批的数据出来，采取bulk api将每一批数据批量写入新索引。</p>
+<p>将goods_index alias切换到my_index_new上去，java应用会直接通过index别名使用新的索引中的数据，java应用程序不需要停机，零停机，高可用。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST /_aliases</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"actions"</span>: [</span><br><span class="line">        &#123; <span class="attr">"remove"</span>: &#123; <span class="attr">"index"</span>: <span class="string">"my_index"</span>, <span class="attr">"alias"</span>: <span class="string">"goods_index"</span> &#125;&#125;,</span><br><span class="line">        &#123; <span class="attr">"add"</span>:    &#123; <span class="attr">"index"</span>: <span class="string">"my_index_new"</span>, <span class="attr">"alias"</span>: <span class="string">"goods_index"</span> &#125;&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接通过goods_index别名来查询，是否成功，这里只有一条，因为我只操作了一条。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">GET /goods_index/my_type/_search</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"took"</span>: <span class="number">24</span>,</span><br><span class="line">  <span class="attr">"timed_out"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">"_shards"</span>: &#123;</span><br><span class="line">    <span class="attr">"total"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="attr">"successful"</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="attr">"failed"</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"hits"</span>: &#123;</span><br><span class="line">    <span class="attr">"total"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"max_score"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"hits"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"_index"</span>: <span class="string">"my_index_new"</span>,</span><br><span class="line">        <span class="attr">"_type"</span>: <span class="string">"my_type"</span>,</span><br><span class="line">        <span class="attr">"_id"</span>: <span class="string">"2"</span>,</span><br><span class="line">        <span class="attr">"_score"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">"_source"</span>: &#123;</span><br><span class="line">          <span class="attr">"title"</span>: <span class="string">"2017-01-02"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ElasticSearch/" rel="tag"># ElasticSearch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/21/elasticSearch06/" rel="next" title="ElasticSearch06-_Search API">
+                <i class="fa fa-chevron-left"></i> ElasticSearch06-_Search API
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/28/elasticSearch08/" rel="prev" title="ElasticSearch08-内核原理">
+                ElasticSearch08-内核原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#索引管理"><span class="nav-number">1.</span> <span class="nav-text">索引管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#手动创建索引"><span class="nav-number">1.1.</span> <span class="nav-text">手动创建索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改索引"><span class="nav-number">1.2.</span> <span class="nav-text">修改索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除索引"><span class="nav-number">1.3.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置分词器"><span class="nav-number">1.4.</span> <span class="nav-text">配置分词器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改分词器"><span class="nav-number">1.5.</span> <span class="nav-text">修改分词器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义分词器"><span class="nav-number">1.6.</span> <span class="nav-text">自定义分词器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型"><span class="nav-number">2.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#根对象"><span class="nav-number">3.</span> <span class="nav-text">根对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#properties"><span class="nav-number">3.1.</span> <span class="nav-text">properties</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#source"><span class="nav-number">3.2.</span> <span class="nav-text">_source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#all"><span class="nav-number">3.3.</span> <span class="nav-text">_all</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标识性metadata"><span class="nav-number">3.4.</span> <span class="nav-text">标识性metadata</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定制dynamic策略"><span class="nav-number">4.</span> <span class="nav-text">定制dynamic策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#date-detection"><span class="nav-number">4.1.</span> <span class="nav-text">date_detection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义dynamic-mapping-template（type-level）"><span class="nav-number">4.2.</span> <span class="nav-text">自定义dynamic mapping template（type level）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义dynamic-mapping-template（index-level）"><span class="nav-number">4.3.</span> <span class="nav-text">自定义dynamic mapping template（index level）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重建索引"><span class="nav-number">5.</span> <span class="nav-text">重建索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#场景"><span class="nav-number">5.1.</span> <span class="nav-text">场景</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2018/09/27/elasticSearch07/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

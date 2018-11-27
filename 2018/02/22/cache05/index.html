@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存预热系统刚上线的时候，redis里面是没有数据的，如果这个时候高并发的流量过来全部跑到mysql，那么mysql肯定就挂掉了。所以我们需要缓存预热">
+<meta name="keywords" content="多级缓存架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高可用缓存架构实战5-缓存预热">
+<meta property="og:url" content="http://www.saily.top/2018/02/22/cache05/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存预热系统刚上线的时候，redis里面是没有数据的，如果这个时候高并发的流量过来全部跑到mysql，那么mysql肯定就挂掉了。所以我们需要缓存预热">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/cache/cache05_1.png">
+<meta property="og:updated_time" content="2018-09-19T01:47:57.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高可用缓存架构实战5-缓存预热">
+<meta name="twitter:description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存预热系统刚上线的时候，redis里面是没有数据的，如果这个时候高并发的流量过来全部跑到mysql，那么mysql肯定就挂掉了。所以我们需要缓存预热">
+<meta name="twitter:image" content="http://www.saily.top/img/cache/cache05_1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2018/02/22/cache05/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>高可用缓存架构实战5-缓存预热 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/02/22/cache05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">高可用缓存架构实战5-缓存预热
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2月 22 2018 20:16:59" itemprop="dateCreated datePublished" datetime="2018-02-22T20:16:59+08:00">2月 22 2018</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 19 2018 9:47:57" itemprop="dateModified" datetime="2018-09-19T09:47:57+08:00">9月 19 2018</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/高可用缓存架构实战/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>此为龙果学院课程笔记，记录以供以后翻看</p>
+<h2 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h2><p>系统刚上线的时候，redis里面是没有数据的，如果这个时候高并发的流量过来全部跑到mysql，那么mysql肯定就挂掉了。所以我们需要缓存预热<br><a id="more"></a></p>
+<ol>
+<li>提前给redis中灌入部分数据，再提供服务</li>
+<li>肯定不可能将所有数据都写入redis，因为数据量太大了，第一耗费的时间太长了，第二根本redis容纳不下所有的数据</li>
+<li>需要根据当天的具体访问情况，实时统计出访问频率较高的热数据</li>
+<li>然后将访问频率较高的热数据写入redis中，肯定是热数据也比较多，我们也得多个服务并行读取数据去写，并行的分布式的缓存预热</li>
+<li>然后将灌入了热数据的redis对外提供服务，这样就不至于冷启动，直接让数据库裸奔了</li>
+</ol>
+<p>缓存预热的方案和流程：</p>
+<p>1、 nginx+lua将访问流量上报到kafka中</p>
+<p>要统计出来当前最新的实时的热数据是哪些，我们就得将商品详情页访问的请求对应的流量，日志，实时上报到kafka中。</p>
+<p>2、 storm从kafka中消费数据，实时统计出每个商品的访问次数，访问次数基于LRU内存数据结构的存储方案</p>
+<p><a href="http://www.saily.top/2018/02/22/cache04-3/">如何使用storm？</a></p>
+<p>优先用内存中的一个LRUMap去存放，这样做性能高，而且没有外部依赖。否则依赖redis的话，我们本就是要防止redis挂掉数据丢失的情况，就不合适了; 用mysql，扛不住高并发读写; 用hbase，hadoop生态系统，维护麻烦，太重了。其实我们只要统计出最近一段时间访问最频繁的商品，然后对它们进行访问计数，同时维护出一个前N个访问最多的商品list即可。计算好每个task大致要存放的商品访问次数的数量，计算出大小。然后构建一个LRUMap，apache commons collections有开源的实现，设定好map的最大大小，就会自动根据LRU算法去剔除多余的数据，保证内存使用限制。即使有部分数据被干掉了，然后下次来重新开始计数，也没关系，因为如果它被LRU算法干掉，那么它就不是热数据，说明最近一段时间都很少访问了。</p>
+<p>3、每个storm task启动的时候，基于zk分布式锁，将自己的id写入zk同一个节点中</p>
+<p>4、每个storm task负责完成自己这里的热数据的统计，每隔一段时间，就遍历一下这个map，然后维护一个前3个商品的list，更新这个list</p>
+<p>5、写一个后台线程，每隔一段时间，比如1分钟，都将排名前3的热数据list，同步到zk中去，存储到这个storm task对应的一个znode中去</p>
+<p>6、我们需要一个服务，比如说，代码可以跟缓存数据生产服务放一起，但是也可以放单独的服务，这个服务可能部署了很多个实例。每次服务启动的时候，就会去拿到一个storm task的列表，然后根据taskid，一个一个的去尝试获取taskid对应的znode的zk分布式锁。如果能获取到分布式锁的话，那么就将那个storm task对应的热数据的list取出来，然后将数据从mysql中查询出来，写入缓存中，进行缓存的预热。因为是多个服务实例，分布式的并行的去做，都基于zk分布式锁做了协调（没有并发冲突问题），分布式并行缓存的预热，效率很高。</p>
+<h2 id="基于nginx-lua完成商品详情页访问流量实时上报kafka的开发"><a href="#基于nginx-lua完成商品详情页访问流量实时上报kafka的开发" class="headerlink" title="基于nginx+lua完成商品详情页访问流量实时上报kafka的开发"></a>基于nginx+lua完成商品详情页访问流量实时上报kafka的开发</h2><p>在nginx这一层，接收到访问请求的时候，就把请求的流量上报发送给kafka。这样的话，storm才能去消费kafka中的实时的访问日志，然后去进行缓存热数据的统计。用的技术方案非常简单，从lua脚本直接创建一个kafka producer，发送数据到kafka。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span></span><br><span class="line">wget https://github.com/doujiang24/lua-resty-kafka/archive/master.zip</span><br><span class="line">yum install -y unzip</span><br><span class="line">unzip master.zip</span><br><span class="line">cp -rf /usr/<span class="built_in">local</span>/lua-resty-kafka-master/lib/resty /usr/hello/lualib</span><br></pre></td></tr></table></figure>
+<p>接着修改脚本，开始写记录日志并发送到kafka：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> cjson = <span class="built_in">require</span>(<span class="string">"cjson"</span>)</span><br><span class="line"><span class="keyword">local</span> producer = <span class="built_in">require</span>(<span class="string">"resty.kafka.producer"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> broker_list = &#123;</span><br><span class="line">	&#123;host=<span class="string">"192.168.2.201"</span>, port=<span class="number">9092</span>&#125;,</span><br><span class="line">	&#123;host=<span class="string">"192.168.2.202"</span>, port=<span class="number">9092</span>&#125;,</span><br><span class="line">	&#123;host=<span class="string">"192.168.2.203"</span>, port=<span class="number">9092</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> log_json = &#123;&#125;</span><br><span class="line"><span class="comment">-- 商品详情页</span></span><br><span class="line">log_json[<span class="string">"request_module"</span>] = <span class="string">"product_detail_info"</span></span><br><span class="line">log_json[<span class="string">"headers"</span>] = ngx.req.get_headers()</span><br><span class="line">log_json[<span class="string">"uri_args"</span>] = ngx.req.get_uri_args()</span><br><span class="line">log_json[<span class="string">"body"</span>] = ngx.req.read_body()  </span><br><span class="line">log_json[<span class="string">"http_version"</span>] = ngx.req.http_version()  </span><br><span class="line">log_json[<span class="string">"method"</span>] =ngx.req.get_method() </span><br><span class="line">log_json[<span class="string">"raw_reader"</span>] = ngx.req.raw_header()  </span><br><span class="line">log_json[<span class="string">"body_data"</span>] = ngx.req.get_body_data()  </span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> message = cjson.encode(log_json);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="keyword">local</span> productId = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"><span class="keyword">local</span> shopId = uri_args[<span class="string">"shopId"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 向kafka发送请求的记录</span></span><br><span class="line"><span class="keyword">local</span> async_producer = producer:new(broker_list, &#123;producer_type=<span class="string">"async"</span>&#125;)</span><br><span class="line"><span class="keyword">local</span> ok, err = async_producer:send(<span class="string">"access-log"</span>, productId, message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 拼接商品和缓存的key</span></span><br><span class="line"><span class="keyword">local</span> productCacheKey = <span class="string">"product_info_"</span>..productId</span><br><span class="line"><span class="keyword">local</span> shopCacheKey = <span class="string">"shop_info_"</span>..shopId</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获取cache</span></span><br><span class="line"><span class="keyword">local</span> productCache = cache_ngx:get(productCacheKey)</span><br><span class="line"><span class="keyword">local</span> shopCache = cache_ngx:get(shopCacheKey)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 没有就从后端查询</span></span><br><span class="line"><span class="keyword">if</span> productCache ==  <span class="string">""</span> <span class="keyword">or</span> productCache == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">"resty.http"</span>)</span><br><span class="line">    <span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">"http://192.168.2.171:8080"</span>,&#123;</span><br><span class="line">	method = <span class="string">"GET"</span>,</span><br><span class="line">	<span class="built_in">path</span> = <span class="string">"/getProductInfo?productId="</span>..productId</span><br><span class="line">    &#125;)</span><br><span class="line">    productCache = resp.body</span><br><span class="line">    cache_ngx:set(productCacheKey, productCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> shopCache == <span class="string">""</span> <span class="keyword">or</span> shopCache == <span class="literal">nil</span> <span class="keyword">then</span> </span><br><span class="line">    <span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">"resty.http"</span>)</span><br><span class="line">    <span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">"http://192.168.2.171:8080"</span>,&#123;</span><br><span class="line">	method = <span class="string">"GET"</span>,</span><br><span class="line">	<span class="built_in">path</span> = <span class="string">"/getShopInfo?shopId="</span>..shopId</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    shopCache = resp.body</span><br><span class="line">    cache_ngx:set(shopCacheKey, shopCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> productCacheJSON = cjson.decode(productCache)</span><br><span class="line"><span class="keyword">local</span> shopCacheJSON = cjson.decode(shopCache)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> context = &#123;</span><br><span class="line">	productId = productCacheJSON.id,</span><br><span class="line">	productName = productCacheJSON.name,</span><br><span class="line">	productPrice = productCacheJSON.price,</span><br><span class="line">	productPictureList = productCacheJSON.pictureList,</span><br><span class="line">	productSpecification = productCacheJSON.specification,</span><br><span class="line">	productService = productCacheJSON.service,</span><br><span class="line">	productColor = productCacheJSON.color,</span><br><span class="line">	productSize = productCacheJSON.size,</span><br><span class="line">	shopId = shopCacheJSON.id,</span><br><span class="line">	shopName = shopCacheJSON.name,</span><br><span class="line">	shopLevel = shopCacheJSON.level,</span><br><span class="line">	shopGoodCommentRate = shopCacheJSON.goodCommentRate</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 渲染模板</span></span><br><span class="line"><span class="keyword">local</span> template = <span class="built_in">require</span>(<span class="string">"resty.template"</span>)</span><br><span class="line">template.render(<span class="string">"product.html"</span>, context)</span><br></pre></td></tr></table></figure>
+<p>两台机器上都这样做，才能统一上报流量到kafka</p>
+<p>修改配置：</p>
+<ol>
+<li>在nginx.conf中，http部分，加入resolver 8.8.8.8;</li>
+<li>在<code>/usr/local/kafka/config/server.properties</code>中加入<code>advertised.host.name = 192.168.2.201</code>(各kafka实例的ip)，杀掉并重启三个kafka进程。<code>nohup bin/kafka-server-start.sh config/server.properties &amp;</code></li>
+<li>启动eshop-cache缓存服务，因为nginx中的本地缓存可能不在了</li>
+</ol>
+<p>下面试试消息是否上报成功，先创建kafka topic。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic access-log --replication-factor 1 --partitions 1 --create</span><br></pre></td></tr></table></figure>
+<p>访问：<a href="http://192.168.2.203/product?productId=1&amp;requestPath=product&amp;shopId=1" target="_blank" rel="noopener">http://192.168.2.203/product?productId=1&amp;requestPath=product&amp;shopId=1</a></p>
+<p>启动consumer，订阅access-log主题可以看到消息已经发送过来了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic access-log --from-beginning</span><br></pre></td></tr></table></figure>
+<p><img src="/img/cache/cache05_1.png" alt="cache05_1.png"></p>
+<h2 id="基于Storm统计热数据"><a href="#基于Storm统计热数据" class="headerlink" title="基于Storm统计热数据"></a>基于Storm统计热数据</h2><ol>
+<li>用Spout从kafka读取消息</li>
+<li>Bolt提取productId发射到下一个Bolt</li>
+<li>基于LRUMap统计热点访问的productId</li>
+<li>将热点数据存入zookeeper</li>
+</ol>
+<p><a href="https://github.com/sail-y/eshop-storm" target="_blank" rel="noopener">https://github.com/sail-y/eshop-storm</a></p>
+<p>预热逻辑：</p>
+<ol>
+<li>服务启动的时候，进行缓存预热</li>
+<li>从zk中读取taskid列表</li>
+<li>依次遍历每个taskid，尝试获取分布式锁，如果获取不到，快速报错，不要等待，因为说明已经有其他服务实例在预热了</li>
+<li>直接尝试获取下一个taskid的分布式锁</li>
+<li>即使获取到了分布式锁，也要检查一下这个taskid的预热状态，如果已经被预热过了，就不再预热了</li>
+<li>执行预热操作，遍历productid列表，查询数据，然后写ehcache和redis</li>
+<li>预热完成后，设置taskid对应的预热状态</li>
+</ol>
+<p><a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a></p>
+<h2 id="基于nginx-lua-storm的热点缓存的流量分发策略自动降级解决方案"><a href="#基于nginx-lua-storm的热点缓存的流量分发策略自动降级解决方案" class="headerlink" title="基于nginx+lua+storm的热点缓存的流量分发策略自动降级解决方案"></a>基于nginx+lua+storm的热点缓存的流量分发策略自动降级解决方案</h2><p>如果因为秒杀等或者抢购等原因，某一个商品访问量瞬间飙升，就算做了流量分发和缓存，因为hash策略所以同一个productId会被分发到同一个nginx服务器中。那么这就可能会导致nginx服务挂掉，这一台挂掉后别的服务上，然后也陆陆续续挂掉，导致整个系统不可用。</p>
+<hr>
+<p><strong>解决办法：</strong></p>
+<p><strong>在storm中实时的计算出瞬间出现的热点</strong></p>
+<p>我们可以基于storm来计算热点数据，比如我们将访问的次数排序，将后面95%的数据访问量取一个平均值。这个时候要设定一个阈值，如果超出95%平均值的n倍，例如5倍，我们就认为是瞬间出现的热点数据，判断其可能在短时间内继续扩大的访问量，甚至达到平均值几十倍，或者几百倍，当发现第一个商品的访问次数，小于平均值的5倍，就安全了，就break掉这个循环。</p>
+<p><strong>流量分发nginx的分发策略降级</strong></p>
+<p>流量分发nginx加一个逻辑：每次访问一个商品详情页的时候，如果发现它是个热点，那么立即做流量分发策略的降级。降级成对这个热点商品，流量分发采取随机负载均衡发送到所有的后端应用nginx服务器上去。瞬间将热点缓存数据的访问从hash分发全部到一台nginx，变成了负载均衡发送到多台nginx上。</p>
+<p><strong>storm还需要保存下来上次识别出来的热点list</strong></p>
+<p>保存上次的热点数据，跟这次计算出的热点数据进行比较，那么就需要对某些数据进行热点取消，删除nginx本地缓存。</p>
+<h3 id="代码实战"><a href="#代码实战" class="headerlink" title="代码实战"></a>代码实战</h3><p><a href="https://github.com/sail-y/eshop-storm" target="_blank" rel="noopener">https://github.com/sail-y/eshop-storm</a></p>
+<pre><code>HotProductFindThread.java
+</code></pre><p>新增的逻辑：</p>
+<ol>
+<li>将LRUMap中的数据按照访问次数进行全局的排序</li>
+<li>计算95%的商品访问次数的平均值</li>
+<li>遍历排序后的商品访问次数，降序</li>
+<li>如果某个商品是平均访问量的10倍以上，就认为是缓存的热点</li>
+<li>将缓存热点数据推送到流量分发的nginx中</li>
+<li>将获取到的换成你数据推送到nginx服务上</li>
+</ol>
+<h3 id="lua接口开发"><a href="#lua接口开发" class="headerlink" title="lua接口开发"></a>lua接口开发</h3><p><strong>将热点数据进行标记接口开发</strong></p>
+<p>之前流量分发的nginx服务是部署在192.168.2.203上面的，所以<code>vi /usr/hello/hello.conf</code></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       <span class="number">80</span>;</span><br><span class="line">    server_name  _;</span><br><span class="line"></span><br><span class="line">    location /hello &#123;</span><br><span class="line">        default_type <span class="string">'text/html'</span>;</span><br><span class="line">        content_by_lua_file /usr/hello/lua/hello.lua;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location /product &#123;</span><br><span class="line">        default_type <span class="string">'text/html'</span>;</span><br><span class="line">        content_by_lua_file /usr/hello/lua/distribute.lua;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location /hot &#123;</span><br><span class="line">        default_type <span class="string">'text/html'</span>;</span><br><span class="line">        content_by_lua_file /usr/hello/lua/hot.lua;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/hello/lua/hot.lua</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="built_in">local</span> product_id = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> hot_product_cache_key = <span class="string">"hot_product_"</span>..product_id</span><br><span class="line">cache_ngx:<span class="built_in">set</span>(hot_product_cache_key, <span class="string">"true"</span>, 60*60)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>设置缓存数据接口开发</strong></p>
+<p><strong>分别在201和201的nginx应用增加一个hot的配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/hello/hello.conf</span><br><span class="line">location /hot &#123;</span><br><span class="line">	default_type <span class="string">'text/html'</span>;</span><br><span class="line">	content_by_lua_file /usr/hello/lua/hot.lua;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vi /usr/hello/lua/hot.lua</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="built_in">local</span> product_id = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"><span class="built_in">local</span> product_info = uri_args[<span class="string">"productInfo"</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> product_cache_key = <span class="string">"product_info_"</span>..product_id</span><br><span class="line"><span class="built_in">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line">cache_ngx:<span class="built_in">set</span>(product_cache_key, product_info, 60*60)</span><br></pre></td></tr></table></figure>
+<h3 id="自动降级代码开发"><a href="#自动降级代码开发" class="headerlink" title="自动降级代码开发"></a>自动降级代码开发</h3><p>下面在distribute.lua里面开发自动降级的逻辑</p>
+<ol>
+<li>取出之前在hot.lua中缓存的hot_product_cache_key</li>
+<li>如果为<code>true</code>就不走hash算法进行流量分发了，走随机负载均衡算法。</li>
+</ol>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> hosts = &#123;<span class="string">"192.168.2.201"</span>, <span class="string">"192.168.2.202"</span>&#125;</span><br><span class="line"><span class="keyword">local</span> backend = <span class="string">""</span></span><br><span class="line"><span class="keyword">local</span> hot_product_key = <span class="string">"hot_product_"</span>..productId</span><br><span class="line"><span class="keyword">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"><span class="keyword">local</span> hot_product_flag = cache_ngx:get(hot_product_key)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> hot_product_flag == <span class="string">"true"</span> <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">math</span>.<span class="built_in">randomseed</span>(<span class="built_in">tostring</span>(<span class="built_in">os</span>.<span class="built_in">time</span>()):<span class="built_in">reverse</span>():<span class="built_in">sub</span>(<span class="number">1</span>, <span class="number">7</span>))</span><br><span class="line">  <span class="keyword">local</span> index = <span class="built_in">math</span>.<span class="built_in">random</span>(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">  backend = <span class="string">"http://"</span>..hosts[index]</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="keyword">local</span> hash = ngx.crc32_long(productId)</span><br><span class="line">  <span class="keyword">local</span> index = (hash % <span class="number">2</span>) + <span class="number">1</span></span><br><span class="line">  backend = <span class="string">"http://"</span>..hosts[index]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="热点缓存消失自动识别和感知逻辑开发"><a href="#热点缓存消失自动识别和感知逻辑开发" class="headerlink" title="热点缓存消失自动识别和感知逻辑开发"></a>热点缓存消失自动识别和感知逻辑开发</h3><p><a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a></p>
+<p><strong>HotProductFindThread.java</strong>    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 缓存热点消失，发送一个一个http请求到nginx取消热点缓存的标识</span><br><span class="line">String url = &quot;http://192.168.2.203/cancelHot?productId=&quot; + productId;</span><br><span class="line">HttpClientUtils.sendGetRequest(url);</span><br></pre></td></tr></table></figure>
+<p><strong>203上nginx的lua接口开发</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">vi hello.conf </span><br><span class="line">location /cancelHot &#123;</span><br><span class="line">    default_type <span class="string">'text/html'</span>;</span><br><span class="line">    content_by_lua_file /usr/hello/lua/cancelHot.lua;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cp lua/hot.lua lua/cancelHot.lua</span><br><span class="line"></span><br><span class="line">vi lua/cancelHot.lua</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="built_in">local</span> product_id = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> hot_product_cache_key = <span class="string">"hot_product_"</span>..product_id</span><br><span class="line"></span><br><span class="line">cache_ngx:<span class="built_in">set</span>(hot_product_cache_key, <span class="string">"false"</span>, 60)</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>手动将某个热点设置为热点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.2.203/hot?productId=1</span><br></pre></td></tr></table></figure>
+<p>然后访问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.2.203/product?productId=1&amp;requestPath=product&amp;shopId=1</span><br></pre></td></tr></table></figure>
+<p>可以看到当缓存变成热点以后，访问的服务是随机变化的。</p>
+<p>因为代码里用了缓存，所以记得在203的上面<code>vi conf/nginx.conf</code>，在http模块下新增<code>lua_shared_dict my_cache 128m;</code>。</p>
+<ol>
+<li>多访问几次不同的商品ID</li>
+<li>用storm运行topology，观察日志是否正确</li>
+<li>观察zookeeper里面的数据是否正确</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkCli.sh</span><br><span class="line">get /task-hot-product-list-4</span><br><span class="line">[5,1,3]</span><br></pre></td></tr></table></figure>
+<p>storm日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">2018-03-03 21:12:56.627 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread计算出一份排序后的商品访问次数列表】 productCountListJSON=[&#123;1:11&#125;,&#123;3:1&#125;,&#123;5:1&#125;,&#123;9:1&#125;,&#123;7:1&#125;]</span><br><span class="line">2018-03-03 21:12:56.637 c.r.e.s.b.ProductCountBolt Thread-16 [INFO] 【ProductCountThread计算出一份top3热门商品列表】zk path=/task-hot-product-list-4, topnProductListJSON=[1,3,5]</span><br><span class="line">2018-03-03 21:12:56.677 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】计算出后95%访问次数的平均值 avgCount=1.0</span><br><span class="line">2018-03-03 21:12:56.821 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】 发现一个新的热点 productId=1</span><br><span class="line">2018-03-03 21:12:58.754 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] http://192.168.2.201/hot?productId=1&amp;productInfo=%7B%22id%22%3A1%2C%22name%22%3A%22iphone7%E6%89%8B%E6%9C%BA%22%2C%22price%22%3A5599.0%2C%22pictureList%22%3A%22a.jpg%2Cb.jpg%22%2C%22specification%22%3A%22iphone7%E7%9A%84%E8%A7%84%E6%A0%BC%22%2C%22service%22%3A%22iphone7%E7%9A%84%E5%94%AE%E5%90%8E%E6%9C%8D%E5%8A%A1%22%2C%22color%22%3A%22%E7%BA%A2%E8%89%B2%2C%E7%99%BD%E8%89%B2%2C%E9%BB%91%E8%89%B2%22%2C%22size%22%3A%225.5%22%2C%22shopId%22%3A1%2C%22modifiedTime%22%3A%222017-01-01+12%3A00%3A00%22%7D%0A</span><br><span class="line">2018-03-03 21:12:58.787 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] http://192.168.2.202/hot?productId=1&amp;productInfo=%7B%22id%22%3A1%2C%22name%22%3A%22iphone7%E6%89%8B%E6%9C%BA%22%2C%22price%22%3A5599.0%2C%22pictureList%22%3A%22a.jpg%2Cb.jpg%22%2C%22specification%22%3A%22iphone7%E7%9A%84%E8%A7%84%E6%A0%BC%22%2C%22service%22%3A%22iphone7%E7%9A%84%E5%94%AE%E5%90%8E%E6%9C%8D%E5%8A%A1%22%2C%22color%22%3A%22%E7%BA%A2%E8%89%B2%2C%E7%99%BD%E8%89%B2%2C%E9%BB%91%E8%89%B2%22%2C%22size%22%3A%225.5%22%2C%22shopId%22%3A1%2C%22modifiedTime%22%3A%222017-01-01+12%3A00%3A00%22%7D%0A</span><br><span class="line">2018-03-03 21:12:58.807 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】 保存上次热点数据 lastTimeHotProductList=[1]</span><br><span class="line">2018-03-03 21:13:01.637 c.r.e.s.b.ProductCountBolt Thread-16 [INFO] 【ProductCountThread打印productCountMap的长度】size=5</span><br></pre></td></tr></table></figure>
+<p>然后访问几次别的商品，把平均数提高。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2018-03-03 21:15:01.948 c.r.e.s.b.ProductCountBolt Thread-16 [INFO] 【ProductCountThread计算出一份top3热门商品列表】zk path=/task-hot-product-list-4, topnProductListJSON=[1,3,5]</span><br><span class="line">2018-03-03 21:15:03.839 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【ProductCountThread打印productCountMap的长度】size=5</span><br><span class="line">2018-03-03 21:15:03.839 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread计算出一份排序后的商品访问次数列表】 productCountListJSON=[&#123;1:12&#125;,&#123;3:3&#125;,&#123;5:1&#125;,&#123;9:1&#125;,&#123;7:1&#125;]</span><br><span class="line">2018-03-03 21:15:03.839 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】计算出后95%访问次数的平均值 avgCount=1.5</span><br><span class="line">2018-03-03 21:15:03.866 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】 发现一个热点消失了 productId=1</span><br><span class="line">2018-03-03 21:15:03.866 c.r.e.s.b.ProductCountBolt Thread-17 [INFO] 【HotProductFindThread】 保存上次热点数据 lastTimeHotProductList=[]</span><br><span class="line">2018-03-03 21:15:06.949 c.r.e.s.b.ProductCountBolt Thread-16 [INFO] 【ProductCountThread打印productCountMap的长度】size=5</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多级缓存架构/" rel="tag"># 多级缓存架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/22/cache04-3/" rel="next" title="Storm介绍和集群部署、WordCount演示">
+                <i class="fa fa-chevron-left"></i> Storm介绍和集群部署、WordCount演示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/11/hystrix01/" rel="prev" title="Hystrix介绍和简单使用">
+                Hystrix介绍和简单使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存预热"><span class="nav-number">1.</span> <span class="nav-text">缓存预热</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于nginx-lua完成商品详情页访问流量实时上报kafka的开发"><span class="nav-number">2.</span> <span class="nav-text">基于nginx+lua完成商品详情页访问流量实时上报kafka的开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于Storm统计热数据"><span class="nav-number">3.</span> <span class="nav-text">基于Storm统计热数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于nginx-lua-storm的热点缓存的流量分发策略自动降级解决方案"><span class="nav-number">4.</span> <span class="nav-text">基于nginx+lua+storm的热点缓存的流量分发策略自动降级解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实战"><span class="nav-number">4.1.</span> <span class="nav-text">代码实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lua接口开发"><span class="nav-number">4.2.</span> <span class="nav-text">lua接口开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动降级代码开发"><span class="nav-number">4.3.</span> <span class="nav-text">自动降级代码开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#热点缓存消失自动识别和感知逻辑开发"><span class="nav-number">4.4.</span> <span class="nav-text">热点缓存消失自动识别和感知逻辑开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.5.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2018/02/22/cache05/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

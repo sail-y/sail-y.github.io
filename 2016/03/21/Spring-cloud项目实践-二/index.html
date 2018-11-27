@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="配置中心和服务注册中心我们先把配置中心和服务注册中心跑起来，这个先照着之前的教程做，很简单没什么变动。就是git仓库需要密码的话加入下面的配置就好。 1234567891011121314151617181920server:  port: 8888eureka:  instance:    hostname: configserver  client:    registerWithEureka">
+<meta name="keywords" content="spring-cloud,微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring cloud项目实践(二)">
+<meta property="og:url" content="http://www.saily.top/2016/03/21/Spring-cloud项目实践-二/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="配置中心和服务注册中心我们先把配置中心和服务注册中心跑起来，这个先照着之前的教程做，很简单没什么变动。就是git仓库需要密码的话加入下面的配置就好。 1234567891011121314151617181920server:  port: 8888eureka:  instance:    hostname: configserver  client:    registerWithEureka">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-12-01T08:46:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring cloud项目实践(二)">
+<meta name="twitter:description" content="配置中心和服务注册中心我们先把配置中心和服务注册中心跑起来，这个先照着之前的教程做，很简单没什么变动。就是git仓库需要密码的话加入下面的配置就好。 1234567891011121314151617181920server:  port: 8888eureka:  instance:    hostname: configserver  client:    registerWithEureka">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2016/03/21/Spring-cloud项目实践-二/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spring cloud项目实践(二) | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/21/Spring-cloud项目实践-二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring cloud项目实践(二)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：3月 21 2016 21:44:07" itemprop="dateCreated datePublished" datetime="2016-03-21T21:44:07+08:00">3月 21 2016</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="配置中心和服务注册中心"><a href="#配置中心和服务注册中心" class="headerlink" title="配置中心和服务注册中心"></a>配置中心和服务注册中心</h1><p>我们先把配置中心和服务注册中心跑起来，这个先照着之前的教程做，很简单没什么变动。<br>就是git仓库需要密码的话加入下面的配置就好。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8888</span><br><span class="line"></span><br><span class="line">eureka:</span><br><span class="line">  instance:</span><br><span class="line">    hostname: configserver</span><br><span class="line">  client:</span><br><span class="line">    registerWithEureka: true</span><br><span class="line">    fetchRegistry: true</span><br><span class="line">    serviceUrl:</span><br><span class="line">      defaultZone: http://$&#123;config.host:192.168.99.100&#125;:8761/eureka/</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    config:</span><br><span class="line">      server:</span><br><span class="line">        git:</span><br><span class="line">          uri: yourgiturl</span><br><span class="line">          password: ****</span><br><span class="line">          username: ****</span><br></pre></td></tr></table></figure>
+<p>这里的<code>${config.host:192.168.99.100}</code>表示没有读到config.host就用192.168.99.100这个值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar cloud-simple-service-1.0.0.jar --config.host=localhost</span><br></pre></td></tr></table></figure>
+<p>这个用法就很灵活了，后面配合Dockerfile可以根据不同的环境来启动不同的配置。<br><a id="more"></a></p>
+<h1 id="微服务应用"><a href="#微服务应用" class="headerlink" title="微服务应用"></a>微服务应用</h1><h2 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h2><p><a href="http://www.cnblogs.com/skyblog/p/5129603.html" target="_blank" rel="noopener">http://www.cnblogs.com/skyblog/p/5129603.html</a><br>这篇文章讲了如何配置一个使用myabtis的项目，我们照着他的做就可以了。</p>
+<h2 id="Mongodb"><a href="#Mongodb" class="headerlink" title="Mongodb"></a>Mongodb</h2><p>我这里说一下配置mongodb遇到的问题。<br>首先在<strong>pom.xml</strong>中加入mongodb的依赖。因为我是用的<em>mongodb3</em>，spring-boot-starter-data-mongodb依赖的驱动是2.0版本的，需要修改一下，加入3.0驱动的依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--mongo驱动版本过低--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-mongodb&lt;/artifactId&gt;</span><br><span class="line">    &lt;exclusions&gt;</span><br><span class="line">        &lt;exclusion&gt;</span><br><span class="line">            &lt;groupId&gt;org.mongodb&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mongo-java-driver&lt;/artifactId&gt;</span><br><span class="line">        &lt;/exclusion&gt;</span><br><span class="line">    &lt;/exclusions&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.mongodb&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mongo-java-driver&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.2.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">```     </span><br><span class="line"></span><br><span class="line">不过还是认证会出错，解决方案参考下面的文章。	</span><br><span class="line">[http://zjumty.iteye.com/blog/2198432](http://zjumty.iteye.com/blog/2198432)</span><br><span class="line"></span><br><span class="line">照着这个文章做完依然还是有错误，所以我这里还有一些额外的改动，一共自建了3个类。</span><br><span class="line">首先在`Application.java`里新加上`MongoAutoConfiguration.class`，`MongoDataAutoConfiguration.class`</span><br></pre></td></tr></table></figure>
+<p>@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br></pre></td><td class="code"><pre><span class="line">自定义的3个类如下		</span><br><span class="line">`MongoProperties.java`		</span><br><span class="line">```java</span><br><span class="line">@ConfigurationProperties(prefix = &quot;spring.data.mongodb&quot;)</span><br><span class="line">public class MongoProperties &#123;</span><br><span class="line"></span><br><span class="line">    private static final int DEFAULT_PORT = 27017;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Mongo server host.</span><br><span class="line">     */</span><br><span class="line">    private String host;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Mongo server port.</span><br><span class="line">     */</span><br><span class="line">    private Integer port = null;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Mongo database URI. When set, host and port are ignored.</span><br><span class="line">     */</span><br><span class="line">    private String uri = &quot;mongodb://localhost/test&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Database name.</span><br><span class="line">     */</span><br><span class="line">    private String database;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Authentication database name.</span><br><span class="line">     */</span><br><span class="line">    private String authenticationDatabase;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * GridFS database name.</span><br><span class="line">     */</span><br><span class="line">    private String gridFsDatabase;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Login user of the mongo server.</span><br><span class="line">     */</span><br><span class="line">    private String username;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Login password of the mongo server.</span><br><span class="line">     */</span><br><span class="line">    private char[] password;</span><br><span class="line"></span><br><span class="line">    public String getHost() &#123;</span><br><span class="line">        return this.host;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setHost(String host) &#123;</span><br><span class="line">        this.host = host;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getDatabase() &#123;</span><br><span class="line">        return this.database;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setDatabase(String database) &#123;</span><br><span class="line">        this.database = database;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getAuthenticationDatabase() &#123;</span><br><span class="line">        return this.authenticationDatabase;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAuthenticationDatabase(String authenticationDatabase) &#123;</span><br><span class="line">        this.authenticationDatabase = authenticationDatabase;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getUsername() &#123;</span><br><span class="line">        return this.username;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUsername(String username) &#123;</span><br><span class="line">        this.username = username;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public char[] getPassword() &#123;</span><br><span class="line">        return this.password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPassword(char[] password) &#123;</span><br><span class="line">        this.password = password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void clearPassword() &#123;</span><br><span class="line">        if (this.password == null) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        for (int i = 0; i &lt; this.password.length; i++) &#123;</span><br><span class="line">            this.password[i] = 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getUri() &#123;</span><br><span class="line">        return this.uri;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUri(String uri) &#123;</span><br><span class="line">        this.uri = uri;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getPort() &#123;</span><br><span class="line">        return this.port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPort(Integer port) &#123;</span><br><span class="line">        this.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getGridFsDatabase() &#123;</span><br><span class="line">        return this.gridFsDatabase;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGridFsDatabase(String gridFsDatabase) &#123;</span><br><span class="line">        this.gridFsDatabase = gridFsDatabase;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getMongoClientDatabase() &#123;</span><br><span class="line">        if (this.database != null) &#123;</span><br><span class="line">            return this.database;</span><br><span class="line">        &#125;</span><br><span class="line">        return new MongoClientURI(this.uri).getDatabase();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public MongoClient createMongoClient(MongoClientOptions options)</span><br><span class="line">            throws UnknownHostException &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            if (hasCustomAddress() || hasCustomCredentials()) &#123;</span><br><span class="line">                if (options == null) &#123;</span><br><span class="line">                    options = MongoClientOptions.builder().build();</span><br><span class="line">                &#125;</span><br><span class="line">                List&lt;MongoCredential&gt; credentials = null;</span><br><span class="line">                if (hasCustomCredentials()) &#123;</span><br><span class="line">                    String database = this.authenticationDatabase == null</span><br><span class="line">                            ? getMongoClientDatabase() : this.authenticationDatabase;</span><br><span class="line">                    credentials = Arrays.asList(MongoCredential.createScramSha1Credential(</span><br><span class="line">                            this.username, database, this.password));</span><br><span class="line">                &#125;</span><br><span class="line">                String host = this.host == null ? &quot;localhost&quot; : this.host;</span><br><span class="line">                int port = this.port == null ? DEFAULT_PORT : this.port;</span><br><span class="line">                return new MongoClient(Arrays.asList(new ServerAddress(host, port)),</span><br><span class="line">                        credentials, options);</span><br><span class="line">            &#125;</span><br><span class="line">            // The options and credentials are in the URI</span><br><span class="line">            return new MongoClient(new MongoClientURI(this.uri, builder(options)));</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            clearPassword();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean hasCustomAddress() &#123;</span><br><span class="line">        return this.host != null || this.port != null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean hasCustomCredentials() &#123;</span><br><span class="line">        return this.username != null &amp;&amp; this.password != null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private MongoClientOptions.Builder builder(MongoClientOptions options) &#123;</span><br><span class="line">        MongoClientOptions.Builder builder = MongoClientOptions.builder();</span><br><span class="line">        if (options != null) &#123;</span><br><span class="line">            builder.alwaysUseMBeans(options.isAlwaysUseMBeans());</span><br><span class="line">            builder.connectionsPerHost(options.getConnectionsPerHost());</span><br><span class="line">            builder.connectTimeout(options.getConnectTimeout());</span><br><span class="line">            builder.cursorFinalizerEnabled(options.isCursorFinalizerEnabled());</span><br><span class="line">            builder.dbDecoderFactory(options.getDbDecoderFactory());</span><br><span class="line">            builder.dbEncoderFactory(options.getDbEncoderFactory());</span><br><span class="line">            builder.description(options.getDescription());</span><br><span class="line">            builder.maxWaitTime(options.getMaxWaitTime());</span><br><span class="line">            builder.readPreference(options.getReadPreference());</span><br><span class="line">            builder.socketFactory(options.getSocketFactory());</span><br><span class="line">            builder.socketKeepAlive(options.isSocketKeepAlive());</span><br><span class="line">            builder.socketTimeout(options.getSocketTimeout());</span><br><span class="line">            builder.threadsAllowedToBlockForConnectionMultiplier(</span><br><span class="line">                    options.getThreadsAllowedToBlockForConnectionMultiplier());</span><br><span class="line">            builder.writeConcern(options.getWriteConcern());</span><br><span class="line">        &#125;</span><br><span class="line">        return builder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里跟上面的文章是一样的，就是<code>MongoCredential.createScramSha1Credential</code>这一句不一样而已。而且<code>MongoCredential.createScramSha1Credential</code>这个方法是在3.0的驱动里面才有的。</p>
+<p>然后是<code>MongoConfiguration.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableConfigurationProperties(MongoProperties.class)</span><br><span class="line">public class MongoConfiguration &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private MongoProperties properties;</span><br><span class="line"></span><br><span class="line">    @Autowired(required = false)</span><br><span class="line">    private MongoClientOptions options;</span><br><span class="line"></span><br><span class="line">    private Mongo mongo;</span><br><span class="line"></span><br><span class="line">    @PreDestroy</span><br><span class="line">    public void close() &#123;</span><br><span class="line">        if (this.mongo != null) &#123;</span><br><span class="line">            this.mongo.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public Mongo mongo() throws UnknownHostException &#123;</span><br><span class="line">        this.mongo = this.properties.createMongoClient(this.options);</span><br><span class="line">        return this.mongo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就引用我们刚才自建的MongoProperties，这样spring在链接mngodb的时候就不会认证出错了。不过我还遇到了了另外一个问题，MongoDataAutoConfiguration引用的MongoProperties也得换成我们自己的，而且升级成3.0的驱动以后，MongoDataAutoConfiguration里面的代码还得修改一下才能正常运行。下面是我修改以后的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@ConditionalOnClass(&#123;Mongo.class, MongoTemplate.class&#125;)</span><br><span class="line">@EnableConfigurationProperties(MongoProperties.class)</span><br><span class="line">@AutoConfigureAfter(MongoConfiguration.class)</span><br><span class="line">public class MongoDataConfiguration &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private MongoProperties properties;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private Environment environment;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ResourceLoader resourceLoader;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @SuppressWarnings(&quot;deprecation&quot;)</span><br><span class="line">    @Bean</span><br><span class="line">    @ConditionalOnMissingBean</span><br><span class="line">    public MongoDbFactory mongoDbFactory(Mongo mongo) throws Exception &#123;</span><br><span class="line">        String database = this.properties.getMongoClientDatabase();</span><br><span class="line">//        String authDatabase = this.properties.getAuthenticationDatabase();</span><br><span class="line">//        if (StringUtils.hasLength(authDatabase)) &#123;</span><br><span class="line">//            String username = this.properties.getUsername();</span><br><span class="line">//            String password = new String(this.properties.getPassword());</span><br><span class="line">//            UserCredentials credentials = new UserCredentials(username, password);</span><br><span class="line">//            return new SimpleMongoDbFactory(mongo, database, credentials, authDatabase);</span><br><span class="line">//        &#125;</span><br><span class="line">        return new SimpleMongoDbFactory(mongo, database);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @ConditionalOnMissingBean</span><br><span class="line">    public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory,</span><br><span class="line">                                       MongoConverter converter) throws UnknownHostException &#123;</span><br><span class="line">        return new MongoTemplate(mongoDbFactory, converter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @ConditionalOnMissingBean(MongoConverter.class)</span><br><span class="line">    public MappingMongoConverter mappingMongoConverter(MongoDbFactory factory,</span><br><span class="line">                                                       MongoMappingContext context, BeanFactory beanFactory) &#123;</span><br><span class="line">        DbRefResolver dbRefResolver = new DefaultDbRefResolver(factory);</span><br><span class="line">        MappingMongoConverter mappingConverter = new MappingMongoConverter(dbRefResolver,</span><br><span class="line">                context);</span><br><span class="line">        try &#123;</span><br><span class="line">            mappingConverter</span><br><span class="line">                    .setCustomConversions(beanFactory.getBean(CustomConversions.class));</span><br><span class="line">        &#125; catch (NoSuchBeanDefinitionException ex) &#123;</span><br><span class="line">            // Ignore</span><br><span class="line">        &#125;</span><br><span class="line">        return mappingConverter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @ConditionalOnMissingBean</span><br><span class="line">    public MongoMappingContext mongoMappingContext(BeanFactory beanFactory)</span><br><span class="line">            throws ClassNotFoundException &#123;</span><br><span class="line">        MongoMappingContext context = new MongoMappingContext();</span><br><span class="line">        context.setInitialEntitySet(getInitialEntitySet(beanFactory));</span><br><span class="line">        return context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Set&lt;Class&lt;?&gt;&gt; getInitialEntitySet(BeanFactory beanFactory)</span><br><span class="line">            throws ClassNotFoundException &#123;</span><br><span class="line">        Set&lt;Class&lt;?&gt;&gt; entitySet = new HashSet&lt;Class&lt;?&gt;&gt;();</span><br><span class="line">        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(</span><br><span class="line">                false);</span><br><span class="line">        scanner.setEnvironment(this.environment);</span><br><span class="line">        scanner.setResourceLoader(this.resourceLoader);</span><br><span class="line">        scanner.addIncludeFilter(new AnnotationTypeFilter(Document.class));</span><br><span class="line">        scanner.addIncludeFilter(new AnnotationTypeFilter(Persistent.class));</span><br><span class="line">        for (String basePackage : getMappingBasePackages(beanFactory)) &#123;</span><br><span class="line">            if (StringUtils.hasText(basePackage)) &#123;</span><br><span class="line">                for (BeanDefinition candidate : scanner</span><br><span class="line">                        .findCandidateComponents(basePackage)) &#123;</span><br><span class="line">                    entitySet.add(ClassUtils.forName(candidate.getBeanClassName(),</span><br><span class="line">                            MongoDataConfiguration.class.getClassLoader()));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return entitySet;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static Collection&lt;String&gt; getMappingBasePackages(BeanFactory beanFactory) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return AutoConfigurationPackages.get(beanFactory);</span><br><span class="line">        &#125; catch (IllegalStateException ex) &#123;</span><br><span class="line">            // no auto-configuration package registered yet</span><br><span class="line">            return Collections.emptyList();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @ConditionalOnMissingBean</span><br><span class="line">    public GridFsTemplate gridFsTemplate(MongoDbFactory mongoDbFactory,</span><br><span class="line">                                         MongoTemplate mongoTemplate) &#123;</span><br><span class="line">        return new GridFsTemplate(</span><br><span class="line">                new GridFsMongoDbFactory(mongoDbFactory, this.properties),</span><br><span class="line">                mongoTemplate.getConverter());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * &#123;@link MongoDbFactory&#125; decorator to respect</span><br><span class="line">     * &#123;@link MongoProperties#getGridFsDatabase()&#125; if set.</span><br><span class="line">     */</span><br><span class="line">    private static class GridFsMongoDbFactory implements MongoDbFactory &#123;</span><br><span class="line"></span><br><span class="line">        private final MongoDbFactory mongoDbFactory;</span><br><span class="line"></span><br><span class="line">        private final MongoProperties properties;</span><br><span class="line"></span><br><span class="line">        public GridFsMongoDbFactory(MongoDbFactory mongoDbFactory,</span><br><span class="line">                                    MongoProperties properties) &#123;</span><br><span class="line">            Assert.notNull(mongoDbFactory, &quot;MongoDbFactory must not be null&quot;);</span><br><span class="line">            Assert.notNull(properties, &quot;Properties must not be null&quot;);</span><br><span class="line">            this.mongoDbFactory = mongoDbFactory;</span><br><span class="line">            this.properties = properties;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public DB getDb() throws DataAccessException &#123;</span><br><span class="line">            String gridFsDatabase = this.properties.getGridFsDatabase();</span><br><span class="line">            if (StringUtils.hasText(gridFsDatabase)) &#123;</span><br><span class="line">                return this.mongoDbFactory.getDb(gridFsDatabase);</span><br><span class="line">            &#125;</span><br><span class="line">            return this.mongoDbFactory.getDb();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public DB getDb(String dbName) throws DataAccessException &#123;</span><br><span class="line">            return this.mongoDbFactory.getDb(dbName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public PersistenceExceptionTranslator getExceptionTranslator() &#123;</span><br><span class="line">            return this.mongoDbFactory.getExceptionTranslator();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public MongoTemplate syslogMongoTemplate(Mongo mongo) &#123;</span><br><span class="line">        return new MongoTemplate(mongo, &quot;syslog&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我注释掉了一些代码，然后授权就正常了，估计3.0以后认证方式改了，这些API已经完全被弃用了，使用的话会直接抛异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UserCredentials credentials = new UserCredentials(username, password);</span><br><span class="line">return new SimpleMongoDbFactory(mongo, database, credentials, authDatabase);</span><br></pre></td></tr></table></figure>
+<p>点进去看看源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Create an instance of SimpleMongoDbFactory given the Mongo instance, database name, and username/password</span><br><span class="line"> * </span><br><span class="line"> * @param mongo Mongo instance, must not be &#123;@literal null&#125;.</span><br><span class="line"> * @param databaseName Database name, must not be &#123;@literal null&#125; or empty.</span><br><span class="line"> * @param credentials username and password.</span><br><span class="line"> * @param authenticationDatabaseName the database name to use for authentication</span><br><span class="line"> * @deprecated since 1.7. The credentials used should be provided by &#123;@link MongoClient#getCredentialsList()&#125;.</span><br><span class="line"> */</span><br><span class="line">@Deprecated</span><br><span class="line">public SimpleMongoDbFactory(Mongo mongo, String databaseName, UserCredentials credentials,</span><br><span class="line">        String authenticationDatabaseName) &#123;</span><br><span class="line">    this(mongo, databaseName, credentials, false, authenticationDatabaseName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就是针对不同DB不同MongoTemplate的配置了，以后使用的话只需要在相应的类里注入就可以了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public MongoTemplate syslogMongoTemplate(Mongo mongo) &#123;</span><br><span class="line">    return new MongoTemplate(mongo, &quot;syslog&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private MongoTemplate syslogMongoTemplate;</span><br></pre></td></tr></table></figure>
+<h3 id="Mongodb配置信息"><a href="#Mongodb配置信息" class="headerlink" title="Mongodb配置信息"></a>Mongodb配置信息</h3><p>可以看到在<code>MongoProperties</code>中有一个注解是<code>@ConfigurationProperties(prefix = &quot;spring.data.mongodb&quot;)</code>。spring-boot会默认读取这些配置，由于我们使用了配置中心。所以它也能从配置中心的配置文件中读取到，不需要配置在本地。(我把示例demo中的properties换成了yml的配置方式)        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysqldb:</span><br><span class="line">    datasource:</span><br><span class="line">        url: jdbc\:mysql\://localhost\:3306/test?useUnicode\=true&amp;characterEncoding\=utf-8</span><br><span class="line">        username: csst</span><br><span class="line">        password: csst</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">    data:</span><br><span class="line">      mongodb:</span><br><span class="line">        host: 10.168.248.36</span><br><span class="line">        port: 27017</span><br><span class="line">        username: test</span><br><span class="line">        password: test</span><br><span class="line">        authenticationDatabase: admin</span><br></pre></td></tr></table></figure>
+<p>就这样加在之前配置文件中就好。如果在调试的过程中发现配置没有读取到，可以用下面的方式来查看配置中心是否配置正确并且已经开启服务。<br><code>http://10.168.248.36:8888/user-dev.yml</code><br><code>http://10.168.248.36:8888/user-dev.properties</code><br>在配置中心的后面加上配置文件的名字可以直接在浏览器中查看。在调试配置中心的时候也可以采取这样的操作，这样你能看到你的git地址和授权错误信息等。</p>
+<p>spring-data-mongo提供了一个<code>MongoRepository</code>实现增删改查和复杂查询，在spring-boot中如何指定它使用哪个db呢？如果不配置他默认是使用的test。我测试了一下，加入下面的配置类就可以了。可以扫描一个包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableMongoRepositories(basePackageClasses = ApiLogRepository.class)</span><br><span class="line">@AutoConfigureAfter(MongoDataAutoConfiguration.class)</span><br><span class="line">public class SysLogDB extends AbstractMongoConfiguration &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private Mongo mongo;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String getDatabaseName() &#123;</span><br><span class="line">        return &quot;syslog&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Mongo mongo() throws Exception &#123;</span><br><span class="line">        return mongo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里服务应用项目的mybatis和mongodb都配置好了，可以进行业务代码开发了。没有一个xml配置文件的感觉是不是很爽？下一篇文章讲解如何通过jenkins进行持续集成开发。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+          
+            <a href="/tags/微服务/" rel="tag"># 微服务</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/21/Spring-cloud项目实践/" rel="next" title="Spring cloud项目实践(一)">
+                <i class="fa fa-chevron-left"></i> Spring cloud项目实践(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/22/Spring-cloud项目实践-三/" rel="prev" title="Spring cloud项目实践(三)">
+                Spring cloud项目实践(三) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/photo/bug.png"
+                alt="帆" />
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/338632221" title="Weibo &rarr; https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#配置中心和服务注册中心"><span class="nav-number">1.</span> <span class="nav-text">配置中心和服务注册中心</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#微服务应用"><span class="nav-number">2.</span> <span class="nav-text">微服务应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis"><span class="nav-number">2.1.</span> <span class="nav-text">Mybatis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mongodb"><span class="nav-number">2.2.</span> <span class="nav-text">Mongodb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mongodb配置信息"><span class="nav-number">2.2.1.</span> <span class="nav-text">Mongodb配置信息</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2016/03/21/Spring-cloud项目实践-二/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
