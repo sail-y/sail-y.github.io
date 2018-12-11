@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Spring Cloud Zuul中修改URI]]></title>
+    <url>%2F2018%2F12%2F11%2Fzuul-change-uri%2F</url>
+    <content type="text"><![CDATA[Zuul 修改URI背景最近项目中有一个需求，因为系统要进行重构，所以在重构期间网关需要判断URL请求的是老系统还是新系统。如果请求的是老系统那么就就需要根据URL和参数在网关层对进行转换，也就是要修改成新系统的URL，并转发到新系统上去。如果请求的是新系统，那么则不做处理，进行相应的鉴权操作。 实践在网上搜索了一番以后，发现zuul提供了一种方式，就是自定义一个Pre类型的Filter，然后写入这行代码： 1ctx.set(FilterConstants.REQUEST_URI_KEY, yourUri); 经过我的测试，他确实可以修改URI，但是并不满足我的需求。 客户端请求的是/a/helloA，我在这里修改成/b/helloB，我会得到一个404错误。经过分析发现，它已经确定了/a/**开头对应的服务，然后在a服务里去找/b/helloB这个路径，所以得到的是一个404。我的需求是修改成b服务下的/helloB请求。 所以我必须在zuul解析/a/** -&gt;&gt; a服务之前就将路径修改了，经过一番探索，以及zuul自带的filter里的源码，我发现PreDecorationFilter里有这样一段代码： 1234567891011@Override public Object run() &#123; RequestContext ctx = RequestContext.getCurrentContext(); final String requestURI = this.urlPathHelper.getPathWithinApplication(ctx.getRequest()); Route route = this.routeLocator.getMatchingRoute(requestURI); if (route != null) &#123; String location = route.getLocation(); if (location != null) &#123; ctx.put(REQUEST_URI_KEY, route.getPath()); ctx.put(PROXY_KEY, route.getId()); ..... 这不就是获取URI，然后routeLocator获取匹配的Route的代码吗？ 那我们跟进this.urlPathHelper.getPathWithinApplication(ctx.getRequest());，看看它是怎么获取URI的。 1234567891011121314151617181920public String getPathWithinApplication(HttpServletRequest request) &#123; String contextPath = getContextPath(request); String requestUri = getRequestUri(request); String path = getRemainingPath(requestUri, contextPath, true); if (path != null) &#123; // Normal case: URI contains context path. return (StringUtils.hasText(path) ? path : "/"); &#125; else &#123; return requestUri; &#125;&#125;public String getRequestUri(HttpServletRequest request) &#123; String uri = (String) request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE); if (uri == null) &#123; uri = request.getRequestURI(); &#125; return decodeAndCleanUriString(request, uri);&#125; 发现Spring是这样来获取URI的：request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE); 既然这样，那我们就可以自由发挥一下了。 改进我的思路就是在执行PreDecorationFilter之前，将request的attribute中的WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE先设置一下。首先PreDecorationFilter的order是5，自定义的过滤得在它前面执行，接下来自定义一个过滤器吧。 123456789101112131415161718192021222324252627282930313233public class ServiceName2APIFilter extends ZuulFilter &#123; @Override public String filterType() &#123; return FilterConstants.PRE_TYPE; &#125; @Override public int filterOrder() &#123; return FilterConstants.PRE_DECORATION_FILTER_ORDER - 1; &#125; @Override public boolean shouldFilter() &#123; RequestContext ctx = RequestContext.getCurrentContext(); HttpServletRequest request = ctx.getRequest(); final String uri = request.getRequestURI(); return uri.contains("/helloB"); &#125; @Override public Object run() &#123; RequestContext ctx = RequestContext.getCurrentContext(); final HttpServletRequest request = ctx.getRequest(); // 转发回到helloA // 将替换掉的url set进去,在对应的转发请求的url就会使用这个url request.setAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/a/helloA"); return null; &#125;&#125; 记得标记@Bean 1234@Beanpublic ServiceName2APIFilter serviceName2APIFilter() &#123; return new ServiceName2APIFilter();&#125; 然后我测试了一下，成功了，需求解决。]]></content>
+      <categories>
+        <category>spring</category>
+      </categories>
+      <tags>
+        <tag>zuul</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[深入理解JVM01-类加载]]></title>
+    <url>%2F2018%2F12%2F02%2Funderstandjvm-1%2F</url>
+    <content type="text"><![CDATA[类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。 类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值 这提供了更大的灵活性，增加了更多的可能性。 类加载深入剖析加载类的工具，叫做类加载器 Java虚拟机的生命周期在如下几种情况，Java虚拟机将结束生命周期 执行了System.exit()方法 程序正常执行结束 程序在执行过程中遇到了异常或错误而异常终止 由于操作系统出现错误而导致Java虚拟机进程终止 类的加载、连续、与初始化 加载：查找并加载类的二进制数据 连接 验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转换为直接引用 初始化：为类的静态变量赋予正确的初始值。 类的使用和卸载 使用 卸载 Java对类的使用方式可以分为两种，主动使用和被动使用。所有的Java虚拟机实现必须在每个类或接口被Java程序首次主动使用时才初始化他们，这也意味着被动使用不会初始化他们。 主动使用一共有其七种情况： 创建类的实例 访问某个类或接口的静态变量，或者对该静态变量赋值（getstatic,putstatic） 调用类的静态方法（invokestatic） 反射（如Class.forName(“com.test.Test”)） 初始化一个类的子类 Java虚拟机启动时被标明为启动类的类（Java Test） JDK1.7开始提供的动态语言支持：java.lang.invoke.MethodHandle实例的解析结果REF_getStatic，REF_putStatic，REF_invokeStatic句柄对应的类没有初始化，则初始化 除了以上其中情况，其他使用Java类的方式都被看做是对类的被动使用，都不会导致类的初始化。 类的加载类的加载指的是将类的.class文件中的二进制数据读入到内存中，将其放在运行时数据区的方法区内，然后在内存中创建一个java.lang.Class对象（规范未说明Class对象位于哪里，HotSpot虚拟机将其放在了方法区中）用来封装类在方法区内的数据结构（JDK8以后没有方法区了，叫做MetaSpace） 加载.class文件的几种方式： 从本地系统中直接加载 通过网络下载.class文件 从zip,jar等归档文件中加载.class文件 从专有数据库中提取.class文件 将Java源文件动态编译为.class文件 例1下面给一个类加载的例子： 12345678910111213141516171819202122232425262728293031323334353637/** * * -XX:+TraceClassLoading，用于追踪类的加载信息并打印出来 * * @author yangfan * @date 2018/12/03 */ // MyTest1就是启动类，会先加载public class MyTest1 &#123; public static void main(String[] args) &#123; // 这里MyChild1里面的静态代码块并不会执行 // 因为没有主动使用MyChild1 // 虽然MyChild1没有初始化，但是它被加载了，在加了-XX:+TraceClassLoading参数后可以看到 System.out.println(MyChild1.str); // 对于静态字段来说，只有直接定义了该字段的类才会被初始化 // 当一个类在初始化时，要求其父类全部都已经初始化完毕// System.out.println(MyChild1.st2); &#125;&#125;class MyParent1 &#123; public static String str = "hello world"; static &#123; System.out.println("MyParent1 static block"); &#125;&#125;class MyChild1 extends MyParent1 &#123; public static String st2 = "welcome"; static &#123; System.out.println("MyChild1 static block"); &#125;&#125; 这里用到了一个JVM参数，其实我们大多数时候，可能只是调整一下堆大小，其他的参数用得比较少，其实这个参数是有规律可循的。 -XX:+&lt;option&gt;，表示开启option选项-XX:-&lt;option&gt;，表示关闭option选项-XX:&lt;option&gt;=value，表示将option选项的值设置为value 例2123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051/** * 用javap反编译后 * * classes javap -c com.sail.jvm.classloader.MyTest2 * Compiled from "MyTest2.java" * public class com.sail.jvm.classloader.MyTest2 &#123; * public com.sail.jvm.classloader.MyTest2(); * Code: * 0: aload_0 * 1: invokespecial #1 // Method java/lang/Object."&lt;init&gt;":()V * 4: return * * public static void main(java.lang.String[]); * Code: * 0: getstatic #2 // Field java/lang/System.out:Ljava/io/PrintStream; * 3: ldc #4 // String hello world * 5: invokevirtual #5 // Method java/io/PrintStream.println:(Ljava/lang/String;)V * 8: return * &#125; * * 助记符： * ldc表示将int，float或是String类型的常量值从常量池推送至栈顶 * bipush表示将单字节(-128 ~ 127)的常量值推送至栈顶 * sipush表示将一个短整型常量值(-32768 ~ 32767)推送至栈顶 * iconst_1表示将int类型1推送至栈顶(iconst_1 ~ iconst_5) * * @author yangfan * @date 2018/12/04 */public class MyTest2 &#123; public static void main(String[] args) &#123; System.out.println(MyParent2.str); &#125;&#125;class MyParent2 &#123; /** * 在编译阶段，这个常量会存入到调用这个常量的方法所在的类的常量池中， * 本质上调用类并没有直接引用到定义常量的类，因此并不会触发定义常量的类的初始化 * * 即str会被放置到MyTest2的常量池中，之后MyTest2与MyParent2就没有任何关系了， * 甚至，我们可以将MyParent2的class删除 */ public static final String str = "hello world"; static &#123; System.out.println("MyParent2 static block"); &#125;&#125;]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>JVM</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ElasticSearch08-内核原理]]></title>
     <url>%2F2018%2F09%2F28%2FelasticSearch08%2F</url>
     <content type="text"><![CDATA[倒排索引如何使文本被搜索到是搜索引擎很重要的一部分，倒排索引是很适合搜索的。 因为它的结构： 包含这个关键词的document list 包含这个关键词的所有document的数量：IDFinverse document frequency. 这个关键词在每个document中出现的次数：TFterm frequency. 这个关键词在这个document中的次序 每个document的长度：length norm 包含这个关键词的所有document的平均长度 123456Term | Doc 1 | Doc 2 | Doc 3 | ...------------------------------------brown | X | | X | ...fox | X | X | X | ...quick | X | X | | ...the | X | | X | ... 倒排索引是不可变的，它的好处如下： 不需要锁，提升并发能力，避免锁的问题 数据不变，一直保存在os cache中，只要cache内存足够 filter cache一直驻留在内存，因为数据不变 可以压缩，节省cpu和io开销 当然，一个不变的索引也有不好的地方。主要事实是它是不可变的! 你不能修改它。如果你需要让一个新的文档 可被搜索，你需要重建整个索引。这要么对一个索引所能包含的数据量造成了很大的限制，要么对索引可被更新的频率造成了很大的限制。 文档写入原理文档在写入的时候，ES的流程如下： 新文档写入buffer commit point buffer中的数据写入新的index segment 等待在os cache中的index segment被fsync强制刷到磁盘上 新的index sgement被打开，供search使用 buffer被清空 删除和更新 每次commit point时，会有一个.del文件，标记了哪些segment中的哪些document被标记为deleted了。搜索的时候，会依次查询所有的segment，从旧的到新的，比如被修改过的document，在旧的segment中，会标记为deleted，在新的segment中会有其新的数据。 优化写入流程现有流程的问题，每次都必须等待fsync将segment刷入磁盘，才能将segment打开供search使用，这样的话从一个document写入，到它可以被搜索，可能会超过1分钟！这就不是近实时的搜索了！主要瓶颈在于fsync实际发生磁盘IO写数据进磁盘，是很耗时的。 写入流程被改进如下： 数据写入buffer 每隔一定时间，buffer中的数据被写入segment文件，但是先写入os cache 只要segment写入os cache，那就直接打开供search使用，不立即执行commit 数据写入os cache，并被打开供搜索的过程，叫做refresh，默认是每隔1秒refresh一次。也就是说，每隔一秒就会将buffer中的数据写入一个新的index segment file，先写入os cache中。所以es是近实时的，数据写入到可以被搜索，默认是1秒。 POST /my_index/_refresh，可以手动refresh，一般不需要手动执行，没必要这样，让es自己搞就可以了。 比如说，我们现在的时效性要求比较低，只要求一条数据写入es，一分钟以后才让我们搜索到就可以了，那么就可以调整refresh interval。如果写的并发量和数据量比较大的话，refresh设置长一点可以优化写入速度，因为频繁的写入index segment file会比较占用资源。 123456PUT /my_index&#123; "settings": &#123; "refresh_interval": "60s" &#125;&#125; 可靠存储实现再次优化的写入流程 数据写入buffer缓冲和translog日志文件 每隔一秒钟，buffer中的数据被写入新的segment file，并进入os cache，此时segment被打开并供search使用 buffer被清空 重复1~3，新的segment不断添加，buffer不断被清空，而translog中的数据不断累加 当translog长度达到一定程度的时候，commit操作发生 buffer中的所有数据写入一个新的segment，并写入os cache，打开供使用 buffer被清空 一个commit ponit被写入磁盘，标明了所有的index segment filesystem cache中的所有index segment file缓存数据，被fsync强行刷到磁盘上 现有的translog被清空，创建一个新的translog 新的文档被添加到内存缓冲区并且被追加到了事务日志 刷新（refresh）完成后, 缓存被清空但是事务日志不会 事务日志不断积累文档 在刷新（flush）之后，段被全量提交，并且事务日志被清空 数据恢复OS cache中积累了不少数据，这个时候如果机器宕机了，虽然os cache的数据丢失了，但是translog的数据是存在的，可以基于translog和commit point进行数据恢复。 fsync+清空translog，就是flush，默认每隔30分钟flush一次，或者当translog过大的时候，也会flush。 POST /my_index/_flush，一般来说别手动flush，让它自动执行就可以了。 translog translog本身，每隔5秒被fsync一次到磁盘上。在一次增删改操作之后，当fsync在primary shard和replica shard都成功之后，那次增删改操作才会成功。 但是这种在一次增删改时强行fsync translog可能会导致部分操作比较耗时，也可以允许部分数据丢失，设置异步fsync translog。 12345PUT /my_index/_settings&#123; "index.translog.durability": "async", "index.translog.sync_interval": "5s"&#125; 如果你不确定这个行为的后果，最好是使用默认的参数（ “index.translog.durability”: “request” ）来避免数据丢失。 段合并前面说了，refresh操作默认是每秒一次，每秒生成一个新的segment file，这样文件太多了，而且每次search都要搜索所有的segment，很耗时。 ES默认会在后台执行segment merge操作，在merge的时候，被标记为deleted的document也会被彻底物理删除。 每次merge操作的执行流程： 选择一些有相似大小的segment，merge成一个大的segment 将新的segment flush到磁盘上去 写一个新的commit point，包括了新的segment，并且排除旧的那些segment 将新的segment打开供搜索 将旧的segment删除 两个提交了的段和一个未提交的段正在被合并到一个更大的段 一旦合并结束，老的段被删除 optimize APIoptimize API大可看做是 强制合并 API 。它会将一个分片强制合并到 max_num_segments 参数指定大小的段数目。 这样做的意图是减少段的数量（通常减少到一个），来提升搜索性能。 POST /my_index/_optimize?max_num_segments=1，尽量不要手动执行，让它自动默认执行就可以了。]]></content>
@@ -53,18 +76,6 @@
       </categories>
       <tags>
         <tag>ElasticSearch</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[深入理解JVM01-类加载]]></title>
-    <url>%2F2018%2F08%2F16%2Funderstandjvm-1%2F</url>
-    <content type="text"><![CDATA[类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。 类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值 这提供了更大的灵活性，增加了更多的可能性。 类加载深入剖析加载类的工具，叫做类加载器 Java虚拟机的生命周期在如下几种情况，Java虚拟机将结束生命周期 执行了System.exit()方法 程序正常执行结束 程序在执行过程中遇到了异常或错误而异常终止 由于操作系统出现错误而导致Java虚拟机进程终止 类的加载、连续、与初始化 加载：查找并加载类的二进制数据 连接 验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转换为直接引用 初始化：为类的静态变量赋予正确的初始值。 类的使用和卸载]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -899,8 +910,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -911,8 +922,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -923,8 +934,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -935,8 +946,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -947,8 +958,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -959,8 +970,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -971,8 +982,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -983,8 +994,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -995,8 +1006,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1007,8 +1018,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1019,8 +1030,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1031,8 +1042,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
