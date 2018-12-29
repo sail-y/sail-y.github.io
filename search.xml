@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Sleuth在异步线程中丢失traceId的解决方案]]></title>
+    <url>%2F2018%2F12%2F29%2Fsleuth-lost-traceId%2F</url>
+    <content type="text"><![CDATA[背景今天同事说在Hystrix的执行方法里打印日志的时候，Sleuth的traceId丢失了，产生了新的traceId，我第一反应是难道是因为Hystrix采用的是线程隔离模式，所以导致sleuth在线程切换的时候丢失了traceId吗？但是我记得Sleuth是针对是Hystrix处理过的，具体的处理的类就是SleuthHystrixConcurrencyStrategy。Spring Cloud Sleuth专门对Hystrix处理过线程切换上下文传递的问题。 所以我猜测可能是同事的业务代码里使用了线程池。经确认后确实有线程池代码，原因同样是线程上下文切换丢失了traceId。那么接下来就去找一找解决方案吧。 解决方案在Spring的官方文档中，我们找到了关于异步通讯的部分。 https://cloud.spring.io/spring-cloud-static/spring-cloud-sleuth/1.3.4.RELEASE/single/spring-cloud-sleuth.html#_asynchronous_communication 我也贴一下原文： Executor, ExecutorService and ScheduledExecutorService We’re providing LazyTraceExecutor, TraceableExecutorService and TraceableScheduledExecutorService. Those implementations are creating Spans each time a new task is submitted, invoked or scheduled. Here you can see an example of how to pass tracing information with TraceableExecutorService when working with CompletableFuture: 123456CompletableFuture&lt;Long&gt; completableFuture = CompletableFuture.supplyAsync(() -&gt; &#123; // perform some logic return 1_000_000L;&#125;, new TraceableExecutorService(executorService, // 'calculateTax' explicitly names the span - this param is optional tracer, traceKeys, spanNamer, "calculateTax")); Important Sleuth doesn’t work with parallelStream() out of the box. If you want to have the tracing information propagated through the stream you have to use the approach with supplyAsync(…) as presented above. 大概意思就是Sleuth提供了一个TraceableExecutorService包装我们自己的ExecutorService，我们手动传入traceId等参数。并且在提交新的任务的时候，TraceableExecutorService会为我们创建新的Span，但是traceId是一致的。 所以大家在用Sleuth的时候，如果代码里有用到线程池、或者Spring Boot提供的@Async注解的时候，大家需要注意一下traceId丢失的问题，这样会导致链路无法追踪。 下面分别贴出两种情况的解决方案代码。 线程池1234567891011121314@Autowiredprivate BeanFactory beanFactory;private TraceableExecutorService traceableExecutorService;@PostConstructpublic void init() &#123; traceableExecutorService = new TraceableExecutorService(beanFactory, ThreadUtil.newExecutor());&#125;@GetMapping("/&#123;id&#125;")public R getR(@PathVariable("id") Long id) &#123; traceableExecutorService.execute(() -&gt; someMethod()); 效果： 123[demo,96d8ba3676199532,96d8ba3676199532] [ix-RedisGroup-1][demo,96d8ba3676199532,d5538e854c35b369] [ix-redisGroup-1] [demo,96d8ba3676199532,96d8ba3676199532] [nio-5000-exec-3] 第一行是Hystrix执行的时候打印的，第二行是异步线程执行的时候打印的，第三行是同步执行的时候打印的。 @Async注解用TraceableExecutorService包装线程池。 12345678910111213141516171819@Configuration@EnableAutoConfiguration@EnableAsyncstatic class CustomExecutorConfig extends AsyncConfigurerSupport &#123; @Autowired BeanFactory beanFactory; @Override public Executor getAsyncExecutor() &#123; ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor(); // CUSTOMIZE HERE executor.setCorePoolSize(7); executor.setMaxPoolSize(42); executor.setQueueCapacity(11); executor.setThreadNamePrefix("MyExecutor-"); // DON'T FORGET TO INITIALIZE executor.initialize(); return new LazyTraceExecutor(this.beanFactory, executor); &#125;&#125; 赶紧查查代码里有没有这个问题吧]]></content>
+      <categories>
+        <category>spring</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+        <tag>sleuth</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Spring Cloud Zuul中修改URI]]></title>
     <url>%2F2018%2F12%2F11%2Fzuul-change-uri%2F</url>
     <content type="text"><![CDATA[Zuul 修改URI背景最近项目中有一个需求，因为系统要进行重构，所以在重构期间网关需要判断URL请求的是老系统还是新系统。如果请求的是老系统那么就需要根据URL和参数在网关层对进行转换，也就是要修改成新系统的URL，并转发到新系统上去。如果请求的是新系统，那么则不做处理，进行相应的鉴权操作。 实践在网上搜索了一番以后，发现zuul提供了一种方式，就是自定义一个Pre类型的Filter，然后写入这行代码： 1ctx.set(FilterConstants.REQUEST_URI_KEY, yourUri); 经过我的测试，他确实可以修改URI，但是并不满足我的需求。 客户端请求的是/a/helloA，我在这里修改成/b/helloB，我会得到一个404错误。经过分析发现，它已经确定了/a/**开头对应的服务，然后在a服务里去找/b/helloB这个路径，所以得到的是一个404。我的需求是修改成b服务下的/helloB请求。 所以我必须在zuul解析/a/** -&gt;&gt; a服务之前就将路径修改了，经过一番探索，以及zuul自带的filter里的源码，我发现PreDecorationFilter里有这样一段代码： 1234567891011@Override public Object run() &#123; RequestContext ctx = RequestContext.getCurrentContext(); final String requestURI = this.urlPathHelper.getPathWithinApplication(ctx.getRequest()); Route route = this.routeLocator.getMatchingRoute(requestURI); if (route != null) &#123; String location = route.getLocation(); if (location != null) &#123; ctx.put(REQUEST_URI_KEY, route.getPath()); ctx.put(PROXY_KEY, route.getId()); ..... 这不就是获取URI，然后routeLocator获取匹配的Route的代码吗？ 那我们跟进this.urlPathHelper.getPathWithinApplication(ctx.getRequest());，看看它是怎么获取URI的。 1234567891011121314151617181920public String getPathWithinApplication(HttpServletRequest request) &#123; String contextPath = getContextPath(request); String requestUri = getRequestUri(request); String path = getRemainingPath(requestUri, contextPath, true); if (path != null) &#123; // Normal case: URI contains context path. return (StringUtils.hasText(path) ? path : "/"); &#125; else &#123; return requestUri; &#125;&#125;public String getRequestUri(HttpServletRequest request) &#123; String uri = (String) request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE); if (uri == null) &#123; uri = request.getRequestURI(); &#125; return decodeAndCleanUriString(request, uri);&#125; 发现Spring是这样来获取URI的：request.getAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE); 既然这样，那我们就可以自由发挥一下了。 改进我的思路就是在执行PreDecorationFilter之前，将request的attribute中的WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE先设置一下。首先PreDecorationFilter的order是5，自定义的过滤得在它前面执行，接下来自定义一个过滤器吧。 123456789101112131415161718192021222324252627282930313233public class ServiceName2APIFilter extends ZuulFilter &#123; @Override public String filterType() &#123; return FilterConstants.PRE_TYPE; &#125; @Override public int filterOrder() &#123; return FilterConstants.PRE_DECORATION_FILTER_ORDER - 1; &#125; @Override public boolean shouldFilter() &#123; RequestContext ctx = RequestContext.getCurrentContext(); HttpServletRequest request = ctx.getRequest(); final String uri = request.getRequestURI(); return uri.contains("/helloB"); &#125; @Override public Object run() &#123; RequestContext ctx = RequestContext.getCurrentContext(); final HttpServletRequest request = ctx.getRequest(); // 转发回到helloA // 将替换掉的url set进去,在对应的转发请求的url就会使用这个url request.setAttribute(WebUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/a/helloA"); return null; &#125;&#125; 记得标记@Bean 1234@Beanpublic ServiceName2APIFilter serviceName2APIFilter() &#123; return new ServiceName2APIFilter();&#125; 然后我测试了一下，成功了，需求解决。]]></content>
@@ -19,8 +31,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -910,8 +922,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -922,8 +934,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -934,8 +946,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -946,8 +958,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -958,8 +970,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -970,8 +982,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -982,8 +994,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -994,8 +1006,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -1006,8 +1018,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -1018,8 +1030,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -1030,8 +1042,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -1042,8 +1054,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
         <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
