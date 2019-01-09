@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Spring Cloud Security OAuth2 定制错误消息]]></title>
+    <url>%2F2019%2F01%2F09%2Fspring-security-oauth2-custom-exception-response%2F</url>
+    <content type="text"><![CDATA[背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring Cloud的版本也不一样，我是F版的。 问题1 /oauth/token 401问题在AuthorizationServer搭建完成以后，启动访问/oauth/token接口获取access_token。传入用户名和密码，然后一直得到一个401错误，日志也没有，我最开始还以为是Spring Security把这个接口给拦截了，后来DEBUG了一下元am，发现在BasicAuthenticationFilter.doFilterInternal()里有这么一句判断。 123456String header = request.getHeader("Authorization");if (header == null || !header.toLowerCase().startsWith("basic ")) &#123; chain.doFilter(request, response); return;&#125; 就是如果你的header里面没有Authorization，或者Authorization不是以basic 开头的，直接就返回401了。虽然我忘记了传这个参数，但是日志里没有任何提示，这个错误真是让我好一顿找才给解决。 这里面是client_id:client_secret的base64编码。到这还没完，因为Spring Cloud F版会有那个PasswordEncoder，所以他在校验secret的时候会和服务器配置的时候会进行加密，如果存储的密钥不是相应的加密方式，他也会报错，这个错误在网上都搜得到了。 Spring Security 4.x -&gt; 5.x 踩坑记录 DaoAuthenticationProvider.additionalAuthenticationChecks()方法里，就是检查密码的地方。 问题2 Unsupported grant type: password接着我又开始遇到这个错误，搜了一下说是AuthenticationManager无法注入。 在AuthorizationServerEndpointsConfigurer.getDefaultTokenGranters里面，如果AuthenticationManager类的实例的话，那么就不支持password的授权模式，也就是ResourceOwnerPasswordTokenGranter。 12345678910111213141516171819private List&lt;TokenGranter&gt; getDefaultTokenGranters() &#123; ClientDetailsService clientDetails = clientDetailsService(); AuthorizationServerTokenServices tokenServices = tokenServices(); AuthorizationCodeServices authorizationCodeServices = authorizationCodeServices(); OAuth2RequestFactory requestFactory = requestFactory(); List&lt;TokenGranter&gt; tokenGranters = new ArrayList&lt;TokenGranter&gt;(); tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetails, requestFactory)); tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetails, requestFactory)); ImplicitTokenGranter implicit = new ImplicitTokenGranter(tokenServices, clientDetails, requestFactory); tokenGranters.add(implicit); tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetails, requestFactory)); if (authenticationManager != null) &#123; tokenGranters.add(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices, clientDetails, requestFactory)); &#125; return tokenGranters;&#125; Spring Security 4.x -&gt; 5.x 踩坑记录的也提到了这个问题，不过我这里遇到了更奇怪的现象，在WebSecurityConfigurerAdapter加上下面的配置后，并没有解决我的问题。 12345@Bean(name = BeanIds.AUTHENTICATION_MANAGER)@Overridepublic AuthenticationManager authenticationManagerBean() throws Exception &#123; return super.authenticationManagerBean();&#125; 结果我发现在我的项目中，AuthorizationServerConfig竟然比WebSecurityConfigurer先加载，所以在public void configure(AuthorizationServerEndpointsConfigurer endpoints)注入并设置endpoints.authenticationManager(authenticationManager)的时候，放的是一个null进去。 我还觉得蛮奇怪的，下面的代码也会注入一个null 12@Autowiredprivate AuthenticationManager authenticationManager; 然后我把这个参数改到构造方法里面去启动，结果就告诉我循环依赖，后来想了想，可能是因为Spring在处理循环依赖的时候，把一些注入类自动处理成null了。 在我解决了循环依赖以后，我就能登录成功了。 问题3 如何定制BadCredentialsException,UserNameNotFound的异常消息接下来就是输入错误密码的时候得到的错误了，如果用户名或者密码错误了，Spring Security会返回一个 1234&#123; "error": "invalid_grant", "error_ description": "坏的凭证"&#125; 这个错误信息太不友好了，我们一般给客户端返回的消息都是统一标准的格式，比如： 1234&#123; "code":"401", "msg":"用户名或密码错误"&#125; 这样另类的消息格式是绝对不允许的。所以我就想定制化这个消息格式，是相信Spring Security肯定提供了相应的机制来供我们实现这个消息的定制，我先是在网上搜了很久，都没有找到解决方案，只是找到了一些哥们跟我有同样的问题，但是却没有人给出解决方案。 比如这个stackoverflow.com上的这个哥们。 没办法了，找不到方案就自己想办法吧，我就从抛出异常的地方开始一行一行的debug，接着发现这个异常被TokenEndpoint类里的一个ExceptionHandler给拦截然后输出的。 1234567@ExceptionHandler(OAuth2Exception.class)public ResponseEntity&lt;OAuth2Exception&gt; handleException(OAuth2Exception e) throws Exception &#123; if (logger.isWarnEnabled()) &#123; logger.warn("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage()); &#125; return getExceptionTranslator().translate(e);&#125; 那么这个getExceptionTranslator到底是个什么东西，最后翻了一下到底是在哪里设置的这个属性，最终发现是AuthorizationServerEndpointsConfigurer的一个字段，是不是很眼熟？ 和设置AuthenticationManager的是同一个类，所以定制一个 123456789@Componentpublic class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator&lt;OAuth2Exception&gt; &#123; @Override public ResponseEntity translate(Exception e) throws Exception &#123; return new ResponseEntity&lt;&gt;(RestResp.error(CommonErrorCode.AUTHORIZED_ERROR), HttpStatus.OK); &#125;&#125; 然后在AuthorizationServerConfig里加上配置， 12345678@Overridepublic void configure(AuthorizationServerEndpointsConfigurer endpoints) &#123; endpoints //......其他配置 .exceptionTranslator(customWebResponseExceptionTranslator) .authenticationManager(authenticationManager);&#125; 最后得到了我们想要的输出结果： 1234&#123; "code": "401", "msg": "用户名或密码错误"&#125;]]></content>
+      <categories>
+        <category>spring</category>
+      </categories>
+      <tags>
+        <tag>spring security</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Sleuth在异步线程中丢失traceId的解决方案]]></title>
     <url>%2F2018%2F12%2F29%2Fsleuth-lost-traceId%2F</url>
     <content type="text"><![CDATA[背景今天同事说在Hystrix的执行方法里打印日志的时候，Sleuth的traceId丢失了，产生了新的traceId，我第一反应是难道是因为Hystrix采用的是线程隔离模式，所以导致sleuth在线程切换的时候丢失了traceId吗？但是我记得Sleuth是针对是Hystrix处理过的，具体的处理的类就是SleuthHystrixConcurrencyStrategy。Spring Cloud Sleuth专门对Hystrix处理过线程切换上下文传递的问题。 所以我猜测可能是同事的业务代码里使用了线程池。经确认后确实有线程池代码，原因同样是线程上下文切换丢失了traceId。那么接下来就去找一找解决方案吧。 解决方案在Spring的官方文档中，我们找到了关于异步通讯的部分。 https://cloud.spring.io/spring-cloud-static/spring-cloud-sleuth/1.3.4.RELEASE/single/spring-cloud-sleuth.html#_asynchronous_communication 我也贴一下原文： Executor, ExecutorService and ScheduledExecutorService We’re providing LazyTraceExecutor, TraceableExecutorService and TraceableScheduledExecutorService. Those implementations are creating Spans each time a new task is submitted, invoked or scheduled. Here you can see an example of how to pass tracing information with TraceableExecutorService when working with CompletableFuture: 123456CompletableFuture&lt;Long&gt; completableFuture = CompletableFuture.supplyAsync(() -&gt; &#123; // perform some logic return 1_000_000L;&#125;, new TraceableExecutorService(executorService, // 'calculateTax' explicitly names the span - this param is optional tracer, traceKeys, spanNamer, "calculateTax")); Important Sleuth doesn’t work with parallelStream() out of the box. If you want to have the tracing information propagated through the stream you have to use the approach with supplyAsync(…) as presented above. 大概意思就是Sleuth提供了一个TraceableExecutorService包装我们自己的ExecutorService，我们手动传入traceId等参数。并且在提交新的任务的时候，TraceableExecutorService会为我们创建新的Span，但是traceId是一致的。 所以大家在用Sleuth的时候，如果代码里有用到线程池、或者Spring Boot提供的@Async注解的时候，大家需要注意一下traceId丢失的问题，这样会导致链路无法追踪。 下面分别贴出两种情况的解决方案代码。 线程池1234567891011121314@Autowiredprivate BeanFactory beanFactory;private TraceableExecutorService traceableExecutorService;@PostConstructpublic void init() &#123; traceableExecutorService = new TraceableExecutorService(beanFactory, ThreadUtil.newExecutor());&#125;@GetMapping("/&#123;id&#125;")public R getR(@PathVariable("id") Long id) &#123; traceableExecutorService.execute(() -&gt; someMethod()); 效果： 123[demo,96d8ba3676199532,96d8ba3676199532] [ix-RedisGroup-1][demo,96d8ba3676199532,d5538e854c35b369] [ix-redisGroup-1] [demo,96d8ba3676199532,96d8ba3676199532] [nio-5000-exec-3] 第一行是Hystrix执行的时候打印的，第二行是异步线程执行的时候打印的，第三行是同步执行的时候打印的。 @Async注解用TraceableExecutorService包装线程池。 12345678910111213141516171819@Configuration@EnableAutoConfiguration@EnableAsyncstatic class CustomExecutorConfig extends AsyncConfigurerSupport &#123; @Autowired BeanFactory beanFactory; @Override public Executor getAsyncExecutor() &#123; ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor(); // CUSTOMIZE HERE executor.setCorePoolSize(7); executor.setMaxPoolSize(42); executor.setQueueCapacity(11); executor.setThreadNamePrefix("MyExecutor-"); // DON'T FORGET TO INITIALIZE executor.initialize(); return new LazyTraceExecutor(this.beanFactory, executor); &#125;&#125; 赶紧查查代码里有没有这个问题吧]]></content>
@@ -31,8 +42,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -922,8 +933,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -934,8 +945,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -946,8 +957,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -958,8 +969,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -970,8 +981,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -982,8 +993,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -994,8 +1005,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1006,8 +1017,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1018,8 +1029,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1030,8 +1041,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1042,8 +1053,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1054,8 +1065,8 @@
         <category>JVM</category>
       </categories>
       <tags>
-        <tag>java</tag>
         <tag>JVM</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
