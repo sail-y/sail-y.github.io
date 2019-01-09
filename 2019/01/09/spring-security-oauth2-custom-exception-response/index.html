@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring Cl">
+  <meta name="description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig 。不过因为只是参考，所以我还做了一些改动，而且我们Spring C">
 <meta name="keywords" content="spring security">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud Security OAuth2 定制错误消息">
 <meta property="og:url" content="http://www.saily.top/2019/01/09/spring-security-oauth2-custom-exception-response/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring Cl">
+<meta property="og:description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig 。不过因为只是参考，所以我还做了一些改动，而且我们Spring C">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-09T13:15:11.315Z">
+<meta property="og:updated_time" content="2019-01-09T13:18:56.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud Security OAuth2 定制错误消息">
-<meta name="twitter:description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring Cl">
+<meta name="twitter:description" content="背景最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。 基本上我是参照这个项目搭建的，https://gitee.com/log4j/pig 。不过因为只是参考，所以我还做了一些改动，而且我们Spring C">
 
 
 
@@ -431,7 +431,7 @@
                 
               
 
-              <time title="创建时间：1月 9 2019 20:32:49 / 修改时间：21:15:11" itemprop="dateCreated datePublished" datetime="2019-01-09T20:32:49+08:00">1月 9 2019</time>
+              <time title="创建时间：1月 9 2019 20:32:49 / 修改时间：21:18:56" itemprop="dateCreated datePublished" datetime="2019-01-09T20:32:49+08:00">1月 9 2019</time>
             
 
             
@@ -496,9 +496,9 @@
 
       
         <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近在搭建一个Spring Cloud的项目，在搭建途中，遇到了一些问题，这里记录一下。<br>在搭建AuthorizationServer的时候，就遇到了问题，我的授权模式是用的password模式，然后是集成了JWT生成access_token。</p>
-<p>基本上我是参照这个项目搭建的，<a href="https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring" target="_blank" rel="noopener">https://gitee.com/log4j/pig。不过因为只是参考，所以我还做了一些改动，而且我们Spring</a> Cloud的版本也不一样，我是F版的。</p>
-<h2 id="问题1-oauth-token-401问题"><a href="#问题1-oauth-token-401问题" class="headerlink" title="问题1 /oauth/token 401问题"></a>问题1 /oauth/token 401问题</h2><p>在AuthorizationServer搭建完成以后，启动访问/oauth/token接口获取access_token。传入用户名和密码，然后一直得到一个401错误，日志也没有，我最开始还以为是Spring Security把这个接口给拦截了，后来DEBUG了一下元am，发现在BasicAuthenticationFilter.doFilterInternal()里有这么一句判断。</p>
-<!--more``-->
+<p>基本上我是参照这个项目搭建的，<a href="https://gitee.com/log4j/pig" target="_blank" rel="noopener">https://gitee.com/log4j/pig</a> 。不过因为只是参考，所以我还做了一些改动，而且我们Spring Cloud的版本也不一样，我是F版的。</p>
+<a id="more"></a>
+<h2 id="问题1-oauth-token-401问题"><a href="#问题1-oauth-token-401问题" class="headerlink" title="问题1 /oauth/token 401问题"></a>问题1 /oauth/token 401问题</h2><p>在AuthorizationServer搭建完成以后，启动访问/oauth/token接口获取access_token。传入用户名和密码，然后一直得到一个401错误，日志也没有，我最开始还以为是Spring Security把这个接口给拦截了，后来DEBUG了一下源码，发现在BasicAuthenticationFilter.doFilterInternal()里有这么一句判断。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String header = request.getHeader(<span class="string">"Authorization"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (header == <span class="keyword">null</span> || !header.toLowerCase().startsWith(<span class="string">"basic "</span>)) &#123;</span><br><span class="line">	chain.doFilter(request, response);</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>就是如果你的header里面没有Authorization，或者Authorization不是以basic 开头的，直接就返回401了。虽然我忘记了传这个参数，但是日志里没有任何提示，这个错误真是让我好一顿找才给解决。</p>
 <p>这里面是<code>client_id:client_secret</code>的base64编码。到这还没完，因为Spring Cloud F版会有那个PasswordEncoder，所以他在校验secret的时候会和服务器配置的时候会进行加密，如果存储的密钥不是相应的加密方式，他也会报错，这个错误在网上都搜得到了。</p>
