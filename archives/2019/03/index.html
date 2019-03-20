@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -108,27 +108,25 @@
 
 
 
-  <meta name="description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
-<meta name="keywords" content="java,JVM">
-<meta property="og:type" content="article">
-<meta property="og:title" content="深入理解JVM01-类加载">
-<meta property="og:url" content="http://www.saily.top/2018/08/16/understandjvm-1/index.html">
+  <meta name="description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
+<meta property="og:type" content="website">
+<meta property="og:title" content="帆的博客">
+<meta property="og:url" content="http://www.saily.top/archives/2019/03/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
+<meta property="og:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-15T15:36:28.990Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解JVM01-类加载">
-<meta name="twitter:description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
+<meta name="twitter:title" content="帆的博客">
+<meta name="twitter:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/08/16/understandjvm-1/"/>
+  <link rel="canonical" href="http://www.saily.top/archives/2019/03/">
 
 
 
@@ -138,7 +136,7 @@
   };
 </script>
 
-  <title>深入理解JVM01-类加载 | 帆的博客</title>
+  <title>归档 | 帆的博客</title>
   
 
 
@@ -187,7 +185,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -238,7 +236,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -255,7 +253,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -272,7 +270,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -289,14 +287,14 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
         
         
           
-          <li class="menu-item menu-item-archives">
+          <li class="menu-item menu-item-archives menu-item-active">
 
     
     
@@ -306,7 +304,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -317,7 +315,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -337,9 +335,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -369,251 +365,103 @@
           
             
 
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
           
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
+      
+      <span class="archive-page-counter">
+        
+        
+         
+          
+        很好! 目前共计 116 篇日志。 继续努力。
+      </span>
+      
 
-  
-  
-  
+      
 
-  
+        
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2019">2019</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/08/16/understandjvm-1/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+            <a class="post-title-link" href="/2019/03/18/microservices-1/" itemprop="url">
+              
+                <span itemprop="name">Spring Cloud微服务-1</span>
+              
+            </a>
         
-          <h1 class="post-title" itemprop="name headline">深入理解JVM01-类加载
-              
-            
-          </h1>
-        
+      </h2>
 
-        <div class="post-meta">
-          <span class="post-time">
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-03-18T18:56:58+08:00" content="3月 18 2019">
+          03-18
+        </time>
+      </div>
 
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：8月 16 2018 15:55:41" itemprop="dateCreated datePublished" datetime="2018-08-16T15:55:41+08:00">8月 16 2018</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：9月 15 2018 23:36:28" itemprop="dateModified" datetime="2018-09-15T23:36:28+08:00">9月 15 2018</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p>
-<ol>
-<li>类加载常见的行为是将磁盘上的class文件加载到内存中</li>
-<li>连接将是类与类之间的关系处理好</li>
-<li>初始化对一些静态的变量进行赋值</li>
-</ol>
-<a id="more"></a>
-<p>这提供了更大的灵活性，增加了更多的可能性。</p>
-<h2 id="类加载深入剖析"><a href="#类加载深入剖析" class="headerlink" title="类加载深入剖析"></a>类加载深入剖析</h2><p>加载类的工具，叫做类加载器</p>
-<h3 id="Java虚拟机的生命周期"><a href="#Java虚拟机的生命周期" class="headerlink" title="Java虚拟机的生命周期"></a>Java虚拟机的生命周期</h3><p>在如下几种情况，Java虚拟机将结束生命周期</p>
-<ul>
-<li>执行了System.exit()方法</li>
-<li>程序正常执行结束</li>
-<li>程序在执行过程中遇到了异常或错误而异常终止</li>
-<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
-</ul>
-<h2 id="类的加载、连续、与初始化"><a href="#类的加载、连续、与初始化" class="headerlink" title="类的加载、连续、与初始化"></a>类的加载、连续、与初始化</h2><ul>
-<li>加载：查找并加载类的二进制数据</li>
-<li><p>连接</p>
-<ul>
-<li>验证：确保被加载的类的正确性</li>
-<li>准备：为类的静态变量分配内存，并将其初始化为默认值</li>
-<li>解析：把类中的符号引用转换为直接引用</li>
-</ul>
-</li>
-<li>初始化：为类的静态变量赋予正确的初始值。</li>
-</ul>
-<h2 id="类的使用和卸载"><a href="#类的使用和卸载" class="headerlink" title="类的使用和卸载"></a>类的使用和卸载</h2>
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/08/13/effective-java-3rd-1/" rel="next" title="Effective Java 第三版-条款1_考虑使用静态工厂方法而非构造方法">
-                <i class="fa fa-chevron-left"></i> Effective Java 第三版-条款1_考虑使用静态工厂方法而非构造方法
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/19/elasticSearch04/" rel="prev" title="ElasticSearch04-Document、Index详解和操作以及并发问题">
-                ElasticSearch04-Document、Index详解和操作以及并发问题 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
+
+      
+
+    </div>
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
           
-
-  
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
-
-
 
         </div>
         
@@ -634,23 +482,12 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -663,7 +500,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -712,7 +549,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -801,7 +642,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">38</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -860,22 +709,6 @@
       </section>
 
       
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载深入剖析"><span class="nav-number">1.1.</span> <span class="nav-text">类加载深入剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机的生命周期"><span class="nav-number">1.1.1.</span> <span class="nav-text">Java虚拟机的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的加载、连续、与初始化"><span class="nav-number">1.2.</span> <span class="nav-text">类的加载、连续、与初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的使用和卸载"><span class="nav-number">1.3.</span> <span class="nav-text">类的使用和卸载</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
 
       
 
@@ -889,7 +722,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -901,7 +734,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1041,10 +874,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
-
-
 
   
 
@@ -1057,20 +886,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/08/16/understandjvm-1/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

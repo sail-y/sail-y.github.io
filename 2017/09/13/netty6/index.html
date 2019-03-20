@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -131,12 +131,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2017/09/13/netty6/"/>
+  <link rel="canonical" href="http://www.saily.top/2017/09/13/netty6/">
 
 
 
@@ -246,7 +246,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -263,7 +263,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -280,7 +280,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -297,7 +297,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -314,7 +314,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -325,7 +325,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -345,9 +345,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -462,7 +460,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -490,11 +488,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -533,7 +530,7 @@
 <p>这个就是说NIO使用Selector基于事件的连接是一样的。</p>
 <h3 id="childHandler"><a href="#childHandler" class="headerlink" title="childHandler()"></a>childHandler()</h3><p>服务于用channel的请求，实现为赋值到childHandler的属性中。</p>
 <h3 id="bind"><a href="#bind" class="headerlink" title="bind()"></a>bind()</h3><p>在这个方法里才真正创建了一个新的channel，并且绑定到上面。</p>
-<p><img src="/img/netty/netty6-7.png" alt=""></p>
+<p><img src="/img/netty/netty6-7.png" alt></p>
 <p>最后调用到doBind方法，在netty中，do开头的基本都是私有方法。</p>
 <p><code>final ChannelFuture regFuture = initAndRegister();</code></p>
 <p>在initAndRegister()里就调用了<code>channelFactory.newChannel()</code>（<em>ReflectiveChannelFactory</em>）来创建Channel对象。</p>
@@ -554,7 +551,7 @@
 <p>Netty建议我们使用addListener，而不要使用await()，因为addListener是非阻塞的，await()会阻塞直到I/O完成。不要在<strong>ChannelHanlder</strong>中调用await()方法，因为<strong>ChannelHanlder</strong>的方法通常是被事件处理器调用的，如果await()被I/O操作线程的事件处理器调用，那么I/O操作就会一直阻塞造成死锁。比如在channelRead()中调用await()方法，等待I/O操作完成，而I/O操作又在等待channelRead()完成，就成了死锁，这种情况应该调用:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">future.addListener(<span class="keyword">new</span>  ChannelFutureListener() &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(ChannelFuture future)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// Perform post-closure operation</span></span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <h2 id="Reactor模式"><a href="#Reactor模式" class="headerlink" title="Reactor模式"></a>Reactor模式</h2><h3 id="Doug-Lea"><a href="#Doug-Lea" class="headerlink" title="Doug Lea"></a>Doug Lea</h3><p>反应器模式，Netty整体架构是Reactor模式的完整体现。提到Reactor模式，就不得不拿出大神Doug Lea(Java并发包的作者)的文档：<a href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf" target="_blank" rel="noopener">《Scalable IO in Java》</a>，内容不多，里面涉及到传统IO的写法，NIO的设计思想。这个文档非常重要，一定要熟读。</p>
-<p><img src="/img/netty/netty6-1.png" alt=""></p>
+<p><img src="/img/netty/netty6-1.png" alt></p>
 <p>大多数的网络服务都是下面的流程：</p>
 <ol>
 <li>读取请求</li>
@@ -563,7 +560,7 @@
 <li>编码相应</li>
 <li>发送响应</li>
 </ol>
-<p><img src="/img/netty/netty6-2.png" alt=""></p>
+<p><img src="/img/netty/netty6-2.png" alt></p>
 <p>传统的网络服务设计方式如上图所示：客户端有多个，服务端每接受到一个请求就创建一个线程进行一系列的处理….</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ServerSocket ss = <span class="keyword">new</span> ServerSocket(PORT);</span><br><span class="line">            <span class="keyword">while</span> (!Thread.interrupted())</span><br><span class="line">                <span class="keyword">new</span> Thread(<span class="keyword">new</span> Handler(ss.accept())).start();</span><br><span class="line">            <span class="comment">// or, single-threaded, or a thread pool</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Socket socket;</span><br><span class="line"></span><br><span class="line">        Handler(Socket s) &#123;</span><br><span class="line">            socket = s;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">byte</span>[] input = <span class="keyword">new</span> <span class="keyword">byte</span>[MAX_INPUT];</span><br><span class="line">                socket.getInputStream().read(input);</span><br><span class="line">                <span class="keyword">byte</span>[] output = process(input);</span><br><span class="line">                socket.getOutputStream().write(output);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">byte</span>[] process(<span class="keyword">byte</span>[] cmd) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这种方式最大的问题就是线程太多了，如果线程持续上升，线程之间的切换非常耗费资源，服务器就支撑不了。</p>
@@ -677,11 +674,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -718,9 +710,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -733,7 +723,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -784,7 +774,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -879,7 +871,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -979,7 +973,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1135,20 +1129,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2017/09/13/netty6/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

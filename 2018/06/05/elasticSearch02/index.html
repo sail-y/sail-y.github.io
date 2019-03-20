@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -130,12 +130,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/06/05/elasticSearch02/"/>
+  <link rel="canonical" href="http://www.saily.top/2018/06/05/elasticSearch02/">
 
 
 
@@ -245,7 +245,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -262,7 +262,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -279,7 +279,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -296,7 +296,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -313,7 +313,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -324,7 +324,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -344,9 +344,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -461,7 +459,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -489,11 +487,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -519,7 +516,7 @@
 <li>安装JDK，至少1.8.0_73以上版本，java -version</li>
 <li>下载和解压缩Elasticsearch安装包（<a href="https://www.elastic.co/downloads/past-releases/elasticsearch-5-2-0）" target="_blank" rel="noopener">https://www.elastic.co/downloads/past-releases/elasticsearch-5-2-0）</a><a id="more"></a></li>
 <li><p>启动Elasticsearch：bin\elasticsearch，es本身特点之一就是开箱即用，如果是中小型应用，数据量少，操作不是很复杂的，直接启动就可以用了。</p>
-<p> <img src="/img/es/02/es_start.png" alt=""></p>
+<p> <img src="/img/es/02/es_start.png" alt></p>
 </li>
 <li><p>检查ES是否启动成功：<a href="http://localhost:9200/?pretty" target="_blank" rel="noopener">http://localhost:9200/?pretty</a></p>
  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">name: node名称</span><br><span class="line">cluster_name: 集群名称（默认的集群名称就是elasticsearch）</span><br><span class="line">version.number: 5.2.0，es版本号</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span> : <span class="string">"4onsTYV"</span>,</span><br><span class="line">  <span class="attr">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</span><br><span class="line">  <span class="attr">"cluster_uuid"</span> : <span class="string">"nKZ9VK_vQdSQ1J0Dx9gx1Q"</span>,</span><br><span class="line">  <span class="attr">"version"</span> : &#123;</span><br><span class="line">    <span class="attr">"number"</span> : <span class="string">"5.2.0"</span>,</span><br><span class="line">    <span class="attr">"build_hash"</span> : <span class="string">"24e05b9"</span>,</span><br><span class="line">    <span class="attr">"build_date"</span> : <span class="string">"2017-01-24T19:52:35.800Z"</span>,</span><br><span class="line">    <span class="attr">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"lucene_version"</span> : <span class="string">"6.4.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -529,7 +526,7 @@
 </li>
 <li><p>下载和解压缩Kibana安装包，使用里面的开发界面，去操作elasticsearch，作为我们学习es知识点的一个主要的界面入口</p>
 <p> <a href="https://www.elastic.co/downloads/past-releases/kibana-5-2-0" target="_blank" rel="noopener">https://www.elastic.co/downloads/past-releases/kibana-5-2-0</a></p>
-<p> <img src="/img/es/02/kibana_start.png" alt=""></p>
+<p> <img src="/img/es/02/kibana_start.png" alt></p>
 <p> 访问<a href="http://localhost:5601/，使用devtools进行测试和开发" target="_blank" rel="noopener">http://localhost:5601/，使用devtools进行测试和开发</a></p>
 <p> <img src="/img/es/02/kibana_health.png" alt="GET _cluster/health">    </p>
 </li>
@@ -575,7 +572,7 @@
 <h4 id="删除商品：删除文档"><a href="#删除商品：删除文档" class="headerlink" title="删除商品：删除文档"></a>删除商品：删除文档</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DELETE /ecommerce/product/1</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"found"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"_index"</span>: <span class="string">"ecommerce"</span>,</span><br><span class="line">  <span class="attr">"_type"</span>: <span class="string">"product"</span>,</span><br><span class="line">  <span class="attr">"_id"</span>: <span class="string">"1"</span>,</span><br><span class="line">  <span class="attr">"_version"</span>: <span class="number">4</span>,</span><br><span class="line">  <span class="attr">"result"</span>: <span class="string">"deleted"</span>,</span><br><span class="line">  <span class="attr">"_shards"</span>: &#123;</span><br><span class="line">    <span class="attr">"total"</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">"successful"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"failed"</span>: <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="多种搜索方式"><a href="#多种搜索方式" class="headerlink" title="多种搜索方式"></a>多种搜索方式</h3><p>上面做了CRUD，接下里就是ES里最重要的搜索部分。</p>
 <h4 id="query-string-search"><a href="#query-string-search" class="headerlink" title="query string search"></a>query string search</h4><p>搜索全部商品：GET /ecommerce/product/_search</p>
-<p><img src="/img/es/02/kibana_search01.png" alt=""></p>
+<p><img src="/img/es/02/kibana_search01.png" alt></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">took：耗费了几毫秒</span><br><span class="line">timed_out：是否超时，这里没有</span><br><span class="line">_shards：数据拆成了5个分片，所以对于搜索请求，会分配所有的primary shard（或者是它的某个replica shard）</span><br><span class="line">hits.total：查询结果的数量，3个document</span><br><span class="line">hits.max_score：score的含义，就是document对于一个search的相关度的匹配分数，越相关，就越匹配，分数也高</span><br><span class="line">hits.hits：包含了匹配搜索的document的详细数据</span><br></pre></td></tr></table></figure>
 <p>query string search的由来，因为search参数都是以http请求的query string来附带的(也就是?后面的)</p>
 <p>搜索商品名称中包含yagao的商品，而且按照售价降序排序：</p>
@@ -601,11 +598,11 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /ecommerce/product/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span> : &#123;</span><br><span class="line">        <span class="attr">"match_phrase"</span> : &#123;</span><br><span class="line">            <span class="attr">"producer"</span> : <span class="string">"yagao producer"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="highlight-search（高亮搜索结果）"><a href="#highlight-search（高亮搜索结果）" class="headerlink" title="highlight search（高亮搜索结果）"></a>highlight search（高亮搜索结果）</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET /ecommerce/product/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span> : &#123;</span><br><span class="line">        <span class="attr">"match"</span> : &#123;</span><br><span class="line">            <span class="attr">"producer"</span> : <span class="string">"producer"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"highlight"</span>: &#123;</span><br><span class="line">        <span class="attr">"fields"</span> : &#123;</span><br><span class="line">            <span class="attr">"producer"</span> : &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="聚合分析快速入门"><a href="#聚合分析快速入门" class="headerlink" title="聚合分析快速入门"></a>聚合分析快速入门</h3><h4 id="计算每个tag下的商品数量"><a href="#计算每个tag下的商品数量" class="headerlink" title="计算每个tag下的商品数量"></a>计算每个tag下的商品数量</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /ecommerce/product/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">    <span class="attr">"group_by_tags"</span>: &#123;</span><br><span class="line">      <span class="attr">"terms"</span>: &#123; <span class="attr">"field"</span>: <span class="string">"tags"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/es/02/aggs_error.png" alt=""></p>
+<p><img src="/img/es/02/aggs_error.png" alt></p>
 <p>报错了，text类型的字段默认不支持聚合，得做个操作让它支持聚合，将文本field的fielddata属性设置为true。</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">```json</span><br><span class="line">PUT /ecommerce/_mapping/product</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"properties"</span>: &#123;</span><br><span class="line">    <span class="attr">"tags"</span>: &#123;</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"text"</span>,</span><br><span class="line">      <span class="attr">"fielddata"</span>: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>再测试一次聚合查询，就好了</p>
-<p><img src="/img/es/02/aggs_normal.png" alt=""></p>
+<p><img src="/img/es/02/aggs_normal.png" alt></p>
 <h4 id="对名称中包含yagao的商品，计算每个tag下的商品数量"><a href="#对名称中包含yagao的商品，计算每个tag下的商品数量" class="headerlink" title="对名称中包含yagao的商品，计算每个tag下的商品数量"></a>对名称中包含yagao的商品，计算每个tag下的商品数量</h4><p>在聚合分析的基础上加上条件筛选</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET /ecommerce/product/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"match"</span>: &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"yagao"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">    <span class="attr">"all_tags"</span>: &#123;</span><br><span class="line">      <span class="attr">"terms"</span>: &#123;</span><br><span class="line">        <span class="attr">"field"</span>: <span class="string">"tags"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="先分组，再算每组的平均值，计算每个tag下的商品的平均价格"><a href="#先分组，再算每组的平均值，计算每个tag下的商品的平均价格" class="headerlink" title="先分组，再算每组的平均值，计算每个tag下的商品的平均价格"></a>先分组，再算每组的平均值，计算每个tag下的商品的平均价格</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET /ecommerce/product/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"group_by_tags"</span> : &#123;</span><br><span class="line">            <span class="attr">"terms"</span> : &#123; <span class="attr">"field"</span> : <span class="string">"tags"</span> &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">                <span class="attr">"avg_price"</span> : &#123;</span><br><span class="line">                    <span class="attr">"avg"</span> : &#123; <span class="attr">"field"</span> : <span class="string">"price"</span> &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -683,11 +680,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -724,9 +716,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -739,7 +729,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -790,7 +780,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -885,7 +877,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -985,7 +979,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1141,20 +1135,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/06/05/elasticSearch02/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

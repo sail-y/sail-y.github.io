@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -125,12 +125,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/04/14/spring-cloud-eureka/"/>
+  <link rel="canonical" href="http://www.saily.top/2018/04/14/spring-cloud-eureka/">
 
 
 
@@ -240,7 +240,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -257,7 +257,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -274,7 +274,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -291,7 +291,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -308,7 +308,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -319,7 +319,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -339,9 +339,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -456,7 +454,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -484,11 +482,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -515,7 +512,7 @@
 <h2 id="服务获取中的缓存问题"><a href="#服务获取中的缓存问题" class="headerlink" title="服务获取中的缓存问题"></a>服务获取中的缓存问题</h2><p>本节的内容都是从这个issue翻译的：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/373" target="_blank" rel="noopener">Documentation: changing Eureka renewal frequency WILL break the self-preservation feature of the server</a></p>
 <h3 id="为什么修改client的默认心跳时间，会导致自我保护模式失效？"><a href="#为什么修改client的默认心跳时间，会导致自我保护模式失效？" class="headerlink" title="为什么修改client的默认心跳时间，会导致自我保护模式失效？"></a>为什么修改client的默认心跳时间，会导致自我保护模式失效？</h3><p>Eureka Service会认为客户端是以30s的频率来发送心跳的。服务端期望收到的最大心跳时间是：<br>n instances x 2(60s/30s) x threshold</p>
 <p>如果是2个实例，Eureka会期望每分钟有：2 instances x 2 x 85% =3.4个心跳,也就是说需要3个心跳。<br>如果client的心跳改成15s，挂掉一个，另一个在1min内会发出4个心跳，而这时候的阈值还是3.4个，自我保护模式就失效了。<br>核心原因就是在Eureka Server计算期望心跳数的时候写死了每分钟的心跳间隔，即30秒，所以他永远会是*2(感觉像是新手写的代码啊啊啊 -_-)</p>
-<p><img src="http://7xijc0.com1.z0.glb.clouddn.com/eureka-self.png" alt=""></p>
+<p><img src="http://7xijc0.com1.z0.glb.clouddn.com/eureka-self.png" alt></p>
 <p>还有一个参数可以调整，eureka.server.renewalThresholdUpdateIntervalMs，心跳阈值重新计算的周期，默认15分钟，可以改短一点，2min</p>
 <h3 id="客户端首次注册时间为什么要30s？如何改进？"><a href="#客户端首次注册时间为什么要30s？如何改进？" class="headerlink" title="客户端首次注册时间为什么要30s？如何改进？"></a>客户端首次注册时间为什么要30s？如何改进？</h3><p>首次注册行为是和首次心跳绑定在一起的，首次心跳发送以后会收到not found的响应,client就知道还没注册过，client就会马上注册。首次心跳由参数<br>eureka.instance.leaseRenewalIntervalInSeconds控制的，默认30</p>
 <p>可以通过eureka.client.initialInstanceInfoReplicationIntervalSeconds参数来加快首次注册的速度。他是控制首次改变实例状态（UP/DOWN ）的时间，启动的时候状态肯定是需要改变的，所以他可以用来加快首次注册速度，并且改变这个值不会影响到保护模式</p>
@@ -620,11 +617,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -661,9 +653,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -676,7 +666,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -727,7 +717,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -822,7 +814,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -922,7 +916,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1078,20 +1072,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/04/14/spring-cloud-eureka/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

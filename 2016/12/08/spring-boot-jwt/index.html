@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -128,12 +128,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2016/12/08/spring-boot-jwt/"/>
+  <link rel="canonical" href="http://www.saily.top/2016/12/08/spring-boot-jwt/">
 
 
 
@@ -243,7 +243,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -260,7 +260,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -277,7 +277,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -294,7 +294,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -311,7 +311,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -322,7 +322,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -342,9 +342,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -459,7 +457,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -487,11 +485,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -515,7 +512,7 @@
         <p>这篇文章我们来讲一下如何集成JWT到Spring Boot项目中来完成接口的权限验证。</p>
 <h1 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h1><p>JWT是一种用于双方之间传递安全信息的简洁的、URL安全的表述性声明规范。JWT作为一个开放的标准（ RFC 7519 ），定义了一种简洁的，自包含的方法用于通信双方之间以Json对象的形式安全的传递信息。因为数字签名的存在，这些信息是可信的，JWT可以使用HMAC算法或者是RSA的公私秘钥对进行签名。<br>如何使用JWT？</p>
 <p>在身份鉴定的实现中，传统方法是在服务端存储一个session，给客户端返回一个cookie，而使用JWT之后，当用户使用它的认证信息登陆系统之后，会返回给用户一个JWT，用户只需要本地保存该token（通常使用local storage，也可以使用cookie）即可。<br><a id="more"></a><br>因为用户的状态在服务端的内存中是不存储的，所以这是一种 无状态 的认证机制。服务端的保护路由将会检查请求头 Authorization 中的JWT信息，如果合法，则允许用户的行为。由于JWT是自包含的，因此减少了需要查询数据库的需要。</p>
-<p>JWT的这些特性使得我们可以完全依赖其无状态的特性提供数据API服务，甚至是创建一个下载流服务。因为JWT并不使用Cookie的，所以你可以使用任何域名提供你的API服务而不需要担心跨域资源共享问题（CORS）。<br>大概就是这样：<br><img src="http://img1.tuicool.com/UfIbUjj.png" alt=""></p>
+<p>JWT的这些特性使得我们可以完全依赖其无状态的特性提供数据API服务，甚至是创建一个下载流服务。因为JWT并不使用Cookie的，所以你可以使用任何域名提供你的API服务而不需要担心跨域资源共享问题（CORS）。<br>大概就是这样：<br><img src="http://img1.tuicool.com/UfIbUjj.png" alt></p>
 <h1 id="Spring-Boot集成"><a href="#Spring-Boot集成" class="headerlink" title="Spring Boot集成"></a>Spring Boot集成</h1><p>我是勤劳的搬运工，<a href="http://www.jdon.com/dl/best/json-web-tokens-spring-cloud-microservices.html" target="_blank" rel="noopener">这应该是翻译老外的东西</a>，项目地址：<a href="https://github.com/thomas-kendall/trivia-microservices。" target="_blank" rel="noopener">https://github.com/thomas-kendall/trivia-microservices。</a></p>
 <p>废话不多说了，我直接上代码,依然是搬运工。<br>我是gradle构建的，就是引入一些依赖的jar包。顺便推荐一下阿里云的中央仓库</p>
 <pre><code>http://maven.aliyun.com/nexus/content/groups/public/
@@ -533,10 +530,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by YangFan on 2016/11/28 上午11:33.</span></span><br><span class="line"><span class="comment"> * &lt;p/&gt;</span></span><br><span class="line"><span class="comment"> * 最核心的地方，就是提供某个资源对应的权限定义，即getAttributes方法返回的结果。</span></span><br><span class="line"><span class="comment"> * 此类在初始化时，应该取到所有资源及其对应角色的定义。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoInvocationSecurityMetadataSourceService</span> <span class="keyword">implements</span></span></span><br><span class="line"><span class="class">        <span class="title">FilterInvocationSecurityMetadataSource</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, Collection&lt;ConfigAttribute&gt;&gt; resourceMap = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DemoInvocationSecurityMetadataSourceService</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadResourceDefine</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * 应当是资源为key， 权限为value。 资源通常为url， 权限就是那些以ROLE_为前缀的角色。 一个资源可以由多个权限来访问。</span></span><br><span class="line"><span class="comment">         * sparta</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Role r = <span class="keyword">new</span> Role();</span><br><span class="line">        r.setId(<span class="number">0L</span>);</span><br><span class="line">        r.setName(<span class="string">"admin"</span>);</span><br><span class="line">        <span class="comment">// 假数据</span></span><br><span class="line">        List&lt;Role&gt; roles = Collections.singletonList(r); <span class="comment">// 替换为查询角色列表</span></span><br><span class="line">        resourceMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Role role : roles) &#123;</span><br><span class="line">            ConfigAttribute ca = <span class="keyword">new</span> SecurityConfig(role.getName());</span><br><span class="line"></span><br><span class="line">            Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">            params.put(<span class="string">"roleId"</span>, role.getId());</span><br><span class="line">            <span class="comment">// 查询每个角色对于的权限,我这里假设直接查到了url</span></span><br><span class="line">            List&lt;String&gt; resources = Collections.singletonList(<span class="string">"/user/*"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (String url : resources) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="comment">/*</span></span><br><span class="line"><span class="comment">                 * 判断资源文件和权限的对应关系，如果已经存在相关的资源url，则要通过该url为key提取出权限集合，将权限增加到权限集合中。</span></span><br><span class="line"><span class="comment">                 * sparta</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="keyword">if</span> (resourceMap.containsKey(url)) &#123;</span><br><span class="line"></span><br><span class="line">                    Collection&lt;ConfigAttribute&gt; value = resourceMap.get(url);</span><br><span class="line">                    value.add(ca);</span><br><span class="line">                    resourceMap.put(url, value);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    Collection&lt;ConfigAttribute&gt; atts = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                    atts.add(ca);</span><br><span class="line">                    resourceMap.put(url, atts);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Collection&lt;ConfigAttribute&gt; <span class="title">getAllConfigAttributes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        loadResourceDefine();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据URL，找到相关的权限配置。</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Collection&lt;ConfigAttribute&gt; <span class="title">getAttributes</span><span class="params">(Object object)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> IllegalArgumentException </span>&#123;</span><br><span class="line"></span><br><span class="line">        FilterInvocation filterInvocation = (FilterInvocation) object;</span><br><span class="line">        <span class="keyword">for</span> (String url : resourceMap.keySet()) &#123;</span><br><span class="line">            RequestMatcher requestMatcher = <span class="keyword">new</span> AntPathRequestMatcher(url);</span><br><span class="line">            HttpServletRequest httpRequest = filterInvocation.getHttpRequest();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (requestMatcher.matches(httpRequest)) &#123;</span><br><span class="line">                <span class="keyword">return</span> resourceMap.get(url);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; arg0)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>现在我们拿到了用户的角色，也拿到了系统里有的角色和权限，就需要判断他是否有这个权限了，配置如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by YangFan on 2016/11/28 下午12:19.</span></span><br><span class="line"><span class="comment"> * &lt;p/&gt;</span></span><br><span class="line"><span class="comment"> * AccessdecisionManager在Spring security中是很重要的。</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 在验证部分简略提过了，所有的Authentication实现需要保存在一个GrantedAuthority对象数组中。</span></span><br><span class="line"><span class="comment"> * 这就是赋予给主体的权限。 GrantedAuthority对象通过AuthenticationManager</span></span><br><span class="line"><span class="comment"> * 保存到 Authentication对象里，然后从AccessDecisionManager读出来，进行授权判断。</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * Spring Security提供了一些拦截器，来控制对安全对象的访问权限，例如方法调用或web请求。</span></span><br><span class="line"><span class="comment"> * 一个是否允许执行调用的预调用决定，是由AccessDecisionManager实现的。</span></span><br><span class="line"><span class="comment"> * 这个 AccessDecisionManager 被AbstractSecurityInterceptor调用，</span></span><br><span class="line"><span class="comment"> * 它用来作最终访问控制的决定。 这个AccessDecisionManager接口包含三个方法：</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * void decide(Authentication authentication, Object secureObject,</span></span><br><span class="line"><span class="comment"> * List&lt;ConfigAttributeDefinition&gt; config) throws AccessDeniedException;</span></span><br><span class="line"><span class="comment"> * boolean supports(ConfigAttribute attribute);</span></span><br><span class="line"><span class="comment"> * boolean supports(Class clazz);</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 从第一个方法可以看出来，AccessDecisionManager使用方法参数传递所有信息，这好像在认证评估时进行决定。</span></span><br><span class="line"><span class="comment"> * 特别是，在真实的安全方法期望调用的时候，传递安全Object启用那些参数。</span></span><br><span class="line"><span class="comment"> * 比如，让我们假设安全对象是一个MethodInvocation。</span></span><br><span class="line"><span class="comment"> * 很容易为任何Customer参数查询MethodInvocation，</span></span><br><span class="line"><span class="comment"> * 然后在AccessDecisionManager里实现一些有序的安全逻辑，来确认主体是否允许在那个客户上操作。</span></span><br><span class="line"><span class="comment"> * 如果访问被拒绝，实现将抛出一个AccessDeniedException异常。</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 这个 supports(ConfigAttribute) 方法在启动的时候被</span></span><br><span class="line"><span class="comment"> * AbstractSecurityInterceptor调用，来决定AccessDecisionManager</span></span><br><span class="line"><span class="comment"> * 是否可以执行传递ConfigAttribute。</span></span><br><span class="line"><span class="comment"> * supports(Class)方法被安全拦截器实现调用，</span></span><br><span class="line"><span class="comment"> * 包含安全拦截器将显示的AccessDecisionManager支持安全对象的类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoAccessDecisionManager</span> <span class="keyword">implements</span> <span class="title">AccessDecisionManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">decide</span><span class="params">(Authentication authentication, Object object,</span></span></span><br><span class="line"><span class="function"><span class="params">                       Collection&lt;ConfigAttribute&gt; configAttributes)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> AccessDeniedException, InsufficientAuthenticationException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (configAttributes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (ConfigAttribute ca : configAttributes) &#123;</span><br><span class="line"></span><br><span class="line">            String needRole = ca.getAttribute();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//ga 为用户所被赋予的权限。 needRole 为访问相应的资源应该具有的权限。</span></span><br><span class="line">            <span class="keyword">for</span> (GrantedAuthority ga : authentication.getAuthorities()) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (needRole.trim().equals(ga.getAuthority().trim())) &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AccessDeniedException(<span class="string">"没有权限进行操作！"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(ConfigAttribute attribute)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; clazz)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们试试登录的接口：<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/login.png" alt=""></p>
+<p>我们试试登录的接口：<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/login.png" alt></p>
 <p>然后我们用这个token来调用另外一个接口。<br>我们先试试不传Token会返回什么</p>
-<p><img src="http://7xs4nh.com1.z0.glb.clouddn.com/spring-boot-jwt-user-0.png" alt=""></p>
-<p>判断没有登录，现在再来试试带上token的请求。<br>已经成功的请求到了数据。<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/spring-boot-jwt-1.png" alt=""></p>
+<p><img src="http://7xs4nh.com1.z0.glb.clouddn.com/spring-boot-jwt-user-0.png" alt></p>
+<p>判断没有登录，现在再来试试带上token的请求。<br>已经成功的请求到了数据。<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/spring-boot-jwt-1.png" alt></p>
 <p>好了，核心配置就是这些，我把这些代码上传github上，有需要的可以下载下来看看。里面的角色和权限都是虚拟数据，应用还需要自行修改代码。<br><a href="https://github.com/sail-y/spring-boot-jwt" target="_blank" rel="noopener">https://github.com/sail-y/spring-boot-jwt</a></p>
 
       
@@ -611,11 +608,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -652,9 +644,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -667,7 +657,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -718,7 +708,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -813,7 +805,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -913,7 +907,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1069,20 +1063,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2016/12/08/spring-boot-jwt/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

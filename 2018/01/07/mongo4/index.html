@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -126,12 +126,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/01/07/mongo4/"/>
+  <link rel="canonical" href="http://www.saily.top/2018/01/07/mongo4/">
 
 
 
@@ -241,7 +241,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -258,7 +258,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -275,7 +275,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -292,7 +292,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -309,7 +309,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -320,7 +320,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -340,9 +340,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -457,7 +455,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -485,11 +483,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -555,7 +552,7 @@
 <h1 id="索引与查询计划"><a href="#索引与查询计划" class="headerlink" title="索引与查询计划"></a>索引与查询计划</h1><p>索引通常能够极大的提高查询的效率，如果没有索引，MongoDB在读取数据时必须扫描集合中的每个文件并选取那些符合查询条件的记录。</p>
 <p>这种扫描全集合的查询效率是非常低的，特别在处理大量的数据时，查询可以要花费几十秒甚至几分钟，这对网站的性能是非常致命的。</p>
 <p>索引是特殊的数据结构，索引存储在一个易于遍历读取的数据集合中，索引是对数据库表中一列或多列的值进行排序的一种结构。</p>
-<p><img src="https://docs.mongodb.com/manual/_images/index-for-sort.bakedsvg.svg" alt=""></p>
+<p><img src="https://docs.mongodb.com/manual/_images/index-for-sort.bakedsvg.svg" alt></p>
 <p>mongodb默认会给每一个集合的<code>_id</code>字段上创建一个索引。</p>
 <h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><p>数据准备：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.myindex.insert(&#123;<span class="attr">name</span>:<span class="string">'zhangsan'</span>, <span class="attr">age</span>:<span class="number">10</span>&#125;);</span><br><span class="line">&gt; db.myindex.insert(&#123;<span class="attr">name</span>:<span class="string">'lisi'</span>, <span class="attr">age</span>:<span class="number">20</span>&#125;);</span><br><span class="line">&gt; db.myindex.insert(&#123;<span class="attr">name</span>:<span class="string">'wangwu'</span>, <span class="attr">age</span>:<span class="number">14</span>&#125;);</span><br><span class="line">&gt; db.myindex.find();</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5a51c3d1a893e40faf1670cb"</span>), <span class="string">"name"</span> : <span class="string">"zhangsan"</span>, <span class="string">"age"</span> : <span class="number">10</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5a51c3e5a893e40faf1670cc"</span>), <span class="string">"name"</span> : <span class="string">"lisi"</span>, <span class="string">"age"</span> : <span class="number">20</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5a51c404a893e40faf1670cd"</span>), <span class="string">"name"</span> : <span class="string">"wangwu"</span>, <span class="string">"age"</span> : <span class="number">14</span> &#125;</span><br></pre></td></tr></table></figure>
@@ -578,7 +575,7 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.myindex.find(&#123;<span class="attr">age</span>:&#123;<span class="attr">$gt</span>:<span class="number">5</span>&#125;&#125;).explain();</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"queryPlanner"</span> : &#123;</span><br><span class="line">		<span class="string">"plannerVersion"</span> : <span class="number">1</span>,</span><br><span class="line">		<span class="string">"namespace"</span> : <span class="string">"test.myindex"</span>,</span><br><span class="line">		<span class="string">"indexFilterSet"</span> : <span class="literal">false</span>,</span><br><span class="line">		<span class="string">"parsedQuery"</span> : &#123;</span><br><span class="line">			<span class="string">"age"</span> : &#123;</span><br><span class="line">				<span class="string">"$gt"</span> : <span class="number">5</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="string">"winningPlan"</span> : &#123;</span><br><span class="line">			<span class="string">"stage"</span> : <span class="string">"COLLSCAN"</span>,</span><br><span class="line">			<span class="string">"filter"</span> : &#123;</span><br><span class="line">				<span class="string">"age"</span> : &#123;</span><br><span class="line">					<span class="string">"$gt"</span> : <span class="number">5</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			<span class="string">"direction"</span> : <span class="string">"forward"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="string">"rejectedPlans"</span> : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"serverInfo"</span> : &#123;</span><br><span class="line">		<span class="string">"host"</span> : <span class="string">"2dd4d04418b1"</span>,</span><br><span class="line">		<span class="string">"port"</span> : <span class="number">27017</span>,</span><br><span class="line">		<span class="string">"version"</span> : <span class="string">"3.6.0"</span>,</span><br><span class="line">		<span class="string">"gitVersion"</span> : <span class="string">"a57d8e71e6998a2d0afde7edc11bd23e5661c915"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"ok"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="重建索引"><a href="#重建索引" class="headerlink" title="重建索引"></a>重建索引</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.myindex.reIndex();</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"nIndexesWas"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="string">"nIndexes"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="string">"indexes"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"v"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"key"</span> : &#123;</span><br><span class="line">				<span class="string">"_id"</span> : <span class="number">1</span></span><br><span class="line">			&#125;,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"_id_"</span>,</span><br><span class="line">			<span class="string">"ns"</span> : <span class="string">"test.myindex"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"v"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"unique"</span> : <span class="literal">true</span>,</span><br><span class="line">			<span class="string">"key"</span> : &#123;</span><br><span class="line">				<span class="string">"name"</span> : <span class="number">1</span></span><br><span class="line">			&#125;,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"name_1"</span>,</span><br><span class="line">			<span class="string">"ns"</span> : <span class="string">"test.myindex"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="string">"ok"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h2><p><a href="https://docs.mongodb.com/manual/indexes/index.html#compound-index" target="_blank" rel="noopener">https://docs.mongodb.com/manual/indexes/index.html#compound-index</a></p>
-<p><img src="https://docs.mongodb.com/manual/_images/index-compound-key.bakedsvg.svg" alt=""></p>
+<p><img src="https://docs.mongodb.com/manual/_images/index-compound-key.bakedsvg.svg" alt></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.myindex.createIndex(&#123;<span class="attr">age</span>:<span class="number">1</span>, <span class="attr">name</span>:<span class="number">1</span>&#125;, &#123;<span class="attr">name</span>:<span class="string">'myNameAndAge'</span>&#125;)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"createdCollectionAutomatically"</span> : <span class="literal">false</span>,</span><br><span class="line">	<span class="string">"numIndexesBefore"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="string">"numIndexesAfter"</span> : <span class="number">3</span>,</span><br><span class="line">	<span class="string">"ok"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">&gt; db.myindex.getIndexes();</span><br><span class="line">[</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="string">"v"</span> : <span class="number">2</span>,</span><br><span class="line">		<span class="string">"key"</span> : &#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">1</span></span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="string">"name"</span> : <span class="string">"_id_"</span>,</span><br><span class="line">		<span class="string">"ns"</span> : <span class="string">"test.myindex"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="string">"v"</span> : <span class="number">2</span>,</span><br><span class="line">		<span class="string">"unique"</span> : <span class="literal">true</span>,</span><br><span class="line">		<span class="string">"key"</span> : &#123;</span><br><span class="line">			<span class="string">"name"</span> : <span class="number">1</span></span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="string">"name"</span> : <span class="string">"name_1"</span>,</span><br><span class="line">		<span class="string">"ns"</span> : <span class="string">"test.myindex"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="string">"v"</span> : <span class="number">2</span>,</span><br><span class="line">		<span class="string">"key"</span> : &#123;</span><br><span class="line">			<span class="string">"age"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="number">1</span></span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="string">"name"</span> : <span class="string">"myNameAndAge"</span>,</span><br><span class="line">		<span class="string">"ns"</span> : <span class="string">"test.myindex"</span></span><br><span class="line">	&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <h1 id="查询优化器"><a href="#查询优化器" class="headerlink" title="查询优化器"></a>查询优化器</h1><p>mysql里面有一个慢查询日志，记录了查询比较慢的一些查询，可以让开发人员分析。</p>
 <p>mongodb也提供了profiling，它默认是没有开启的，需要手动开启，0表示没有开启。</p>
@@ -666,11 +663,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -707,9 +699,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -722,7 +712,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -773,7 +763,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -868,7 +860,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -968,7 +962,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1124,20 +1118,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/01/07/mongo4/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

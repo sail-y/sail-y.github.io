@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -109,7 +109,7 @@
 
 
   <meta name="description" content="哪些内存需要回收？程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，方法或者线程结束的时候内存自然就跟着回收了，所以不需要考虑过多回收的问题。而Java堆和方法区就不一样了，这部分内存的分配和回收都是动态的。 Java堆内存回收因为堆就是放对象的地方，要回收内存，首先要知道哪些对象是不可能再被任何途径使用的 引用计数法这个算法的实现是：给对象中添加一个引用计数器，每当有一个地方引用它">
-<meta name="keywords" content="JVM,java">
+<meta name="keywords" content="java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM4-垃圾收集器">
 <meta property="og:url" content="http://www.saily.top/2016/10/31/JVM4/index.html">
@@ -130,12 +130,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2016/10/31/JVM4/"/>
+  <link rel="canonical" href="http://www.saily.top/2016/10/31/JVM4/">
 
 
 
@@ -245,7 +245,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -262,7 +262,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -279,7 +279,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -296,7 +296,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -313,7 +313,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -324,7 +324,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -344,9 +344,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -461,7 +459,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -489,11 +487,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -522,7 +519,7 @@
 <p>运行结果</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc())  7440K-&gt;632K(125952K), 0.0012069 secs]</span><br><span class="line">[Full GC (System.gc())  632K-&gt;520K(125952K), 0.0058047 secs]</span><br></pre></td></tr></table></figure>
 <p>看到<code>632K-&gt;520K</code>，意味着两个对象相互引用也被回收了，侧面说明虚拟机不是通过引用计数法来判断对象是否存活的。</p>
-<h4 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h4><p>这个算法的基本思路是通过一系列的称为<code>GC Roots</code>的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到<code>GC Roots</code>没有任何引用链相连(从GC Roots到这个对象不可达)时，则证明此对象是不可用的。下图中object5、object6、object7虽然相互关联，但是到GC Roots是不可达的，所以他们会被回收。<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/jvm3-1.jpeg" alt=""></p>
+<h4 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h4><p>这个算法的基本思路是通过一系列的称为<code>GC Roots</code>的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到<code>GC Roots</code>没有任何引用链相连(从GC Roots到这个对象不可达)时，则证明此对象是不可用的。下图中object5、object6、object7虽然相互关联，但是到GC Roots是不可达的，所以他们会被回收。<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/jvm3-1.jpeg" alt></p>
 <p>在Java语言中，可用作为GC Roots的对象包括下面几种：</p>
 <ul>
 <li>虚拟机栈(栈帧中的本地变量)中引用的对象</li>
@@ -552,13 +549,13 @@
 <h3 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h3><p>最基础的收集算法是标记-清除(Mark-Sweep)算法，，如同它的名字一样，算法分为<code>标记</code>和<code>清除</code>两个阶段：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。（<a href="#对象自我拯救">标记过程</a>已经介绍过了）。这种算法主要有两个不足：</p>
 <ul>
 <li>一个是效率问题，标记和清除两个过程的效率都不高</li>
-<li>另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行中需要分配较大对象时<a href="http://sail-y.github.io/2016/10/28/JVM2/#对象创建" target="_blank" rel="noopener">对象的创建</a>，无法找到足够的连续内存而不得不提前出发另一次垃圾收集动作。标记-清除算法的执行过程如图：<br><img src="/img/jvm/04/标记清楚算法.png" alt="">。</li>
+<li>另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行中需要分配较大对象时<a href="http://sail-y.github.io/2016/10/28/JVM2/#对象创建" target="_blank" rel="noopener">对象的创建</a>，无法找到足够的连续内存而不得不提前出发另一次垃圾收集动作。标记-清除算法的执行过程如图：<br><img src="/img/jvm/04/标记清楚算法.png" alt>。</li>
 </ul>
-<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>复制算法是为了解决效率问题而出现的，<strong>它将可用的内存分为两块，每次只用其中一块，当这一块内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已经使用过的内存空间一次性清理掉</strong>。这样每次只需要对整个半区进行内存回收，内存分配时也不需要考虑内存碎片等复杂情况，只需要移动指针，按照顺序分配即可。复制算法的执行过程如图：<br><img src="/img/jvm/04/复制算法.png" alt=""></p>
+<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>复制算法是为了解决效率问题而出现的，<strong>它将可用的内存分为两块，每次只用其中一块，当这一块内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已经使用过的内存空间一次性清理掉</strong>。这样每次只需要对整个半区进行内存回收，内存分配时也不需要考虑内存碎片等复杂情况，只需要移动指针，按照顺序分配即可。复制算法的执行过程如图：<br><img src="/img/jvm/04/复制算法.png" alt></p>
 <p>只是这个算法代价太高，内存缩小为原来的一半，现在商用虚拟机都采用这种算法来回收“新生代”，IBM研究表明新生代98%的对象“朝生夕死”，所以不需要按1:1来划分内存空间，而是将内存分为一块较大的<strong>Eden</strong>空间和两块较小的<strong>Survivor</strong>空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。HotSpot虚拟机默认Eden和Survivor的大小比例是8:1，也就是每次新生代可用内存空间为整个新生代容量的90%，只有10%的内存会被“浪费”。我们没有办法保证每次回收都只有不多余10%的对象存活，所以如果Survivor空间不够用的时候，这些对象将直接通过分配担保机制进入老年代。</p>
-<h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>复制算法在对象存活率较高时就要进行较多的复制操作，效率会变低，如果对象存活率太高，还需要额外的空间进行分配担保，所以老年代一般不能直接用这种算法。<br>标记-整理算法是先标记对象，让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。如图：<img src="/img/jvm/04/标记-整理算法.png" alt=""></p>
-<h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>概括一下Java内存的布局：<img src="/img/jvm/04/分代收集算法.png" alt=""><br>当前的商业虚拟机垃圾收集都采用“分代收集”算法，把Java堆分为新生代和老年代。在新生代中，垃圾收集时都有大批对象死去，只有少量存活，只需复制少量存活的对象成本低。老年代对象存活率高、没有额外的空间进行分配担保，就必须使用“标记-清理”或者“标记-整理”算法来进行回收。</p>
-<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>垃圾收集器是内存回收的具体实现，JDK1.7之后的HotSpot虚拟机包含的收集器如下图所示：<br><img src="/img/jvm/04/垃圾收集器.png" alt=""></p>
+<h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>复制算法在对象存活率较高时就要进行较多的复制操作，效率会变低，如果对象存活率太高，还需要额外的空间进行分配担保，所以老年代一般不能直接用这种算法。<br>标记-整理算法是先标记对象，让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。如图：<img src="/img/jvm/04/标记-整理算法.png" alt></p>
+<h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>概括一下Java内存的布局：<img src="/img/jvm/04/分代收集算法.png" alt><br>当前的商业虚拟机垃圾收集都采用“分代收集”算法，把Java堆分为新生代和老年代。在新生代中，垃圾收集时都有大批对象死去，只有少量存活，只需复制少量存活的对象成本低。老年代对象存活率高、没有额外的空间进行分配担保，就必须使用“标记-清理”或者“标记-整理”算法来进行回收。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>垃圾收集器是内存回收的具体实现，JDK1.7之后的HotSpot虚拟机包含的收集器如下图所示：<br><img src="/img/jvm/04/垃圾收集器.png" alt></p>
 <p>上图展示了7种不作用于不同分代的收集器，如果两个收集器之间存在连线，就说明它们可以搭配使用。虚拟机所处的区域，则表示它是属于新生代收集器还是老年代收集器。</p>
 <h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><p>Serial收集器是一个单线程的收集器，在进行垃圾收集的时候，会暂停其他所有的工作线程，直到它收集结束。新生代采用<em>复制</em>算法，老年代采取<em>标记-整理</em>算法。虽然它会暂停用户的工作线程似乎显得很不能接受，<strong>不过它仍然是Client模式下虚拟机的默认新生代收集器</strong>，因为它简单而高效，收集几十兆内存停顿时间可以控制在几十毫秒，这是可以接受的。</p>
 <h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><p><strong>ParNew收集器是Serial收集器的多线程版本，它是运行在Server模式下虚拟机中首选的新生代收集器</strong>。有个重要的原因是，除了Serial收集器，目前只有它能与CMS收集器配合工作。(CMS是HotSpot在JDK1.5推出的第一款真正意义上的<strong>老年代</strong>并发收集器，第一次实现了垃圾收集线程基本上与用户线程同时工作–意思就是几乎不会暂停用户的工作线程)。ParNew收集器默认开启的收集线程数与CPU数量相同，与Serial相比，CPU数量越多，它的效果才越好。在CPU数量非常多的情况下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。</p>
@@ -603,9 +600,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
-          
             <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -653,11 +650,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -694,9 +686,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -709,7 +699,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -760,7 +750,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -855,7 +847,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -955,7 +949,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1111,20 +1105,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2016/10/31/JVM4/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

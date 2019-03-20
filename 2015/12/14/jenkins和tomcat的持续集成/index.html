@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -130,12 +130,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2015/12/14/jenkins和tomcat的持续集成/"/>
+  <link rel="canonical" href="http://www.saily.top/2015/12/14/jenkins和tomcat的持续集成/">
 
 
 
@@ -245,7 +245,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -262,7 +262,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -279,7 +279,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -296,7 +296,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -313,7 +313,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -324,7 +324,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -344,9 +344,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -461,7 +459,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -489,11 +487,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -526,9 +523,9 @@
 <p>是不是很简单？这样我们在发布应用的时候就再也不需要每次先在本地打包，再手动去删除之前的项目，然后通过ftp工具上传到服务器上，最后再重启tomcat。如果一天要进行几十次类似的操作，其实还是非常耗时的。</p>
 <h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><h2 id="配置jenkins拉取git代码"><a href="#配置jenkins拉取git代码" class="headerlink" title="配置jenkins拉取git代码"></a>配置jenkins拉取git代码</h2><p><img src="http://7xiqxx.com1.z0.glb.clouddn.com/3807ACD4-7799-45F9-89BF-D67BCC4BD2D3.png" alt="jenkins配置"><br>首先配置在jenkins中配置好，然后再去gitlab里面配上hook触发点。<br><img src="http://7xiqxx.com1.z0.glb.clouddn.com/B2859F18-E479-401F-AB0C-8C852F7CA54C.png" alt="gitlab配置"><br>我这里是配置的当gitlab中merge的时候触发构建操作。        </p>
 <h2 id="用Maven打包应用"><a href="#用Maven打包应用" class="headerlink" title="用Maven打包应用"></a>用Maven打包应用</h2><p>这个很简单：<br><img src="http://7xiqxx.com1.z0.glb.clouddn.com/4B6A6B6C-9D16-4B2B-BC50-46EAA3563AB8.png" alt="打包"></p>
-<h2 id="上传包到服务器并执行脚本"><a href="#上传包到服务器并执行脚本" class="headerlink" title="上传包到服务器并执行脚本"></a>上传包到服务器并执行脚本</h2><p>这里需要在jenkins里安装Publish over SSH插件，并在全局配置中配置一下。<br><img src="http://7xiqxx.com1.z0.glb.clouddn.com/B7FAD378-98CD-480D-906B-3657E4A5FEB8.png" alt=""></p>
+<h2 id="上传包到服务器并执行脚本"><a href="#上传包到服务器并执行脚本" class="headerlink" title="上传包到服务器并执行脚本"></a>上传包到服务器并执行脚本</h2><p>这里需要在jenkins里安装Publish over SSH插件，并在全局配置中配置一下。<br><img src="http://7xiqxx.com1.z0.glb.clouddn.com/B7FAD378-98CD-480D-906B-3657E4A5FEB8.png" alt></p>
 <p>然后下面是项目中的配置</p>
-<p><img src="http://7xiqxx.com1.z0.glb.clouddn.com/F254D9A3-8589-4FE7-9993-BFF799982B7D.png" alt=""></p>
+<p><img src="http://7xiqxx.com1.z0.glb.clouddn.com/F254D9A3-8589-4FE7-9993-BFF799982B7D.png" alt></p>
 <p>上图中的war其实是基于全局配置中的路径，举个例子：</p>
 <blockquote>
 <p>全局配置中的Remote Directory是 <code>/web</code>，项目配置中的Remote directory是<code>war</code>，那么实际上war传送的路径是/web/war    </p>
@@ -610,11 +607,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -651,9 +643,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -666,7 +656,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -717,7 +707,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -812,7 +804,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -912,7 +906,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1068,20 +1062,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2015/12/14/jenkins和tomcat的持续集成/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

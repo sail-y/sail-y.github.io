@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -129,12 +129,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2015/03/06/CentOS-Jenkins-Sonar-Nexus-环境搭建/"/>
+  <link rel="canonical" href="http://www.saily.top/2015/03/06/CentOS-Jenkins-Sonar-Nexus-环境搭建/">
 
 
 
@@ -244,7 +244,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -261,7 +261,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -278,7 +278,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -295,7 +295,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -312,7 +312,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -323,7 +323,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -343,9 +343,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -460,7 +458,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -488,11 +486,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -524,8 +521,8 @@
 <p>执行命令添加nexus自启动服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig –add nexus</span><br><span class="line">chkconfig –levels 345 nexus on</span><br></pre></td></tr></table></figure></p>
 <p>执行如下命令启动、停止nexus服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service nexus start</span><br><span class="line">service nexus stop</span><br></pre></td></tr></table></figure></p>
 <p>启动后可通过<a href="http://yourip:8081/nexus访问" target="_blank" rel="noopener">http://yourip:8081/nexus访问</a></p>
-<p>用admin/admin123登陆<br>登陆后点击左侧Repositories，将下图所示设置为true，就可以搜索了<br><img src="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br><img src="http://img.blog.csdn.net/20140826131504260?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>这个时候还搜索不到</p>
-<p>需要再右击选项点击 Repair Index如下所示<br><img src="http://img.blog.csdn.net/20140826131615365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>修复完成后便可以搜索了。</p>
+<p>用admin/admin123登陆<br>登陆后点击左侧Repositories，将下图所示设置为true，就可以搜索了<br><img src="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br><img src="http://img.blog.csdn.net/20140826131504260?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>这个时候还搜索不到</p>
+<p>需要再右击选项点击 Repair Index如下所示<br><img src="http://img.blog.csdn.net/20140826131615365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>修复完成后便可以搜索了。</p>
 <h1 id="Jenkins篇"><a href="#Jenkins篇" class="headerlink" title="Jenkins篇"></a>Jenkins篇</h1><p>添加Jenkins的源（repository）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O/etc/yum.repos.d/jenkins.repo http://jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">sudo rpm--import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key</span><br></pre></td></tr></table></figure></p>
 <p>不然你在启动jenkins服务的时候他会说你没有什么key啥的。</p>
 <p>安装Jenkins：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum installjenkins</span><br></pre></td></tr></table></figure></p>
@@ -535,7 +532,7 @@
 <p><code>/etc/sysconfig/jenkins</code>：jenkins配置文件，“端口”，“JENKINS_HOME”等都可以在这里配置。内容如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Path:        Development/Jenkins</span></span><br><span class="line"><span class="comment">## Description: Configuration for theJenkins continuous build server</span></span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "/var/lib/jenkins"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Directory where Jenkins store itsconfiguration and working</span></span><br><span class="line"><span class="comment"># files (checkouts, build reports, artifacts,...).</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HOME=<span class="string">"/var/lib/jenkins"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     ""</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Java executable to run Jenkins</span></span><br><span class="line"><span class="comment"># When left empty, we'll try to find thesuitable Java.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_CMD=<span class="string">""</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "jenkins"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unix user account that runs the Jenkinsdaemon</span></span><br><span class="line"><span class="comment"># Be careful when you change this, as youneed to update</span></span><br><span class="line"><span class="comment"># permissions of $JENKINS_HOME and/var/log/jenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_USER=<span class="string">"jenkins"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "-Djava.awt.headless=true"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Options to pass to java when runningJenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_OPTIONS=<span class="string">"-Djava.awt.headless=true"</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8080</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_PORT=<span class="string">"8085"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8009</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Ajp13 Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_AJP_PORT=<span class="string">"8019"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(1:9)</span></span><br><span class="line"><span class="comment">## Default:     5</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Debug level for logs -- the higher thevalue, the more verbose.</span></span><br><span class="line"><span class="comment"># 5 is INFO.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_DEBUG_LEVEL=<span class="string">"5"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        yesno</span></span><br><span class="line"><span class="comment">## Default:     no</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Whether to enable access logging or not.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ENABLE_ACCESS_LOG=<span class="string">"no"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     100</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of HTTP worker threads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_MAX=<span class="string">"100"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     20</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of idle HTTP workerthreads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_IDLE=<span class="string">"20"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     ""</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Pass arbitrary arguments to Jenkins.</span></span><br><span class="line"><span class="comment"># Full option list: java -jar jenkins.war--help</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ARGS=<span class="string">""</span></span><br></pre></td></tr></table></figure></p>
 <p>我这里修改端口号为8085，避免和本机tomcat冲突</p>
 <p>启动Jenkins<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo servicejenkins start</span><br></pre></td></tr></table></figure></p>
-<p>启动后用 <code>http://yourip:8085/</code> 访问<br><img src="http://img.blog.csdn.net/20140826131719653?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>启动后用 <code>http://yourip:8085/</code> 访问<br><img src="http://img.blog.csdn.net/20140826131719653?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
 <h1 id="Sonar篇"><a href="#Sonar篇" class="headerlink" title="Sonar篇"></a>Sonar篇</h1><p>首先下载<a href="http://www.sonarqube.org/downloads/" target="_blank" rel="noopener">http://www.sonarqube.org/downloads/</a></p>
 <p>我用的ftp工具上传到服务器。</p>
 <p>编辑~/.bash_profile，添加环境变量</p>
@@ -560,7 +557,7 @@
 <p>运行如下命令启动sonar，其它操作系统sonar均提供了启动脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;SONAR_HOME&#125;</span>/bin/linux-x86-64/sonar.sh start</span><br></pre></td></tr></table></figure></p>
 <p>如果遇到wrapper没有执行权限，用chmod命令赋予权限</p>
 <p>如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 wrapper</span><br></pre></td></tr></table></figure></p>
-<p>在浏览器中访问: <a href="http://yourip:9000/" target="_blank" rel="noopener">http://yourip:9000/</a> ，运行界面如下：<br><img src="http://img.blog.csdn.net/20140826131827217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>配置为自启动服务</p>
+<p>在浏览器中访问: <a href="http://yourip:9000/" target="_blank" rel="noopener">http://yourip:9000/</a> ，运行界面如下：<br><img src="http://img.blog.csdn.net/20140826131827217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>配置为自启动服务</p>
 <p>使用<code>root</code>账户或者开启<code>sudo</code>权限操作。</p>
 <p>创建自启动脚本文件<code>/etc/init.d/sonar</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi/etc/init.d/sonar</span><br></pre></td></tr></table></figure>
@@ -638,11 +635,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -679,9 +671,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -694,7 +684,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -745,7 +735,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -840,7 +832,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -940,7 +934,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1096,20 +1090,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2015/03/06/CentOS-Jenkins-Sonar-Nexus-环境搭建/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -127,12 +127,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/01/01/mongo3/"/>
+  <link rel="canonical" href="http://www.saily.top/2018/01/01/mongo3/">
 
 
 
@@ -242,7 +242,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -259,7 +259,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -276,7 +276,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -293,7 +293,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -310,7 +310,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -321,7 +321,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -341,9 +341,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -458,7 +456,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -486,11 +484,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -529,7 +526,7 @@
 </ul>
 <p>reduce的两个参数，就是分组后对数据的处理，current表示每次循环的当前对象，aggregator则每一组拥有一个共享对象，所以在这个例子里aggregator的totalCount每一组开始循环的时候都是0，最终统计出来每一组的总数。</p>
 <p>关于这些的详细介绍，官网文档也给了非常好的介绍：<a href="https://docs.mongodb.com/manual/reference/method/db.collection.group/index.html" target="_blank" rel="noopener">https://docs.mongodb.com/manual/reference/method/db.collection.group/index.html</a></p>
-<p><img src="/img/mongo/mongo3-1.png" alt=""></p>
+<p><img src="/img/mongo/mongo3-1.png" alt></p>
 <h3 id="实例-最大值"><a href="#实例-最大值" class="headerlink" title="实例-最大值"></a>实例-最大值</h3><p>重新准备数据：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.mygroup.drop()</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">30</span>; ++i ) &#123;</span><br><span class="line">    <span class="keyword">var</span> count = i % <span class="number">5</span>;</span><br><span class="line">    db.mygroup.insert(&#123;<span class="attr">name</span>: <span class="string">'name'</span> + i, <span class="attr">age</span>:i, <span class="attr">count</span> : count&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以count作为分组，取出每一组里age最大值。</p>
@@ -545,7 +542,7 @@
 </ul>
 <p><a href="https://docs.mongodb.com/manual/reference/command/mapReduce/index.html" target="_blank" rel="noopener">https://docs.mongodb.com/manual/reference/command/mapReduce/index.html</a></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">db.runCommand(</span><br><span class="line">               &#123;</span><br><span class="line">                 mapReduce: <span class="xml"><span class="tag">&lt;<span class="name">collection</span>&gt;</span>,</span></span><br><span class="line">                 map: &lt;function&gt;,</span><br><span class="line">                 reduce: &lt;function&gt;,</span><br><span class="line">                 finalize: &lt;function&gt;,</span><br><span class="line">                 out: &lt;output&gt;,</span><br><span class="line">                 query: &lt;document&gt;,</span><br><span class="line">                 sort: &lt;document&gt;,</span><br><span class="line">                 limit: &lt;number&gt;,</span><br><span class="line">                 scope: &lt;document&gt;,</span><br><span class="line">                 jsMode: &lt;boolean&gt;,</span><br><span class="line">                 verbose: &lt;boolean&gt;,</span><br><span class="line">                 bypassDocumentValidation: &lt;boolean&gt;,</span><br><span class="line">                 collation: &lt;document&gt;</span><br><span class="line">               &#125;</span><br><span class="line">             )</span><br></pre></td></tr></table></figure>
-<p><img src="https://docs.mongodb.com/manual/_images/map-reduce.bakedsvg.svg" alt=""></p>
+<p><img src="https://docs.mongodb.com/manual/_images/map-reduce.bakedsvg.svg" alt></p>
 <blockquote>
 <p>For those keys that have multiple values, MongoDB applies the reduce phase, which collects and condenses the aggregated data. </p>
 </blockquote>
@@ -570,12 +567,12 @@
 <p>为什么会出现这样的结果？有的是对象，有的是值，之前说过，如果map产出的values的结果只有一个，是不会执行reduce阶段的，这里可以用finalize来保证结果的统一。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">db.article.mapReduce(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">    <span class="keyword">this</span>.tags.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">currrnt</span>)</span>&#123;</span><br><span class="line">                emit(currrnt, &#123;<span class="attr">count</span>:<span class="number">1</span>&#125;)</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">key, values</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> values.length;</span><br><span class="line">    &#125;, &#123;<span class="attr">out</span>:<span class="string">"aa"</span>,<span class="attr">finalize</span>: <span class="function"><span class="keyword">function</span>(<span class="params">key,reduced</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(reduced.count) &#123;</span><br><span class="line">                <span class="keyword">return</span> reduced.count;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> reduced;</span><br><span class="line">        &#125;&#125;);</span><br><span class="line">&gt; db.getCollection(<span class="string">'aa'</span>).find(&#123;&#125;)</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"groovy"</span>, <span class="string">"value"</span> : <span class="number">2</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"java"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"kotlin"</span>, <span class="string">"value"</span> : <span class="number">3</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"mongodb"</span>, <span class="string">"value"</span> : <span class="number">4</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"perl"</span>, <span class="string">"value"</span> : <span class="number">4</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"python"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"redis"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"ruby"</span>, <span class="string">"value"</span> : <span class="number">3</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"scala"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="进阶，mapReduce过滤"><a href="#进阶，mapReduce过滤" class="headerlink" title="进阶，mapReduce过滤"></a>进阶，mapReduce过滤</h3><p>现在我们只统计发布了java标签的数据，可以用query参数来过滤，也可以用map阶段来用代码过滤。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">db.article.mapReduce(function()&#123; </span><br><span class="line">    var flag = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span>(i in <span class="keyword">this</span>.tags)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.tags[i] == <span class="string">'java'</span>) &#123;</span><br><span class="line">            flag = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(flag) &#123;</span><br><span class="line">        <span class="keyword">this</span>.tags.forEach(function(tag)&#123;</span><br><span class="line">            emit(tag, &#123;count:<span class="number">1</span>&#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, function(key, values)&#123;</span><br><span class="line">        <span class="keyword">return</span> values.length;</span><br><span class="line">    &#125;, &#123;out:<span class="string">"aa"</span>,finalize: function(key,reduced)&#123;</span><br><span class="line">            <span class="keyword">if</span>(reduced.count) &#123;</span><br><span class="line">                <span class="keyword">return</span> reduced.count;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> reduced;</span><br><span class="line">        &#125;&#125;);</span><br><span class="line">&gt; db.getCollection(<span class="string">'aa'</span>).find(&#123;&#125;)</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"java"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"mongodb"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"python"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">db.article.mapReduce(function()&#123; </span><br><span class="line">    <span class="keyword">var</span> flag = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span>(i in <span class="keyword">this</span>.tags)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.tags[i] == <span class="string">'java'</span>) &#123;</span><br><span class="line">            flag = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(flag) &#123;</span><br><span class="line">        <span class="keyword">this</span>.tags.forEach(function(tag)&#123;</span><br><span class="line">            emit(tag, &#123;count:<span class="number">1</span>&#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, function(key, values)&#123;</span><br><span class="line">        <span class="keyword">return</span> values.length;</span><br><span class="line">    &#125;, &#123;out:<span class="string">"aa"</span>,finalize: function(key,reduced)&#123;</span><br><span class="line">            <span class="keyword">if</span>(reduced.count) &#123;</span><br><span class="line">                <span class="keyword">return</span> reduced.count;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> reduced;</span><br><span class="line">        &#125;&#125;);</span><br><span class="line">&gt; db.getCollection(<span class="string">'aa'</span>).find(&#123;&#125;)</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"java"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"mongodb"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"python"</span>, <span class="string">"value"</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="聚合框架（aggregation-framework）"><a href="#聚合框架（aggregation-framework）" class="headerlink" title="聚合框架（aggregation framework）"></a>聚合框架（aggregation framework）</h2><p>聚合框架是mongo聚合操作的第三种方式，它与group()解决的问题是的一样的，group()和MapReduce都是需要写函数的，所以mongodb提供了聚合框架，简化聚合操作。</p>
 <p>注意：只有MapReduce和聚合框架能分片的环境下使用。</p>
 <p>聚合框架是不能自定义函数的，它帮我们实现了一些函数。</p>
 <p><a href="https://docs.mongodb.com/manual/core/aggregation-pipeline/index.html" target="_blank" rel="noopener">https://docs.mongodb.com/manual/core/aggregation-pipeline/index.html</a></p>
-<p><img src="https://docs.mongodb.com/manual/_images/aggregation-pipeline.bakedsvg.svg" alt=""></p>
+<p><img src="https://docs.mongodb.com/manual/_images/aggregation-pipeline.bakedsvg.svg" alt></p>
 <p>聚合框架为我们提供了很多操作，aggregate参数是一个pipeline，每一个按操作按顺序执行。</p>
 <p><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/reference/operator/aggregation/</a></p>
 <p>常用的几个操作：</p>
@@ -681,11 +678,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -722,9 +714,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -737,7 +727,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -788,7 +778,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -883,7 +875,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -983,7 +977,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1139,20 +1133,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/01/01/mongo3/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 

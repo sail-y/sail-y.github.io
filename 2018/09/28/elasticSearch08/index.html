@@ -15,10 +15,10 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
@@ -132,12 +132,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2018/09/28/elasticSearch08/"/>
+  <link rel="canonical" href="http://www.saily.top/2018/09/28/elasticSearch08/">
 
 
 
@@ -247,7 +247,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -264,7 +264,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -281,7 +281,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -298,7 +298,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -315,7 +315,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
 
@@ -326,7 +326,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -346,9 +346,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -463,7 +461,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -491,11 +489,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -544,7 +541,7 @@
 <li>新的index sgement被打开，供search使用</li>
 <li>buffer被清空</li>
 </ol>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1102.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1102.png" alt></p>
 <p><strong>删除和更新</strong></p>
 <p>每次commit point时，会有一个.del文件，标记了哪些segment中的哪些document被标记为deleted了。<br>搜索的时候，会依次查询所有的segment，从旧的到新的，比如被修改过的document，在旧的segment中，会标记为deleted，在新的segment中会有其新的数据。</p>
 <h1 id="优化写入流程"><a href="#优化写入流程" class="headerlink" title="优化写入流程"></a>优化写入流程</h1><p>现有流程的问题，每次都必须等待fsync将segment刷入磁盘，才能将segment打开供search使用，这样的话从一个document写入，到它可以被搜索，可能会超过1分钟！这就不是近实时的搜索了！主要瓶颈在于fsync实际发生磁盘IO写数据进磁盘，是很耗时的。</p>
@@ -554,7 +551,7 @@
 <li>每隔一定时间，buffer中的数据被写入segment文件，但是先写入os cache</li>
 <li>只要segment写入os cache，那就直接打开供search使用，不立即执行commit</li>
 </ol>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1105.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1105.png" alt></p>
 <p>数据写入os cache，并被打开供搜索的过程，叫做refresh，默认是每隔1秒refresh一次。也就是说，每隔一秒就会将buffer中的数据写入一个新的index segment file，先写入os cache中。所以es是近实时的，数据写入到可以被搜索，默认是1秒。</p>
 <p>POST /my_index/_refresh，可以手动refresh，一般不需要手动执行，没必要这样，让es自己搞就可以了。</p>
 <p>比如说，我们现在的时效性要求比较低，只要求一条数据写入es，一分钟以后才让我们搜索到就可以了，那么就可以调整refresh interval。如果写的并发量和数据量比较大的话，refresh设置长一点可以优化写入速度，因为频繁的写入index segment file会比较占用资源。</p>
@@ -577,11 +574,11 @@
 <p><strong>新的文档被添加到内存缓冲区并且被追加到了事务日志</strong></p>
 <p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1106.png" alt="新的文档被添加到内存缓冲区并且被追加到了事务日志"></p>
 <p><strong>刷新（refresh）完成后, 缓存被清空但是事务日志不会</strong></p>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1107.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1107.png" alt></p>
 <p><strong>事务日志不断积累文档</strong></p>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1108.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1108.png" alt></p>
 <p><strong>在刷新（flush）之后，段被全量提交，并且事务日志被清空</strong></p>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1109.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1109.png" alt></p>
 <h2 id="数据恢复"><a href="#数据恢复" class="headerlink" title="数据恢复"></a>数据恢复</h2><p>OS cache中积累了不少数据，这个时候如果机器宕机了，虽然os cache的数据丢失了，但是translog的数据是存在的，可以基于translog和commit point进行数据恢复。</p>
 <p>fsync+清空translog，就是flush，默认每隔30分钟flush一次，或者当translog过大的时候，也会flush。</p>
 <p>POST /my_index/_flush，一般来说别手动flush，让它自动执行就可以了。</p>
@@ -601,9 +598,9 @@
 <li>将旧的segment删除</li>
 </ol>
 <p><strong>两个提交了的段和一个未提交的段正在被合并到一个更大的段</strong></p>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1110.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1110.png" alt></p>
 <p><strong>一旦合并结束，老的段被删除</strong></p>
-<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1111.png" alt=""></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1111.png" alt></p>
 <h2 id="optimize-API"><a href="#optimize-API" class="headerlink" title="optimize API"></a>optimize API</h2><p>optimize API大可看做是 强制合并 API 。它会将一个分片强制合并到 max_num_segments 参数指定大小的段数目。 这样做的意图是减少段的数量（通常减少到一个），来提升搜索性能。</p>
 <p>POST /my_index/_optimize?max_num_segments=1，尽量不要手动执行，让它自动默认执行就可以了。</p>
 
@@ -677,11 +674,6 @@
           
 
   
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
-    </div>
-
-  
 
 
 
@@ -718,9 +710,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="/img/photo/bug.png"
-                alt="帆" />
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
             
               <p class="site-author-name" itemprop="name">帆</p>
               <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
@@ -733,7 +723,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -784,7 +774,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -879,7 +871,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                    <span class="site-state-item-count">42</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -979,7 +973,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1135,20 +1129,6 @@
 
 
 
-  
-    <script type="text/javascript">
-      window.livereOptions = {
-        refer: '2018/09/28/elasticSearch08/'
-      };
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
   
 
 
