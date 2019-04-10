@@ -112,14 +112,17 @@
 <meta name="keywords" content="微服务,Spring Cloud">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud微服务-1">
-<meta property="og:url" content="http://www.saily.top/2019/03/18/microservices-1/index.html">
+<meta property="og:url" content="http://www.saily.top/2019/04/10/microservices-1/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="微服务学习笔记 什么是微服务https://martinfowler.com/articles/microservices.html  “Microservices” - yet another new term on the crowded streets of software architecture. Although our natural inclination is to pass">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-28T10:13:36.250Z">
+<meta property="og:image" content="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png">
+<meta property="og:image" content="http://www.saily.top/imgs/spring-cloud/sc01-01.jpg">
+<meta property="og:updated_time" content="2019-04-10T11:34:45.026Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud微服务-1">
 <meta name="twitter:description" content="微服务学习笔记 什么是微服务https://martinfowler.com/articles/microservices.html  “Microservices” - yet another new term on the crowded streets of software architecture. Although our natural inclination is to pass">
+<meta name="twitter:image" content="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png">
 
 
 
@@ -128,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2019/03/18/microservices-1/">
+  <link rel="canonical" href="http://www.saily.top/2019/04/10/microservices-1/">
 
 
 
@@ -387,7 +390,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/03/18/microservices-1/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/04/10/microservices-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -429,24 +432,12 @@
                 
               
 
-              <time title="创建时间：3月 18 2019 18:56:58" itemprop="dateCreated datePublished" datetime="2019-03-18T18:56:58+08:00">3月 18 2019</time>
+              <time title="创建时间：4月 10 2019 18:56:58 / 修改时间：19:34:45" itemprop="dateCreated datePublished" datetime="2019-04-10T18:56:58+08:00">4月 10 2019</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：3月 28 2019 18:13:36" itemprop="dateModified" datetime="2019-03-28T18:13:36+08:00">3月 28 2019</time>
               
             
           </span>
@@ -575,7 +566,75 @@
 <li>轻量级通信原则</li>
 <li>接口明确原则</li>
 </ul>
-<h1 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h1>
+<h1 id="SOA"><a href="#SOA" class="headerlink" title="SOA"></a>SOA</h1><p>很多人会把SOA和微服务搞混，甚至理解为同一个东西。实际上SOA已经面世20多年了，和微服务是不一样的，接下来去维基百科看看SOA到底是什么。</p>
+<p><a href="https://en.wikipedia.org/wiki/Service-oriented_architecture" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Service-oriented_architecture</a></p>
+<p>学技术，一定要去阅读原版的英文资料。</p>
+<blockquote>
+<p><strong>Service-oriented architecture (SOA)</strong> is a style of software design where services are provided to the other components by application components, through a communication protocol over a network. The basic principles of service-oriented architecture are independent of vendors, products and technologies.[1] A service is a discrete unit of functionality that can be accessed remotely and acted upon and updated independently, such as retrieving a credit card statement online.</p>
+</blockquote>
+<blockquote>
+<p>A service has four properties according to one of many definitions of SOA:[2]</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>It logically represents a business activity with a specified outcome.        </li>
+<li>It is self-contained.        </li>
+<li>It is a black box for its consumers.</li>
+<li>It may consist of other underlying services.[3]</li>
+</ol>
+<p>Different services can be used in conjunction to provide the functionality of a large software application,[5] a principle SOA shares with modular programming. Service-oriented architecture integrates distributed, separately-maintained and -deployed software components. It is enabled by technologies and standards that facilitate components’ communication and cooperation over a network, especially over an IP network.</p>
+</blockquote>
+<p>SOA是一种软件设计风格，SOA包含了一些服务，服务是通过应用组件的形式，通过网络上的一些通信协议像向其他应用提供服务。不同的服务可以联合起来构成一个大型的应用，SOA遵循模块化编程，它的这种架构集成了分布式的，独自维护的，独自部署的软件组件。也是通过网络来通信的。</p>
+<p>好像看起来SOA的和微服务的概念也没什么太大差别？</p>
+<blockquote>
+<p>In SOA, services use protocols that describe how they pass and parse messages using description metadata. This metadata describes both the functional characteristics of the service and quality-of-service characteristics. Service-oriented architecture aims to allow users to combine large chunks of functionality to form applications which are built purely from existing services and combining them in an ad hoc manner. A service presents a simple interface to the requester that abstracts away the underlying complexity acting as a black box. Further users can also access these independent services without any knowledge of their internal implementation.[6]</p>
+</blockquote>
+<p>在SOA里，服务是用元数据描述的服务的功能特性和质量特性。有没有想起wsdl实现的webservice？</p>
+<p>SOA里有3个角色</p>
+<ul>
+<li>Service provider</li>
+<li>Service broker, service registry or service repository</li>
+<li>Service requester/consumer</li>
+</ul>
+<p>SOA可以借助webservice实现，通过标准的internet协议，通过网络来访问这些功能。比如SOAP，Jini，CORBA，Rest</p>
+<p>有很多技术都可以实现SOA，比如</p>
+<ul>
+<li>Web services based on WSDL and SOAP</li>
+<li>Messaging, e.g., with ActiveMQ, JMS, RabbitMQ</li>
+<li>RESTful HTTP, with Representational state transfer (REST) constituting its own constraints-based architectural style</li>
+<li>OPC-UA</li>
+<li>WCF (Microsoft’s implementation of Web services, forming a part of WCF)</li>
+<li>Apache Thrift</li>
+<li>SORCER</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>SOA已经被Web Service合并了，然而Web Service只是实现SOA的一种方式。在缺乏本地或二进制的数据传递调用的情况下，远程调用和效率都会变慢。XML是比较慢的，JSON相比XML会好一些。</p>
+<p>有状态的服务不利于管理。</p>
+<p>SOA主要的挑战是元数据的管理，服务于服务之间的通信会生成大量的消息。</p>
+<p>难以测试。</p>
+<h2 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h2><p>微服务是现代化的SOA架构，用于构建分布式的软件系统。在微服务架构中的服务都是一些进程，它们之间是通过网络来进行通信去完成一个目标。这些服务使用技术不可知的协议，在服务内部去封装语言和框架。微服务是一种SOA的一种新的实现方式，从2014年开始变得流行起来（在引入DevOps后）。它强调的是持续的部署和其他敏捷的实现。</p>
+<p>微服务没有统一的定义，但是有以下特征和原则</p>
+<ul>
+<li>fine-grained interfaces (to independently deployable services),</li>
+<li>business-driven development (e.g. domain-driven design),</li>
+<li>IDEAL cloud application architectures,</li>
+<li>polyglot programming and persistence,</li>
+<li>lightweight container deployment,</li>
+<li>decentralized continuous delivery, and</li>
+<li>DevOps with holistic service monitoring.</li>
+</ul>
+<h1 id="SOA和微服务的差异性"><a href="#SOA和微服务的差异性" class="headerlink" title="SOA和微服务的差异性"></a>SOA和微服务的差异性</h1><h2 id="文章1"><a href="#文章1" class="headerlink" title="文章1"></a>文章1</h2><p><a href="https://www.ibm.com/blogs/cloud-computing/2018/09/06/soa-versus-microservices/" target="_blank" rel="noopener">https://www.ibm.com/blogs/cloud-computing/2018/09/06/soa-versus-microservices/</a></p>
+<blockquote>
+<p>The main distinction comes down to scope. To put it simply, service-oriented architecture (SOA) has an enterprise scope, while the microservices architecture has an application scope.</p>
+</blockquote>
+<p>SOA着重点在企业范围，微服务着重点在应用范围。</p>
+<p><img src="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png" alt></p>
+<p>从这个图可以看出来，SOA的范围更大，他关注的是应用与应用之间的关系。而微服务是应用内部的关联。</p>
+<h2 id="文章2"><a href="#文章2" class="headerlink" title="文章2"></a>文章2</h2><p><a href="https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al" target="_blank" rel="noopener">https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al</a></p>
+<blockquote>
+<p>Service Oriented Architecture is less about how to modularize an application, and more about how to compose an application by integration of distributed, separately-maintained and deployed software components. It is enabled by technologies and standards that make it easier for components to communicate and cooperate over a network, especially an IP network.</p>
+</blockquote>
+<p><img src="/imgs/spring-cloud/sc01-01.jpg" alt></p>
+
       
     </div>
 
@@ -613,8 +672,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/28/spring-cloud-nepxion-gray/" rel="next" title="Spring Cloud基于用户和ip的灰度发布方案">
-                <i class="fa fa-chevron-left"></i> Spring Cloud基于用户和ip的灰度发布方案
+              <a href="/2019/03/21/effective-java-3rd-3/" rel="next" title="Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型">
+                <i class="fa fa-chevron-left"></i> Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型
               </a>
             
           </div>
@@ -622,10 +681,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/20/effective-java-3rd-2/" rel="prev" title="Effective Java 第三版-条款2_当面对很多构造方法参数时，请考虑使用构建器">
-                Effective Java 第三版-条款2_当面对很多构造方法参数时，请考虑使用构建器 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -697,7 +752,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">119</span>
+                    <span class="site-state-item-count">118</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -915,7 +970,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是微服务"><span class="nav-number">1.</span> <span class="nav-text">什么是微服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单体架构存在的缺点"><span class="nav-number">1.1.</span> <span class="nav-text">单体架构存在的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是微服务-1"><span class="nav-number">1.2.</span> <span class="nav-text">什么是微服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务是一种架构风格"><span class="nav-number">1.3.</span> <span class="nav-text">微服务是一种架构风格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的优点和挑战"><span class="nav-number">1.4.</span> <span class="nav-text">微服务的优点和挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务具备的特性"><span class="nav-number">1.4.1.</span> <span class="nav-text">微服务具备的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务的优点"><span class="nav-number">1.4.2.</span> <span class="nav-text">微服务的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务带来的挑战"><span class="nav-number">1.4.3.</span> <span class="nav-text">微服务带来的挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务的设计原则"><span class="nav-number">1.4.4.</span> <span class="nav-text">微服务的设计原则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cloud"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是微服务"><span class="nav-number">1.</span> <span class="nav-text">什么是微服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单体架构存在的缺点"><span class="nav-number">1.1.</span> <span class="nav-text">单体架构存在的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是微服务-1"><span class="nav-number">1.2.</span> <span class="nav-text">什么是微服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务是一种架构风格"><span class="nav-number">1.3.</span> <span class="nav-text">微服务是一种架构风格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的优点和挑战"><span class="nav-number">1.4.</span> <span class="nav-text">微服务的优点和挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务具备的特性"><span class="nav-number">1.4.1.</span> <span class="nav-text">微服务具备的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务的优点"><span class="nav-number">1.4.2.</span> <span class="nav-text">微服务的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务带来的挑战"><span class="nav-number">1.4.3.</span> <span class="nav-text">微服务带来的挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务的设计原则"><span class="nav-number">1.4.4.</span> <span class="nav-text">微服务的设计原则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOA"><span class="nav-number">2.</span> <span class="nav-text">SOA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">2.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务"><span class="nav-number">2.2.</span> <span class="nav-text">微服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOA和微服务的差异性"><span class="nav-number">3.</span> <span class="nav-text">SOA和微服务的差异性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章1"><span class="nav-number">3.1.</span> <span class="nav-text">文章1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文章2"><span class="nav-number">3.2.</span> <span class="nav-text">文章2</span></a></li></ol></li></ol></div>
             
 
           </div>

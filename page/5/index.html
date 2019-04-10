@@ -386,194 +386,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/12/12/netty9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/12/12/netty9/" class="post-title-link" itemprop="http://www.saily.top/page/5/index.html">Netty-编解码器&处理器</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：12月 12 2017 20:38:16" itemprop="dateCreated datePublished" datetime="2017-12-12T20:38:16+08:00">12月 12 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：9月 28 2018 12:55:57" itemprop="dateModified" datetime="2018-09-28T12:55:57+08:00">9月 28 2018</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Netty处理器"><a href="#Netty处理器" class="headerlink" title="Netty处理器"></a>Netty处理器</h1><p>编解码器本质上也是ChannelHandler的特殊实现，Netty本身为我们提供了很多处理器。</p>
-<p>Netty处理器重要概念：</p>
-<ol>
-<li>Netty的处理器可以分为两类：入站处理器与出站处理器。</li>
-<li>入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。</li>
-<li>数据处理时常用的各种编解码器本质上都是处理器。</li>
-<li>编解码器：无论我们向网络中写入的数据是什么类型（int、char、String、二进制等），数据在网络中传递时，其都是以字节流的形式呈现的；将数据由原本的形式转换为字节流的操作称为编码（encode），将数据由字节转换为它原本的格式或是其他格式的操作称为解码（decode），编解码统一称为codec。</li>
-<li>编码：本质上是一种出站处理器，因此，编码是一种ChannelOutboundHandler。</li>
-<li>解码：本质上是一种入站处理器，因此，解码是一种ChannelInboundHandler。</li>
-<li>在Netty中，编码器通常以XXXEncoder命名；解码器通常以XXXDecoder命名。</li>
-</ol>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/12/12/netty9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/12/08/mongo1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2183,6 +1995,187 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/21/git2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/09/21/git2/" class="post-title-link" itemprop="http://www.saily.top/page/5/index.html">Git-分支</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：9月 21 2017 21:35:29" itemprop="dateCreated datePublished" datetime="2017-09-21T21:35:29+08:00">9月 21 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：8月 25 2018 22:32:27" itemprop="dateModified" datetime="2018-08-25T22:32:27+08:00">8月 25 2018</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>先介绍一下<strong>.gitignore</strong></p>
+<h2 id="gitignore"><a href="#gitignore" class="headerlink" title=".gitignore"></a>.gitignore</h2><p>项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">/build/</span><br><span class="line">!gradle/wrapper/gradle-wrapper.jar</span><br><span class="line"></span><br><span class="line">### STS ###</span><br><span class="line">.apt_generated</span><br><span class="line">.classpath</span><br><span class="line">.factorypath</span><br><span class="line">.project</span><br><span class="line">.settings</span><br><span class="line">.springBeans</span><br><span class="line"></span><br><span class="line">### IntelliJ IDEA ###</span><br><span class="line">.idea</span><br><span class="line">*.iws</span><br><span class="line">*.iml</span><br><span class="line">*.ipr</span><br><span class="line"></span><br><span class="line">### NetBeans ###</span><br><span class="line">nbproject/private/</span><br><span class="line">build/</span><br><span class="line">nbbuild/</span><br><span class="line">dist/</span><br><span class="line">nbdist/</span><br><span class="line">.nb-gradle/</span><br><span class="line"></span><br><span class="line">rebel.xml</span><br><span class="line"></span><br><span class="line">/out</span><br></pre></td></tr></table></figure>
+<p>上面是我的一个项目的配置，看得出来是有一些规则的，使用起来很简单，将这些规则保存到一个<code>.gitignore</code>中后，在项目里面这些文件或者文件夹里面的所有修改操作都不会被纳入到git版本控制中，也不会提交。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/09/21/git2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2232,7 +2225,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">119</span>
+                    <span class="site-state-item-count">118</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
