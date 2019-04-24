@@ -125,7 +125,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-7.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-8.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-9.png">
-<meta property="og:updated_time" content="2019-04-18T13:04:47.554Z">
+<meta property="og:updated_time" content="2019-04-18T13:43:36.827Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud微服务-2-SpringBoot起步">
 <meta name="twitter:description" content="微服务学习笔记 Spring Boothttps://spring.io/projects/spring-boot#learn 要创建一个Spring Boot项目，可以去https://start.spring.io/，一键创建。  依赖中加入Web，然后点击Generate Project，就会下载一个压缩包。">
@@ -456,7 +456,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：4月 18 2019 21:04:47" itemprop="dateModified" datetime="2019-04-18T21:04:47+08:00">4月 18 2019</time>
+                <time title="修改时间：4月 18 2019 21:43:36" itemprop="dateModified" datetime="2019-04-18T21:43:36+08:00">4月 18 2019</time>
               
             
           </span>
@@ -594,6 +594,14 @@
 <p>再往下，就是根据找到的MainClass创建一个MainMethodRunner，通过之前设置的线程上下文类加载获取之前设置的类加载器，来加载MainClass，然后用反射的方式执行。</p>
 <p><img src="/img/spring-cloud/sc02-9.png" alt></p>
 <h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><p>接下来回到源代码上，SpringLectureApplication上面的@SpringBootApplication，标识了一个SpringBoot应用，他会自动扫描这个类，以及这个类以下的子包。</p>
+<p>如果不加这个注解，会怎么样？试试看，会得到一个错误missing ServletWebServerFactory bean，没有这个注解，SpringBoot是无法启动的，除了SpringBootApplication注解，各种注解在SpringBoot项目中扮演着很重要的角色。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.context.ApplicationContextException: Unable to start ServletWebServerApplicationContext due to missing ServletWebServerFactory bean.</span><br></pre></td></tr></table></figure>
+<p>现在是SpringApplication的静态方法启动的应用，实际上我们可以手动一步一步的启动。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	System.out.println(SpringLectureApplication.class.getClassLoader());</span><br><span class="line"><span class="comment">//		SpringApplication.run(SpringLectureApplication.class, args);</span></span><br><span class="line"></span><br><span class="line">	SpringApplication springApplication = <span class="keyword">new</span> SpringApplication(SpringLectureApplication.class);</span><br><span class="line">	springApplication.setBannerMode(Banner.Mode.OFF);</span><br><span class="line">	springApplication.run(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实对于使用者来讲，SpringBoot和传统的Spring MVC应用差别并不是很大，都是通过注解的方式来写Controller，Controller里面持有service变量，再层层调用。那么SpringBoot的便利之处就在于配置变少了，约定优于配置。</p>
+<p>看一下<code>SpringBootApplication</code>注解的源码，相当于同时声明了3个注解@SpringBootConfiguration，@EnableAutoConfiguration，@ComponentScan。@SpringBootConfiguration里面又包含了@Configuration</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Indicates that a class declares one or more @Bean methods and may be processed by the Spring container to generate bean definitions and service requests for those beans at runtime, for example:</span><br><span class="line">	<span class="meta">@Configuration</span></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line">	  </span><br><span class="line">	   <span class="meta">@Bean</span></span><br><span class="line">	   <span class="function"><span class="keyword">public</span> MyBean <span class="title">myBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	       <span class="comment">// instantiate, configure and return bean ...</span></span><br><span class="line">	   &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">Via AnnotationConfigApplicationContext</span><br><span class="line"><span class="meta">@Configuration</span> classes are typically bootstrapped using either AnnotationConfigApplicationContext or its web-capable variant, AnnotationConfigWebApplicationContext. A simple example with the former follows:</span><br><span class="line">   AnnotationConfigApplicationContext ctx = <span class="keyword">new</span> AnnotationConfigApplicationContext();</span><br><span class="line">   ctx.register(AppConfig.class);</span><br><span class="line">   ctx.refresh();</span><br><span class="line">   MyBean myBean = ctx.getBean(MyBean.class);</span><br><span class="line">   <span class="comment">// use myBean ...</span></span><br></pre></td></tr></table></figure>
+<p>@Configuration是通过AnnotationConfigApplicationContext或者AnnotationConfigWebApplicationContext启动的，通过AnnotationConfigApplicationContext将AppConfig注册到上下文中，就能从上下文获取MyBean的实例了。</p>
 
       
     </div>
@@ -641,6 +649,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/24/effective-java-3rd-4-md/" rel="prev" title="Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型">
+                Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -712,7 +724,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">119</span>
+                    <span class="site-state-item-count">120</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
