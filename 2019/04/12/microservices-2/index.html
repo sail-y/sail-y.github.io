@@ -125,7 +125,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-7.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-8.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc02-9.png">
-<meta property="og:updated_time" content="2019-05-06T13:36:04.511Z">
+<meta property="og:updated_time" content="2019-05-23T14:51:20.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud微服务-2-SpringBoot起步">
 <meta name="twitter:description" content="微服务学习笔记 Spring Boothttps://spring.io/projects/spring-boot#learn 要创建一个Spring Boot项目，可以去https://start.spring.io/，一键创建。  依赖中加入Web，然后点击Generate Project，就会下载一个压缩包。">
@@ -456,7 +456,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 6 2019 21:36:04" itemprop="dateModified" datetime="2019-05-06T21:36:04+08:00">5月 6 2019</time>
+                <time title="修改时间：5月 23 2019 22:51:20" itemprop="dateModified" datetime="2019-05-23T22:51:20+08:00">5月 23 2019</time>
               
             
           </span>
@@ -621,34 +621,6 @@
 <p>Auto-configuration classes are regular Spring Configuration beans. They are located using the SpringFactoriesLoader mechanism (keyed against this class). Generally auto-configuration beans are @Conditional beans (most often using @ConditionalOnClass and @ConditionalOnMissingBean annotations).</p>
 <p>自动装配，注解扫描当前包及以下的@Configuration类，所以建议放在到根目录下。自动装配的bean通常用@Conditional一类的注解修饰。</p>
 <h3 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h3><p>配置扫描@Configuration组件的目录。</p>
-<h2 id="SpringApplication"><a href="#SpringApplication" class="headerlink" title="SpringApplication"></a>SpringApplication</h2><p>Class that can be used to bootstrap and launch a Spring application from a Java main method. By default class will perform the following steps to bootstrap your application:</p>
-<ul>
-<li>Create an appropriate ApplicationContext instance (depending on your classpath)</li>
-<li>Register a CommandLinePropertySource to expose command line arguments as Spring properties</li>
-<li>Refresh the application context, loading all singleton beans</li>
-<li>Trigger any CommandLineRunner beans</li>
-</ul>
-<p> SpringApplications can read beans from a variety of different sources. It is generally recommended that a single @Configuration class is used to bootstrap your application, however, you may also set sources from:</p>
-<ul>
-<li>The fully qualified class name to be loaded by AnnotatedBeanDefinitionReader</li>
-<li>The location of an XML resource to be loaded by XmlBeanDefinitionReader, or a groovy script to be loaded by GroovyBeanDefinitionReader</li>
-<li>The name of a package to be scanned by ClassPathBeanDefinitionScanner</li>
-</ul>
-<p>除了用@Configuration标记的类可以启动应用，还有上面介绍的3种方式可以启动应用。</p>
-<h3 id="run-方法"><a href="#run-方法" class="headerlink" title="run()方法"></a>run()方法</h3><p>这种有Class的，一般最后也用反射做了一些操作</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(Class&lt;?&gt;[] primarySources,</span></span></span><br><span class="line"><span class="function"><span class="params">			String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> SpringApplication(primarySources).run(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><p>看看构造方法的说明：</p>
-<blockquote>
-<p>Create a new SpringApplication instance. The application context will load beans from the specified primary sources (see class-level documentation for details. The instance can be customized before calling run(String…).</p>
-</blockquote>
-<p>创建一个SpringApplication，应用上下文从指定的primary sources加载bean。</p>
-<p>构造方法的实现里有一行this.webApplicationType=WebApplicationType.deduceFromClasspath();，这行决定了应用是用的什么web容器启动的，非web环境，Servlet容器，或者Reactive（Spring 5新增的）。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SpringApplication</span><span class="params">(ResourceLoader resourceLoader, Class&lt;?&gt;... primarySources)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.resourceLoader = resourceLoader;</span><br><span class="line">	Assert.notNull(primarySources, <span class="string">"PrimarySources must not be null"</span>);</span><br><span class="line">	<span class="keyword">this</span>.primarySources = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(Arrays.asList(primarySources));</span><br><span class="line">	<span class="keyword">this</span>.webApplicationType = WebApplicationType.deduceFromClasspath();</span><br><span class="line">	setInitializers((Collection) getSpringFactoriesInstances(</span><br><span class="line">			ApplicationContextInitializer.class));</span><br><span class="line">	setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));</span><br><span class="line">	<span class="keyword">this</span>.mainApplicationClass = deduceMainApplicationClass();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再看下一行代码<code>setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));</code></p>
-<p>从getSpringFactoriesInstances方法代码里执行跟到SpringFactoriesLoader.loadSpringFactories这个方法中，有行很关键的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Enumeration&lt;URL&gt; urls = (classLoader != <span class="keyword">null</span> ?</span><br><span class="line">					classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :</span><br><span class="line">					ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));</span><br><span class="line">					</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The location to look for factories.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Can be present in multiple JAR files.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FACTORIES_RESOURCE_LOCATION = <span class="string">"META-INF/spring.factories"</span>;</span><br></pre></td></tr></table></figure>
-<p>SpringFactoriesLoader是框架内部用来加载工厂的一种机制，它会读取META-INF/spring.factories这个文件的内容，这个文件存在于多个jar文件中（所有的spring.factories都会被读取并加载），随便看一个，比如spring-boot-autoconfigure-2.1.4.RELEASE.jar里的，定义了7种类型的类，Spring会去加载这个文件中定义的工厂类。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># Initializers</span><br><span class="line">org.springframework.context.ApplicationContextInitializer=\</span><br><span class="line">org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer,\</span><br><span class="line">org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener</span><br><span class="line"></span><br><span class="line"># Application Listeners</span><br><span class="line">org.springframework.context.ApplicationListener=\</span><br><span class="line">org.springframework.boot.autoconfigure.BackgroundPreinitializer</span><br><span class="line"></span><br><span class="line"># Auto Configuration Import Listeners</span><br><span class="line">org.springframework.boot.autoconfigure.AutoConfigurationImportListener=\</span><br><span class="line">org.springframework.boot.autoconfigure.condition.ConditionEvaluationReportAutoConfigurationImportListener</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -697,8 +669,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/24/effective-java-3rd-4/" rel="prev" title="Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型">
-                Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/24/effective-java-3rd-5/" rel="prev" title="Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系">
+                Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -771,7 +743,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">122</span>
+                    <span class="site-state-item-count">123</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -989,7 +961,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot"><span class="nav-number">1.</span> <span class="nav-text">Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bootJar"><span class="nav-number">1.1.</span> <span class="nav-text">bootJar</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">1.1.1.</span> <span class="nav-text">验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDWP远程调试"><span class="nav-number">1.2.</span> <span class="nav-text">JDWP远程调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBotApplication"><span class="nav-number">1.3.</span> <span class="nav-text">@SpringBotApplication</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration"><span class="nav-number">1.3.1.</span> <span class="nav-text">@Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EnableAutoConfiguration"><span class="nav-number">1.3.2.</span> <span class="nav-text">@EnableAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ComponentScan"><span class="nav-number">1.3.3.</span> <span class="nav-text">@ComponentScan</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringApplication"><span class="nav-number">1.4.</span> <span class="nav-text">SpringApplication</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#run-方法"><span class="nav-number">1.4.1.</span> <span class="nav-text">run()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法"><span class="nav-number">1.4.2.</span> <span class="nav-text">构造方法</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot"><span class="nav-number">1.</span> <span class="nav-text">Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bootJar"><span class="nav-number">1.1.</span> <span class="nav-text">bootJar</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">1.1.1.</span> <span class="nav-text">验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDWP远程调试"><span class="nav-number">1.2.</span> <span class="nav-text">JDWP远程调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBotApplication"><span class="nav-number">1.3.</span> <span class="nav-text">@SpringBotApplication</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration"><span class="nav-number">1.3.1.</span> <span class="nav-text">@Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EnableAutoConfiguration"><span class="nav-number">1.3.2.</span> <span class="nav-text">@EnableAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ComponentScan"><span class="nav-number">1.3.3.</span> <span class="nav-text">@ComponentScan</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
