@@ -15,7 +15,7 @@
 
 
 <html class="theme-next gemini use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
+  <meta name="description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系">
-<meta property="og:url" content="http://www.saily.top/2019/04/24/effective-java-3rd-5/index.html">
+<meta property="og:title" content="Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型">
+<meta property="og:url" content="http://www.saily.top/2019/03/21/归档文章/effective-java-3rd-3/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
+<meta property="og:description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T14:56:53.382Z">
+<meta property="og:updated_time" content="2019-05-23T14:56:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系">
-<meta name="twitter:description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
+<meta name="twitter:title" content="Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型">
+<meta name="twitter:description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2019/04/24/effective-java-3rd-5/">
+  <link rel="canonical" href="http://www.saily.top/2019/03/21/归档文章/effective-java-3rd-3/">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系 | 帆的博客</title>
+  <title>Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型 | 帆的博客</title>
   
 
 
@@ -387,7 +387,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/04/24/effective-java-3rd-5/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/03/21/归档文章/effective-java-3rd-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -404,7 +404,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系
+          <h1 class="post-title" itemprop="name headline">Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型
               
             
           </h1>
@@ -429,7 +429,7 @@
                 
               
 
-              <time title="创建时间：4月 24 2019 20:14:38" itemprop="dateCreated datePublished" datetime="2019-04-24T20:14:38+08:00">4月 24 2019</time>
+              <time title="创建时间：3月 21 2019 21:08:04" itemprop="dateCreated datePublished" datetime="2019-03-21T21:08:04+08:00">3月 21 2019</time>
             
 
             
@@ -446,7 +446,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 23 2019 22:56:53" itemprop="dateModified" datetime="2019-05-23T22:56:53+08:00">5月 23 2019</time>
+                <time title="修改时间：5月 23 2019 22:56:34" itemprop="dateModified" datetime="2019-05-23T22:56:34+08:00">5月 23 2019</time>
               
             
           </span>
@@ -504,47 +504,77 @@
       
 
       
-        <h1 id="条款5-优先选择依赖注入而非硬编码资源的关联关系"><a href="#条款5-优先选择依赖注入而非硬编码资源的关联关系" class="headerlink" title="条款5_优先选择依赖注入而非硬编码资源的关联关系"></a>条款5_优先选择依赖注入而非硬编码资源的关联关系</h1><blockquote>
-<p>Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static utility classes (Item 4):</p>
+        <h1 id="条款3：强制对单例属性使用私有构造方法或是枚举类型"><a href="#条款3：强制对单例属性使用私有构造方法或是枚举类型" class="headerlink" title="条款3：强制对单例属性使用私有构造方法或是枚举类型"></a>条款3：强制对单例属性使用私有构造方法或是枚举类型</h1><blockquote>
+<p>A <em>singleton</em> is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system component that is intrinsically unique. <strong>Making a class a singleton can make it difficult to test its clients</strong> because it’s impossible to substitute a mock implementation for a singleton unless it implements an interface that serves as its type.<br><a id="more"></a><br>所谓单例，指的是只会实例化⼀次的类[Gamma95]。单例要么表示⼀个⽆状态的对象（⽐<br>如说函数，条款25），要么表示⼀个本质上独⼀⽆⼆的系统组件。将⼀个类设定为单例会使得其客户端难以测试，这是因为我们⽆法为单例替换模拟实现，除⾮它实现了作为其类型的接⼝。</p>
 </blockquote>
-<p>很多类会依赖一个或多个潜在的资源。比如拼写检查器会依赖字典。我们常常会看<br>到这种类被实现为了静态辅助类（条款4）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Inappropriate use of static utility - inflexible &amp; untestable!</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Lexicon dictionary = ...;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">SpellChecker</span><span class="params">()</span> </span>&#123;&#125; <span class="comment">// Noninstantiable</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
+<p>单例是只实例化一次的简单类[Gamma95]。单例通常要么是一个无状态的对象，比如一个<del>功能</del>，要么是系统内固有且唯一的组件。类变成单例后会让他的客户端很难测试，因为无法为单例模拟一个替代的实现，除非这个类实现了一个接口作为它的类型。</p>
 <blockquote>
-<p>Similarly, it’s not uncommon to see them implemented as singletons (Item 3):</p>
+<p>There are two common ways to implement singletons. Both are based on keeping the constructor private and exporting a public static member to provide access to the sole instance. In one approach, the member is a final field:</p>
 </blockquote>
-<p>同样地，它们常常也被实现成单例模式（条款3）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Inappropriate use of singleton - inflexible &amp; untestable!</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Lexicon dictionary = ...;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">SpellChecker</span><span class="params">(...)</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> INSTANCE = <span class="keyword">new</span> SpellChecker(...);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>Neither of these approaches is satisfactory, because they assume that there is only one dictionary worth using. In practice, each language has its own dictionary, and special dictionaries are used for special vocabularies. Also, it may be desirable to use a special dictionary for testing. It is wishful thinking to assume that a single dictionary will suffice for all time. </p>
+<p>有两种常⻅的⽅式来实现单例。他们的做法都是将构造⽅法设为私有，并导出⼀个公有的静态成员来提供对唯⼀实例的访问。在第⼀种⽅式中，成员是个final字段：</p>
 </blockquote>
-<p>上面的两种方式都不尽人意，因为他们都假设只有一个字典可供使用。实际上，没中语言都有自己的字典，并且特殊的字典用于特殊的词汇表。另外，我们还需要一个特殊的字典用于测试。认为一个字典就能满足所有的情况只不过是一种美好的愿望罢了。</p>
+<p>有两种常规方式实现单例模式。都是让构造方法保持私有，输出一个公共的静态成员以提供访问唯一的实例。一种实现的方法是成员是一个final的字段：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Singleton with public final field</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Elvis</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Elvis INSTANCE = <span class="keyword">new</span> Elvis();</span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="title">Elvis</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>You could try to have SpellChecker support multiple dictionaries by making the dictionary field nonfinal and adding a method to change the dictionary in an existing spell checker, but this would be awkward, error-prone, and unworkable in a concurrent setting. <strong>Static utility classes and singletons are inappropriate for classes whose behavior is parameterized by an underlying resource. </strong></p>
+<p>The private constructor is called only once, to initialize the public static final field Elvis.INSTANCE. The lack of a public or protected constructor guarantees a “monoelvistic” universe: exactly one Elvis instance will exist once the Elvis class is initialized—no more, no less. Nothing that a client does can change this, with one caveat: a privileged client can invoke the private constructor reflectively (Item 65) with the aid of the AccessibleObject.setAccessible method. If you need to defend against this attack, modify the constructor to make it throw an exception if it’s asked to create a second instance.</p>
 </blockquote>
-<p>你可以试着让拼写检查器支持多个字典，让字典的字段为非final并且添加一个方法改变拼写检查器里的字典，但是这样会很笨拙，容易出错，在并发设置的情况下无法正常工作。<strong>如果一个类的行为是由等资源来参数化的，那么静态辅助类和单例不适合这种情况</strong></p>
 <blockquote>
-<p>What is required is the ability to support multiple instances of the class (in our example, SpellChecker), each of which uses the resource desired by the client (in our example, the dictionary). A simple pattern that satisfies this requirement is to <strong>pass the resource into the constructor when creating a new instance</strong>. This is one form of dependency injection: the dictionary is a dependency of the spell checker and is injected into the spell checker when it is created.</p>
+<p>私有构造⽅法只会被调⽤⼀次，⽤于初始化public static final字段Elvis.INSTANCE。由于缺乏公有或是受保护的构造⽅法，因此这可以确保⼀种『独占的』世界：当实例化Elvis类时，只有唯⼀⼀个Elvis实例会存在——不多也不少。⽆论客户端怎么做都⽆法改变这⼀点，只不过我还是要警告⼀下：授权的客户端可以通过反射来调⽤私有构造⽅法（条款65），借助于AccessibleObject.setAccessible⽅法即可做到。如果需要防范这种情况，请修改构造⽅法，使得在通过构造⽅法创建第⼆个实例时抛出异常。</p>
 </blockquote>
-<p>我们所需要的是支持类的多个实例的能力（在该例里中就是SpellChecker），每个实例都会使用客户端所需要的资源（在该示例中就是字典）。满足该需求的一个简单模式就是<strong>在创建一个新实例的时候将资源传给构造方法</strong>。这是依赖注入的一种形式：字典是拼写检查器的的一个依赖，并且在创建拼写检查器的时候被注入。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dependency injection provides flexibility and testability</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Lexicon dictionary;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SpellChecker</span><span class="params">(Lexicon dictionary)</span> </span>&#123;</span><br><span class="line"><span class="keyword">this</span>.dictionary = Objects.requireNonNull(dictionary);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>私有的构造方法只会被调用一次，用来初始化public static final修饰的字段Elvis.INSTANCE。没有public和protected的构造方法保证了实例的唯一性：不多不少，在Elvis类初始化后只会有一个Elvis的实例存在。客户端做的任何事情都不能改变这一点，但是有一点要注意：有特权的客户端可以在AccessibleObject.setAccessible方法的帮助下，反射（条款65）调用private的构造方法。<del>你需要防御这种攻击</del>，修改构造方法，当它创建第二个的实例的抛出一个异常。</p>
 <blockquote>
-<p>The dependency injection pattern is so simple that many programmers use it for years without knowing it has a name. While our spell checker example had only a single resource (the dictionary), dependency injection works with an arbitrary number of resources and arbitrary dependency graphs. It preserves immutability (Item 17), so multiple clients can share dependent objects (assuming the clients desire the same underlying resources). Dependency injection is equally applicable to constructors, static factories (Item 1), and builders (Item 2).</p>
+<p>In the second approach to implementing singletons, the public member is a static factory method:</p>
 </blockquote>
-<p>依赖注入模式非常的简单，许多程序员用了很多年，不过却不知道它有一个名字。虽然我们的拼写检查器例子只有一个资源（字典），依赖注入可用于任意数量的资源和任意数量的依赖图。它能够保证不变性（条款17），所以多个客户端可以共享依赖对象（假设客户端需要同样的底层资源）。依赖注入适用于构造方法、静态工厂（条款1）和构建器（条款2）。</p>
 <blockquote>
-<p>A useful variant of the pattern is to pass a resource factory to the constructor. A factory is an object that can be called repeatedly to create instances of a type. Such factories embody the Factory Method pattern [Gamma95]. The Supplier<t> interface, introduced in Java 8, is perfect for representing factories. Methods that take a Supplier<t> on input should typically constrain the factory’s type parameter using a bounded wildcard type (Item 31) to allow the client to pass in a factory that creates any subtype of a specified type. For example, here is a method that makes a mosaic using a client-provided factory to produce each tile:</t></t></p>
+<p>在实现单例的第⼆种⽅式中，公有成员是个静态⼯⼚⽅法：</p>
 </blockquote>
-<p>这种模式的一个很有用的变种是将资源工厂传递给构造方法。工厂是个可以被重复调用来创建同一个类的实例的对象。这种工厂是工厂方法模式的一种具化形式[Gama95]。Java 8 引入的Supplier<t>接口，就非常适用于表示工厂。将Supplier<t>作为输入的方法会通过绑定的通配符类型（条款31）来限制工厂的类型参数，从而可以让客户端传递的工厂能够创建指定类型的任意子类型。比如，有一个方法用客户端提供的用于生产每个瓷砖的工厂做一个马赛克：</t></t></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Mosaic <span class="title">create</span><span class="params">(Supplier&lt;? extends Tile&gt; tileFactory)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>实现单例模式的第二种方法是public成员是一个静态的工厂方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Singleton with static factory</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Elvis</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Elvis INSTANCE = <span class="keyword">new</span> Elvis(); <span class="function"><span class="keyword">private</span> <span class="title">Elvis</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Elvis <span class="title">getInstance</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> INSTANCE; &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>Although dependency injection greatly improves flexibility and testability, it can clutter up large projects, which typically contain thousands of dependencies. This clutter can be all but eliminated by using a dependency injection framework, such as Dagger [Dagger], Guice [Guice], or Spring [Spring]. The use of these frameworks is beyond the scope of this book, but note that APIs designed for manual dependency injection are trivially adapted for use by these frameworks.</p>
+<p>All calls to Elvis.getInstance return the same object reference, and no other Elvis instance will ever be created (with the same caveat mentioned earlier).</p>
 </blockquote>
-<p>虽然依赖注入极大的提供了灵活性和可测试性，但是它可能让包含成千上万依赖的大型项目变得混乱。这种混乱可以通过依赖注入框架消除，比如Dagger [Dagger]、Guice<br>[Guice]或是Spring [Spring]。这些框架的使用介绍超过了本书的范围，不过请注意，针对⼿⼯进⾏依赖管理所设计的APIs也是适合于这些框架的。</p>
 <blockquote>
-<p>In summary, do not use a singleton or static utility class to implement a class that depends on one or more underlying resources whose behavior affects that of the class, and do not have the class create these resources directly. Instead, pass the resources, or factories to create them, into the constructor (or static factory or builder). This practice, known as dependency injection, will greatly enhance the flexibility, reusability, and testability of a class.</p>
+<p>所有对Elvis.getInstance的调⽤都会返回相同的对象引⽤，不会再创建其他的Elvis实例（请不要忘记上⾯提到的警告）。</p>
 </blockquote>
-<p>总结一下，如果一个类依赖一个或多个底层资源，而这些资源的行为会影响到类的行为，那么请不要用单例或者静态辅助类来实现，也不要让类直接创建这些资源。相反，将资源或工厂传递给构造方法（或者静态工厂，或者构建器）来创建它们。这种实践叫做依赖注入，会极大提高类的灵活性，可重用性，和测试性。</p>
+<p>所有Elvis.getInstance的调用都会返回相同的对象引用，不会有其他的Elvis实例被创建（除了前面提到过的特殊方式）</p>
+<blockquote>
+<p>The main advantage of the public field approach is that the API makes it clear that the class is a singleton: the public static field is final, so it will always contain the same object reference. The second advantage is that it’s simpler.</p>
+</blockquote>
+<blockquote>
+<p>采⽤公有字段⽅式的主要优点在于，通过API我们就可以很清晰地看到类是个单例：public static字段是final的，这样它就总是包含着同样的对象引⽤。第⼆个优点则是它更加简单。</p>
+</blockquote>
+<p>公共字段这种方法的主要好处是API清楚的表明这个类就是一个单例类：public static修饰的字段是final的，所以它始终都包含同一个对象引用。<del>第二种方法的好处</del>则是它更简单。</p>
+<blockquote>
+<p>One advantage of the static factory approach is that it gives you the flexibility to change your mind about whether the class is a singleton without changing its API. The factory method returns the sole instance, but it could be modified to return, say, a separate instance for each thread that invokes it. A second advantage is that you can write a generic singleton factory if your application requires it (Item 30). A final advantage of using a static factory is that a method reference can be used as a supplier, for example Elvis::instance is a Supplier<elvis>. Unless one of these advantages is relevant, the public field approach is preferable.</elvis></p>
+</blockquote>
+<blockquote>
+<p>静态⼯⼚⽅式的⼀个优点在于，它赋予了你这样⼀种灵活性，即当你想要改变类的单例特性时，你⽆需修改其API。⼯⼚⽅法返回唯⼀的实例，不过你可以修改这个⽅法，使得每个线程调⽤它时都返回⼀个单独的实例。第⼆个优点则是，如果应⽤需要的话，你可以编写⼀个泛型的单例⼯⼚（条款30）。使⽤静态⼯⼚的第三个好处是，⽅法引⽤可以⽤作提供者，⽐如说Elvis::instance就是个Supplier<elvis>。除⾮上述这些好处存在⼀定程度的相关性，否则推荐使⽤公有字段⽅式。</elvis></p>
+</blockquote>
+<p>静态工厂的方式的一个好处是给了你很大的灵活性，你可以不用修改API就能改变一个类是否是单例的。工厂方法返回唯一的实例，但是可以在返回之前修改它，比如说每一个调用它线程都享有单独的实例。第二个好处是如果你的应用有需求的话，你可以写一个泛型的单例工厂（条款30）。最后一个好处是静态工厂可以被当做一个supplier来使用，比如Elvis::instance就是一个Supplier<elvis>。<del>除非这些好处都用不着</del>，公共字段的方式才更可取。</elvis></p>
+<blockquote>
+<p>To make a singleton class that uses either of these approaches serializable (Chapter 12), it is not sufficient merely to add implements Serializable to its declaration. To maintain the singleton guarantee, declare all instance fields transient and provide a readResolve method (Item 89). Otherwise, each time a serialized instance is deserialized, a new instance will be created, leading, in the case of our example, to spurious Elvis sightings. To prevent this from happening, add this readResolve method to the Elvis class:</p>
+</blockquote>
+<blockquote>
+<p>要想让上述两种⽅式实现的单例类能够序列化（第12章），仅仅在类的声明中添加<br>implements Serializable是不够的。为了确保单例，请将所有实例字段声明为transient，并提供⼀个readResolve⽅法（条款89）。否则，每次当序列化的实例在反序列化时，⼀个新的实例就会被创建出来，对于我们这个示例来说，就会出现另⼀个Elvis。为了防⽌这种情况发⽣，请将如下的readResolve⽅法添加到Elvis类中:</p>
+</blockquote>
+<p>要让使用这<del>两种方法之一</del>的单例类可序列化（第十二章），仅仅在声明的时候实现Serializable是不足够的。为了<del>维持保证</del>单例性，把所有instance的字段都用transient修饰，并且提供一个readResolve方法（条款89）。否则，序列化后的实例每次反序列化的时候都会生成一个新的实例，正如例子里的一样，<del>这会导致虚假的Elvis单例</del>。要避免这种情况，在Elvis类中添加readResolve方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// readResolve method to preserve singleton property</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Return the one true Elvis and let the garbage collector</span></span><br><span class="line">    <span class="comment">// take care of the Elvis impersonator.</span></span><br><span class="line">   <span class="keyword">return</span> INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>A third way to implement a singleton is to declare a single-element enum:</p>
+</blockquote>
+<blockquote>
+<p>实现单例的第三种⽅式是声明⼀个单元素的枚举：</p>
+</blockquote>
+<p>第三种实现单例的方式是声明一个只有一个元素的枚举：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Enum singleton - the preferred approach</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Elvis &#123;</span><br><span class="line">   INSTANCE;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>This approach is similar to the public field approach, but it is more concise, provides the serialization machinery for free, and provides an ironclad guarantee against multiple instantiation, even in the face of sophisticated serialization or reflection attacks. This approach may feel a bit unnatural, but a single-element enum type is often the best way to implement a singleton. Note that you can’t use this approach if your singleton must extend a superclass other than Enum (though you can declare an enum to implement interfaces).</p>
+</blockquote>
+<blockquote>
+<p>该⽅式类似于公有字段⽅式，不过更加简洁，⽽且天然提供了序列化机制，能够强有⼒地保证不会出现多次实例化的情况，即便在复杂的序列化与反射场景下亦如此。该⽅式看起来有些不那么⾃然，不过单元素枚举类型通常是实现单例的最佳⽅式。注意，如果单例必须要继承⼀个⽗类⽽⾮枚举的情况下是⽆法使⽤该⽅式的（不过可以声明⼀个实现了接⼝的枚举）。</p>
+</blockquote>
+<p>这种方式跟公开字段的方式是相似的，但是更简洁，天生自带序列化功能，为防止多次实例化提供了坚固的保证，甚至处理复杂的序列化或者反射调用时候也没有问题。这种方式可能感觉不太自然，但通常只有一个元素的枚举类是实现单例模式的最好的一种方式。注意这种方式你只能继承一个枚举类型以外的类（<del>尽管</del>你可以声明一个枚举去实现接口）。</p>
 
       
     </div>
@@ -581,8 +611,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/12/microservices-2/" rel="next" title="Spring Cloud微服务-2-SpringBoot起步">
-                <i class="fa fa-chevron-left"></i> Spring Cloud微服务-2-SpringBoot起步
+              <a href="/2019/03/20/归档文章/effective-java-3rd-2/" rel="next" title="Effective Java 第三版-条款2_当面对很多构造方法参数时，请考虑使用构建器">
+                <i class="fa fa-chevron-left"></i> Effective Java 第三版-条款2_当面对很多构造方法参数时，请考虑使用构建器
               </a>
             
           </div>
@@ -591,8 +621,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/24/effective-java-3rd-4/" rel="prev" title="Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型">
-                Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/10/microservices-1/" rel="prev" title="Spring Cloud微服务-1-什么是微服务">
+                Spring Cloud微服务-1-什么是微服务 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -872,7 +902,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条款5-优先选择依赖注入而非硬编码资源的关联关系"><span class="nav-number">1.</span> <span class="nav-text">条款5_优先选择依赖注入而非硬编码资源的关联关系</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条款3：强制对单例属性使用私有构造方法或是枚举类型"><span class="nav-number">1.</span> <span class="nav-text">条款3：强制对单例属性使用私有构造方法或是枚举类型</span></a></li></ol></div>
             
 
           </div>
@@ -904,7 +934,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 
