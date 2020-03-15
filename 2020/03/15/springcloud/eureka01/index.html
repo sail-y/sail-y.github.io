@@ -116,14 +116,14 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="如何阅读一个开源框架的源码如果要阅读一个开源框架的源码，我们应该从什么地方入手。首先应该想到的是，从框架启动的入口入手，比如Eureka，肯定是从Eureka服务本身启动的入口开始。或者我们也可以从框架的单元测试开始看，因为单元测试都包含了框架的核心流程和功能。所以我们通过这2个入口，可以通过打断点执行的方式阅读代码的逻辑。下面我将开始学习Eureka的源码，我将基于https://github.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.saily.top/2020/03/15/img/spring-cloud/image-20200315153312195.png">
-<meta property="og:image" content="http://www.saily.top/2020/03/15/img/spring-cloud/image-20200315153257597.png">
-<meta property="og:image" content="http://www.saily.top/2020/03/15/img/spring-cloud/image-20200315153346879.png">
-<meta property="og:updated_time" content="2020-03-15T14:25:07.073Z">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200315153312195.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200315153257597.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200315153346879.png">
+<meta property="og:updated_time" content="2020-03-15T14:30:39.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码01-eureka启动流程">
 <meta name="twitter:description" content="如何阅读一个开源框架的源码如果要阅读一个开源框架的源码，我们应该从什么地方入手。首先应该想到的是，从框架启动的入口入手，比如Eureka，肯定是从Eureka服务本身启动的入口开始。或者我们也可以从框架的单元测试开始看，因为单元测试都包含了框架的核心流程和功能。所以我们通过这2个入口，可以通过打断点执行的方式阅读代码的逻辑。下面我将开始学习Eureka的源码，我将基于https://github.">
-<meta name="twitter:image" content="http://www.saily.top/2020/03/15/img/spring-cloud/image-20200315153312195.png">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200315153312195.png">
 
 
 
@@ -433,7 +433,7 @@
                 
               
 
-              <time title="创建时间：3月 15 2020 17:05:39 / 修改时间：22:25:07" itemprop="dateCreated datePublished" datetime="2020-03-15T17:05:39+08:00">3月 15 2020</time>
+              <time title="创建时间：3月 15 2020 17:05:39 / 修改时间：22:30:39" itemprop="dateCreated datePublished" datetime="2020-03-15T17:05:39+08:00">3月 15 2020</time>
             
 
             
@@ -513,9 +513,9 @@
 <p>这个类里也基本包含了我们需要核心关注的功能，例如<code>testRegistration</code>,<code>testHeartbeat</code>等等。</p>
 <h2 id="启动eureka客户端"><a href="#启动eureka客户端" class="headerlink" title="启动eureka客户端"></a>启动eureka客户端</h2><p>在eureka-examples项目里，单元测试还包含了客户端的一些操作，例如<code>ExampleEurekaClient</code>类里。需要将<code>EurekaClientServerRestIntegrationTest.injectEurekaConfiguration</code>方法复制到<code>ExampleEurekaClient</code>类里，然后在main方法的第一行先调用一下，设置一些系统属性。</p>
 <h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>eureka-server依赖了eureka-client和eureka-core2个模块，server又当服务器，又当作客户端，因为在集群模式下，他们也会相互注册。注册中心相关核心的代码都在eureka-core模块里，也能看出来eureka是基于jersey（类似spring mvc)开发的接口，和客户端http请求，在服务时间相互通信。</p>
-<p><img src="../../img/spring-cloud/image-20200315153312195.png" alt="image-20200315153312195"><img src="../../img/spring-cloud/image-20200315153257597.png" alt="image-20200315153257597"></p>
+<p><img src="/img/spring-cloud/image-20200315153312195.png" alt="image-20200315153312195"><img src="/img/spring-cloud/image-20200315153257597.png" alt="image-20200315153257597"></p>
 <p>然后eureka-resources里，其实就是一些css、js和jsp文件。</p>
-<p><img src="../../img/spring-cloud/image-20200315153346879.png" alt="image-20200315153346879"></p>
+<p><img src="/img/spring-cloud/image-20200315153346879.png" alt="image-20200315153346879"></p>
 <p>那么eureka-server本质上其实就是一个web应用，并且在eureka-server里发现还有一个web.xml文件，所以我们应该重点分析下<code>web.xml</code>文件，里面包含了一些listener和filter，这些类应该都是我们要重点看一下的源码，先猜一下这几个类都是干什么的。</p>
 <ul>
 <li>com.netflix.eureka.EurekaBootStrap（初始化逻辑？）</li>
