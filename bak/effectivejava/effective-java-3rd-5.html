@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="条款6_避免创建不必要的对象 It is often appropriate to reuse a single object instead of creating a new functionally equivalent object each time it is needed. Reuse can be both faster and more stylish. An object c">
+  <meta name="description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
 <meta name="keywords" content="java">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Effective Java 第三版-条款6_避免创建不必要的对象">
-<meta property="og:url" content="http://www.saily.top/2019/05/09/effectivejava/effective-java-3rd-6/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系">
+<meta property="og:url" content="http://www.saily.top/bak/effectivejava/effective-java-3rd-5.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="条款6_避免创建不必要的对象 It is often appropriate to reuse a single object instead of creating a new functionally equivalent object each time it is needed. Reuse can be both faster and more stylish. An object c">
+<meta property="og:description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T14:56:58.000Z">
+<meta property="og:updated_time" content="2019-05-23T14:56:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Effective Java 第三版-条款6_避免创建不必要的对象">
-<meta name="twitter:description" content="条款6_避免创建不必要的对象 It is often appropriate to reuse a single object instead of creating a new functionally equivalent object each time it is needed. Reuse can be both faster and more stylish. An object c">
+<meta name="twitter:title" content="Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系">
+<meta name="twitter:description" content="条款5_优先选择依赖注入而非硬编码资源的关联关系 Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static uti">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.saily.top/2019/05/09/effectivejava/effective-java-3rd-6/">
+  <link rel="canonical" href="http://www.saily.top/bak/effectivejava/effective-java-3rd-5.html">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>Effective Java 第三版-条款6_避免创建不必要的对象 | 帆的博客</title>
+  <title>Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系 | 帆的博客</title>
   
 
 
@@ -367,285 +367,178 @@
           
             
 
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/05/09/effectivejava/effective-java-3rd-6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
+<h1 class="post-title" itemprop="name headline">Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
         
+          <li><a href="/bak/">BAK</a></li>
+          
+            
+          
         
-          <h1 class="post-title" itemprop="name headline">Effective Java 第三版-条款6_避免创建不必要的对象
-              
-            
-          </h1>
+      
+    
+      
+      
         
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：5月 9 2019 20:20:55" itemprop="dateCreated datePublished" datetime="2019-05-09T20:20:55+08:00">5月 9 2019</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 23 2019 22:56:58" itemprop="dateModified" datetime="2019-05-23T22:56:58+08:00">5月 23 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Effective-Java/" itemprop="url" rel="index"><span itemprop="name">Effective Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon">
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
+          <li>EFFECTIVEJAVA</li>
+        
+      
     
+      
+      
+        
+          <li><a href="/bak/effective-java-3rd-5.html/">EFFECTIVE-JAVA-3RD-5.HTML</a></li>
+          
+            
+          
+        
+      
+    
+  </ul>
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+
+</div>
+
+</header>
 
       
       
-
       
-        <h1 id="条款6-避免创建不必要的对象"><a href="#条款6-避免创建不必要的对象" class="headerlink" title="条款6_避免创建不必要的对象"></a>条款6_避免创建不必要的对象</h1><blockquote>
-<p>It is often appropriate to reuse a single object instead of creating a new functionally equivalent object each time it is needed. Reuse can be both faster and more stylish. An object can always be reused if it is immutable (Item 17).</p>
+      <div class="post-body">
+        
+        
+          <h1 id="条款5-优先选择依赖注入而非硬编码资源的关联关系"><a href="#条款5-优先选择依赖注入而非硬编码资源的关联关系" class="headerlink" title="条款5_优先选择依赖注入而非硬编码资源的关联关系"></a>条款5_优先选择依赖注入而非硬编码资源的关联关系</h1><blockquote>
+<p>Many classes depend on one or more underlying resources. For example, a spellchecker depends on a dictionary. It is not uncommon to see such classes implemented as static utility classes (Item 4):</p>
 </blockquote>
-<p>在需要一个对象时，恰当的做法是尽可能重用这个对象而非创建一个功能完全一样的新对象。重用是既快又时髦。如果对象是不可变的，那么它总是可以被重用（条款17）。</p>
+<p>很多类会依赖一个或多个潜在的资源。比如拼写检查器会依赖字典。我们常常会看<br>到这种类被实现为了静态辅助类（条款4）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Inappropriate use of static utility - inflexible &amp; untestable!</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Lexicon dictionary = ...;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">SpellChecker</span><span class="params">()</span> </span>&#123;&#125; <span class="comment">// Noninstantiable</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <blockquote>
-<p>As an extreme example of what not to do, consider this statement:</p>
+<p>Similarly, it’s not uncommon to see them implemented as singletons (Item 3):</p>
 </blockquote>
-<p>作为⼀个绝对不要这么做的极端示例，考虑如下语句：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">"bikini"</span>); <span class="comment">// DON'T DO THIS!</span></span><br></pre></td></tr></table></figure>
+<p>同样地，它们常常也被实现成单例模式（条款3）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Inappropriate use of singleton - inflexible &amp; untestable!</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Lexicon dictionary = ...;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">SpellChecker</span><span class="params">(...)</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> INSTANCE = <span class="keyword">new</span> SpellChecker(...);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>The statement creates a new String instance each time it is executed, and none of those object creations is necessary. The argument to the String constructor (“bikini”) is itself a String instance, functionally identical to all of the objects created by the constructor. If this usage occurs in a loop or in a frequently invoked method, millions of String instances can be created needlessly.</p>
+<p>Neither of these approaches is satisfactory, because they assume that there is only one dictionary worth using. In practice, each language has its own dictionary, and special dictionaries are used for special vocabularies. Also, it may be desirable to use a special dictionary for testing. It is wishful thinking to assume that a single dictionary will suffice for all time. </p>
 </blockquote>
-<p>这个语句每次执行都会创建一个新的实例，而这些对象的创建却是完全没有必要的。String构造方法的参数数(“bikini”)本身就是个String实例，在功能上与由这个构造方法创建的所有对象完全相同。如果这种用法出现在一个循环或是被频繁调用的方法中，那就会创建出无数的不必要地String实例。</p>
+<p>上面的两种方式都不尽人意，因为他们都假设只有一个字典可供使用。实际上，没中语言都有自己的字典，并且特殊的字典用于特殊的词汇表。另外，我们还需要一个特殊的字典用于测试。认为一个字典就能满足所有的情况只不过是一种美好的愿望罢了。</p>
 <blockquote>
-<p>The improved version is simply the following:</p>
+<p>You could try to have SpellChecker support multiple dictionaries by making the dictionary field nonfinal and adding a method to change the dictionary in an existing spell checker, but this would be awkward, error-prone, and unworkable in a concurrent setting. <strong>Static utility classes and singletons are inappropriate for classes whose behavior is parameterized by an underlying resource. </strong></p>
 </blockquote>
-<p>如下是改进版本：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">"bikini"</span>;</span><br></pre></td></tr></table></figure>
+<p>你可以试着让拼写检查器支持多个字典，让字典的字段为非final并且添加一个方法改变拼写检查器里的字典，但是这样会很笨拙，容易出错，在并发设置的情况下无法正常工作。<strong>如果一个类的行为是由等资源来参数化的，那么静态辅助类和单例不适合这种情况</strong></p>
 <blockquote>
-<p>This version uses a single String instance, rather than creating a new one each time it is executed. Furthermore, it is guaranteed that the object will be reused by any other code running in the same virtual machine that happens to contain the same string literal [JLS, 3.10.5]</p>
+<p>What is required is the ability to support multiple instances of the class (in our example, SpellChecker), each of which uses the resource desired by the client (in our example, the dictionary). A simple pattern that satisfies this requirement is to <strong>pass the resource into the constructor when creating a new instance</strong>. This is one form of dependency injection: the dictionary is a dependency of the spell checker and is injected into the spell checker when it is created.</p>
 </blockquote>
-<p>该版本使用了单个String实例⽽⾮每次在执⾏时都创建⼀个新的实例。此外，它还确保了运⾏在同⼀个虚拟机中并且包含了相同字符串字⾯值的其他代码能够重⽤该对象[JLS,<br>3.10.5]。</p>
+<p>我们所需要的是支持类的多个实例的能力（在该例里中就是SpellChecker），每个实例都会使用客户端所需要的资源（在该示例中就是字典）。满足该需求的一个简单模式就是<strong>在创建一个新实例的时候将资源传给构造方法</strong>。这是依赖注入的一种形式：字典是拼写检查器的的一个依赖，并且在创建拼写检查器的时候被注入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dependency injection provides flexibility and testability</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpellChecker</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Lexicon dictionary;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SpellChecker</span><span class="params">(Lexicon dictionary)</span> </span>&#123;</span><br><span class="line"><span class="keyword">this</span>.dictionary = Objects.requireNonNull(dictionary);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String word)</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">suggestions</span><span class="params">(String typo)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>You can often avoid creating unnecessary objects by using static factory methods (Item 1) in preference to constructors on immutable classes that provide both. For example, the factory method Boolean.valueOf(String) is preferable to the constructor Boolean(String), which was deprecated in Java 9. The constructor must create a new object each time it’s called, while the factory method is never required to do so and won’t in practice. In addition to reusing immutable objects, you can also reuse mutable objects if you know they won’t be modified.</p>
+<p>The dependency injection pattern is so simple that many programmers use it for years without knowing it has a name. While our spell checker example had only a single resource (the dictionary), dependency injection works with an arbitrary number of resources and arbitrary dependency graphs. It preserves immutability (Item 17), so multiple clients can share dependent objects (assuming the clients desire the same underlying resources). Dependency injection is equally applicable to constructors, static factories (Item 1), and builders (Item 2).</p>
 </blockquote>
-<p>如果不变类既提供了静态⼯⼚⽅法（条款1），也提供了构造⽅法，那么你就可以通过前者<br>来避免创建不必要的对象。比如说，工厂方法Boolean.valueOf(String)要⽐构造⽅法<br>Boolean(String)更值得使⽤，后者已经在Java 9中被标记为不建议使⽤。构造⽅法必须要在每次调⽤时创建新的对象，⽽⼯⼚⽅法则没有这个限制，在实践中也不会这么做。除了重⽤不可变对象外，如果你知道对象不会被修改，那还可以重⽤可变对象。</p>
+<p>依赖注入模式非常的简单，许多程序员用了很多年，不过却不知道它有一个名字。虽然我们的拼写检查器例子只有一个资源（字典），依赖注入可用于任意数量的资源和任意数量的依赖图。它能够保证不变性（条款17），所以多个客户端可以共享依赖对象（假设客户端需要同样的底层资源）。依赖注入适用于构造方法、静态工厂（条款1）和构建器（条款2）。</p>
 <blockquote>
-<p>Some object creations are much more expensive than others. If you’re going to need such an “expensive object” repeatedly, it may be advisable to cache it for reuse. Unfortunately, it’s not always obvious when you’re creating such an object. Suppose you want to write a method to determine whether a string is a valid Roman numeral. Here’s the easiest way to do this using a regular expression:</p>
+<p>A useful variant of the pattern is to pass a resource factory to the constructor. A factory is an object that can be called repeatedly to create instances of a type. Such factories embody the Factory Method pattern [Gamma95]. The Supplier<t> interface, introduced in Java 8, is perfect for representing factories. Methods that take a Supplier<t> on input should typically constrain the factory’s type parameter using a bounded wildcard type (Item 31) to allow the client to pass in a factory that creates any subtype of a specified type. For example, here is a method that makes a mosaic using a client-provided factory to produce each tile:</t></t></p>
 </blockquote>
-<p>一些对象的创建成本要比其他对象高很多。如果你不断需要这种<code>昂贵的对象</code>，那么更好的方式是将其缓存起来重用。不幸地是，在创建这样的对象时，这种情况并非那么显而易见。假设你要写一个方法来确定一个字符串是否是一个有效的罗马数字。下面是个最简单的实现方式，它使用了正则表达式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Performance can be greatly improved!</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isRomanNumeral</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> s.matches(<span class="string">"^(?=.)M*(C[MD]|D?C&#123;0,3&#125;)"</span></span><br><span class="line">+ <span class="string">"(X[CL]|L?X&#123;0,3&#125;)(I[XV]|V?I&#123;0,3&#125;)$"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式的一个很有用的变种是将资源工厂传递给构造方法。工厂是个可以被重复调用来创建同一个类的实例的对象。这种工厂是工厂方法模式的一种具化形式[Gama95]。Java 8 引入的Supplier<t>接口，就非常适用于表示工厂。将Supplier<t>作为输入的方法会通过绑定的通配符类型（条款31）来限制工厂的类型参数，从而可以让客户端传递的工厂能够创建指定类型的任意子类型。比如，有一个方法用客户端提供的用于生产每个瓷砖的工厂做一个马赛克：</t></t></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Mosaic <span class="title">create</span><span class="params">(Supplier&lt;? extends Tile&gt; tileFactory)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>The problem with this implementation is that it relies on the String.matches method. While String.matches is the easiest way to check if a string matches a regular expression, it’s not suitable for repeated use in performance-critical situations. The problem is that it internally creates a Pattern instance for the regular expression and uses it only once, after which it becomes eligible for garbage collection. Creating a Pattern instance is expensive because it requires compiling the regular expression into a finite state machine.</p>
+<p>Although dependency injection greatly improves flexibility and testability, it can clutter up large projects, which typically contain thousands of dependencies. This clutter can be all but eliminated by using a dependency injection framework, such as Dagger [Dagger], Guice [Guice], or Spring [Spring]. The use of these frameworks is beyond the scope of this book, but note that APIs designed for manual dependency injection are trivially adapted for use by these frameworks.</p>
 </blockquote>
-<p>上述这种实现的问题在于它依赖于String.matches方法。虽然String.matches是检查字符串是否匹配一个正则表达式的最简单的方式，但它却不适合于性能关键的场景下重复使用。问题的原因是，它内部会为正则表达式创建一个Pattern实例，但却只用一次，接下来就会被垃圾回收掉。创建Pattern实例是非常昂贵的，因为它需要将正则表达式编译为一个有限状态机。</p>
+<p>虽然依赖注入极大的提供了灵活性和可测试性，但是它可能让包含成千上万依赖的大型项目变得混乱。这种混乱可以通过依赖注入框架消除，比如Dagger [Dagger]、Guice<br>[Guice]或是Spring [Spring]。这些框架的使用介绍超过了本书的范围，不过请注意，针对⼿⼯进⾏依赖管理所设计的APIs也是适合于这些框架的。</p>
 <blockquote>
-<p>To improve the performance, explicitly compile the regular expression into a Pattern instance (which is immutable) as part of class initialization, cache it, and reuse the same instance for every invocation of the isRomanNumeral method:</p>
+<p>In summary, do not use a singleton or static utility class to implement a class that depends on one or more underlying resources whose behavior affects that of the class, and do not have the class create these resources directly. Instead, pass the resources, or factories to create them, into the constructor (or static factory or builder). This practice, known as dependency injection, will greatly enhance the flexibility, reusability, and testability of a class.</p>
 </blockquote>
-<p>为了改进性能，请在类初始化过程中手动将正则表达式编译到Pattern实例中（它是不可变），然后将其缓存起来，在每次调用isRomanNumeral方法的时候重用这个实例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Reusing expensive object for improved performance</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RomanNumerals</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern ROMAN = Pattern.compile(</span><br><span class="line">			<span class="string">"^(?=.)M*(C[MD]|D?C&#123;0,3&#125;)"</span></span><br><span class="line">			+ <span class="string">"(X[CL]|L?X&#123;0,3&#125;)(I[XV]|V?I&#123;0,3&#125;)$"</span>);</span><br><span class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isRomanNumeral</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> ROMAN.matcher(s).matches();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>The improved version of isRomanNumeral provides significant performance gains if invoked frequently. On my machine, the original version takes 1.1 µs on an 8-character input string, while the improved version takes 0.17 µs, which is 6.5 times faster. Not only is the performance improved, but arguably, so is clarity. Making a static final field for the otherwise invisible Pattern instance allows us to give it a name, which is far more readable than the regular expression itself.</p>
-</blockquote>
-<p>改进版本的isRomanNumeral在频繁调用调用的情况极大提升了性能。在我的机器上，原始版本对于8字符的字符串花费了1.1 µs，而改进版本则只花了0.17 µs，快了6.5倍。除了性能改进外，代码也更清晰了。相比于不可见的Pattern实例，我们为其指定了一个static final字段，这可以让我们给它起一个名字，这一点相比正则表达式本身来说，可读性更好了。</p>
-<blockquote>
-<p>If the class containing the improved version of the isRomanNumeral method is initialized but the method is never invoked, the field ROMAN will be initialized needlessly. It would be possible to eliminate the initialization by lazily initializing the field (Item 83) the first time the isRomanNumeral method is invoked, but this is not recommended. As is often the case with lazy initialization, it would complicate the implementation with no measurable performance improvement (Item 67).</p>
-</blockquote>
-<p>如果包含了改进版本isRomanNumeral方法的类初始化了，但是方法却永远没有被调用，那么ROMAN字段就没有必要初始化了。可以通过在isRomanNumeral方法首次调用的时候延迟初始化该字段（条款83）来消除不必要的初始化，不过并不推荐这么做。因为对于延迟初始化来说，它常常导致实现变得复杂，并且性能上的改进也是存疑的（条款67）。</p>
-<blockquote>
-<p>When an object is immutable, it is obvious it can be reused safely, but there are other situations where it is far less obvious, even counterintuitive. Consider the case of adapters [Gamma95], also known as views. An adapter is an object that delegates to a backing object, providing an alternative interface. Because an adapter has no state beyond that of its backing object, there’s no need to create more than one instance of a given adapter to a given object.</p>
-</blockquote>
-<p>当一个对象是不可变的，那么显然对象可以被安全的重用，但是还有一些其他情况，这一点并不是那么明显，甚至是违反直觉的。考虑适配器场景[Gamma95]，⼜叫做视图（views）。所谓适配器，指的是委托给支撑对象的对象，并提供了另外的接口。因为适配器除了支撑对象的状态外，它自身是没有状态的，因此对于给定的对象来说，没有必要为其创建多个适配器的实例。</p>
-<blockquote>
-<p>For example, the keySet method of the Map interface returns a Set view of the Map object, consisting of all the keys in the map. Naively, it would seem that every call to keySet would have to create a new Set instance, but every call to keySet on a given Map object may return the same Set instance. Although the returned Set instance is typically mutable, all of the returned objects are functionally identical: when one of the returned objects changes, so do all the others, because they’re all backed by the same Map instance. While it is largely harmless to create multiple instances of the keySet view object, it is unnecessary and has no benefits.</p>
-</blockquote>
-<p>比如说，Map接口的keySet方法会返回Map对象的Set视图，其中包含了map里所有的键。直觉上，每次调用keySet都会创建一个Set实例，不过实际情况却是，每次调用给定Map对象的keySet都只会返回同一个Set实例。虽然返回的Set实例是可变的，但返回的对象却是相同的：当返回的对象中的一个发生了变化，其他也会发生变化，因为他们都是由相同的Map实例维护的。虽然创建keySet视图对象的多个实例是没有什么问题的，但是这么做没有必要，也没什么好处。</p>
-<blockquote>
-<p>Another way to create unnecessary objects is autoboxing, which allows the programmer to mix primitive and boxed primitive types, boxing and unboxing automatically as needed. Autoboxing blurs but does not erase the distinction between primitive and boxed primitive types. There are subtle semantic distinctions and not-so-subtle performance differences (Item 61). Consider the following method, which calculates the sum of all the positive int values. To do this, the program has to use long arithmetic because an int is not big enough to hold the sum of all the positive int values:</p>
-</blockquote>
-<p>创建不必要对象的另一种情况是自动装箱，程序员们可以通过自动装箱将原生类型与原生类型的包装类混合起来，这种情况下就会根据需要自动进行装箱与拆箱操作。<strong>自动装箱模糊了原生类型与包装类型，但却没有消除原生类型与包装类型之间的差别。</strong>这里存在一些微小的语义上的差别以及稍微有点大的性能上的差别（条款61）。考虑如下方法，它会计算所有正整型的和。为了做到这一点，程序需要运用long运算，因为int不足以容纳所有正整型int值的和：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Hideously slow! Can you spot the object creation?</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">sum</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> Long sum = <span class="number">0L</span>;</span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">long</span> i = <span class="number">0</span>; i &lt;= Integer.MAX_VALUE; i++)</span><br><span class="line"> 	sum += i;</span><br><span class="line"> <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>This program gets the right answer, but it is much slower than it should be, due to a one-character typographical error. The variable sum is declared as a Long instead of a long, which means that the program constructs about 231 unnecessary Long instances (roughly one for each time the long i is added to the Long sum). Changing the declaration of sum from Long to long reduces the runtime from 6.3 seconds to 0.59 seconds on my machine. The lesson is clear: <strong>prefer primitives to boxed primitives, and watch out for unintentional autoboxing.</strong></p>
-</blockquote>
-<p>这个程序会得到正确的答案，不过要比预计的慢很多，原因在于一个字符拼写上的错误。变量sum被声明为Long而非long，这意味着程序要构建大约2的31次方个不必要的Long实例（大致在每次long i被加到Long sum中时）。在我的机器上，将sum声明由Long改为long则会将运行时间从6.3秒减少到0.59s。结论很清晰：<strong>优选选择原生类型而非包装类型，并消息提防无意的自动装箱</strong></p>
-<blockquote>
-<p>This item should not be misconstrued to imply that object creation is expensive and should be avoided. On the contrary, the creation and reclamation of small objects whose constructors do little explicit work is cheap, especially on modern JVM implementations. Creating additional objects to enhance the clarity, simplicity, or power of a program is generally a good thing. </p>
-</blockquote>
-<p>本条款不应该被误解，以为对象创建是昂贵的，应该避免。与之相反，构造方法没有做什么显式工作的小对象的创建和回收是非常廉价的，特别是在现代JVM上更是如此。创建额外的对象来增强清晰性、简单性或是程序的能力通常是件好事。</p>
-<blockquote>
-<p>Conversely, avoiding object creation by maintaining your own object pool is a bad idea unless the objects in the pool are extremely heavyweight. The classic example of an object that does justify an object pool is a database connection. The<br>cost of establishing the connection is sufficiently high that it makes sense to reuse these objects. Generally speaking, however, maintaining your own object pools clutters your code, increases memory footprint, and harms performance. Modern JVM implementations have highly optimized garbage collectors that easily outperform such object pools on lightweight objects.</p>
-</blockquote>
-<p>与之相反，通过维护自己的对象池来避免对象创建是个不好的做法，除非池中的对象是非常重量级的。真正需要一个对象池的一个典型示例就是数据库连接。建立连接的成本非常高昂，因此重用对象是有意义的。不过，一般来说，维护自己的对象池会将代码搞乱，增加内存使用率，也会对性能产生不好的影响。现在JVM已经对垃圾回收期进行了高度优化，对于轻量级对象来说，其性能已经超越了这种对象池。</p>
-<blockquote>
-<p>The counterpoint to this item is Item 50 on defensive copying. The present item says, “Don’t create a new object when you should reuse an existing one,” while Item 50 says, “Don’t reuse an existing object when you should create a new one.” Note that the penalty for reusing an object when defensive copying is called for is far greater than the penalty for needlessly creating a duplicate object. Failing to make defensive copies where required can lead to insidious bugs and security holes; creating objects unnecessarily merely affects style and performance.</p>
-</blockquote>
-<p>与本条款对应的是关于防御式拷贝的条款50。本条款说的是“在应该重用已有对象的时候，请不要创建新的”，而条款50说的是“在应该创建新的对象时，请不要复用已有的”。注意，当防御式拷贝调用时，重用对象的代价要比创建一个复制对象的成本高许多。在本应该进行防御式拷贝但却没有这么做的情况下会导致难以察觉的bug和安全漏洞；创建不必要的对象仅仅是影响了风格和性能而已。</p>
+<p>总结一下，如果一个类依赖一个或多个底层资源，而这些资源的行为会影响到类的行为，那么请不要用单例或者静态辅助类来实现，也不要让类直接创建这些资源。相反，将资源或工厂传递给构造方法（或者静态工厂，或者构建器）来创建它们。这种实践叫做依赖注入，会极大提高类的灵活性，可重用性，和测试性。</p>
 
+        
+      </div>
+      
+      
       
     </div>
-
     
 
-    
-    
-    
 
+  
+  
+  <ul class="breadcrumb">
     
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
       
-        <div class="post-tags">
+      
+        
+          <li><a href="/bak/">BAK</a></li>
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            
           
-        </div>
+        
       
-
+    
       
       
+        
+          <li>EFFECTIVEJAVA</li>
+        
       
-
+    
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
+      
+        
+          <li><a href="/bak/effective-java-3rd-5.html/">EFFECTIVE-JAVA-3RD-5.HTML</a></li>
+          
             
-              <a href="/2019/04/24/effectivejava/effective-java-3rd-4/" rel="next" title="Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型">
-                <i class="fa fa-chevron-left"></i> Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/10/13/springcloud/microservices-3/" rel="prev" title="Spring Cloud微服务-3-SpringBoot源码初探">
-                Spring Cloud微服务-3-SpringBoot源码初探 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
+          
+        
       
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
+    
+  </ul>
 
 
+    
+    
+    
   </div>
 
 
@@ -702,7 +595,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-count">119</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -757,7 +650,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -856,7 +749,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -913,7 +806,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条款6-避免创建不必要的对象"><span class="nav-number">1.</span> <span class="nav-text">条款6_避免创建不必要的对象</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条款5-优先选择依赖注入而非硬编码资源的关联关系"><span class="nav-number">1.</span> <span class="nav-text">条款5_优先选择依赖注入而非硬编码资源的关联关系</span></a></li></ol></div>
             
 
           </div>
