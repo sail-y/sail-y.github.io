@@ -386,7 +386,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/11/12/git5/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/11/21/git/git6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -406,7 +406,377 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/11/12/git5/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-远程仓库2</a>
+                <a href="/2017/11/21/git/git6/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-裸库和submodule、substree</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2017 8:46:13" itemprop="dateCreated datePublished" datetime="2017-11-21T08:46:13+08:00">11月 21 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 13 2017 22:14:10" itemprop="dateModified" datetime="2017-12-13T22:14:10+08:00">12月 13 2017</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="裸库"><a href="#裸库" class="headerlink" title="裸库"></a>裸库</h2><p>通常我们在本地初始化仓库的时候，都是用<code>git init</code>。如果我们不借助github，如何自己建立一个中心仓库呢，这个就是裸库的概念。</p>
+<p><code>git init --bare &lt;repo&gt;</code></p>
+<p>这个命令执行后，将在本地创建一个名为 repo 的文件夹， 里面包含着 Git 的基本目录， 我们一般会将这个文件夹命名为后面加 .git 的形式，如 repo.git （这也是为什么我们从 GitHub clone 仓库的时候，地址都是 xxx.git 这样的形式的原因）.使用 –bare 参数初始化的仓库，我们一般称之为裸仓库， 因为这样创建的仓库并不包含 工作区 ， 也就是说，我们并不能在这个目录下执行我们一般使用的 Git 命令。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/21/git/git6/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/11/19/netty/netty8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/11/19/netty/netty8/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Netty-源码分析(三）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 19 2017 17:41:07" itemprop="dateCreated datePublished" datetime="2017-11-19T17:41:07+08:00">11月 19 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 28 2018 12:52:16" itemprop="dateModified" datetime="2018-09-28T12:52:16+08:00">9月 28 2018</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="源码分析-三）"><a href="#源码分析-三）" class="headerlink" title="源码分析(三）"></a>源码分析(三）</h1><p>前面我们已经了解了Netty的启动流程，以及各个组件之间的关系，接下来要看看Netty的数据容器（ByteBuf)。</p>
+<h2 id="回顾Java-NIO"><a href="#回顾Java-NIO" class="headerlink" title="回顾Java NIO"></a>回顾Java NIO</h2><p>先回顾一下Java NIO的Buffer使用方式。</p>
+<p>使用NIO进行文件读取所涉及的步骤：</p>
+<ol>
+<li>从FileInputStream对象获取到Channel对象。</li>
+<li>创建Buffer.</li>
+<li>将数据从Channel中读取到Buffer对象中。</li>
+</ol>
+<p>0 &lt;= mark &lt;= postion &lt;= limit &lt;= capacity</p>
+<h3 id="flip-方法切换读和写的状态："><a href="#flip-方法切换读和写的状态：" class="headerlink" title="flip()方法切换读和写的状态："></a>flip()方法切换读和写的状态：</h3><ol>
+<li>将limit值设为当前的position。</li>
+<li>将position设为0.</li>
+</ol>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/19/netty/netty8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/11/12/git/git5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/11/12/git/git5/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-远程仓库2</a>
               
             
           </h1>
@@ -505,7 +875,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/11/12/git5/#more" rel="contents">
+              <a class="btn" href="/2017/11/12/git/git5/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -565,7 +935,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/29/git4/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/29/git/git4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -585,7 +955,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/29/git4/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-远程仓库</a>
+                <a href="/2017/09/29/git/git4/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-远程仓库</a>
               
             
           </h1>
@@ -686,7 +1056,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/29/git4/#more" rel="contents">
+              <a class="btn" href="/2017/09/29/git/git4/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -746,7 +1116,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/28/git3/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/28/git/git3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -766,7 +1136,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/28/git3/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-checkout、stash等命令</a>
+                <a href="/2017/09/28/git/git3/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-checkout、stash等命令</a>
               
             
           </h1>
@@ -868,7 +1238,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/28/git3/#more" rel="contents">
+              <a class="btn" href="/2017/09/28/git/git3/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -928,7 +1298,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/28/jdk8-11/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/28/java/jdk8-11/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -948,7 +1318,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/28/jdk8-11/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">JDK8-Fork/Join和CompletableFuture的使用</a>
+                <a href="/2017/09/28/java/jdk8-11/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">JDK8-Fork/Join和CompletableFuture的使用</a>
               
             
           </h1>
@@ -1036,7 +1406,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/28/jdk8-11/#more" rel="contents">
+              <a class="btn" href="/2017/09/28/java/jdk8-11/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1096,7 +1466,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/22/netty7/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/22/netty/netty7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -1116,7 +1486,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/22/netty7/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Netty-源码分析(二)</a>
+                <a href="/2017/09/22/netty/netty7/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Netty-源码分析(二)</a>
               
             
           </h1>
@@ -1217,7 +1587,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/22/netty7/#more" rel="contents">
+              <a class="btn" href="/2017/09/22/netty/netty7/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1277,7 +1647,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/21/git2/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/21/git/git2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -1297,7 +1667,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/21/git2/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-分支</a>
+                <a href="/2017/09/21/git/git2/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-分支</a>
               
             
           </h1>
@@ -1398,7 +1768,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/21/git2/#more" rel="contents">
+              <a class="btn" href="/2017/09/21/git/git2/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1458,7 +1828,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/13/netty6/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/13/netty/netty6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -1478,7 +1848,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/13/netty6/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Netty-源码分析(一)</a>
+                <a href="/2017/09/13/netty/netty6/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Netty-源码分析(一)</a>
               
             
           </h1>
@@ -1577,7 +1947,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/13/netty6/#more" rel="contents">
+              <a class="btn" href="/2017/09/13/netty/netty6/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1637,7 +2007,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/12/nio7/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/12/nio/nio7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -1657,7 +2027,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2017/09/12/nio7/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">NIO-零拷贝</a>
+                <a href="/2017/09/12/nio/nio7/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">NIO-零拷贝</a>
               
             
           </h1>
@@ -1757,356 +2127,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2017/09/12/nio7/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/08/28/git1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/08/28/git1/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Git-简介基本操作</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：8月 28 2017 21:04:37" itemprop="dateCreated datePublished" datetime="2017-08-28T21:04:37+08:00">8月 28 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：9月 28 2018 11:17:26" itemprop="dateModified" datetime="2018-09-28T11:17:26+08:00">9月 28 2018</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>用git已经差不多3年了，回顾一下。</p>
-<p><a href="https://git-scm.com/" target="_blank" rel="noopener">https://git-scm.com/</a></p>
-<p>这个是Git的官网，Git是一款免费、开源的分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目。 Git的读音为/gɪt/。</p>
-<p>Git是一个开源的分布式版本控制系统，可以有效、高速的处理从很小到非常大的项目版本管理。Git 是 Linus Torvalds 为了帮助管理 Linux 内核开发而开发的一个开放源码的版本控制软件。</p>
-<p>Torvalds 开始着手开发 Git 是为了作为一种过渡方案来替代 BitKeeper，后者之前一直是 Linux 内核开发人员在全球使用的主要源代码工具。开放源码社区中的有些人觉得BitKeeper 的许可证并不适合开放源码社区的工作，因此 Torvalds 决定着手研究许可证更为灵活的版本控制系统。尽管最初 Git 的开发是为了辅助 Linux 内核开发的过程，但是我们已经发现在很多其他自由软件项目中也使用了 Git。例如 很多 Freedesktop 的项目迁移到了 Git 上。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/08/28/git1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/08/27/nio6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-      <meta itemprop="image" content="/img/photo/bug.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/08/27/nio6/" class="post-title-link" itemprop="http://www.saily.top/page/6/index.html">Java 编码和解码</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：8月 27 2017 15:35:41 / 修改时间：16:49:14" itemprop="dateCreated datePublished" datetime="2017-08-27T15:35:41+08:00">8月 27 2017</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/io/" itemprop="url" rel="index"><span itemprop="name">io</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>做过web开发的人一定遇到过中文乱码的问题，一般情况下我们都是直接把所有的编码都设置成UTF-8，可是并没有真正的去理解为什么会导致乱码的问题，这里一起研究一下编码和解码究竟是怎么一回事。</p>
-<p>这段代码很简单，就是读取一个文件的内容，然后输出到另外一个文件里面。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/08/27/nio6/#more" rel="contents">
+              <a class="btn" href="/2017/09/12/nio/nio7/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2200,7 +2221,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">124</span>
+                    <span class="site-state-item-count">126</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2253,7 +2274,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2350,7 +2373,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">42</span>
+                      
+                    
+                    <span class="site-state-item-count">43</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2411,7 +2436,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
+<meta name="keywords" content="hystrix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hystrix监控和运维">
+<meta property="og:url" content="http://www.saily.top/2018/06/10/springcloud/hystrix04/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running.png">
+<meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running2.png">
+<meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running3.png">
+<meta property="og:updated_time" content="2018-08-25T08:18:24.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hystrix监控和运维">
+<meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
+<meta name="twitter:image" content="http://www.saily.top/img/hystrix/hystrix-running.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://www.saily.top/2018/06/10/springcloud/hystrix04/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hystrix监控和运维 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">扬帆起航</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/06/10/springcloud/hystrix04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hystrix监控和运维
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：6月 10 2018 18:03:59" itemprop="dateCreated datePublished" datetime="2018-06-10T18:03:59+08:00">6月 10 2018</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：8月 25 2018 16:18:24" itemprop="dateModified" datetime="2018-08-25T16:18:24+08:00">8月 25 2018</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hystrix/" itemprop="url" rel="index"><span itemprop="name">hystrix</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>此为龙果学院课程学习笔记，记录以后翻看</p>
+<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><h3 id="为什么需要监控与报警？"><a href="#为什么需要监控与报警？" class="headerlink" title="为什么需要监控与报警？"></a>为什么需要监控与报警？</h3><p>HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。<br><a id="more"></a><br>这些统计信息，无论是单独看，还是聚合起来看，都是很有用的。如果将一个请求中的多个command的统计信息拿出来单独查看，包括耗时的统计，对debug系统是很有帮助的。聚合起来的metric对于系统层面的行为来说，是很有帮助的，很适合做报警或者报表。hystrix dashboard就很适合。</p>
+<h3 id="hystrix的事件类型"><a href="#hystrix的事件类型" class="headerlink" title="hystrix的事件类型"></a>hystrix的事件类型</h3><p>对于hystrix command来说，只会返回一个值，execute只有一个event type，fallback也只有一个event type，那么返回一个SUCCESS就代表着命令执行的结束</p>
+<p>对于hystrix observable command来说，多个值可能被返回，所以emit event代表一个value被返回，success代表成功，failure代表异常</p>
+<h4 id="execute-event-type"><a href="#execute-event-type" class="headerlink" title="execute event type"></a>execute event type</h4><p>EMIT                    observable command返回一个value<br>SUCCESS                 完成执行，并且没有报错<br>FAILURE                    执行时抛出了一个异常，会触发fallback<br>TIMEOUT                    开始执行了，但是在指定时间内没有完成执行，会触发fallback<br>BAD_REQUEST                执行的时候抛出了一个HystrixBadRequestException<br>SHORT_CIRCUITED            短路器打开了，触发fallback<br>THREAD_POOL_REJECTED    线程成的容量满了，被reject，触发fallback<br>SEMAPHORE_REJECTED        信号量的容量满了，被reject，触发fallback</p>
+<h4 id="fallback-event-type"><a href="#fallback-event-type" class="headerlink" title="fallback event type"></a>fallback event type</h4><p>FALLBACK_EMIT            observable command，fallback value被返回了<br>FALLBACK_SUCCESS        fallback逻辑执行没有报错<br>FALLBACK_FAILURE        fallback逻辑抛出了异常，会报错<br>FALLBACK_REJECTION        fallback的信号量容量满了，fallback不执行，报错<br>FALLBACK_MISSING        fallback没有实现，会报错</p>
+<h4 id="其他的event-type"><a href="#其他的event-type" class="headerlink" title="其他的event type"></a>其他的event type</h4><p>EXCEPTION_THROWN        command生命自周期是否抛出了异常<br>RESPONSE_FROM_CACHE        command是否在cache中查找到了结果<br>COLLAPSED                command是否是一个合并batch中的一个</p>
+<h4 id="thread-pool-event-type"><a href="#thread-pool-event-type" class="headerlink" title="thread pool event type"></a>thread pool event type</h4><p>EXECUTED                线程池有空间，允许command去执行了<br>REJECTED                 线程池没有空间，不允许command执行，reject掉了</p>
+<h4 id="collapser-event-type"><a href="#collapser-event-type" class="headerlink" title="collapser event type"></a>collapser event type</h4><p>BATCH_EXECUTED            collapser合并了一个batch，并且执行了其中的command<br>ADDED_TO_BATCH            command加入了一个collapser batch<br>RESPONSE_FROM_CACHE        没有加入batch，而是直接取了request cache中的数据</p>
+<h3 id="metric-storage"><a href="#metric-storage" class="headerlink" title="metric storage"></a>metric storage</h3><p>metric被生成之后，就会按照一段时间来存储，存储了一段时间的数据才会推送到其他系统中，比如hystrix dashboard。</p>
+<p>另外一种方式，就是每次生成metric就实时推送metric流到其他地方，但是这样的话，会给系统带来很大的压力。</p>
+<p>hystrix的方式是将metric写入一个内存中的数据结构中，在一段时间之后就可以查询到，hystrix 1.5x之后，采取的是为每个command key都生成一个start event和completion event流，而且可以订阅这个流。每个thread pool key也是一样的，包括每个collapser key也是一样的。</p>
+<p>每个command的event是发送给一个线程安全的RxJava中的rx.Subject，因为是线程安全的，所以不需要进行线程同步。</p>
+<p>因此每个command级别的，threadpool级别的，每个collapser级别的，event都会发送到对应的RxJava的rx.Subject对象中。这些rx.Subject对象接着就会被暴露出Observable接口，可以被订阅。</p>
+<h3 id="metric统计相关的配置"><a href="#metric统计相关的配置" class="headerlink" title="metric统计相关的配置"></a>metric统计相关的配置</h3><h4 id="metrics-rollingStats-timeInMilliseconds"><a href="#metrics-rollingStats-timeInMilliseconds" class="headerlink" title="metrics.rollingStats.timeInMilliseconds"></a>metrics.rollingStats.timeInMilliseconds</h4><p>设置统计的rolling window，单位是毫秒，hystrix只会维持这段时间内的metric供短路器统计使用</p>
+<p>这个属性是不允许热修改的，默认值是10000，就是10秒钟</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingStatisticalWindowInMilliseconds(int value)</p>
+<h4 id="metrics-rollingStats-numBuckets"><a href="#metrics-rollingStats-numBuckets" class="headerlink" title="metrics.rollingStats.numBuckets"></a>metrics.rollingStats.numBuckets</h4><p>该属性设置每个滑动窗口被拆分成多少个bucket，而且滑动窗口对这个参数必须可以整除，同样不允许热修改</p>
+<p>默认值是10，也就是说，每秒钟是一个bucket</p>
+<p>随着时间的滚动，比如又过了一秒钟，那么最久的一秒钟的bucket就会被丢弃，然后新的一秒的bucket会被创建</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingStatisticalWindowBuckets(int value)</p>
+<h4 id="metrics-rollingPercentile-enabled"><a href="#metrics-rollingPercentile-enabled" class="headerlink" title="metrics.rollingPercentile.enabled"></a>metrics.rollingPercentile.enabled</h4><p>控制是否追踪请求耗时，以及通过百分比方式来统计，默认是true</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingPercentileEnabled(boolean value)</p>
+<h4 id="metrics-rollingPercentile-timeInMilliseconds"><a href="#metrics-rollingPercentile-timeInMilliseconds" class="headerlink" title="metrics.rollingPercentile.timeInMilliseconds"></a>metrics.rollingPercentile.timeInMilliseconds</h4><p>设置rolling window被持久化保存的时间，这样才能计算一些请求耗时的百分比，默认是60000，60s，不允许热修改</p>
+<p>相当于是一个大的rolling window，专门用于计算请求执行耗时的百分比</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingPercentileWindowInMilliseconds(int value)</p>
+<h4 id="metrics-rollingPercentile-numBuckets"><a href="#metrics-rollingPercentile-numBuckets" class="headerlink" title="metrics.rollingPercentile.numBuckets"></a>metrics.rollingPercentile.numBuckets</h4><p>设置rolling percentile window被拆分成的bucket数量，上面那个参数除以这个参数必须能够整除，不允许热修改</p>
+<p>默认值是6，也就是每10s被拆分成一个bucket</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingPercentileWindowBuckets(int value)</p>
+<h4 id="metrics-rollingPercentile-bucketSize"><a href="#metrics-rollingPercentile-bucketSize" class="headerlink" title="metrics.rollingPercentile.bucketSize"></a>metrics.rollingPercentile.bucketSize</h4><p>设置每个bucket的请求执行次数被保存的最大数量，如果在一个bucket内，执行次数超过了这个值，那么就会重新覆盖从bucket的开始再写</p>
+<p>举例来说，如果bucket size设置为100，而且每个bucket代表一个10秒钟的窗口，但是在这个bucket内发生了500次请求执行，那么这个bucket内仅仅会保留100次执行</p>
+<p>如果调大这个参数，就会提升需要耗费的内存，来存储相关的统计值，不允许热修改</p>
+<p>默认值是100</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsRollingPercentileBucketSize(int value)</p>
+<h4 id="metrics-healthSnapshot-intervalInMilliseconds"><a href="#metrics-healthSnapshot-intervalInMilliseconds" class="headerlink" title="metrics.healthSnapshot.intervalInMilliseconds"></a>metrics.healthSnapshot.intervalInMilliseconds</h4><p>控制成功和失败的百分比计算，与影响短路器之间的等待时间，默认值是500毫秒</p>
+<p>HystrixCommandProperties.Setter()<br>   .withMetricsHealthSnapshotIntervalInMilliseconds(int value)</p>
+<h2 id="监控部署"><a href="#监控部署" class="headerlink" title="监控部署"></a>监控部署</h2><p>找到之前的eshop-cache-ha项目，引入配置：</p>
+<p><a href="https://github.com/sail-y/eshop-cache-ha" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache-ha</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后再注册一个servlet的bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ServletRegistrationBean <span class="title">indexServletRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ServletRegistrationBean registration = <span class="keyword">new</span> ServletRegistrationBean(<span class="keyword">new</span> HystrixMetricsStreamServlet());</span><br><span class="line">    registration.addUrlMappings(<span class="string">"/hystrix.stream"</span>);</span><br><span class="line">    <span class="keyword">return</span> registration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Tomcat</strong></p>
+<p>准备一个tomcat部署HystrixDashboard，网上下载一个<code>hystrix-dashboard-1.5.12.war</code>，再装一个turbin，turbin是用来监控一个集群的，可以将一个集群的所有机器都配置在这里。</p>
+<p>在/WEB-INF/classes下添加一个配置文件，告诉turbin需要监控哪些实例。</p>
+<p><strong>config.properties</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">turbine.ConfigPropertyBasedDiscovery.default.instances=localhost</span><br><span class="line">turbine.instanceUrlSuffix=:8081/hystrix.stream</span><br></pre></td></tr></table></figure>
+<p><img src="/img/hystrix/hystrix-running.png" alt></p>
+<p>然后启动我们自己的<code>eshop-cache-ha</code>项目，</p>
+<p>访问页面查看</p>
+<p><a href="http://localhost:8080/hystrix-dashboard/" target="_blank" rel="noopener">http://localhost:8080/hystrix-dashboard/</a></p>
+<p>填入我们要监控的URL.</p>
+<p><img src="/img/hystrix/hystrix-running2.png" alt></p>
+<p><a href="http://localhost:8081/hystrix.stream，监控单个机器" target="_blank" rel="noopener">http://localhost:8081/hystrix.stream，监控单个机器</a></p>
+<p><a href="http://localhost:8080/turbine/turbine.stream，监控整个集群" target="_blank" rel="noopener">http://localhost:8080/turbine/turbine.stream，监控整个集群</a></p>
+<p>现在还看不到什么东西，我们对项目发送几个请求，再看看效果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 监控请求测试</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/10</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixDashboardTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            HttpUtil.get(<span class="string">"http://localhost:8081/getProductInfo?productId=1"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/hystrix/hystrix-running3.png" alt></p>
+<p>hystrix的dashboard可以支持实时监控metric</p>
+<p>netflix开始用这个dashboard的时候，大幅度优化了工程运维的操作，帮助节约了恢复系统的时间。大多数生产系统的故障持续时间变得很短，而且影响幅度小了很多，主要是因为hystrix dashborad提供了可视化的监控。</p>
+<p>截图说明，dashboard上的指标都是什么？</p>
+<p>圆圈的颜色和大小代表了健康状况以及流量，折线代表了最近2分钟的请求流量</p>
+<p>集群中的机器数量，请求延时的中位数以及平均值</p>
+<p>最近10秒内的异常请求比例，请求QPS，每台机器的QPS，以及整个集群的QPS</p>
+<p>断路器的状态</p>
+<p>最近一分钟的请求延时百分比，TP90，TP99，TP99.5</p>
+<p>几个有颜色的数字，代表了最近10秒钟的统计，以1秒钟为粒度</p>
+<p>成功的请求数量，绿颜色的数字; 短路的请求数量，蓝色的数字; timeout超时的请求数量，黄色的数字; 线程池reject的请求数量，紫色的数字; 请求失败，抛出异常的请求数量，红色的数字</p>
+<h2 id="生产环境运维"><a href="#生产环境运维" class="headerlink" title="生产环境运维"></a>生产环境运维</h2><p>如果发现了严重的依赖调用延时，先不用急着去修改配置，如果一个command被限流了，可能本来就应该限流</p>
+<p>在netflix早期的时候，经常会有人在发现短路器因为访问延时发生的时候，去热修改一些配置，比如线程池大小，队列大小，超时时长，等等，给更多的资源，但是这其实是不对的。</p>
+<p>如果我们之前对系统进行了良好的配置，然后现在在高峰期，系统在进行线程池reject，超时，短路，那么此时我们应该集中精力去看底层根本的原因，而不是调整配置</p>
+<p>为什么在高峰期，一个10个线程的线程池，搞不定这些流量呢？那就是代码写的太烂了，可以使用异步，或者更好的算法。</p>
+<p>千万不要急于给你的依赖调用过多的资源，比如线程池大小，队列大小，超时时长，信号量容量，等等，因为这可能导致我们自己对自己的系统进行DDOS攻击。</p>
+<p>举例来说，想象一下，我们现在有100台服务器组成的集群，每台机器有10个线程大小的线程池去访问一个服务，那么我们对那个服务就有1000个线程资源去访问了，在正常情况下，可能只会用到其中200~300个线程去访问那个后端服务。但是如果再高峰期出现了访问延时，可能导致1000个线程全部被调用去访问那个后端服务，如果我们调整到每台服务器20个线程呢？</p>
+<p>如果因为你的代码等问题导致访问延时，即使有20个线程可能还是会导致线程池资源被占满，此时就有2000个线程去访问后端服务，可能对后端服务就是一场灾难。</p>
+<p>这就是断路器的作用了，如果我们把后端服务打死了，或者产生了大量的压力，有大量的timeout和reject，那么就自动短路，一段时间后，等流量洪峰过去了，再重启访问。</p>
+<p>简单来说，让系统自己去限流，短路，超时，以及reject，直到系统重新变得正常了，就是不要随便乱改资源配置，不要随便乱增加线程池大小，等待队列大小，异常情况是正常的。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hystrix/" rel="tag"># hystrix</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/05/elasticsearch/elasticSearch02/" rel="next" title="ElasticSearch02-快速入门">
+                <i class="fa fa-chevron-left"></i> ElasticSearch02-快速入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/12/cache/cache06/" rel="prev" title="高可用缓存架构实战6-缓存雪崩及解决方案">
+                高可用缓存架构实战6-缓存雪崩及解决方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/img/photo/bug.png" alt="帆">
+            
+              <p class="site-author-name" itemprop="name">帆</p>
+              <p class="site-description motion-element" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/sail-y" title="GitHub &rarr; https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">1.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要监控与报警？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要监控与报警？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hystrix的事件类型"><span class="nav-number">1.2.</span> <span class="nav-text">hystrix的事件类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#execute-event-type"><span class="nav-number">1.2.1.</span> <span class="nav-text">execute event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fallback-event-type"><span class="nav-number">1.2.2.</span> <span class="nav-text">fallback event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他的event-type"><span class="nav-number">1.2.3.</span> <span class="nav-text">其他的event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thread-pool-event-type"><span class="nav-number">1.2.4.</span> <span class="nav-text">thread pool event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#collapser-event-type"><span class="nav-number">1.2.5.</span> <span class="nav-text">collapser event type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric-storage"><span class="nav-number">1.3.</span> <span class="nav-text">metric storage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric统计相关的配置"><span class="nav-number">1.4.</span> <span class="nav-text">metric统计相关的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-timeInMilliseconds"><span class="nav-number">1.4.1.</span> <span class="nav-text">metrics.rollingStats.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-numBuckets"><span class="nav-number">1.4.2.</span> <span class="nav-text">metrics.rollingStats.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-enabled"><span class="nav-number">1.4.3.</span> <span class="nav-text">metrics.rollingPercentile.enabled</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-timeInMilliseconds"><span class="nav-number">1.4.4.</span> <span class="nav-text">metrics.rollingPercentile.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-numBuckets"><span class="nav-number">1.4.5.</span> <span class="nav-text">metrics.rollingPercentile.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-bucketSize"><span class="nav-number">1.4.6.</span> <span class="nav-text">metrics.rollingPercentile.bucketSize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-healthSnapshot-intervalInMilliseconds"><span class="nav-number">1.4.7.</span> <span class="nav-text">metrics.healthSnapshot.intervalInMilliseconds</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控部署"><span class="nav-number">2.</span> <span class="nav-text">监控部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生产环境运维"><span class="nav-number">3.</span> <span class="nav-text">生产环境运维</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.5.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

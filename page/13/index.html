@@ -386,7 +386,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/02/06/mybatis-memcached框架配置/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -406,7 +406,369 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2015/02/06/mybatis-memcached框架配置/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">mybatis-memcached框架配置</a>
+                <a href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">CentOS Jenkins + Sonar + Nexus 环境搭建</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：3月 6 2015 21:43:05" itemprop="dateCreated datePublished" datetime="2015-03-06T21:43:05+08:00">3月 6 2015</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/CI/" itemprop="url" rel="index"><span itemprop="name">CI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Nexus篇"><a href="#Nexus篇" class="headerlink" title="Nexus篇"></a>Nexus篇</h1><p>在Centos上安装</p>
+<p>如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。</p>
+<p>下载地址：<a href="http://www.sonatype.org/nexus/archived" target="_blank" rel="noopener">http://www.sonatype.org/nexus/archived</a></p>
+<p>我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。</p>
+<p>设置为系统自启动服务（使用root用户）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">cp /usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01/bin/jsw/linux-x86-64/nexus nexus</span><br></pre></td></tr></table></figure></p>
+<p>编辑<code>/etc/init.d/nexus</code>文件，添加以下变量定义：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_HOME=/usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01</span><br><span class="line">PLATFORM=linux-x86-64</span><br><span class="line">PLATFORM_DIR=<span class="string">"<span class="variable">$&#123;NEXUS_HOME&#125;</span>/bin/jsw/<span class="variable">$&#123;PLATFORM&#125;</span>"</span></span><br></pre></td></tr></table></figure></p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">centos 6.5 安装gitlab安装需注意的问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2月 6 2015 23:30:50" itemprop="dateCreated datePublished" datetime="2015-02-06T23:30:50+08:00">2月 6 2015</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>安装gitlab<br>首先按照官网进行操作，环境为centos 6.5<br><a href="https://about.gitlab.com/downloads/" target="_blank" rel="noopener">https://about.gitlab.com/downloads/</a><br>注意安装过程中执行命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure></p>
+<p>出现错误，在<code>/etc/gitlab/gitlab.rb</code>中修改域名后再执行一次方可启动成功<br><img src="http://img.blog.csdn.net/20141207182607301?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="image"><br>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
+        
+      
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/02/06/java/mybatis-memcached框架配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+      <meta itemprop="image" content="/img/photo/bug.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/02/06/java/mybatis-memcached框架配置/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">mybatis-memcached框架配置</a>
               
             
           </h1>
@@ -504,7 +866,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2015/02/06/mybatis-memcached框架配置/#more" rel="contents">
+              <a class="btn" href="/2015/02/06/java/mybatis-memcached框架配置/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -564,7 +926,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/31/centos6-5使用yum安装mysql/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/31/linux/centos6-5使用yum安装mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -584,7 +946,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2015/01/31/centos6-5使用yum安装mysql/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">centos6.5使用yum安装mysql</a>
+                <a href="/2015/01/31/linux/centos6-5使用yum安装mysql/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">centos6.5使用yum安装mysql</a>
               
             
           </h1>
@@ -683,7 +1045,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2015/01/31/centos6-5使用yum安装mysql/#more" rel="contents">
+              <a class="btn" href="/2015/01/31/linux/centos6-5使用yum安装mysql/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -743,7 +1105,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/31/Spring-mvc-ResponseBody-返回枚举类型/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/31/java/Spring-mvc-ResponseBody-返回枚举类型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -763,7 +1125,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2015/01/31/Spring-mvc-ResponseBody-返回枚举类型/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">Spring mvc @ResponseBody 返回枚举类型</a>
+                <a href="/2015/01/31/java/Spring-mvc-ResponseBody-返回枚举类型/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">Spring mvc @ResponseBody 返回枚举类型</a>
               
             
           </h1>
@@ -861,7 +1223,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2015/01/31/Spring-mvc-ResponseBody-返回枚举类型/#more" rel="contents">
+              <a class="btn" href="/2015/01/31/java/Spring-mvc-ResponseBody-返回枚举类型/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -921,7 +1283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/30/fastjson序列化枚举属性/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/01/30/java/fastjson序列化枚举属性/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="帆">
@@ -941,7 +1303,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2015/01/30/fastjson序列化枚举属性/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">fastjson序列化枚举属性</a>
+                <a href="/2015/01/30/java/fastjson序列化枚举属性/" class="post-title-link" itemprop="http://www.saily.top/page/13/index.html">fastjson序列化枚举属性</a>
               
             
           </h1>
@@ -1042,7 +1404,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2015/01/30/fastjson序列化枚举属性/#more" rel="contents">
+              <a class="btn" href="/2015/01/30/java/fastjson序列化枚举属性/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1136,7 +1498,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">124</span>
+                    <span class="site-state-item-count">126</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1189,7 +1551,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1286,7 +1650,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">42</span>
+                      
+                    
+                    <span class="site-state-item-count">43</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1347,7 +1713,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
