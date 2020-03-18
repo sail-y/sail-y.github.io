@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+<meta property="og:type" content="article">
+<meta property="og:title" content="帆的博客">
+<meta property="og:url" content="http://www.saily.top/2020/03/18/springcloud/eureka02/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
+<meta property="og:updated_time" content="2020-03-18T14:57:41.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="帆的博客">
+<meta name="twitter:description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
+
+<link rel="canonical" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title> | 帆的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：3月 18 2020 21:19:36 / 修改时间：22:57:41" itemprop="dateCreated datePublished" datetime="2020-03-18T21:19:36+08:00">3月 18 2020</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="eureka-client启动流程"><a href="#eureka-client启动流程" class="headerlink" title="eureka client启动流程"></a>eureka client启动流程</h1><p>在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This will be read by server internal discovery client. We need to salience it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectEurekaConfiguration</span><span class="params">()</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">  String myHostName = InetAddress.getLocalHost().getHostName();</span><br><span class="line">  String myServiceUrl = <span class="string">"http://"</span> + myHostName + <span class="string">":8080/v2/"</span>;</span><br><span class="line"></span><br><span class="line">  System.setProperty(<span class="string">"eureka.region"</span>, <span class="string">"default"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.name"</span>, <span class="string">"eureka"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.vipAddress"</span>, <span class="string">"eureka.mydomain.net"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.port"</span>, <span class="string">"8080"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.preferSameZone"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldUseDns"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldFetchRegistry"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.default.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsAccessId"</span>, <span class="string">"fake_aws_access_id"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsSecretKey"</span>, <span class="string">"fake_aws_secret_key"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.numberRegistrySyncRetries"</span>, <span class="string">"0"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>然后在main方法的第一行调用一下上面的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">    injectEurekaConfiguration();</span><br><span class="line">    ExampleEurekaClient sampleClient = <span class="keyword">new</span> ExampleEurekaClient();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// create the client</span></span><br><span class="line">    ApplicationInfoManager applicationInfoManager = initializeApplicationInfoManager(<span class="keyword">new</span> MyDataCenterInstanceConfig());</span><br><span class="line">    EurekaClient client = initializeEurekaClient(applicationInfoManager, <span class="keyword">new</span> DefaultEurekaClientConfig());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use the client</span></span><br><span class="line">    sampleClient.sendRequestToServiceUsingEureka(client);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// shutdown the client</span></span><br><span class="line">    eurekaClient.shutdown();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看下上面这个方法，这段逻辑几乎和上一篇文章中介绍的eureka server启动流程中，初始化eureka client逻辑的是一样的。</p>
+<ol>
+<li>读取eureka-client.properties配置文件，形成服务实例配置，基于接口对外提供服务实例配置项的读取。（MyDataCenterInstanceConfig）</li>
+<li>基于服务实例配置，构造服务实例（InstanceInfo）</li>
+<li>基于eureka client配置和服务实例，构造服务实例管理器（ApplicationInfoManager）</li>
+<li>读取eureka-client.properties配置文件，形成一个eureka client的配置，基于接口对外提供eureka client配置项读取（DefaultEurekaClientConfig）。</li>
+<li>基于eureka client配置，和服务实例管理器构造了一个EurekaClient（DiscoveryClient），保存了一些配置，处理服务的注册和注册表的抓取，启动了几个线程池，启动了网络通信组件，启动了一些调度任务，注册了监控项。</li>
+</ol>
+<p><img src="/img/spring-cloud/eureka client启动流程.jpg" alt="eureka client启动流程"></p>
+<h1 id="eureka-client服务注册逻辑"><a href="#eureka-client服务注册逻辑" class="headerlink" title="eureka client服务注册逻辑"></a>eureka client服务注册逻辑</h1><p>上面的逻辑咱们理完了后，发现不知道服务注册是哪一个步骤完成的，实际上注册的逻辑，是在初始化调度任务那里，和心跳任务一起初始化的<code>InstanceInfoReplicator</code>任务里。<strong>这儿其实感觉比较奇怪，注册服务和实例信息复制，在我们常见的分布式系统里应该是不同的概念，比如redis、mongodb、elastic search里都有副本的概念（Replica），但是在eureka这里，这里面实际上却是注册服务的逻辑。</strong></p>
+<ol>
+<li><code>InstanceInfoReplicator</code>的start方法里，将自己作为一个线程放到一个调度线程池中去了，默认</li>
+</ol>
+<p>是延迟40秒执行。</p>
+<ol start="2">
+<li><p>那么执行线程的时候，是执行run()方法。</p>
+</li>
+<li><p>在run方法里，刷新了一下服务实例的信息discoveryClient.refreshInstanceInfo();，里面其实是调用ApplicationInfoManager的一些方法刷新了服务实例的配置，看看配置有没有改变，如果改变了，就刷新一下；用健康检查器检查状态，将状态设置到了ApplicationInfoManager中，更新服务实例状态。</p>
+</li>
+<li><p>然后调用discoveryClient.register();进行服务注册。</p>
+</li>
+<li><p>服务注册的时候，是基于EurekaClient的register()方法去注册的，调用的是底层的eurekaTransport的registrationClient，将InstanceInfo服务实例的信息，通过http请求，调用eureka server对外暴露的一个restful接口，将InstanceInfo发送过去。注意：EurekaTransport在构造的下一行代码的时候，调用了<strong>scheduleServerEndpointTask</strong>（一个令人迷惑的方法名），其实这个方法里就初始化了专门用于注册的registrationClient。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">eurekaTransport = <span class="keyword">new</span> EurekaTransport();</span><br><span class="line"><span class="comment">// 其实是初始化eurekaTransport</span></span><br><span class="line">scheduleServerEndpointTask(eurekaTransport, args);</span><br><span class="line">......</span><br><span class="line">httpResponse = eurekaTransport.registrationClient.register(instanceInfo);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后实际上底层执行发送请求的逻辑，实在是非常难找，代码嵌套过多，最后在EurekaHttpClient的子类里，寻找和http库有关的类，我们找到了AbstractJersey2EurekaHttpClient，在这里的register方法，发现了实际发送注册请求的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送请求，http://localhost:8080/v2/apps/ServiceA</span></span><br><span class="line"><span class="comment">// 发送的是post请求，服务实例的对象打成了一个json发送过去，包含了自己的主机，ip，端口号</span></span><br><span class="line"><span class="comment">// eureka server就知道这个ServiceA这个服务，有一个服务实例，比如是在172.16.21.33、dev-server、8080</span></span><br><span class="line">Builder resourceBuilder = jerseyClient.target(serviceUrl).path(urlPath).request();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>eureka client在服务注册的这块代码，有很多<strong>槽点</strong>：</p>
+<ol>
+<li>服务注册，不应该放在<code>InstanceInfoReplicator</code>中，语意不明朗。</li>
+<li>负责发送请求的HttpClient，类体系过于复杂，导致看代码的人根本找不到对应的client，最后是根据顶层接口和项目依赖实际是使用jersey框架来进行restful接口暴露和调用，才找到真正发送服务注册请求的地方。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/15/springcloud/eureka01/" rel="prev" title="Eureka源码01-eureka启动流程">
+      <i class="fa fa-chevron-left"></i> Eureka源码01-eureka启动流程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client启动流程"><span class="nav-number">1.</span> <span class="nav-text">eureka client启动流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client服务注册逻辑"><span class="nav-number">2.</span> <span class="nav-text">eureka client服务注册逻辑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="帆"
+      src="/img/photo/bug.png">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https://github.com/sail-y" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/338632221" title="Weibo → https://weibo.com/338632221" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

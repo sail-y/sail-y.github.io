@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200315153257597.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200315153346879.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/eureka%20server启动流程图.jpg">
-<meta property="og:updated_time" content="2020-03-16T15:09:50.727Z">
+<meta property="og:updated_time" content="2020-03-18T13:30:33.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码01-eureka启动流程">
 <meta name="twitter:description" content="如何阅读一个开源框架的源码如果要阅读一个开源框架的源码，我们应该从什么地方入手。首先应该想到的是，从框架启动的入口入手，比如Eureka，肯定是从Eureka服务本身启动的入口开始。或者我们也可以从框架的单元测试开始看，因为单元测试都包含了框架的核心流程和功能。所以我们通过这2个入口，可以通过打断点执行的方式阅读代码的逻辑。下面我将开始学习Eureka的源码，我将基于https://github.">
@@ -234,7 +234,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：3月 16 2020 23:09:50" itemprop="dateModified" datetime="2020-03-16T23:09:50+08:00">3月 16 2020</time>
+                <time title="修改时间：3月 18 2020 21:30:33" itemprop="dateModified" datetime="2020-03-18T21:30:33+08:00">3月 18 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -303,7 +303,7 @@
 <p>DefaultEurekaServerConfig的init方法中，加载了一个properties文件，文件名默认叫eureka-server.properties（<code>EUREKA_PROPS_FILE</code>变量），通过ConfigurationManager加载到内存中，然后EurekaServerConfig的方法，再用configInstance获取对应的值。EurekaServerConfig是个接口，有很多get方法，包含了eureka server需要的所有配置，都可以通过这个接口获取。通过接口，对properties文件里的配置项进行了封装，增加了代码的可读性，不像我们自己可能做的有些项目里，读取配置文件都是去调用get某个key。</p>
 <p>在DefaultEurekaServerConfig的方法中，也能看到大量的硬编码配置项和默认值。</p>
 <h4 id="初始化ApplicationInfoManager"><a href="#初始化ApplicationInfoManager" class="headerlink" title="初始化ApplicationInfoManager"></a>初始化ApplicationInfoManager</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">EurekaInstanceConfig instanceConfig = isCloud(ConfigurationManager.getDeploymentContext())</span><br><span class="line">  ? <span class="keyword">new</span> CloudInstanceConfig()</span><br><span class="line">  : <span class="keyword">new</span> MyDataCenterInstanceConfig();</span><br><span class="line"></span><br><span class="line">applicationInfoManager = <span class="keyword">new</span> ApplicationInfoManager(</span><br><span class="line">  instanceConfig, <span class="keyword">new</span> EurekaConfigBasedInstanceInfoProvider(instanceConfig).get());</span><br></pre></td></tr></table></figure>
-<p>查看ApplicationInfoManager的javadoc说明，这个类用来初始化服务注册和被其他服务发现的一些配置，其中配置通过EurekaInstanceConfig设置，从MyDataCenterInstanceConfig的父类的构造方法可以看到，其实也是读取的eureka-client.properties文件加载的。和<code>DefaultEurekaServerConfig</code>一样<code>PropertiesInstanceConfig</code>也是提供了一些方法，实际是从配置文件读取，同时也提供了默认值。</p>
+<p>查看ApplicationInfoManager的javadoc说明，这个类用来初始化服务注册和被其他服务发现的一些配置，其中配置通过EurekaInstanceConfig设置，从MyDataCenterInstanceConfig的父类的构造方法可以看到，其实也是读取的eureka-client.properties文件加载的。和<code>DefaultEurekaServerConfig</code>一样<code>EurekaInstanceConfig</code>也是提供了一些方法，实际是从配置文件读取，同时也提供了默认值。</p>
 <p><code>new EurekaConfigBasedInstanceInfoProvider(instanceConfig).get()</code>方法返回了InstanceInfo。InstanceInfo是服务实例本身的信息，用<strong>构造器模式</strong><code>InstanceInfo.Builder.newBuilder()</code>构造了一个<code>InstanceInfo.Builder</code>实例，从instanceConfig里获取了大量配置，再加创建的几个类完成了构造。</p>
 <p>最后，EurekaInstanceConfig和InstnaceInfo，构造了ApplicationInfoManager，作为服务实例的一个管理器。</p>
 <h4 id="初始化eureka-server内部的一个eureka-client（用来跟其他的eureka-server节点注册和通信的）"><a href="#初始化eureka-server内部的一个eureka-client（用来跟其他的eureka-server节点注册和通信的）" class="headerlink" title="初始化eureka-server内部的一个eureka-client（用来跟其他的eureka-server节点注册和通信的）"></a>初始化eureka-server内部的一个eureka-client（用来跟其他的eureka-server节点注册和通信的）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EurekaClientConfig eurekaClientConfig = <span class="keyword">new</span> DefaultEurekaClientConfig();</span><br><span class="line">eurekaClient = <span class="keyword">new</span> DiscoveryClient(applicationInfoManager, eurekaClientConfig);</span><br></pre></td></tr></table></figure>
@@ -355,7 +355,10 @@
     <a href="/2020/01/30/springcloud/microservices-5/" rel="prev" title="Spring Cloud微服务-5-SpringBoot整合Spring MVC">
       <i class="fa fa-chevron-left"></i> Spring Cloud微服务-5-SpringBoot整合Spring MVC
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/18/springcloud/eureka02/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -436,7 +439,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">119</span>
+          <span class="site-state-item-count">120</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
