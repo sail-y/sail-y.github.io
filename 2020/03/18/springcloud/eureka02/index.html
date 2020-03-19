@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+  <meta name="description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
 <meta property="og:type" content="article">
 <meta property="og:title" content="帆的博客">
 <meta property="og:url" content="http://www.saily.top/2020/03/18/springcloud/eureka02/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+<meta property="og:description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
-<meta property="og:updated_time" content="2020-03-18T14:57:41.918Z">
+<meta property="og:updated_time" content="2020-03-19T01:25:33.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="帆的博客">
-<meta name="twitter:description" content="eureka client启动流程在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码： 1234567891011121314151617181920/** * This will be read by server internal discovery client. We need to salience it. */">
+<meta name="twitter:description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
 <meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
 
 <link rel="canonical" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
@@ -222,10 +222,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：3月 18 2020 21:19:36 / 修改时间：22:57:41" itemprop="dateCreated datePublished" datetime="2020-03-18T21:19:36+08:00">3月 18 2020</time>
+              <time title="创建时间：3月 18 2020 22:57:41" itemprop="dateCreated datePublished" datetime="2020-03-18T22:57:41+08:00">3月 18 2020</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：3月 19 2020 9:25:33" itemprop="dateModified" datetime="2020-03-19T09:25:33+08:00">3月 19 2020</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -245,10 +251,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="eureka-client启动流程"><a href="#eureka-client启动流程" class="headerlink" title="eureka client启动流程"></a>eureka client启动流程</h1><p>在eureka-examples里，有一个ExampleEurekaClient的测试类。我要执行这个类，首先需要复制一段代码：</p>
+        <h1 id="eureka-client启动流程"><a href="#eureka-client启动流程" class="headerlink" title="eureka client启动流程"></a>eureka client启动流程</h1><p>上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This will be read by server internal discovery client. We need to salience it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectEurekaConfiguration</span><span class="params">()</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">  String myHostName = InetAddress.getLocalHost().getHostName();</span><br><span class="line">  String myServiceUrl = <span class="string">"http://"</span> + myHostName + <span class="string">":8080/v2/"</span>;</span><br><span class="line"></span><br><span class="line">  System.setProperty(<span class="string">"eureka.region"</span>, <span class="string">"default"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.name"</span>, <span class="string">"eureka"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.vipAddress"</span>, <span class="string">"eureka.mydomain.net"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.port"</span>, <span class="string">"8080"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.preferSameZone"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldUseDns"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldFetchRegistry"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.default.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsAccessId"</span>, <span class="string">"fake_aws_access_id"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsSecretKey"</span>, <span class="string">"fake_aws_secret_key"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.numberRegistrySyncRetries"</span>, <span class="string">"0"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<p>然后在main方法的第一行调用一下上面的方法。</p>
+<p>在main方法的第一行调用一下上面的方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">    injectEurekaConfiguration();</span><br><span class="line">    ExampleEurekaClient sampleClient = <span class="keyword">new</span> ExampleEurekaClient();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// create the client</span></span><br><span class="line">    ApplicationInfoManager applicationInfoManager = initializeApplicationInfoManager(<span class="keyword">new</span> MyDataCenterInstanceConfig());</span><br><span class="line">    EurekaClient client = initializeEurekaClient(applicationInfoManager, <span class="keyword">new</span> DefaultEurekaClientConfig());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use the client</span></span><br><span class="line">    sampleClient.sendRequestToServiceUsingEureka(client);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// shutdown the client</span></span><br><span class="line">    eurekaClient.shutdown();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>看下上面这个方法，这段逻辑几乎和上一篇文章中介绍的eureka server启动流程中，初始化eureka client逻辑的是一样的。</p>
 <ol>
@@ -258,6 +264,7 @@
 <li>读取eureka-client.properties配置文件，形成一个eureka client的配置，基于接口对外提供eureka client配置项读取（DefaultEurekaClientConfig）。</li>
 <li>基于eureka client配置，和服务实例管理器构造了一个EurekaClient（DiscoveryClient），保存了一些配置，处理服务的注册和注册表的抓取，启动了几个线程池，启动了网络通信组件，启动了一些调度任务，注册了监控项。</li>
 </ol>
+<p>在DiscoveryClient的构造方法里，做了很多操作，具体可以看下图。</p>
 <p><img src="/img/spring-cloud/eureka client启动流程.jpg" alt="eureka client启动流程"></p>
 <h1 id="eureka-client服务注册逻辑"><a href="#eureka-client服务注册逻辑" class="headerlink" title="eureka client服务注册逻辑"></a>eureka client服务注册逻辑</h1><p>上面的逻辑咱们理完了后，发现不知道服务注册是哪一个步骤完成的，实际上注册的逻辑，是在初始化调度任务那里，和心跳任务一起初始化的<code>InstanceInfoReplicator</code>任务里。<strong>这儿其实感觉比较奇怪，注册服务和实例信息复制，在我们常见的分布式系统里应该是不同的概念，比如redis、mongodb、elastic search里都有副本的概念（Replica），但是在eureka这里，这里面实际上却是注册服务的逻辑。</strong></p>
 <ol>
@@ -274,14 +281,14 @@
 <li><p>服务注册的时候，是基于EurekaClient的register()方法去注册的，调用的是底层的eurekaTransport的registrationClient，将InstanceInfo服务实例的信息，通过http请求，调用eureka server对外暴露的一个restful接口，将InstanceInfo发送过去。注意：EurekaTransport在构造的下一行代码的时候，调用了<strong>scheduleServerEndpointTask</strong>（一个令人迷惑的方法名），其实这个方法里就初始化了专门用于注册的registrationClient。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">eurekaTransport = <span class="keyword">new</span> EurekaTransport();</span><br><span class="line"><span class="comment">// 其实是初始化eurekaTransport</span></span><br><span class="line">scheduleServerEndpointTask(eurekaTransport, args);</span><br><span class="line">......</span><br><span class="line">httpResponse = eurekaTransport.registrationClient.register(instanceInfo);</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>然后实际上底层执行发送请求的逻辑，实在是非常难找，代码嵌套过多，最后在EurekaHttpClient的子类里，寻找和http库有关的类，我们找到了AbstractJersey2EurekaHttpClient，在这里的register方法，发现了实际发送注册请求的逻辑。</p>
+<li><p>然后实际上底层执行发送请求的逻辑，实在是非常难找，代码嵌套过多，最后在EurekaHttpClient的子类里，寻找和http库有关的类，我们找到了AbstractJersey2EurekaHttpClient，在这里的<code>register</code>方法，发现了实际发送注册请求的逻辑。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送请求，http://localhost:8080/v2/apps/ServiceA</span></span><br><span class="line"><span class="comment">// 发送的是post请求，服务实例的对象打成了一个json发送过去，包含了自己的主机，ip，端口号</span></span><br><span class="line"><span class="comment">// eureka server就知道这个ServiceA这个服务，有一个服务实例，比如是在172.16.21.33、dev-server、8080</span></span><br><span class="line">Builder resourceBuilder = jerseyClient.target(serviceUrl).path(urlPath).request();</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>eureka client在服务注册的这块代码，有很多<strong>槽点</strong>：</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>eureka client在服务注册的这块代码，可以也是看到有用到工厂模式、装饰器模式，但是也有很多<strong>槽点</strong>：</p>
 <ol>
 <li>服务注册，不应该放在<code>InstanceInfoReplicator</code>中，语意不明朗。</li>
-<li>负责发送请求的HttpClient，类体系过于复杂，导致看代码的人根本找不到对应的client，最后是根据顶层接口和项目依赖实际是使用jersey框架来进行restful接口暴露和调用，才找到真正发送服务注册请求的地方。</li>
+<li>负责发送请求的HttpClient，类体系过于<strong>复杂</strong>，导致看代码的人根本找不到对应的client，最后是根据顶层接口(EurekaHttpClient)和项目依赖实际是使用jersey框架来进行restful接口暴露和调用，才找到真正发送服务注册请求的地方(AbstractJersey2EurekaHttpClient)。</li>
 </ol>
 
     </div>
