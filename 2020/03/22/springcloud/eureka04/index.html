@@ -21,16 +21,17 @@
   </script>
 
   <meta name="description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
+<meta name="keywords" content="spring-cloud,eureka">
 <meta property="og:type" content="article">
-<meta property="og:title" content="帆的博客">
+<meta property="og:title" content="Eureka源码04-心跳和服务下线流程分析">
 <meta property="og:url" content="http://www.saily.top/2020/03/22/springcloud/eureka04/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
-<meta property="og:updated_time" content="2020-03-22T15:16:35.218Z">
+<meta property="og:updated_time" content="2020-03-22T15:20:12.269Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="帆的博客">
+<meta name="twitter:title" content="Eureka源码04-心跳和服务下线流程分析">
 <meta name="twitter:description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
 <meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
 
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title> | 帆的博客</title>
+  <title>Eureka源码04-心跳和服务下线流程分析 | 帆的博客</title>
   
 
 
@@ -213,7 +214,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          Eureka源码04-心跳和服务下线流程分析
         </h1>
 
         <div class="post-meta">
@@ -224,7 +225,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：3月 22 2020 20:44:27 / 修改时间：23:16:35" itemprop="dateCreated datePublished" datetime="2020-03-22T20:44:27+08:00">3月 22 2020</time>
+              <time title="创建时间：3月 22 2020 18:05:39 / 修改时间：23:20:12" itemprop="dateCreated datePublished" datetime="2020-03-22T18:05:39+08:00">3月 22 2020</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/eureka/" itemprop="url" rel="index"><span itemprop="name">eureka</span></a>
+                </span>
             </span>
 
           
@@ -295,6 +305,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+              <a href="/tags/eureka/" rel="tag"># eureka</a>
+          </div>
 
         
 
@@ -302,7 +316,7 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/22/springcloud/eureka03/" rel="prev" title="Eureka源码03-服务列表同步分析">
+    <a href="/2020/03/21/springcloud/eureka03/" rel="prev" title="Eureka源码03-服务列表同步分析">
       <i class="fa fa-chevron-left"></i> Eureka源码03-服务列表同步分析
     </a></div>
       <div class="post-nav-item"></div>
