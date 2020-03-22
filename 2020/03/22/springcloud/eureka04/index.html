@@ -20,22 +20,21 @@
     var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="安装gitlab首先按照官网进行操作，环境为centos 6.5https://about.gitlab.com/downloads/注意安装过程中执行命令1sudo gitlab-ctl reconfigure 出现错误，在/etc/gitlab/gitlab.rb中修改域名后再执行一次方可启动成功">
-<meta name="keywords" content="gitlab,centos">
+  <meta name="description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centos 6.5 安装gitlab安装需注意的问题">
-<meta property="og:url" content="http://www.saily.top/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/index.html">
+<meta property="og:title" content="帆的博客">
+<meta property="og:url" content="http://www.saily.top/2020/03/22/springcloud/eureka04/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="安装gitlab首先按照官网进行操作，环境为centos 6.5https://about.gitlab.com/downloads/注意安装过程中执行命令1sudo gitlab-ctl reconfigure 出现错误，在/etc/gitlab/gitlab.rb中修改域名后再执行一次方可启动成功">
+<meta property="og:description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20141207182607301?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
-<meta property="og:updated_time" content="2016-12-01T08:46:42.000Z">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
+<meta property="og:updated_time" content="2020-03-22T15:16:35.218Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="centos 6.5 安装gitlab安装需注意的问题">
-<meta name="twitter:description" content="安装gitlab首先按照官网进行操作，环境为centos 6.5https://about.gitlab.com/downloads/注意安装过程中执行命令1sudo gitlab-ctl reconfigure 出现错误，在/etc/gitlab/gitlab.rb中修改域名后再执行一次方可启动成功">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20141207182607301?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta name="twitter:title" content="帆的博客">
+<meta name="twitter:description" content="心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来是用">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
 
-<link rel="canonical" href="http://www.saily.top/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/">
+<link rel="canonical" href="http://www.saily.top/2020/03/22/springcloud/eureka04/">
 
 
 <script id="page-configurations">
@@ -47,7 +46,7 @@
   };
 </script>
 
-  <title>centos 6.5 安装gitlab安装需注意的问题 | 帆的博客</title>
+  <title> | 帆的博客</title>
   
 
 
@@ -201,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/22/springcloud/eureka04/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -214,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          centos 6.5 安装gitlab安装需注意的问题
+          
         </h1>
 
         <div class="post-meta">
@@ -223,24 +222,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2月 6 2015 23:30:50" itemprop="dateCreated datePublished" datetime="2015-02-06T23:30:50+08:00">2月 6 2015</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a>
-                </span>
+              <time title="创建时间：3月 22 2020 20:44:27 / 修改时间：23:16:35" itemprop="dateCreated datePublished" datetime="2020-03-22T20:44:27+08:00">3月 22 2020</time>
             </span>
 
           
@@ -261,23 +245,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>安装gitlab<br>首先按照官网进行操作，环境为centos 6.5<br><a href="https://about.gitlab.com/downloads/" target="_blank" rel="noopener">https://about.gitlab.com/downloads/</a><br>注意安装过程中执行命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure></p>
-<p>出现错误，在<code>/etc/gitlab/gitlab.rb</code>中修改域名后再执行一次方可启动成功<br><img src="http://img.blog.csdn.net/20141207182607301?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="image"><br><a id="more"></a><br>进页面提示<code>502</code>，用命令查看日志<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl tail postgresql</span><br></pre></td></tr></table></figure></p>
-<p>提示内存不足，官方也是建议1g内存进行搭建，512m的话也可以安装但是要添加swap，不然启动后就会提示内存不足，我目前是512的，添加<em>swap</em>后访问成功，但是有点慢可能，还是升为1g最好。</p>
-<p>上面的图是我目前的配置，注意这里修改了gitlab默认的仓库存储路径，教程官网有<br><a href="https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md</a><br>我这里贴出来给大家看看</p>
-<h4 id="Storing-Git-data-in-an-alternative-directory"><a href="#Storing-Git-data-in-an-alternative-directory" class="headerlink" title="Storing Git data in an alternative directory"></a>Storing Git data in an alternative directory</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Prevent users from writing to the repositories while you move them.</span></span><br><span class="line">sudo gitlab-ctl stop</span><br><span class="line"><span class="comment"># Only move 'repositories'; 'gitlab-satellites' will be recreated</span></span><br><span class="line"><span class="comment"># automatically. Note there is _no_ slash behind 'repositories', but there _is_ a</span></span><br><span class="line"><span class="comment"># slash behind 'git-data'.</span></span><br><span class="line">sudo rsync -av /var/opt/gitlab/git-data/repositories /mnt/nas/git-data/</span><br><span class="line"><span class="comment"># Fix permissions if necessary</span></span><br><span class="line">sudo gitlab-ctl reconfigure</span><br><span class="line"><span class="comment"># Double-check directory layout in /mnt/nas/git-data. Expected output:</span></span><br><span class="line"><span class="comment"># gitlab-satellites repositories</span></span><br><span class="line">sudo ls /mnt/nas/git-data/</span><br><span class="line"><span class="comment"># Done! Start GitLab and verify that you can browse through the repositories in</span></span><br><span class="line"><span class="comment"># the web interface.</span></span><br><span class="line">sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
-<p>可以看到这下面是安装完成后gitlab一些文件和数据的路径    </p>
-<blockquote>
-<p>注：看到网上很多资料都不对，可能是过时了，所以搞gitlab建议大家还是以官网为主，说不定你在看我这个文章的时候也过时了</p>
-</blockquote>
-<h4 id="Omnibus-gitlab-uses-four-different-directories"><a href="#Omnibus-gitlab-uses-four-different-directories" class="headerlink" title="Omnibus-gitlab uses four different directories."></a>Omnibus-gitlab uses four different directories.</h4><ul>
-<li><code>/opt/gitlab</code> holds application code for GitLab and its dependencies.</li>
-<li><code>/var/opt/gitlab</code> holds application data and configuration files that gitlab-ctl reconfigure writes to.</li>
-<li><code>/etc/gitlab</code> holds configuration files for omnibus-gitlab. These are the only files that you should ever have to edit manually.</li>
-<li><code>/var/log/gitlab</code> contains all log data generated by components of omnibus-gitlab.</li>
-</ul>
-<p>有错误的时候尽量用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl tail</span><br><span class="line">``` </span><br><span class="line">查看日志分析错误原因，我在配置邮件的时候也是试了很久才用上</span><br><span class="line"></span><br><span class="line">接下来我们来配置邮件，我这里使用SMTP，用腾讯企业邮箱</span><br><span class="line">还是修改`/etc/gitlab/gitlab.rb` 配置文件，再次**提醒**网上很多文章可以已经过时了</span><br><span class="line">附上官网地址</span><br><span class="line">https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/smtp.md</span><br><span class="line">```ruby</span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = <span class="literal">true</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = 25  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"xx@xxx.com"</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"password"</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"exmail.qq.com"</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span>  </span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = <span class="literal">true</span>  </span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'xx@xxx.com'</span>  </span><br><span class="line"><span class="comment">##修改gitlab配置的发信人  </span></span><br><span class="line">user[<span class="string">"git_user_email"</span>] = <span class="string">"xx@xxx.com"</span></span><br></pre></td></tr></table></figure></p>
-<p>保持发信人和登录邮箱一致,我配置这里的时候也出错了，原因是我在看腾讯官网时候写的是用的SSL，端口是465<br>但是gitlab好像不是用的<code>ssl</code>，gitlab的教程里也没找到是否启用ssl的配置，我也没去深究了，于是把端口号改为<code>25</code>，邮件发送成功。<br>大家在测试邮件的时候可以用忘记密码来发送邮件测试，然后用<code>gitlab-ctl tail</code>来查看，大概等1分钟就能看到发送邮件的日志，出错了再具体分析原因</p>
+        <h1 id="心跳流程分析"><a href="#心跳流程分析" class="headerlink" title="心跳流程分析"></a>心跳流程分析</h1><p>eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。</p>
+<p>心跳在代码里，叫做续约。</p>
+<ol>
+<li><p>还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由<code>HeartbeatThread</code>执行。</p>
+</li>
+<li><p>默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL</p>
+</li>
+<li><p>接下来是用jersy去给eureka server发送心跳的http请求。<a id="more"></a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpResponse = eurekaTransport.registrationClient.sendHeartBeat(instanceInfo.getAppName(), instanceInfo.getId(), instanceInfo, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>请求的地址是：<code>PUT apps/{appName}/{id}</code></p>
+</li>
+<li><p>我们根据这个接口去找下是什么类处理的请求，这个又是让我好一顿找：在ApplicationsResource里有个<code>@Path(&quot;{appId}&quot;)</code>，这里已经组成了路径<code>apps/{appId}</code>，然后在ApplicationsResource里边又有一个<code></code>@Path(“{id}”)<code>方法，到这里就是</code>apps/{appId}/{id}`，是不是刚好符合客户端的请求路径，但是还是没有定位到PUT方法在哪里，继续看InstanceResource里的renewLease方法，配合参数看下，终于才找到了server端处理心跳逻辑的代码。<em>不得不说这个隐藏的真是比较深，你看那个getInstanceInfo方法，你很难想到这个get方法只是一个路径的节点，具体的处理还得继续往里跟。应该是也因为我不熟悉jersy这个框架，不知道怎么快速定位一个mvc路径的执行代码。</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ApplicationsResource</span></span><br><span class="line"><span class="meta">@Path</span>(<span class="string">"&#123;appId&#125;"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ApplicationResource <span class="title">getApplicationResource</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">        @<span class="title">PathParam</span><span class="params">(<span class="string">"appId"</span>)</span> String appId) </span>&#123;</span><br><span class="line">    CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ApplicationResource(appId, serverConfig, registry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ApplicationResource</span></span><br><span class="line"><span class="meta">@Path</span>(<span class="string">"&#123;id&#125;"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> InstanceResource <span class="title">getInstanceInfo</span><span class="params">(@PathParam(<span class="string">"id"</span>)</span> String id) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> InstanceResource(<span class="keyword">this</span>, id, serverConfig, registry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// InstanceResource</span></span><br><span class="line"><span class="meta">@PUT</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Response <span class="title">renewLease</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication,</span></span><br><span class="line"><span class="function">        @<span class="title">QueryParam</span><span class="params">(<span class="string">"overriddenstatus"</span>)</span> String overriddenStatus,</span></span><br><span class="line"><span class="function">        @<span class="title">QueryParam</span><span class="params">(<span class="string">"status"</span>)</span> String status,</span></span><br><span class="line"><span class="function">        @<span class="title">QueryParam</span><span class="params">(<span class="string">"lastDirtyTimestamp"</span>)</span> String lastDirtyTimestamp) </span>&#123;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过注册表的renew方法，完成服务续约的逻辑。registry.renew，实际还是进入AbstractInstanceRegistry.renew这个方法里。</p>
+</li>
+<li><p>用appName获取服务注册表那个map，做了一些检查。最后执行续约的逻辑（leaseToRenew.renew();）其实就是更新了一下lastUpdateTimestamp的时间，加上了duration。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(appName);</span><br><span class="line"><span class="comment">// 一些代码</span></span><br><span class="line">leaseToRenew.renew();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="服务下线流程分析"><a href="#服务下线流程分析" class="headerlink" title="服务下线流程分析"></a>服务下线流程分析</h1><p>下面看一下DiscoveryClient的shutdown方法的逻辑。</p>
+<ol>
+<li><p>在eureka client里，得自己调用一下eurekaClient.shutodwn()方法来进行服务下线。关注里边的unregister();方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EurekaHttpResponse&lt;Void&gt; httpResponse = eurekaTransport.registrationClient.cancel(instanceInfo.getAppName(), instanceInfo.getId());</span><br></pre></td></tr></table></figure>
+<p>对应的路径是，<code>DELETE apps/{appName}/{id}</code>，和上面一样，是在InstanceResource类里的cancelLease方法。</p>
+</li>
+<li><p>最后跟着源码里走，执行的的逻辑是AbstractInstanceRegistry.internalCancel方法。</p>
+</li>
+<li><p>取到注册表的map，直接调用remove从map里给移除了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(appName);</span><br><span class="line">....</span><br><span class="line">gMap.remove(id);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后调用了leaseToCancel.cancel();，设置了evictionTimestamp时间。</p>
+</li>
+<li><p>在recentlyChangedQueue里新增了一条服务实例变更记录，保留3分钟。（用于在客户端进行增量更新的时候进行合并）</p>
+</li>
+<li><p>调用invalidateCache，让缓存失效，从readWriteCacheMap里全部清理掉。会有定时任务每隔30秒让readOnlyCacheMap和readWriteCacheMap进行同步。这部分逻辑在上一篇文章有分析到。</p>
+</li>
+<li><p><strong>下次所有的eureka client来拉取增量注册表的时候，就会返回recentlyChangedQueue里的数据，然后在本地进行合并，比对hash值，再决定是否重新拉取全量注册表的逻辑。</strong></p>
+</li>
+</ol>
+<p><img src="/img/spring-cloud/image-20200322230318802.png" alt="image-20200322230318802"></p>
+<p>这里再一次体现了，无论是服务注册、故障、还是下线了，都会将变更记录放进<strong>recentlyChangedQueue</strong>里，eureka client在30秒的增量更新定时任务里，去合并新的服务列表。readOnlyCacheMap从readWriteCacheMap同步的时间也是30秒。所以服务最长可能60秒才能感知到服务的下线。</p>
 
     </div>
 
@@ -286,10 +295,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/gitlab/" rel="tag"># gitlab</a>
-              <a href="/tags/centos/" rel="tag"># centos</a>
-          </div>
 
         
 
@@ -297,13 +302,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2015/02/06/java/mybatis-memcached框架配置/" rel="prev" title="mybatis-memcached框架配置">
-      <i class="fa fa-chevron-left"></i> mybatis-memcached框架配置
+    <a href="/2020/03/22/springcloud/eureka03/" rel="prev" title="Eureka源码03-服务列表同步分析">
+      <i class="fa fa-chevron-left"></i> Eureka源码03-服务列表同步分析
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/" rel="next" title="CentOS Jenkins + Sonar + Nexus 环境搭建">
-      CentOS Jenkins + Sonar + Nexus 环境搭建 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -368,7 +370,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Storing-Git-data-in-an-alternative-directory"><span class="nav-number">1.</span> <span class="nav-text">Storing Git data in an alternative directory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Omnibus-gitlab-uses-four-different-directories"><span class="nav-number">2.</span> <span class="nav-text">Omnibus-gitlab uses four different directories.</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#心跳流程分析"><span class="nav-number">1.</span> <span class="nav-text">心跳流程分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务下线流程分析"><span class="nav-number">2.</span> <span class="nav-text">服务下线流程分析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
