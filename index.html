@@ -197,6 +197,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/22/springcloud/eureka03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/22/springcloud/eureka03/" class="post-title-link" itemprop="url">未命名</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：3月 22 2020 15:16:13 / 修改时间：18:39:06" itemprop="dateCreated datePublished" datetime="2020-03-22T15:16:13+08:00">3月 22 2020</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="eureka-client全量抓取注册表"><a href="#eureka-client全量抓取注册表" class="headerlink" title="eureka client全量抓取注册表"></a>eureka client全量抓取注册表</h1><p>eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。</p>
+<p>先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (clientConfig.shouldFetchRegistry() &amp;&amp; !fetchRegistry(<span class="keyword">false</span>)) &#123;</span><br><span class="line">  fetchRegistryFromBackup();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个fetchRegistry方法，就是抓取注册表的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If the delta is disabled or if it is the first time, get all</span></span><br><span class="line"><span class="comment">// applications</span></span><br><span class="line"><span class="comment">// 本地的Application缓存</span></span><br><span class="line">Applications applications = getApplications();</span><br><span class="line"><span class="keyword">if</span> 一大堆条件 &#123;</span><br><span class="line">  <span class="comment">// 用jeresy从server端获取全量注册表，然后缓存到本地</span></span><br><span class="line">  <span class="comment">// localRegionApps.set(this.filterAndShuffle(apps));</span></span><br><span class="line">  getAndStoreFullRegistry();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 增量</span></span><br><span class="line">  getAndUpdateDelta(applications);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="eureka-server端处理抓取注册表的请求（多级缓存机制）"><a href="#eureka-server端处理抓取注册表的请求（多级缓存机制）" class="headerlink" title="eureka server端处理抓取注册表的请求（多级缓存机制）"></a>eureka server端处理抓取注册表的请求（多级缓存机制）</h1><p>根据客户端请求的接口（GET ip:port/v2/apps），去服务端找对应的处理方法。是在ApplicationsResource.getContainers方法。</p>
+<p>eureka server端，有一套多级缓存的机制，这里的cacheKey，就是缓存用的Key，然后下面就是从缓存读取数据的逻辑，注意这里的key是ALL_APPS。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Key cacheKey = <span class="keyword">new</span> Key(Key.EntityType.Application,</span><br><span class="line">                       ResponseCacheImpl.ALL_APPS,</span><br><span class="line">                       keyType, CurrentRequestVersion.get(), EurekaAccept.fromString(eurekaAccept), regions</span><br><span class="line">);</span><br><span class="line">Response response;</span><br><span class="line"><span class="keyword">if</span> (acceptEncoding != <span class="keyword">null</span> &amp;&amp; acceptEncoding.contains(HEADER_GZIP_VALUE)) &#123;</span><br><span class="line">  response = Response.ok(responseCache.getGZIP(cacheKey))</span><br><span class="line">    .header(HEADER_CONTENT_ENCODING, HEADER_GZIP_VALUE)</span><br><span class="line">    .header(HEADER_CONTENT_TYPE, returnMediaType)</span><br><span class="line">    .build();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  response = Response.ok(responseCache.get(cacheKey))</span><br><span class="line">    .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>eureka server的缓存，是基于ResponseCache这样的一个接口开发的。实现类是ResponseCacheImpl，看下它的get方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@VisibleForTesting</span><br><span class="line">String get(final Key key, boolean useReadOnlyCache) &#123;</span><br><span class="line">    Value payload = getValue(key, useReadOnlyCache);</span><br><span class="line">    if (payload == null || payload.getPayload().equals(EMPTY_PAYLOAD)) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return payload.getPayload();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的useReadOnlyCache，是通过配置读取的。再跟进去看看源码，getValue方法里，看到有了2个map，做了两级缓存，分别是readOnlyCacheMap和readWriteCacheMap，先从只读缓存里去读，如果没有的话，会从读写缓存里去读。实际上在ResponseCacheImpl的构造方法里，就包含了readWriteCacheMap数据初始化的逻辑。</p>
+<blockquote>
+<p>generatePayload方法中，从注册表中获取所有的Applications，通过ServerCodecs组件，将Applications对象序列化成一个json字符串，然后放入读写缓存（readWriteCacheMap）。接着，放入只读缓存中（readOnlyCacheMap）。</p>
+</blockquote>
+<p><img src="/img/spring-cloud/image-20200322172453943.png" alt="image-20200322172453943"></p>
+<h2 id="多级缓存过期机制"><a href="#多级缓存过期机制" class="headerlink" title="多级缓存过期机制"></a>多级缓存过期机制</h2><h3 id="主动过期"><a href="#主动过期" class="headerlink" title="主动过期"></a>主动过期</h3><p>有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。之前在阅读PeerAwareInstanceRegistryImpl的javadoc的时候，说这个类会同步一些状态变化到其他节点，同事我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// invalidate cache</span></span><br><span class="line">responseCache.invalidate(appName, vipAddress, secureVipAddress);</span><br></pre></td></tr></table></figure>
+<p>这不就是调用responseCache的主动过期方法吗？之前注册的时候看不懂的逻辑，现在一切都明了。借助IDEA的快捷键，在invalidateCache方法上按<code>option + F7</code>，还能找到所有调用的方法，分别是：register、internalCancel、statusUpdate、deleteStatusOverride。</p>
+<h3 id="定时过期"><a href="#定时过期" class="headerlink" title="定时过期"></a>定时过期</h3><p>被动过期在初始化缓存的时候就已经设置了过期属性，<code>.expireAfterWrite(serverConfig.getResponseCacheAutoExpirationInSeconds(), TimeUnit.SECONDS)</code>，默认值是180秒。</p>
+<h3 id="被动过期"><a href="#被动过期" class="headerlink" title="被动过期"></a>被动过期</h3><p>readOnlyCacheMap是在初始化的时候，设置了一个定时器，默认每隔30从readWriteCacheMap里对数据进行比对，如果数据不一致，就同步数据。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>所以说有服务注册、故障或者下线了，因为缓存的原因，其他客户端可能要30秒才能感知到。</p>
+<h1 id="增量抓取注册表"><a href="#增量抓取注册表" class="headerlink" title="增量抓取注册表"></a>增量抓取注册表</h1><p>上面有说到，在eureka client初始化的时候，会全量的抓取一次注册表，然后在initScheduledTasks里启动了一个定时任务，每隔30秒会定时增量同步一次注册表的信息，具体的执行类叫做<code>CacheRefreshThread</code>。</p>
+<ol>
+<li>定时任务，30秒一次</li>
+<li>因为本地有缓存的Applications，所以走增量抓取的逻辑</li>
+<li>走eurekaHttpClient的getDelta接口，<code>GET apps/delta</code></li>
+<li>ApplicationsResources.getContainerDifferential处理增量请求</li>
+<li>一样是走多级缓存机制，key是ALL_APPS_DELTA。后面就是一样了，唯一的区别就是因为key不一样，所以在generatePayload方法里，执行的逻辑不一样，这里不再用registry.getApplications()获取全量数据，而是用registry.getApplicationDeltasFromMultipleRegions(key.getRegions()));获取增量的注册表信息。</li>
+<li>这儿有个recentlyChangedQueue，在状态变化的时候会往里边放数据，代表着最近有变化的服务实例，增量信息就是从这里边去抓取。在Registry初始化的时候有个定时任务，每隔30秒检查一次，这个队列里面的服务实例变更信息是否已经超过180秒了，如果超过会移除。所以这个队列里保留的其实是最近3分钟的服务实例变更数据。</li>
+<li>eureka client每隔30秒，去抓取增量注册表的时候，会拿到最近3分钟内有变化的服务实例的注册表。</li>
+<li>抓取到的注册表和本地缓存的注册表进行合并，完成服务实例的增删改。updateDelta(delta);</li>
+<li>对合并后的注册表计算一个hash值，之前返回的delta带了一个eureka server全量注册表的hash值。对这2个值进行对比，如果不一致，此时会从eureka server抓取全量的注册表到本地。</li>
+</ol>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p><img src="/img/spring-cloud/image-20200322183205931.png" alt="image-20200322183205931"></p>
+<h3 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h3><ol>
+<li>如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue种，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。</li>
+<li>数据同步的hash值对：如果在分布式系统里，在不同的地方进行数据的同步，可以采用hash值的思想，从一个地方计算一个hash值，在另外一个地方也计算一个hash值，保证两个hash值是一样的，这样可以保证数据的准确性。 </li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -925,86 +1021,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/12/29/springcloud/sleuth-lost-traceId/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/12/29/springcloud/sleuth-lost-traceId/" class="post-title-link" itemprop="url">Sleuth在异步线程中丢失traceId的解决方案</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：12月 29 2018 9:55:21 / 修改时间：11:07:13" itemprop="dateCreated datePublished" datetime="2018-12-29T09:55:21+08:00">12月 29 2018</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>今天同事说在Hystrix的执行方法里打印日志的时候，Sleuth的traceId丢失了，产生了新的traceId，我第一反应是难道是因为Hystrix采用的是线程隔离模式，所以导致sleuth在线程切换的时候丢失了traceId吗？但是我记得Sleuth是针对是Hystrix处理过的，具体的处理的类就是<code>SleuthHystrixConcurrencyStrategy</code>。Spring Cloud Sleuth专门对Hystrix处理过线程切换上下文传递的问题。<br>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2018/12/29/springcloud/sleuth-lost-traceId/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1072,7 +1093,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

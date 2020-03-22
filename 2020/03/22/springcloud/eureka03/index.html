@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="eureka client全量抓取注册表eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。 先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码： 123if (clientConfig.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="帆的博客">
+<meta property="og:url" content="http://www.saily.top/2020/03/22/springcloud/eureka03/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="eureka client全量抓取注册表eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。 先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码： 123if (clientConfig.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322172453943.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322183205931.png">
+<meta property="og:updated_time" content="2020-03-22T10:39:06.325Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="帆的博客">
+<meta name="twitter:description" content="eureka client全量抓取注册表eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。 先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码： 123if (clientConfig.">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200322172453943.png">
+
+<link rel="canonical" href="http://www.saily.top/2020/03/22/springcloud/eureka03/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title> | 帆的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/22/springcloud/eureka03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：3月 22 2020 15:16:13 / 修改时间：18:39:06" itemprop="dateCreated datePublished" datetime="2020-03-22T15:16:13+08:00">3月 22 2020</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="eureka-client全量抓取注册表"><a href="#eureka-client全量抓取注册表" class="headerlink" title="eureka client全量抓取注册表"></a>eureka client全量抓取注册表</h1><p>eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。</p>
+<p>先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (clientConfig.shouldFetchRegistry() &amp;&amp; !fetchRegistry(<span class="keyword">false</span>)) &#123;</span><br><span class="line">  fetchRegistryFromBackup();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个fetchRegistry方法，就是抓取注册表的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If the delta is disabled or if it is the first time, get all</span></span><br><span class="line"><span class="comment">// applications</span></span><br><span class="line"><span class="comment">// 本地的Application缓存</span></span><br><span class="line">Applications applications = getApplications();</span><br><span class="line"><span class="keyword">if</span> 一大堆条件 &#123;</span><br><span class="line">  <span class="comment">// 用jeresy从server端获取全量注册表，然后缓存到本地</span></span><br><span class="line">  <span class="comment">// localRegionApps.set(this.filterAndShuffle(apps));</span></span><br><span class="line">  getAndStoreFullRegistry();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 增量</span></span><br><span class="line">  getAndUpdateDelta(applications);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="eureka-server端处理抓取注册表的请求（多级缓存机制）"><a href="#eureka-server端处理抓取注册表的请求（多级缓存机制）" class="headerlink" title="eureka server端处理抓取注册表的请求（多级缓存机制）"></a>eureka server端处理抓取注册表的请求（多级缓存机制）</h1><p>根据客户端请求的接口（GET ip:port/v2/apps），去服务端找对应的处理方法。是在ApplicationsResource.getContainers方法。</p>
+<p>eureka server端，有一套多级缓存的机制，这里的cacheKey，就是缓存用的Key，然后下面就是从缓存读取数据的逻辑，注意这里的key是ALL_APPS。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Key cacheKey = <span class="keyword">new</span> Key(Key.EntityType.Application,</span><br><span class="line">                       ResponseCacheImpl.ALL_APPS,</span><br><span class="line">                       keyType, CurrentRequestVersion.get(), EurekaAccept.fromString(eurekaAccept), regions</span><br><span class="line">);</span><br><span class="line">Response response;</span><br><span class="line"><span class="keyword">if</span> (acceptEncoding != <span class="keyword">null</span> &amp;&amp; acceptEncoding.contains(HEADER_GZIP_VALUE)) &#123;</span><br><span class="line">  response = Response.ok(responseCache.getGZIP(cacheKey))</span><br><span class="line">    .header(HEADER_CONTENT_ENCODING, HEADER_GZIP_VALUE)</span><br><span class="line">    .header(HEADER_CONTENT_TYPE, returnMediaType)</span><br><span class="line">    .build();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  response = Response.ok(responseCache.get(cacheKey))</span><br><span class="line">    .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>eureka server的缓存，是基于ResponseCache这样的一个接口开发的。实现类是ResponseCacheImpl，看下它的get方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@VisibleForTesting</span><br><span class="line">String get(final Key key, boolean useReadOnlyCache) &#123;</span><br><span class="line">    Value payload = getValue(key, useReadOnlyCache);</span><br><span class="line">    if (payload == null || payload.getPayload().equals(EMPTY_PAYLOAD)) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return payload.getPayload();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的useReadOnlyCache，是通过配置读取的。再跟进去看看源码，getValue方法里，看到有了2个map，做了两级缓存，分别是readOnlyCacheMap和readWriteCacheMap，先从只读缓存里去读，如果没有的话，会从读写缓存里去读。实际上在ResponseCacheImpl的构造方法里，就包含了readWriteCacheMap数据初始化的逻辑。</p>
+<blockquote>
+<p>generatePayload方法中，从注册表中获取所有的Applications，通过ServerCodecs组件，将Applications对象序列化成一个json字符串，然后放入读写缓存（readWriteCacheMap）。接着，放入只读缓存中（readOnlyCacheMap）。</p>
+</blockquote>
+<p><img src="/img/spring-cloud/image-20200322172453943.png" alt="image-20200322172453943"></p>
+<h2 id="多级缓存过期机制"><a href="#多级缓存过期机制" class="headerlink" title="多级缓存过期机制"></a>多级缓存过期机制</h2><h3 id="主动过期"><a href="#主动过期" class="headerlink" title="主动过期"></a>主动过期</h3><p>有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。之前在阅读PeerAwareInstanceRegistryImpl的javadoc的时候，说这个类会同步一些状态变化到其他节点，同事我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// invalidate cache</span></span><br><span class="line">responseCache.invalidate(appName, vipAddress, secureVipAddress);</span><br></pre></td></tr></table></figure>
+<p>这不就是调用responseCache的主动过期方法吗？之前注册的时候看不懂的逻辑，现在一切都明了。借助IDEA的快捷键，在invalidateCache方法上按<code>option + F7</code>，还能找到所有调用的方法，分别是：register、internalCancel、statusUpdate、deleteStatusOverride。</p>
+<h3 id="定时过期"><a href="#定时过期" class="headerlink" title="定时过期"></a>定时过期</h3><p>被动过期在初始化缓存的时候就已经设置了过期属性，<code>.expireAfterWrite(serverConfig.getResponseCacheAutoExpirationInSeconds(), TimeUnit.SECONDS)</code>，默认值是180秒。</p>
+<h3 id="被动过期"><a href="#被动过期" class="headerlink" title="被动过期"></a>被动过期</h3><p>readOnlyCacheMap是在初始化的时候，设置了一个定时器，默认每隔30从readWriteCacheMap里对数据进行比对，如果数据不一致，就同步数据。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>所以说有服务注册、故障或者下线了，因为缓存的原因，其他客户端可能要30秒才能感知到。</p>
+<h1 id="增量抓取注册表"><a href="#增量抓取注册表" class="headerlink" title="增量抓取注册表"></a>增量抓取注册表</h1><p>上面有说到，在eureka client初始化的时候，会全量的抓取一次注册表，然后在initScheduledTasks里启动了一个定时任务，每隔30秒会定时增量同步一次注册表的信息，具体的执行类叫做<code>CacheRefreshThread</code>。</p>
+<ol>
+<li>定时任务，30秒一次</li>
+<li>因为本地有缓存的Applications，所以走增量抓取的逻辑</li>
+<li>走eurekaHttpClient的getDelta接口，<code>GET apps/delta</code></li>
+<li>ApplicationsResources.getContainerDifferential处理增量请求</li>
+<li>一样是走多级缓存机制，key是ALL_APPS_DELTA。后面就是一样了，唯一的区别就是因为key不一样，所以在generatePayload方法里，执行的逻辑不一样，这里不再用registry.getApplications()获取全量数据，而是用registry.getApplicationDeltasFromMultipleRegions(key.getRegions()));获取增量的注册表信息。</li>
+<li>这儿有个recentlyChangedQueue，在状态变化的时候会往里边放数据，代表着最近有变化的服务实例，增量信息就是从这里边去抓取。在Registry初始化的时候有个定时任务，每隔30秒检查一次，这个队列里面的服务实例变更信息是否已经超过180秒了，如果超过会移除。所以这个队列里保留的其实是最近3分钟的服务实例变更数据。</li>
+<li>eureka client每隔30秒，去抓取增量注册表的时候，会拿到最近3分钟内有变化的服务实例的注册表。</li>
+<li>抓取到的注册表和本地缓存的注册表进行合并，完成服务实例的增删改。updateDelta(delta);</li>
+<li>对合并后的注册表计算一个hash值，之前返回的delta带了一个eureka server全量注册表的hash值。对这2个值进行对比，如果不一致，此时会从eureka server抓取全量的注册表到本地。</li>
+</ol>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p><img src="/img/spring-cloud/image-20200322183205931.png" alt="image-20200322183205931"></p>
+<h3 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h3><ol>
+<li>如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue种，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。</li>
+<li>数据同步的hash值对：如果在分布式系统里，在不同的地方进行数据的同步，可以采用hash值的思想，从一个地方计算一个hash值，在另外一个地方也计算一个hash值，保证两个hash值是一样的，这样可以保证数据的准确性。 </li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/18/springcloud/eureka02/" rel="prev" title="Eureka源码02-服务注册流程分析">
+      <i class="fa fa-chevron-left"></i> Eureka源码02-服务注册流程分析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client全量抓取注册表"><span class="nav-number">1.</span> <span class="nav-text">eureka client全量抓取注册表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-server端处理抓取注册表的请求（多级缓存机制）"><span class="nav-number">2.</span> <span class="nav-text">eureka server端处理抓取注册表的请求（多级缓存机制）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多级缓存过期机制"><span class="nav-number">2.1.</span> <span class="nav-text">多级缓存过期机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主动过期"><span class="nav-number">2.1.1.</span> <span class="nav-text">主动过期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时过期"><span class="nav-number">2.1.2.</span> <span class="nav-text">定时过期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#被动过期"><span class="nav-number">2.1.3.</span> <span class="nav-text">被动过期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#增量抓取注册表"><span class="nav-number">3.</span> <span class="nav-text">增量抓取注册表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">3.0.1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#亮点"><span class="nav-number">3.0.2.</span> <span class="nav-text">亮点</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="帆"
+      src="/img/photo/bug.png">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">121</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
