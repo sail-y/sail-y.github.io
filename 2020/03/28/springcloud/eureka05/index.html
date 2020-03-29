@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+<meta name="keywords" content="spring-cloud,eureka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eureka源码05-服务集群初始化和同步原理分析">
+<meta property="og:url" content="http://www.saily.top/2020/03/28/springcloud/eureka05/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329222305903.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329230726176.png">
+<meta property="og:updated_time" content="2020-03-29T15:16:34.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Eureka源码05-服务集群初始化和同步原理分析">
+<meta name="twitter:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200329222305903.png">
+
+<link rel="canonical" href="http://www.saily.top/2020/03/28/springcloud/eureka05/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>Eureka源码05-服务集群初始化和同步原理分析 | 帆的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">帆的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/28/springcloud/eureka05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Eureka源码05-服务集群初始化和同步原理分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：3月 28 2020 11:05:39" itemprop="dateCreated datePublished" datetime="2020-03-28T11:05:39+08:00">3月 28 2020</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：3月 29 2020 23:16:34" itemprop="dateModified" datetime="2020-03-29T23:16:34+08:00">3月 29 2020</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/eureka/" itemprop="url" rel="index"><span itemprop="name">eureka</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="eureka-server集群相关源码分析"><a href="#eureka-server集群相关源码分析" class="headerlink" title="eureka server集群相关源码分析"></a>eureka server集群相关源码分析</h1><p>前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。</p>
+<p><img src="/img/spring-cloud/image-20200329222305903.png" alt="image-20200329222305903"></p>
+<h2 id="集群信息初始化"><a href="#集群信息初始化" class="headerlink" title="集群信息初始化"></a>集群信息初始化</h2><p>eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第五步，处理peer节点相关的事情</span></span><br><span class="line">PeerEurekaNodes peerEurekaNodes = getPeerEurekaNodes(</span><br><span class="line">  registry,</span><br><span class="line">  eurekaServerConfig,</span><br><span class="line">  eurekaClient.getEurekaClientConfig(),</span><br><span class="line">  serverCodecs,</span><br><span class="line">  applicationInfoManager</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这个PeerEurekaNodes的start方法，在DefaultEurekaServerContext的初始化代码中被调用。它会解析配置文件中配置的其他eureka server的地址，基于URL地址构造一个一个的PeerEurekaNode，然后将其他节点的信息保存到本地。默认是每隔10分钟，会定时基于这个配置刷新集群配置信息。</p>
+<h2 id="集群数据同步"><a href="#集群数据同步" class="headerlink" title="集群数据同步"></a>集群数据同步</h2><p>在初始化集群的节点信息后，还需要同步其他节点的注册表到本地。也就是EurekaBootstrap初始化代码里的registry.syncUp();，因为自己本来也是一个eureka client，<a href="http://www.saily.top/2020/03/21/springcloud/eureka03/#eureka-client%E5%85%A8%E9%87%8F%E6%8A%93%E5%8F%96%E6%B3%A8%E5%86%8C%E8%A1%A8">所以在启动初始化的时候，就已经从任意一个其他的eureka server节点拉取到注册表在本地</a>，在这里只需要将缓存的实例信息取出来，然后在挨个本地注册一次。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; ((i &lt; serverConfig.getRegistrySyncRetries()) &amp;&amp; (count == <span class="number">0</span>)); i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 如果第一次没有在本地的eureka client 中获取任何注册表</span></span><br><span class="line">      <span class="comment">// 那么就等待30秒，看DiscoveryClient.fetchRegistry是否已经执行完成。</span></span><br><span class="line">      Thread.sleep(serverConfig.getRegistrySyncRetryWaitMs());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">      logger.warn(<span class="string">"Interrupted during registry transfer.."</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 这是读取的eureka client在本地初始化的时候拉取的全量注册表缓存。</span></span><br><span class="line">  Applications apps = eurekaClient.getApplications();</span><br></pre></td></tr></table></figure>
+<p>那么在源码里我们可以看到，这里有一个重试的机制，里面还包含了sleep的代码，其实就是因为eureka client在本地的缓存可能还没有生成成功，就先执行了这里的代码，所以会等到30秒后再重试，看是否缓存已经有了数据。</p>
+<p>这里也包含了上一节中提到的统计服务实例数量，后续会用来计算预期收到的心跳次数。</p>
+<h2 id="注册、下线、故障集群间同步"><a href="#注册、下线、故障集群间同步" class="headerlink" title="注册、下线、故障集群间同步"></a>注册、下线、故障集群间同步</h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>还记得eureka server处理注册请求的代码，在ApplicationResource.addInstance方法中，调用PeerAwareInstanceRegistryImpl.register方法进行注册，那么replicateToPeers方法，就会将注册数据同步到其他节点，此时这里的<code>isReplication</code>参数是false。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(<span class="keyword">final</span> InstanceInfo info, <span class="keyword">final</span> <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> leaseDuration = Lease.DEFAULT_DURATION_IN_SECS;</span><br><span class="line">  <span class="keyword">if</span> (info.getLeaseInfo() != <span class="keyword">null</span> &amp;&amp; info.getLeaseInfo().getDurationInSecs() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    leaseDuration = info.getLeaseInfo().getDurationInSecs();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">super</span>.register(info, leaseDuration, isReplication);</span><br><span class="line">  <span class="comment">// 将注册信息同步到其他集群节点</span></span><br><span class="line">  replicateToPeers(Action.Register, info.getAppName(), info.getId(), info, <span class="keyword">null</span>, isReplication);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>跟到这个方法里面看一下，它会循环所有配置的集群节点信息，并排除自己。然后带上服务实例的注册信息，分别调用其他节点的注册接口，但是这里和client调用是有区别的，他底层的调用发起类是JerseyReplicationClient，在发起http请求的时候，一定会带上请求头：<code>webResource.header(PeerEurekaNode.HEADER_REPLICATION, &quot;true&quot;);</code>，那么其他节点在收到请求的时候，上面的<code>isReplication</code>就是肯定是true了。当<code>isReplication</code>是true的时候，不会像其他节点进行注册。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (action) &#123;</span><br><span class="line">  <span class="keyword">case</span> Cancel:</span><br><span class="line">    node.cancel(appName, id);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> Heartbeat:</span><br><span class="line">    InstanceStatus overriddenStatus = overriddenInstanceStatusMap.get(id);</span><br><span class="line">    infoFromRegistry = getInstanceByAppAndId(appName, id, <span class="keyword">false</span>);</span><br><span class="line">    node.heartbeat(appName, id, infoFromRegistry, overriddenStatus, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> Register:</span><br><span class="line">    node.register(info);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> StatusUpdate:</span><br><span class="line">    infoFromRegistry = getInstanceByAppAndId(appName, id, <span class="keyword">false</span>);</span><br><span class="line">    node.statusUpdate(appName, id, newStatus, infoFromRegistry);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> DeleteStatusOverride:</span><br><span class="line">    infoFromRegistry = getInstanceByAppAndId(appName, id, <span class="keyword">false</span>);</span><br><span class="line">    node.deleteStatusOverride(appName, id, infoFromRegistry);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="注册逻辑的批处理"><a href="#注册逻辑的批处理" class="headerlink" title="注册逻辑的批处理"></a>注册逻辑的批处理</h2><p>跟到node.register(info);里去看，这块代码有点复杂，他用了一个三层队列做了一个批处理请求。</p>
+<ol>
+<li>集群同步的机制：client可以找任意一个几点发送请求，然后这个server会将请求同步到其他所有的节点上去，但是其他的server仅仅只会在本地执行，不会再往其他节点同步。</li>
+<li>数据同步的异步批处理机制：有三个队列，第一个队列纯写入（acceptorQueue），第二个队列用来根据时间和大小来拆分队列（processingOrder），第三个队列用来放批处理任务(batchWorkQueue)—&gt;任务批处理机制。</li>
+</ol>
+<p>流程如下图所示。</p>
+<p><img src="/img/spring-cloud/image-20200329230726176.png" alt="image-20200329230726176"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+              <a href="/tags/eureka/" rel="tag"># eureka</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/22/springcloud/eureka04/" rel="prev" title="Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析">
+      <i class="fa fa-chevron-left"></i> Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2Ni82NTMx"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-server集群相关源码分析"><span class="nav-number">1.</span> <span class="nav-text">eureka server集群相关源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#集群信息初始化"><span class="nav-number">1.1.</span> <span class="nav-text">集群信息初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群数据同步"><span class="nav-number">1.2.</span> <span class="nav-text">集群数据同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册、下线、故障集群间同步"><span class="nav-number">1.3.</span> <span class="nav-text">注册、下线、故障集群间同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册"><span class="nav-number">1.3.1.</span> <span class="nav-text">注册</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册逻辑的批处理"><span class="nav-number">1.4.</span> <span class="nav-text">注册逻辑的批处理</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="帆"
+      src="/img/photo/bug.png">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">帆</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
