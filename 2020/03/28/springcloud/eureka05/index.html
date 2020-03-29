@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+  <meta name="description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。">
 <meta name="keywords" content="spring-cloud,eureka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Eureka源码05-服务集群初始化和同步原理分析">
 <meta property="og:url" content="http://www.saily.top/2020/03/28/springcloud/eureka05/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+<meta property="og:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329222305903.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329230726176.png">
-<meta property="og:updated_time" content="2020-03-29T15:16:34.042Z">
+<meta property="og:updated_time" content="2020-03-29T15:19:12.640Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码05-服务集群初始化和同步原理分析">
-<meta name="twitter:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。  集群信息初始化eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。 12345678// 第五步，处理p">
+<meta name="twitter:description" content="eureka server集群相关源码分析前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。">
 <meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200329222305903.png">
 
 <link rel="canonical" href="http://www.saily.top/2020/03/28/springcloud/eureka05/">
@@ -232,7 +232,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：3月 29 2020 23:16:34" itemprop="dateModified" datetime="2020-03-29T23:16:34+08:00">3月 29 2020</time>
+                <time title="修改时间：3月 29 2020 23:19:12" itemprop="dateModified" datetime="2020-03-29T23:19:12+08:00">3月 29 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -263,7 +263,7 @@
 
       
         <h1 id="eureka-server集群相关源码分析"><a href="#eureka-server集群相关源码分析" class="headerlink" title="eureka server集群相关源码分析"></a>eureka server集群相关源码分析</h1><p>前面的文章分别介绍了服务启动、注册、下线、故障和自我保护机制等原理，这里就开始介绍集群相关的东西。</p>
-<p><img src="/img/spring-cloud/image-20200329222305903.png" alt="image-20200329222305903"></p>
+<p><img src="/img/spring-cloud/image-20200329222305903.png" alt="image-20200329222305903"><br><a id="more"></a></p>
 <h2 id="集群信息初始化"><a href="#集群信息初始化" class="headerlink" title="集群信息初始化"></a>集群信息初始化</h2><p>eureka server集群高可用，是需要相互注册的，然后会相互同步服务实例列表。前面分析eureka server启动流程的时候，在EurekaBootstrap的初始化代码里有一段和集群相关的代码。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第五步，处理peer节点相关的事情</span></span><br><span class="line">PeerEurekaNodes peerEurekaNodes = getPeerEurekaNodes(</span><br><span class="line">  registry,</span><br><span class="line">  eurekaServerConfig,</span><br><span class="line">  eurekaClient.getEurekaClientConfig(),</span><br><span class="line">  serverCodecs,</span><br><span class="line">  applicationInfoManager</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <p>这个PeerEurekaNodes的start方法，在DefaultEurekaServerContext的初始化代码中被调用。它会解析配置文件中配置的其他eureka server的地址，基于URL地址构造一个一个的PeerEurekaNode，然后将其他节点的信息保存到本地。默认是每隔10分钟，会定时基于这个配置刷新集群配置信息。</p>
