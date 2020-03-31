@@ -3,7 +3,7 @@
   <entry>
     <title></title>
     <url>%2F2020%2F03%2F31%2Fspringcloud%2Fribbon01%2F</url>
-    <content type="text"><![CDATA[负载均衡服务注册，就是为了在分布式系统中，将注册的ip和端口号等信息告诉注册中心。 那么服务发现就是客户端去注册中心获取服务列表，知道每一个服务实例的ip和端口是什么。 那么在拿到了这个服务列表以后，从中要选取一个实例来进行调用，这里就需要用到负载均衡算法。在Spring Cloud中，Ribbon就是做负载均衡用的一个组件，在这边叫做客户端负载均衡。具体的概念咋回事和如何使用我这里就不介绍了，网上文章很多，用过SpringCloud的人也应该都用过，下面开始进入源码探索。 Netflix RibbonSpring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。我这边还是基于Ribbon进行源码分析。]]></content>
+    <content type="text"><![CDATA[负载均衡服务注册，就是在分布式系统中，将注册的ip和端口号等信息告诉注册中心。 那么服务发现就是客户端去注册中心获取服务列表，知道每一个服务实例的ip和端口是什么。 那么在拿到了这个服务列表以后，从中要选取一个实例来进行调用，这里就需要用到负载均衡算法。在Spring Cloud中，Ribbon就是做负载均衡用的一个组件，在这边叫做客户端负载均衡。具体的概念咋回事和如何使用我这里就不介绍了，网上文章很多，用过SpringCloud的人也应该都用过，下面开始进入源码探索。 Spring Cloud RibbonSpring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。大体流程如下图所示： 在RestTemplate的Bean上声明@LoadBalanced注解后，会开启LoadBalancerAutoConfiguration 在自动配置类中，会为RestTemplate添加拦截器LoadBalancerInterceptor 调用请求后，拦截器中获取host，并在LoadBalancerClient中对host信息进行转换，得到真正的服务器地址。 LoadBalancerClient中从Eureka client得到服务实例列表，然后通过包含了负载均衡规则IRule，选出要发起调用的server。 交给负责Http通讯的组件LoadBalancerRequest执行真正的http请求。 准备源码调试的环境我这边还是基于Ribbon进行源码分析，那么Ribbon的话，我们主要去分析他的负载均衡规则部分，也就是IRule接口的实现。先从https://github.com/Netflix/ribbon fork一个仓库到自己的github。然后自己的仓库clone到本地。]]></content>
   </entry>
   <entry>
     <title><![CDATA[Eureka源码05-服务集群初始化和同步原理分析]]></title>
