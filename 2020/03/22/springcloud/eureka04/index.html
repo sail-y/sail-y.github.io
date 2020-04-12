@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329171857177.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329182748663.png">
-<meta property="og:updated_time" content="2020-03-29T10:27:51.774Z">
+<meta property="og:updated_time" content="2020-04-12T06:19:16.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析">
 <meta name="twitter:description" content="服务心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来">
@@ -233,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：3月 29 2020 18:27:51" itemprop="dateModified" datetime="2020-03-29T18:27:51+08:00">3月 29 2020</time>
+                <time title="修改时间：4月 12 2020 14:19:16" itemprop="dateModified" datetime="2020-04-12T14:19:16+08:00">4月 12 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,7 +241,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/eureka/" itemprop="url" rel="index"><span itemprop="name">eureka</span></a>
+                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
                 </span>
             </span>
 
@@ -451,14 +451,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
