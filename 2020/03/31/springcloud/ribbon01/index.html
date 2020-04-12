@@ -37,7 +37,8 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200409221508995.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200409224739519.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200410001159973.png">
-<meta property="og:updated_time" content="2020-04-12T05:43:46.556Z">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/默认的负载均衡算法可能存在的问题.png">
+<meta property="og:updated_time" content="2020-04-12T05:53:27.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负载均衡选择并发起Http请求">
 <meta name="twitter:description" content="负载均衡服务注册，就是在分布式系统中，将注册的ip和端口号等信息告诉注册中心。 服务发现就是客户端去注册中心获取服务列表，知道每一个服务实例的ip和端口是什么。 负载均衡就是在拿到了这个服务列表以后，从中要选取一个实例来进行调用，这里就需要用到负载均衡算法。在Spring Cloud中，Ribbon就是做负载均衡用的一个组件，在这边叫做客户端负载均衡。具体的概念咋回事和如何使用我这里就不介绍了，网">
@@ -239,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 12 2020 13:43:46" itemprop="dateModified" datetime="2020-04-12T13:43:46+08:00">4月 12 2020</time>
+                <time title="修改时间：4月 12 2020 13:53:27" itemprop="dateModified" datetime="2020-04-12T13:53:27+08:00">4月 12 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -353,6 +354,8 @@
 <p>RetryRule：对选定的负载均衡策略机上重试机制，在一个配置时间段内当选择Server不成功，则一直尝试使用subRule的方式选择一个可用的server。</p>
 <p>ResponseTimeWeightedRule：作用同WeightedResponseTimeRule，二者作用是一样的，ResponseTimeWeightedRule后来改名为WeightedResponseTimeRule。</p>
 <p>WeightedResponseTimeRule：根据响应时间分配一个weight(权重)，响应时间越长，weight越小，被选中的可能性越低。</p>
+<h2 id="服务宕机后Ribbon多久能感知到"><a href="#服务宕机后Ribbon多久能感知到" class="headerlink" title="服务宕机后Ribbon多久能感知到"></a>服务宕机后Ribbon多久能感知到</h2><p>在和eureka结合使用的情况下，因为eureka server是靠心跳来摘除服务实例，那么他是需要duration * 2 =180秒，eureka client 从server同步(recentlyChangedQueue)默认是需要30秒，Ribbon从Eureka Client同步也是30秒，所以最多可能需要240秒，也就是4分钟才能知道一个服务以及宕机了，他是有可能访问到宕机的服务，不过SpringCloud是借用了Hystrix降级和熔断的机制来解决这个问题，一定次数错误后会屏蔽某个实例。</p>
+<p><img src="/img/spring-cloud/默认的负载均衡算法可能存在的问题.png" alt="默认的负载均衡算法可能存在的问题"></p>
 <h2 id="SpringCloud和Ribbon的全局配置和特定配置"><a href="#SpringCloud和Ribbon的全局配置和特定配置" class="headerlink" title="SpringCloud和Ribbon的全局配置和特定配置"></a>SpringCloud和Ribbon的全局配置和特定配置</h2><p>这有篇文章写的比较清晰，说明了SpringCloud在读取Ribbon配置的时候是通过懒加载去读取配置的，也就是第一次发起调用的时候，才会通过NamedContextFactory.createContext去初始化@RibbonClients和@RibbonClient指定的配置。 但是@RibbonClients和@RibbonClient的配置被放入NamedContextFactory的configurations字段中，是在RibbonClientConfigurationRegistrar这个类里，结合源码看看文章，就很清楚了。</p>
 <p><a href="https://www.cnblogs.com/trust-freedom/p/11216280.html" target="_blank" rel="noopener">https://www.cnblogs.com/trust-freedom/p/11216280.html</a></p>
 
@@ -442,7 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡"><span class="nav-number">1.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cloud-Ribbon"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud Ribbon</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RestTemplate如何拥有负载均衡的能力"><span class="nav-number">2.1.</span> <span class="nav-text">RestTemplate如何拥有负载均衡的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#负载均衡器ILoadBalancer"><span class="nav-number">2.2.</span> <span class="nav-text">负载均衡器ILoadBalancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon如何获取到服务列表"><span class="nav-number">2.3.</span> <span class="nav-text">Ribbon如何获取到服务列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#负载均衡算法如何选择一个server"><span class="nav-number">2.4.</span> <span class="nav-text">负载均衡算法如何选择一个server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拿到server后如何发起真正的请求"><span class="nav-number">2.5.</span> <span class="nav-text">拿到server后如何发起真正的请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon-IPing检查服务是否存活"><span class="nav-number">2.6.</span> <span class="nav-text">Ribbon IPing检查服务是否存活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他几种自带的负载均衡规则"><span class="nav-number">2.7.</span> <span class="nav-text">其他几种自带的负载均衡规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringCloud和Ribbon的全局配置和特定配置"><span class="nav-number">2.8.</span> <span class="nav-text">SpringCloud和Ribbon的全局配置和特定配置</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡"><span class="nav-number">1.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cloud-Ribbon"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud Ribbon</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RestTemplate如何拥有负载均衡的能力"><span class="nav-number">2.1.</span> <span class="nav-text">RestTemplate如何拥有负载均衡的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#负载均衡器ILoadBalancer"><span class="nav-number">2.2.</span> <span class="nav-text">负载均衡器ILoadBalancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon如何获取到服务列表"><span class="nav-number">2.3.</span> <span class="nav-text">Ribbon如何获取到服务列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#负载均衡算法如何选择一个server"><span class="nav-number">2.4.</span> <span class="nav-text">负载均衡算法如何选择一个server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拿到server后如何发起真正的请求"><span class="nav-number">2.5.</span> <span class="nav-text">拿到server后如何发起真正的请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon-IPing检查服务是否存活"><span class="nav-number">2.6.</span> <span class="nav-text">Ribbon IPing检查服务是否存活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他几种自带的负载均衡规则"><span class="nav-number">2.7.</span> <span class="nav-text">其他几种自带的负载均衡规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务宕机后Ribbon多久能感知到"><span class="nav-number">2.8.</span> <span class="nav-text">服务宕机后Ribbon多久能感知到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringCloud和Ribbon的全局配置和特定配置"><span class="nav-number">2.9.</span> <span class="nav-text">SpringCloud和Ribbon的全局配置和特定配置</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
