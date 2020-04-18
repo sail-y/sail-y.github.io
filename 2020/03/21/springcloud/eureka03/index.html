@@ -30,7 +30,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322172453943.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322183205931.png">
-<meta property="og:updated_time" content="2020-04-12T06:19:10.659Z">
+<meta property="og:updated_time" content="2020-04-17T04:13:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码03-服务列表同步分析">
 <meta name="twitter:description" content="eureka client全量抓取注册表eureka client第一次启动的时候，会从eureka server端抓取全量的注册表，在本地进行缓存。后续每隔30秒从eureka server端抓取增量的注册表信息，和本地缓存进行合并。 先找到第一次抓取全量注册表的源码，没记错的话应该是在创建DiscoveryClient的构造方法里。就是下面这几行代码： 123if (clientConfig.">
@@ -232,7 +232,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 12 2020 14:19:10" itemprop="dateModified" datetime="2020-04-12T14:19:10+08:00">4月 12 2020</time>
+                <time title="修改时间：4月 17 2020 12:13:15" itemprop="dateModified" datetime="2020-04-17T12:13:15+08:00">4月 17 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -267,7 +267,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (clientConfig.shouldFetchRegistry() &amp;&amp; !fetchRegistry(<span class="keyword">false</span>)) &#123;</span><br><span class="line">  fetchRegistryFromBackup();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>这个fetchRegistry方法，就是抓取注册表的方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If the delta is disabled or if it is the first time, get all</span></span><br><span class="line"><span class="comment">// applications</span></span><br><span class="line"><span class="comment">// 本地的Application缓存，在执行完成后续的全量注册表拉取后，也会将数据缓存到这个地方</span></span><br><span class="line">Applications applications = getApplications();</span><br><span class="line"><span class="keyword">if</span> 一大堆条件 &#123;</span><br><span class="line">  <span class="comment">// localRegionApps.set(this.filterAndShuffle(apps));</span></span><br><span class="line">  <span class="comment">// 用jeresy从server端获取全量注册表，然后缓存到本地（也就是上方的getApplications()）</span></span><br><span class="line">  getAndStoreFullRegistry();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 增量</span></span><br><span class="line">  getAndUpdateDelta(applications);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DiscoveryClient.fetchRegistry()</span></span><br><span class="line"><span class="comment">// If the delta is disabled or if it is the first time, get all</span></span><br><span class="line"><span class="comment">// applications</span></span><br><span class="line"><span class="comment">// 本地的Application缓存，在执行完成后续的全量注册表拉取后，也会将数据缓存到这个地方</span></span><br><span class="line">Applications applications = getApplications();</span><br><span class="line"><span class="keyword">if</span> 一大堆条件 &#123;</span><br><span class="line">  <span class="comment">// localRegionApps.set(this.filterAndShuffle(apps));</span></span><br><span class="line">  <span class="comment">// 用jeresy从server端获取全量注册表，然后缓存到本地（也就是上方的getApplications()）</span></span><br><span class="line">  getAndStoreFullRegistry();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 增量</span></span><br><span class="line">  getAndUpdateDelta(applications);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="eureka-server端处理抓取注册表的请求（多级缓存机制）"><a href="#eureka-server端处理抓取注册表的请求（多级缓存机制）" class="headerlink" title="eureka server端处理抓取注册表的请求（多级缓存机制）"></a>eureka server端处理抓取注册表的请求（多级缓存机制）</h1><p>根据客户端请求的接口（GET ip:port/v2/apps），去服务端找对应的处理方法。是在ApplicationsResource.getContainers方法。</p>
 <p>eureka server端，有一套多级缓存的机制，这里的cacheKey，就是缓存用的Key，然后下面就是从缓存读取数据的逻辑，注意这里的key是ALL_APPS。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Key cacheKey = <span class="keyword">new</span> Key(Key.EntityType.Application,</span><br><span class="line">                       ResponseCacheImpl.ALL_APPS,</span><br><span class="line">                       keyType, CurrentRequestVersion.get(), EurekaAccept.fromString(eurekaAccept), regions</span><br><span class="line">);</span><br><span class="line">Response response;</span><br><span class="line"><span class="keyword">if</span> (acceptEncoding != <span class="keyword">null</span> &amp;&amp; acceptEncoding.contains(HEADER_GZIP_VALUE)) &#123;</span><br><span class="line">  response = Response.ok(responseCache.getGZIP(cacheKey))</span><br><span class="line">    .header(HEADER_CONTENT_ENCODING, HEADER_GZIP_VALUE)</span><br><span class="line">    .header(HEADER_CONTENT_TYPE, returnMediaType)</span><br><span class="line">    .build();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  response = Response.ok(responseCache.get(cacheKey))</span><br><span class="line">    .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -278,7 +278,7 @@
 <p>generatePayload方法中，从注册表中获取所有的Applications，通过ServerCodecs组件，将Applications对象序列化成一个json字符串，然后放入读写缓存（readWriteCacheMap）。接着，放入只读缓存中（readOnlyCacheMap）。</p>
 </blockquote>
 <p><img src="/img/spring-cloud/image-20200322172453943.png" alt="image-20200322172453943"></p>
-<h2 id="多级缓存过期机制"><a href="#多级缓存过期机制" class="headerlink" title="多级缓存过期机制"></a>多级缓存过期机制</h2><h3 id="主动过期"><a href="#主动过期" class="headerlink" title="主动过期"></a>主动过期</h3><p>有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。之前在阅读PeerAwareInstanceRegistryImpl的javadoc的时候，说这个类会同步一些状态变化到其他节点，同事我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码</p>
+<h2 id="多级缓存过期机制"><a href="#多级缓存过期机制" class="headerlink" title="多级缓存过期机制"></a>多级缓存过期机制</h2><h3 id="主动过期"><a href="#主动过期" class="headerlink" title="主动过期"></a>主动过期</h3><p>有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。PeerAwareInstanceRegistryImpl的javadoc，说这个类会同步一些状态变化到其他节点，同时我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// invalidate cache</span></span><br><span class="line">responseCache.invalidate(appName, vipAddress, secureVipAddress);</span><br></pre></td></tr></table></figure>
 <p>这不就是调用responseCache的主动过期方法吗？之前注册的时候看不懂的逻辑，现在一切都明了。借助IDEA的快捷键，在invalidateCache方法上按<code>option + F7</code>，还能找到所有调用的方法，分别是：register、internalCancel、statusUpdate、deleteStatusOverride。</p>
 <h3 id="定时过期"><a href="#定时过期" class="headerlink" title="定时过期"></a>定时过期</h3><p>被动过期在初始化缓存的时候就已经设置了过期属性，<code>.expireAfterWrite(serverConfig.getResponseCacheAutoExpirationInSeconds(), TimeUnit.SECONDS)</code>，默认值是180秒。</p>
@@ -298,7 +298,7 @@
 </ol>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p><img src="/img/spring-cloud/image-20200322183205931.png" alt="image-20200322183205931"></p>
 <h3 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h3><ol>
-<li>如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue种，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。</li>
+<li>如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue中，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。</li>
 <li>数据同步的hash值对：如果在分布式系统里，在不同的地方进行数据的同步，可以采用hash值的思想，从一个地方计算一个hash值，在另外一个地方也计算一个hash值，保证两个hash值是一样的，这样可以保证数据的准确性。 </li>
 </ol>
 
@@ -407,7 +407,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -420,7 +420,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

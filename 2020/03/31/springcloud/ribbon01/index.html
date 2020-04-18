@@ -38,7 +38,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200409224739519.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200410001159973.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/默认的负载均衡算法可能存在的问题.png">
-<meta property="og:updated_time" content="2020-04-12T06:20:12.476Z">
+<meta property="og:updated_time" content="2020-04-17T04:16:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负载均衡选择并发起Http请求">
 <meta name="twitter:description" content="负载均衡服务注册，就是在分布式系统中，将注册的ip和端口号等信息告诉注册中心。 服务发现就是客户端去注册中心获取服务列表，知道每一个服务实例的ip和端口是什么。 负载均衡就是在拿到了这个服务列表以后，从中要选取一个实例来进行调用，这里就需要用到负载均衡算法。在Spring Cloud中，Ribbon就是做负载均衡用的一个组件，在这边叫做客户端负载均衡。具体的概念咋回事和如何使用我这里就不介绍了，网">
@@ -240,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 12 2020 14:20:12" itemprop="dateModified" datetime="2020-04-12T14:20:12+08:00">4月 12 2020</time>
+                <time title="修改时间：4月 17 2020 12:16:16" itemprop="dateModified" datetime="2020-04-17T12:16:16+08:00">4月 17 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -274,7 +274,19 @@
 <p><strong>服务发现</strong>就是客户端去注册中心获取服务列表，知道每一个服务实例的ip和端口是什么。</p>
 <p><strong>负载均衡</strong>就是在拿到了这个服务列表以后，从中要选取一个实例来进行调用，这里就需要用到负载均衡算法。在Spring Cloud中，Ribbon就是做负载均衡用的一个组件，在这边叫做客户端负载均衡。具体的概念咋回事和如何使用我这里就不介绍了，网上文章很多，用过SpringCloud的人也应该都用过，下面开始进入源码探索。</p>
 <a id="more"></a>
-<h1 id="Spring-Cloud-Ribbon"><a href="#Spring-Cloud-Ribbon" class="headerlink" title="Spring Cloud Ribbon"></a>Spring Cloud Ribbon</h1><p>Spring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。大体流程如下图所示：</p>
+<h1 id="Spring-Cloud-Ribbon"><a href="#Spring-Cloud-Ribbon" class="headerlink" title="Spring Cloud Ribbon"></a>Spring Cloud Ribbon</h1><p>Spring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。</p>
+<p>Ribbon包含几个核心组件：</p>
+<ul>
+<li><p>IRule:负载均衡规则组件，轮询，随机，权重等。</p>
+</li>
+<li><p>IPing: 用于检测服务是否存活，剔除宕机的服务。</p>
+</li>
+<li><p>ServerList: 针对不同的注册中心，有不同的实现类，例如ConsulServerList，NacosServiceList，ZookeeperServerList以及eureka的DomainExtractingServerList。</p>
+</li>
+<li>ILoadBalancer:负载均衡器，选择服务用，包含了IRule、IPing和ServerList。</li>
+<li>LoadBalancerClient: 这是SpringCloud二次封装的一层组件，基于以上组件进行服务列表更新，过滤，选择并发起http调用。</li>
+</ul>
+<p>大体流程如下图所示：</p>
 <p><img src="/img/spring-cloud/image-20200331230023575.png" alt="image-20200331230023575"></p>
 <ol>
 <li>自动装配LoadBalancerAutoConfiguration</li>
@@ -354,7 +366,7 @@
 <p>RetryRule：对选定的负载均衡策略机上重试机制，在一个配置时间段内当选择Server不成功，则一直尝试使用subRule的方式选择一个可用的server。</p>
 <p>ResponseTimeWeightedRule：作用同WeightedResponseTimeRule，二者作用是一样的，ResponseTimeWeightedRule后来改名为WeightedResponseTimeRule。</p>
 <p>WeightedResponseTimeRule：根据响应时间分配一个weight(权重)，响应时间越长，weight越小，被选中的可能性越低。</p>
-<h2 id="服务宕机后Ribbon多久能感知到"><a href="#服务宕机后Ribbon多久能感知到" class="headerlink" title="服务宕机后Ribbon多久能感知到"></a>服务宕机后Ribbon多久能感知到</h2><p>在和eureka结合使用的情况下，因为eureka server是靠心跳来摘除服务实例，那么他是需要duration * 2 =180秒，eureka client 从server同步(recentlyChangedQueue)默认是需要30秒，Ribbon从Eureka Client同步也是30秒，所以最多可能需要240秒，也就是4分钟才能知道一个服务以及宕机了，他是有可能访问到宕机的服务，不过SpringCloud是借用了Hystrix降级和熔断的机制来解决这个问题，一定次数错误后会屏蔽某个实例。</p>
+<h2 id="服务宕机后Ribbon多久能感知到"><a href="#服务宕机后Ribbon多久能感知到" class="headerlink" title="服务宕机后Ribbon多久能感知到"></a>服务宕机后Ribbon多久能感知到</h2><p>在和eureka结合使用的情况下，因为eureka server是靠心跳来摘除服务实例，那么他是需要duration * 2 =180秒，eureka client 从server同步(recentlyChangedQueue)默认是需要30秒，Ribbon从Eureka Client同步也是30秒，所以最多可能需要240秒，也就是4分钟才能知道一个服务已经宕机了，他是有可能访问到宕机的服务，不过SpringCloud是借用了Hystrix降级和熔断的机制来解决这个问题，一定次数错误后会屏蔽某个实例。</p>
 <p><img src="/img/spring-cloud/默认的负载均衡算法可能存在的问题.png" alt="默认的负载均衡算法可能存在的问题"></p>
 <h2 id="SpringCloud和Ribbon的全局配置和特定配置"><a href="#SpringCloud和Ribbon的全局配置和特定配置" class="headerlink" title="SpringCloud和Ribbon的全局配置和特定配置"></a>SpringCloud和Ribbon的全局配置和特定配置</h2><p>这有篇文章写的比较清晰，说明了SpringCloud在读取Ribbon配置的时候是通过懒加载去读取配置的，也就是第一次发起调用的时候，才会通过NamedContextFactory.createContext去初始化@RibbonClients和@RibbonClient指定的配置。 但是@RibbonClients和@RibbonClient的配置被放入NamedContextFactory的configurations字段中，是在RibbonClientConfigurationRegistrar这个类里，结合源码看看文章，就很清楚了。</p>
 <p><a href="https://www.cnblogs.com/trust-freedom/p/11216280.html" target="_blank" rel="noopener">https://www.cnblogs.com/trust-freedom/p/11216280.html</a></p>
@@ -381,8 +393,8 @@
       <i class="fa fa-chevron-left"></i> Eureka源码05-服务集群初始化和同步原理分析
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/04/12/springcloud/feign01/" rel="next" title="Feign源码分析">
-      Feign源码分析 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/04/12/springcloud/feign01/" rel="next" title="Feign01-流程大体分析和源码分析入口">
+      Feign01-流程大体分析和源码分析入口 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -464,7 +476,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -477,7 +489,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

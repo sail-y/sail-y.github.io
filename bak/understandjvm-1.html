@@ -22,9 +22,9 @@
 
   <meta name="description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
 <meta name="keywords" content="java,JVM">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="深入理解JVM01-类加载">
-<meta property="og:url" content="http://www.saily.top/2018/12/02/jvm/understandjvm-1/index.html">
+<meta property="og:url" content="http://www.saily.top/bak/understandjvm-1.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
 <meta property="og:locale" content="zh-CN">
@@ -33,7 +33,7 @@
 <meta name="twitter:title" content="深入理解JVM01-类加载">
 <meta name="twitter:description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
 
-<link rel="canonical" href="http://www.saily.top/2018/12/02/jvm/understandjvm-1/">
+<link rel="canonical" href="http://www.saily.top/bak/understandjvm-1">
 
 
 <script id="page-configurations">
@@ -41,11 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : false
   };
 </script>
 
-  <title>深入理解JVM01-类加载 | 帆的博客</title>
+  <title>深入理解JVM01-类加载 | 帆的博客
+  </title>
   
 
 
@@ -190,76 +191,34 @@
       <div class="main-inner">
         <div class="content-wrap">
           
+  
+  
 
           <div class="content">
             
 
   <div class="posts-expand">
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/12/02/jvm/understandjvm-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          深入理解JVM01-类加载
-        </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+<h1 class="post-title" itemprop="name headline">深入理解JVM01-类加载
+</h1>
 
-              <time title="创建时间：12月 2 2018 15:55:41" itemprop="dateCreated datePublished" datetime="2018-12-02T15:55:41+08:00">12月 2 2018</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：3月 26 2019 20:14:25" itemprop="dateModified" datetime="2019-03-26T20:14:25+08:00">3月 26 2019</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
+<div class="post-meta">
+  
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
+</div>
 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
-        <h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p>
+      
+      
+      <div class="post-body">
+          <h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p>
 <ol>
 <li>类加载常见的行为是将磁盘上的class文件加载到内存中</li>
 <li>连接将是类与类之间的关系处理好</li>
@@ -322,39 +281,16 @@
 <h3 id="例5"><a href="#例5" class="headerlink" title="例5"></a>例5</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当一个接口在初始化时，并不要求其父接口都完成了初始化</span></span><br><span class="line"><span class="comment"> * 只有在真正使用到父接口的时候（如引用接口中定义的常量时），才会初始化</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest5</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 删除MyParent5.class文件后再运行</span></span><br><span class="line">        <span class="comment">// 把MyChild5.class删了，也没有问题</span></span><br><span class="line">        System.out.println(MyChild5.b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyParent5</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyChild5</span> <span class="keyword">extends</span> <span class="title">MyParent5</span> </span>&#123;</span><br><span class="line"><span class="comment">//    int b = 6;</span></span><br><span class="line">    <span class="comment">// 此时要求MyParent5.class必须存在</span></span><br><span class="line">    <span class="keyword">int</span> b = <span class="keyword">new</span> Random().nextInt(<span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="例6"><a href="#例6" class="headerlink" title="例6"></a>例6</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest6</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Singleton singleton = Singleton.getInstance();</span><br><span class="line">        System.out.println(<span class="string">"counter:1 "</span> + Singleton.counter1);</span><br><span class="line">        System.out.println(<span class="string">"counter:2 "</span> + Singleton.counter2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> counter1;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在这里输出1</span></span><br><span class="line"><span class="comment">//    public static int counter2 = 0;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        counter1++;</span><br><span class="line">        counter2++; <span class="comment">// 准备阶段的重要意义（分配内存，给默认值）</span></span><br><span class="line"></span><br><span class="line">        System.out.println(counter1);</span><br><span class="line">        System.out.println(counter2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在这里输出0</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> counter2 = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+      </div>
+      
+      
+      
     </div>
+    
 
     
     
     
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/java/" rel="tag"># java</a>
-              <a href="/tags/JVM/" rel="tag"># JVM</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2018/09/28/elasticsearch/elasticSearch08/" rel="prev" title="ElasticSearch08-内核原理">
-      <i class="fa fa-chevron-left"></i> ElasticSearch08-内核原理
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2018/12/11/springcloud/zuul-change-uri/" rel="next" title="Spring Cloud Zuul中修改URI">
-      Spring Cloud Zuul中修改URI <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
   </div>
 
 
@@ -427,7 +363,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">125</span>
+          <span class="site-state-item-count">127</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -440,7 +376,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
