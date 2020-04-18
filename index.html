@@ -197,6 +197,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/18/springcloud/feign04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/18/springcloud/feign04/" class="post-title-link" itemprop="url">Feign04-Feign超时和重试分析</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：4月 18 2020 22:05:39 / 修改时间：22:55:26" itemprop="dateCreated datePublished" datetime="2020-04-18T22:05:39+08:00">4月 18 2020</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Feign超时和重试"><a href="#Feign超时和重试" class="headerlink" title="Feign超时和重试"></a>Feign超时和重试</h1><p><strong>超时</strong></p>
+<p>在微服务架构中，一个服务对服务的访问至少得配置一个超时时间，不可能请求一个接口等了好几分钟都还没有返回，在设置超时时间后，超时后就认为这次接口请求失败了。</p>
+<p><strong>重试</strong></p>
+<p>服务B调用服务A，服务A部署了3台机器，现在服务B通过负载均衡的算法，调用到了服务A的机器1，因为服务A的机器1宕机了，请求超时了，可以让服务B再次请求一次服务A的机器1，如果还是不行，再请求服务A的机器2，如果还是不行，就再请求服务A的服务3，这就是重试机制。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/18/springcloud/feign04/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/18/springcloud/feign03/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,7 +300,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：4月 18 2020 13:05:39 / 修改时间：21:48:11" itemprop="dateCreated datePublished" datetime="2020-04-18T13:05:39+08:00">4月 18 2020</time>
+              <time title="创建时间：4月 18 2020 16:05:39 / 修改时间：22:55:38" itemprop="dateCreated datePublished" datetime="2020-04-18T16:05:39+08:00">4月 18 2020</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -327,84 +405,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/18/springcloud/feign02/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/18/springcloud/feign04/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/18/springcloud/feign04/" class="post-title-link" itemprop="url">Feign04-Feign超时和重试分析</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：4月 18 2020 13:05:39 / 修改时间：22:49:30" itemprop="dateCreated datePublished" datetime="2020-04-18T13:05:39+08:00">4月 18 2020</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Feign超时和重试"><a href="#Feign超时和重试" class="headerlink" title="Feign超时和重试"></a>Feign超时和重试</h1><p><strong>超时</strong></p>
-<p>在微服务架构中，一个服务对服务的访问至少得配置一个超时时间，不可能请求一个接口等了好几分钟都还没有返回，在设置超时时间后，超时后就认为这次接口请求失败了。</p>
-<p><strong>重试</strong></p>
-<p>服务B调用服务A，服务A部署了3台机器，现在服务B通过负载均衡的算法，调用到了服务A的机器1，因为服务A的机器1宕机了，请求超时了，可以让服务B再次请求一次服务A的机器1，如果还是不行，再请求服务A的机器2，如果还是不行，就再请求服务A的服务3，这就是重试机制。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/18/springcloud/feign04/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
