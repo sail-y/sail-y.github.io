@@ -228,7 +228,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 21 2020 22:47:54" itemprop="dateModified" datetime="2020-04-21T22:47:54+08:00">4月 21 2020</time>
+                <time title="修改时间：4月 27 2020 22:22:42" itemprop="dateModified" datetime="2020-04-27T22:22:42+08:00">4月 27 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -598,6 +598,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/02/springcloud/SpringCloud底层Http调用连接池配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/02/springcloud/SpringCloud底层Http调用连接池配置/" class="post-title-link" itemprop="url">SpringCloud的HttpClient连接池配置</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：4月 2 2020 22:05:39" itemprop="dateCreated datePublished" datetime="2020-04-02T22:05:39+08:00">4月 2 2020</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：4月 29 2020 18:15:13" itemprop="dateModified" datetime="2020-04-29T18:15:13+08:00">4月 29 2020</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在zuul网关中，有关于配置连接数量的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line"><span class="attr">  host:</span></span><br><span class="line"><span class="attr">    max-per-route-connections:</span> <span class="number">20</span> <span class="comment">#默认值</span></span><br><span class="line"><span class="attr">    max-total-connections:</span> <span class="number">200</span> <span class="comment">#默认值</span></span><br></pre></td></tr></table></figure>
+<p>这个是只是的zuul调用静态路由配置的Http连接池数量，按照实际情况设置就好（请注意不要和Tomcat的maxConnections搞混了）。</p>
+<p>这个配置并不会对基于Ribbon的下游服务访问生效，如果要配置Ribbon相关的配置，需要配置以下的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line"><span class="attr">  MaxConnectionsPerHost:</span> <span class="number">50</span> <span class="comment">#默认值</span></span><br><span class="line"><span class="attr">  MaxTotalConnections:</span> <span class="number">200</span> <span class="comment">#默认值</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/02/springcloud/SpringCloud底层Http调用连接池配置/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/31/springcloud/ribbon01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -930,88 +1015,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/18/springcloud/eureka02/" class="post-title-link" itemprop="url">Eureka源码02-服务注册流程分析</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：3月 18 2020 20:05:39" itemprop="dateCreated datePublished" datetime="2020-03-18T20:05:39+08:00">3月 18 2020</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 12 2020 14:19:06" itemprop="dateModified" datetime="2020-04-12T14:19:06+08:00">4月 12 2020</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="eureka-client启动流程"><a href="#eureka-client启动流程" class="headerlink" title="eureka client启动流程"></a>eureka client启动流程</h1><p>上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This will be read by server internal discovery client. We need to salience it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectEurekaConfiguration</span><span class="params">()</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">  String myHostName = InetAddress.getLocalHost().getHostName();</span><br><span class="line">  String myServiceUrl = <span class="string">"http://"</span> + myHostName + <span class="string">":8080/v2/"</span>;</span><br><span class="line"></span><br><span class="line">  System.setProperty(<span class="string">"eureka.region"</span>, <span class="string">"default"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.name"</span>, <span class="string">"eureka"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.vipAddress"</span>, <span class="string">"eureka.mydomain.net"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.port"</span>, <span class="string">"8080"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.preferSameZone"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldUseDns"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldFetchRegistry"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.default.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsAccessId"</span>, <span class="string">"fake_aws_access_id"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsSecretKey"</span>, <span class="string">"fake_aws_secret_key"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.numberRegistrySyncRetries"</span>, <span class="string">"0"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/18/springcloud/eureka02/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1084,7 +1087,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-count">129</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
