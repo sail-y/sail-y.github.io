@@ -373,7 +373,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/19/springcloud/hystrix05/" class="post-title-link" itemprop="url">SpringCloud和Hystrix的结合使用</a>
+            <a href="/2020/04/19/springcloud/hystrix05/" class="post-title-link" itemprop="url">Feign和Hystrix的结合使用</a>
         </h1>
 
         <div class="post-meta">
@@ -390,7 +390,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：5月 9 2020 23:04:26" itemprop="dateModified" datetime="2020-05-09T23:04:26+08:00">5月 9 2020</time>
+                <time title="修改时间：5月 10 2020 0:10:18" itemprop="dateModified" datetime="2020-05-10T00:10:18+08:00">5月 10 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -413,7 +413,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="SpringCloud-Feign和Hystrix结合使用"><a href="#SpringCloud-Feign和Hystrix结合使用" class="headerlink" title="SpringCloud Feign和Hystrix结合使用"></a>SpringCloud Feign和Hystrix结合使用</h1><p>在@FeignClient中增加fallback配置，指定降级方法的执行</p>
+          <h1 id="Feign和Hystrix结合使用"><a href="#Feign和Hystrix结合使用" class="headerlink" title="Feign和Hystrix结合使用"></a>Feign和Hystrix结合使用</h1><p>在@FeignClient中增加fallback配置，指定降级方法的执行</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient</span>(name = <span class="string">"user"</span>,url = <span class="string">"$&#123;user.url&#125;"</span>,fallback = UserFeignFallback.class</span><br><span class="line">        <span class="comment">/*fallbackFactory = UserFeignFactory.class*/</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserFeign</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">save</span><span class="params">(User user)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function">User <span class="title">getUserByID</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> String id)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
