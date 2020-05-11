@@ -197,6 +197,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/11/15/jvm/JVM9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/11/15/jvm/JVM9/" class="post-title-link" itemprop="url">JVM9-虚拟机字节码执行引擎</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：11月 15 2016 16:53:50" itemprop="dateCreated datePublished" datetime="2016-11-15T16:53:50+08:00">11月 15 2016</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：8月 28 2018 10:38:48" itemprop="dateModified" datetime="2018-08-28T10:38:48+08:00">8月 28 2018</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>执行引擎是Java虚拟机最核心的组成部分之一，本章将主要从概念模型的角度来讲解虚拟机的方法调用和字节码执行。</p>
+<h2 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h2><p>栈帧（Stack Frame）是用于支持虚拟机进行方法代用和方法执行的数据结构，它是虚拟机运行时数据区中的<a href="http://sail-y.github.io/2016/10/28/JVM2/#Java虚拟机栈" target="_blank" rel="noopener">虚拟机栈</a>的栈元素。栈帧存储了局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机里面从入栈到出栈的过程。对于执行引擎来说，在活动线程中，只有位于栈顶的栈帧才是有效的，称为当前栈帧，与这个栈帧相关联的方法称为当前方法，执行引擎运行的所有字节码指令都只针对当前栈帧进行操作，在概念模型上，典型的栈帧结构图如下：<br>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/11/15/jvm/JVM9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/11/07/jvm/JVM8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -944,95 +1026,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/" class="post-title-link" itemprop="url">Spring cloud @EnableOAuth2Client</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：7月 15 2016 13:55:11" itemprop="dateCreated datePublished" datetime="2016-07-15T13:55:11+08:00">7月 15 2016</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2月 28 2019 11:34:18" itemprop="dateModified" datetime="2019-02-28T11:34:18+08:00">2月 28 2019</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-boot-cloud/" itemprop="url" rel="index"><span itemprop="name">spring boot/cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Spring Cloud oauth2 开启客户端功能，并启用LoadBalanced</p>
-<p>如果不添加以下配置，只添加<code>@EnableOAuth2Client</code>注解，spring cloud默认是在web环境下使用的<code>AuthorizationCodeResourceDetails</code>。</p>
-<p>具体代码在<code>OAuth2RestOperationsConfiguration</code>类中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@ConditionalOnBean(OAuth2ClientConfiguration.class)</span><br><span class="line">@ConditionalOnWebApplication</span><br><span class="line">protected static class SessionScopedConfiguration &#123;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	@ConfigurationProperties(&quot;security.oauth2.client&quot;)</span><br><span class="line">	@Primary</span><br><span class="line">	public AuthorizationCodeResourceDetails oauth2RemoteResource() &#123;</span><br><span class="line">		AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();</span><br><span class="line">		return details;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public FilterRegistrationBean oauth2ClientFilterRegistration(</span><br><span class="line">			OAuth2ClientContextFilter filter, SecurityProperties security) &#123;</span><br><span class="line">		FilterRegistrationBean registration = new FilterRegistrationBean();</span><br><span class="line">		registration.setFilter(filter);</span><br><span class="line">		registration.setOrder(security.getFilterOrder() - 10);</span><br><span class="line">		return registration;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Configuration</span><br><span class="line">	protected static class ClientContextConfiguration &#123;</span><br><span class="line"></span><br><span class="line">		@Resource</span><br><span class="line">		@Qualifier(&quot;accessTokenRequest&quot;)</span><br><span class="line">		protected AccessTokenRequest accessTokenRequest;</span><br><span class="line"></span><br><span class="line">		@Bean</span><br><span class="line">		@Scope(value = &quot;session&quot;, proxyMode = ScopedProxyMode.INTERFACES)</span><br><span class="line">		public DefaultOAuth2ClientContext oauth2ClientContext() &#123;</span><br><span class="line">			return new DefaultOAuth2ClientContext(this.accessTokenRequest);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1100,7 +1098,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
