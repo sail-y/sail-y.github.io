@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329171857177.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329182748663.png">
-<meta property="og:updated_time" content="2020-04-12T06:19:16.438Z">
+<meta property="og:updated_time" content="2020-05-19T14:30:14.859Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析">
 <meta name="twitter:description" content="服务心跳流程分析eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。 心跳在代码里，叫做续约。  还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由HeartbeatThread执行。  默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL  接下来">
@@ -233,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：4月 12 2020 14:19:16" itemprop="dateModified" datetime="2020-04-12T14:19:16+08:00">4月 12 2020</time>
+                <time title="修改时间：5月 19 2020 22:30:14" itemprop="dateModified" datetime="2020-05-19T22:30:14+08:00">5月 19 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -337,7 +337,7 @@
 </li>
 <li><p>定时更新，根据<code>ALT+F7</code>的方式，PeerAwareInstanceRegistryImpl初始化的时候，启了定时调度任务，默认是15分钟执行一次。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">scheduleRenewalThresholdUpdateTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  timer.schedule(<span class="keyword">new</span> TimerTask() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      updateRenewalThreshold();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, serverConfig.getRenewalThresholdUpdateIntervalMs(),</span><br><span class="line">                 serverConfig.getRenewalThresholdUpdateIntervalMs());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在updateRenewalThreshold任务中，从别的服务同步并合并注册表。然后计算出一个服务实例的数量。如果拉取到的服务实例数量，大于本地的期望的服务实例数量<em>0.85。**我觉得这里是不是写错了，numberOfRenewsPerMinThreshold本来就是count\</em>2*0.85，这里判断再*0.85？？？*<em>接着再次计算了一下服务实例列表的count，count </em> 2 <em> 0.85。这个代码也是骚的很，刚计算了expectedNumberOfRenewsPerMin=count </em> 2，下面却不用这个变量，又写了一遍。</p>
+<p>在updateRenewalThreshold任务中，从别的服务同步并合并注册表。然后计算出一个服务实例的数量。如果拉取到的服务实例数量，大于本地的期望的服务实例数量<em>0.85。**我觉得这里是不是写错了，numberOfRenewsPerMinThreshold本来就是count\</em>2*0.85，这里判断再*0.85？？？*<em>接着再次计算了一下服务实例列表的count，count </em> 2 <em> 0.85。这个代码也是骚的很，刚计算了`expectedNumberOfRenewsPerMin=count </em> 2`，下面却不用这个变量，又写了一遍。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">  <span class="comment">// Update threshold only if the threshold is greater than the</span></span><br><span class="line">  <span class="comment">// current expected threshold of if the self preservation is disabled.</span></span><br><span class="line">  <span class="keyword">if</span> ((count * <span class="number">2</span>) &gt; (serverConfig.getRenewalPercentThreshold() * numberOfRenewsPerMinThreshold)</span><br><span class="line">      || (!<span class="keyword">this</span>.isSelfPreservationModeEnabled())) &#123;</span><br><span class="line">    <span class="keyword">this</span>.expectedNumberOfRenewsPerMin = count * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">this</span>.numberOfRenewsPerMinThreshold = (<span class="keyword">int</span>) ((count * <span class="number">2</span>) * serverConfig.getRenewalPercentThreshold());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
@@ -451,7 +451,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
