@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后赶紧登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
+  <meta name="description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
 <meta name="keywords" content="spring-cloud">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)">
 <meta property="og:url" content="http://www.saily.top/2020/06/04/springcloud/记一次线上故障排查并解决/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后赶紧登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
+<meta property="og:description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604221611065.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604222132779.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604223511793.png">
-<meta property="og:updated_time" content="2020-06-04T14:42:19.701Z">
+<meta property="og:updated_time" content="2020-06-04T14:46:53.346Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)">
-<meta name="twitter:description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后赶紧登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
+<meta name="twitter:description" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：">
 <meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200604221611065.png">
 
 <link rel="canonical" href="http://www.saily.top/2020/06/04/springcloud/记一次线上故障排查并解决/">
@@ -227,7 +227,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：6月 4 2020 21:55:39 / 修改时间：22:42:19" itemprop="dateCreated datePublished" datetime="2020-06-04T21:55:39+08:00">6月 4 2020</time>
+              <time title="创建时间：6月 4 2020 21:55:39 / 修改时间：22:46:53" itemprop="dateCreated datePublished" datetime="2020-06-04T21:55:39+08:00">6月 4 2020</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -257,7 +257,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="记一次线上故障排查并解决-Spring-Cloud健康检查的坑"><a href="#记一次线上故障排查并解决-Spring-Cloud健康检查的坑" class="headerlink" title="记一次线上故障排查并解决(Spring Cloud健康检查的坑)"></a>记一次线上故障排查并解决(Spring Cloud健康检查的坑)</h1><p>今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后赶紧登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：</p>
+        <h1 id="记一次线上故障排查并解决-Spring-Cloud健康检查的坑"><a href="#记一次线上故障排查并解决-Spring-Cloud健康检查的坑" class="headerlink" title="记一次线上故障排查并解决(Spring Cloud健康检查的坑)"></a>记一次线上故障排查并解决(Spring Cloud健康检查的坑)</h1><p>今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：</p>
 <a id="more"></a>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.io.IOException: 断开的管道    </span><br><span class="line">at sun.nio.ch.FileDispatcherImpl.write0(Native Method)    </span><br><span class="line">at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:<span class="number">47</span>)    </span><br><span class="line">at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:<span class="number">93</span>)    </span><br><span class="line">at sun.nio.ch.IOUtil.write(IOUtil.java:<span class="number">65</span>)    </span><br><span class="line">at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:<span class="number">471</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:<span class="number">134</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioBlockingSelector.write(NioBlockingSelector.java:<span class="number">101</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioSelectorPool.write(NioSelectorPool.java:<span class="number">157</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:<span class="number">1276</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:<span class="number">670</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.flushBlocking(SocketWrapperBase.java:<span class="number">607</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.flush(SocketWrapperBase.java:<span class="number">597</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.flush(Http11OutputBuffer.java:<span class="number">646</span>)    </span><br><span class="line">at org.apache.coyote.http11.filters.ChunkedOutputFilter.flush(ChunkedOutputFilter.java:<span class="number">169</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11OutputBuffer.flush(Http11OutputBuffer.java:<span class="number">252</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11Processor.flush(Http11Processor.java:<span class="number">1564</span>)    </span><br><span class="line">at org.apache.coyote.AbstractProcessor.action(AbstractProcessor.java:<span class="number">352</span>)    </span><br><span class="line">at org.apache.coyote.Response.action(Response.java:<span class="number">173</span>)    </span><br><span class="line">at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:<span class="number">317</span>)    </span><br><span class="line">... <span class="number">92</span> more</span><br></pre></td></tr></table></figure>
 <p>搜索<code>ERROR</code>级别日志，看到的全是这个日志，而且有两个项目都在输出这个错误日志，询问同事后确定了几个问题：</p>
@@ -266,7 +266,7 @@
 <li>这两个项目当前都没有人访问，也就是没有接口流量</li>
 <li>这个日志似乎是有周期性的输出，1分钟~3分钟不等</li>
 </ol>
-<p>记录一下我自己的排查思路，首先项目没有流量，也没有人访问，<strong>但是这个错明显是有接口请求，并且是因为客户端主动断开链接导致的，这一点可以确定</strong>。那么再结合周期性的错误日志输出，我首先想到的是不是采集监控的端点，或者是健康检查的端点出问题了，于是我赶紧登录堡垒机，测试了一下问题项目的采集监控数据的接口，没有问题，健康检查端点也没有问题，都是可以访问的。</p>
+<p>记录一下我自己的排查思路，首先项目没有流量，也没有人访问，<strong>但是这个错明显是有接口请求，并且是因为客户端主动断开链接导致的，这一点可以确定</strong>。那么再结合周期性的错误日志输出，我首先想到的是不是采集监控的端点，或者是健康检查的端点出问题了，于是我登录堡垒机，测试了一下问题项目的采集监控数据的接口，没有问题，健康检查端点也没有问题，都是可以访问的。</p>
 <p>我们的项目是SpringCloud的，所以健康检查端点是：<code>/actuator/health</code>，但是我多刷新了几次，发现有的时候很慢，有的时候很快，慢的时候能达到十几二十秒，健康检查的结果才出来。因为我们的项目是接入了prometheus的，紧接着我又去看了下监控，没有发现问题（监控排除了健康检查端点的访问情况，因为如果是SLB的话每秒会检查10+次），于是我将Grafana中的条件做了调整，得到了健康检查端点的耗时情况。</p>
 <p><img src="/img/spring-cloud/image-20200604221611065.png" alt="image-20200604221611065"></p>
 <h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>可以看得出来，健康检查端点的耗时确实很长，基本可以确定，上面异常产生的原因是因为consul在对服务进行心跳检查的时候，<strong>超时了</strong>。所以consul的agent主动断开了<code>/actuator/health</code>的请求，所以得到了 <code>java.io.IOException: Broken pipe</code>的错误。</p>
