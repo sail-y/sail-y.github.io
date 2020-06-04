@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.saily.top/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/</loc>
+    
+    <lastmod>2020-06-04T14:42:19.701Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.saily.top/2020/04/18/springcloud/feign04/</loc>
+    
+    <lastmod>2020-06-02T14:36:51.059Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.saily.top/2020/05/17/springcloud/SpringCloud%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/</loc>
     
     <lastmod>2020-05-27T14:04:28.460Z</lastmod>
@@ -54,13 +68,6 @@
     <loc>http://www.saily.top/2020/04/29/springcloud/SpringCloud%E7%BB%84%E4%BB%B6%E7%9A%84%E5%90%84%E7%A7%8DMaxTotalConnections%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2020-04-29T10:19:17.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.saily.top/2020/04/18/springcloud/feign04/</loc>
-    
-    <lastmod>2020-04-29T10:17:56.000Z</lastmod>
     
   </url>
   
