@@ -1697,15 +1697,9 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>JDK集合源码</title>
     <url>/2020/10/13/jdk/jdk01/</url>
-    <content><![CDATA[<p>-–</p>
-<p>title: JDK集合源码</p>
-<p>date: 2020-10-13 14:00:37</p>
-<p>tags: [java, JDK源码]</p>
-<p>categories:  JDK源码</p>
-<p>-–</p>
-<h1 id="JDK集合源码"><a href="#JDK集合源码" class="headerlink" title="JDK集合源码"></a>JDK集合源码</h1><p>准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。</p>
+    <content><![CDATA[<h1 id="JDK集合源码"><a href="#JDK集合源码" class="headerlink" title="JDK集合源码"></a>JDK集合源码</h1><p>准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。</p>
 <h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>默认的构造函数，给了一个空数字，Object[]， {}，默认的初始化大小为10。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty list with an initial capacity of ten.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1765,6 +1759,13 @@
 
 
 ]]></content>
+      <categories>
+        <category>JDK源码</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>JDK源码</tag>
+      </tags>
   </entry>
   <entry>
     <title>[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版</title>
