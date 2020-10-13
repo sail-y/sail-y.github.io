@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,31 +13,32 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="持续集成配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。 Maven的Docker插件http://www.cnblogs.com/skyblog/p/5163691.html 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在这里">
-<meta name="keywords" content="spring-cloud,微服务">
+  <meta name="description" content="持续集成配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。 Maven的Docker插件http:&#x2F;&#x2F;www.cnblogs.com&#x2F;skyblog&#x2F;p&#x2F;5163691.html 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在这里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring cloud项目实践(三)">
-<meta property="og:url" content="http://www.saily.top/2016/03/22/springcloud/Spring-cloud项目实践-三/index.html">
+<meta property="og:url" content="http://www.saily.top/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="持续集成配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。 Maven的Docker插件http://www.cnblogs.com/skyblog/p/5163691.html 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在这里">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="持续集成配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。 Maven的Docker插件http:&#x2F;&#x2F;www.cnblogs.com&#x2F;skyblog&#x2F;p&#x2F;5163691.html 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在这里">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.08.51.png">
 <meta property="og:image" content="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.24.33.png">
 <meta property="og:image" content="http://7xs4nh.com1.z0.glb.clouddn.com/2F11C9E9-193C-445E-86BA-CA76BB259CCA.png">
-<meta property="og:updated_time" content="2019-02-28T03:34:06.336Z">
+<meta property="article:published_time" content="2016-03-22T00:22:18.000Z">
+<meta property="article:modified_time" content="2019-02-28T03:34:06.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="spring-cloud">
+<meta property="article:tag" content="微服务">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring cloud项目实践(三)">
-<meta name="twitter:description" content="持续集成配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。 Maven的Docker插件http://www.cnblogs.com/skyblog/p/5163691.html 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在这里">
 <meta name="twitter:image" content="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.08.51.png">
 
-<link rel="canonical" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud项目实践-三/">
+<link rel="canonical" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/">
 
 
 <script id="page-configurations">
@@ -45,7 +46,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -80,6 +82,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -98,14 +101,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -116,32 +117,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -149,17 +151,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -173,10 +176,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -185,9 +187,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -195,15 +194,14 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud项目实践-三/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -222,7 +220,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -230,14 +228,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:34:06" itemprop="dateModified" datetime="2019-02-28T11:34:06+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -264,42 +262,52 @@
 
       
         <h1 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h1><p>配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。</p>
-<h2 id="Maven的Docker插件"><a href="#Maven的Docker插件" class="headerlink" title="Maven的Docker插件"></a>Maven的Docker插件</h2><p><a href="http://www.cnblogs.com/skyblog/p/5163691.html" target="_blank" rel="noopener">http://www.cnblogs.com/skyblog/p/5163691.html</a> 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在<a href="https://github.com/spotify/docker-maven-plugin" target="_blank" rel="noopener">这里</a><br><a id="more"></a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>repackage<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spotify<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>docker-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;docker.plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--绑定build命令到mvn package中--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--绑定push命令到mvn deploy中--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">id</span>&gt;</span>push-image<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>deploy<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>push<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;:$&#123;project.version&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">forceTags</span>&gt;</span>true<span class="tag">&lt;/<span class="name">forceTags</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">imageTags</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--&lt;imageTag&gt;$&#123;project.version&#125;&lt;/imageTag&gt;--&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">imageTag</span>&gt;</span>latest<span class="tag">&lt;/<span class="name">imageTag</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">imageTags</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">dockerDirectory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/docker<span class="tag">&lt;/<span class="name">dockerDirectory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span>/<span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.build.directory&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">include</span>&gt;</span>$&#123;project.build.finalName&#125;.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Maven的Docker插件"><a href="#Maven的Docker插件" class="headerlink" title="Maven的Docker插件"></a>Maven的Docker插件</h2><p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/skyblog/p/5163691.html">http://www.cnblogs.com/skyblog/p/5163691.html</a> 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在<a target="_blank" rel="noopener" href="https://github.com/spotify/docker-maven-plugin">这里</a></p>
+<a id="more"></a>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>repackage<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spotify<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>docker-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;docker.plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--绑定build命令到mvn package中--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--绑定push命令到mvn deploy中--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">id</span>&gt;</span>push-image<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>deploy<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>push<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;:$&#123;project.version&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">forceTags</span>&gt;</span>true<span class="tag">&lt;/<span class="name">forceTags</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">imageTags</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--&lt;imageTag&gt;$&#123;project.version&#125;&lt;/imageTag&gt;--&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">imageTag</span>&gt;</span>latest<span class="tag">&lt;/<span class="name">imageTag</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">imageTags</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">dockerDirectory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/docker<span class="tag">&lt;/<span class="name">dockerDirectory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span>/<span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.build.directory&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">include</span>&gt;</span>$&#123;project.build.finalName&#125;.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>Dockerfile文件在src/main/docker/Dockerfile<br>内容如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8</span><br><span class="line">VOLUME /tmp</span><br><span class="line">ADD pin-user-0.1.0.jar app.jar</span><br><span class="line">RUN bash -c &apos;touch /app.jar&apos;</span><br><span class="line">EXPOSE 9000</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd=file:/dev/./urandom&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</span><br></pre></td></tr></table></figure>
-<p><a href="https://spring.io/guides/gs/spring-boot-docker/" target="_blank" rel="noopener">https://spring.io/guides/gs/spring-boot-docker/</a><br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.08.51.png" alt="说明"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8</span><br><span class="line">VOLUME &#x2F;tmp</span><br><span class="line">ADD pin-user-0.1.0.jar app.jar</span><br><span class="line">RUN bash -c &#39;touch &#x2F;app.jar&#39;</span><br><span class="line">EXPOSE 9000</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd&#x3D;file:&#x2F;dev&#x2F;.&#x2F;urandom&quot;,&quot;-jar&quot;,&quot;&#x2F;app.jar&quot;]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://spring.io/guides/gs/spring-boot-docker/">https://spring.io/guides/gs/spring-boot-docker/</a><br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.08.51.png" alt="说明"></p>
 <p>特别解释一下<code>ENTRYPOINT</code>指令,<code>docker run</code>命令中的参数都会传递给<code>ENTRYPOINT</code>指令。<br>执行<code>docker run -d pin-user --config.host=localhost</code>启动容器。<br>会把–config.host加在<code>ENTRYPOINT</code>后面,相当于执行了<code>java -Djava.security.egd=file:/dev/./urandom -jar /app.jar --config.host=localhost</code>。有了这个参数后我们就能很方便的控制环境和配置文件了。</p>
 <h2 id="配置jenkins"><a href="#配置jenkins" class="headerlink" title="配置jenkins"></a>配置jenkins</h2><p>jenkins中新建一个项目，配置好git后，执行目标服务器的一个shell脚本来启动容器。<br><img src="http://7xs4nh.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-03-22%20%E4%B8%8A%E5%8D%889.24.33.png" alt="配置界面"></p>
-<p>然后开始构建项目，因为在<code>pom.xml</code>配置中绑定了<code>docker:build</code>到<code>package</code>命令中，所以会自动执行<code>docker:build</code>，这里遇到了一个docker命令的权限问题，jenkins抛出一个错误。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.io.IOException: Permission denied</span><br></pre></td></tr></table></figure></p>
+<p>然后开始构建项目，因为在<code>pom.xml</code>配置中绑定了<code>docker:build</code>到<code>package</code>命令中，所以会自动执行<code>docker:build</code>，这里遇到了一个docker命令的权限问题，jenkins抛出一个错误。        </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.io.IOException: Permission denied</span><br></pre></td></tr></table></figure>
 <p>在jenkins所在的服务器上执行以下命令查看jenkins用户组    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id jenkins</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id jenkins </span><br></pre></td></tr></table></figure>
 <p>将jenkins用户加入到docker组中。        </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -a -G docker jenkins</span><br></pre></td></tr></table></figure>
+
 <p>再构建，权限问题没有了，但是我又得到另外一个错误</p>
 <blockquote>
 <p>[ERROR] Failed to execute goal com.spotify:docker-maven-plugin:0.3.258:build (default) on project pin-user: Exception caught: Error getting container 1e509efd653d0a3a942bf5ef34601305b7301d64378381614b55d3f5f88c7166 from driver devicemapper: open /dev/mapper/docker-202:33-5767218-1e509efd653d0a3a942bf5ef34601305b7301d64378381614b55d3f5f88c7166: no such file or directory</p>
 </blockquote>
 <p>说是因为docker在centos下的存储驱动原因，我这里试试把devicemapper换成btrfs。在centos下只能选择这2种方式。</p>
 <p>需要把docker使用的分区的文件系统换掉。这一步会镜像会被全部清除掉，记得备份镜像，因为我是测试环境，所以镜像全部丢了也无所谓。教程如下。</p>
-<p><a href="https://wiki.centos.org/PhilipJensen/CentOS6ConvertToBTRFS#head-c0851e0e7c9205aa8ca5616b85179b96981b24a7" target="_blank" rel="noopener">https://wiki.centos.org/PhilipJensen/CentOS6ConvertToBTRFS#head-c0851e0e7c9205aa8ca5616b85179b96981b24a7</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umount /dev/xvdc1</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://wiki.centos.org/PhilipJensen/CentOS6ConvertToBTRFS#head-c0851e0e7c9205aa8ca5616b85179b96981b24a7">https://wiki.centos.org/PhilipJensen/CentOS6ConvertToBTRFS#head-c0851e0e7c9205aa8ca5616b85179b96981b24a7</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umount &#x2F;dev&#x2F;xvdc1</span><br></pre></td></tr></table></figure>
 <p>提示divice busy。下面命令把相关进程kill掉再umount</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fuser -m -v -i -k /dev/xvdc1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fuser -m -v -i -k &#x2F;dev&#x2F;xvdc1</span><br></pre></td></tr></table></figure>
 <p>再执行这个命令。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btrfs-convert /dev/xvdc1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btrfs-convert &#x2F;dev&#x2F;xvdc1</span><br></pre></td></tr></table></figure>
 <p>完事后再挂载回去 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/xvdc1 /mnt2</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount &#x2F;dev&#x2F;xvdc1 &#x2F;mnt2</span><br></pre></td></tr></table></figure>
 <p>还是提示busy，reboot重启下，再mount。<br>然后在<code>/etc/sysconfig/docker</code>加上<code>--storage-driver btrfs</code>参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">other_args=&quot;--graph=/mnt2/apps/docker --storage-driver btrfs --insecure-registry=10.168.248.36:5000&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">other_args&#x3D;&quot;--graph&#x3D;&#x2F;mnt2&#x2F;apps&#x2F;docker --storage-driver btrfs --insecure-registry&#x3D;10.168.248.36:5000&quot;</span><br></pre></td></tr></table></figure>
+
 <p>重启docker，再执行<code>docker info</code>就看到docker的存储驱动已经变了</p>
-<p><img src="http://7xs4nh.com1.z0.glb.clouddn.com/2F11C9E9-193C-445E-86BA-CA76BB259CCA.png" alt></p>
+<p><img src="http://7xs4nh.com1.z0.glb.clouddn.com/2F11C9E9-193C-445E-86BA-CA76BB259CCA.png"></p>
 <p>启动docker容器的时候报错了，把<code>/var/lib/docker/linkgraph.db</code>删了<br>因为我在<code>/etc/sysconfig/docker</code>修改了docker的目录。<br>所以我这里是目录是<code>/mnt2/apps/docker/linkgraph.db</code>。<br>service restart docker<br>重启下docker即可。<br>现在再用jenkins构建和发布就没有错误了。</p>
-<h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mnt/web/scripts/docker_run.sh 10.168.248.36:5000/pin-user 9000 <span class="string">"--config.profile=dev --config.host=10.168.248.36"</span></span><br></pre></td></tr></table></figure>
-<p>下面我解释一下这个启动docker容器的脚本。<br>脚本后面跟了3个参数，一个是镜像名称，一个是端口号，一个是启动容器加在<code>ENTRYPOINT</code>的项目配置。<br>先找出之前镜像对应的containerId，把它删除掉，然后再用新的镜像启动容器。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#defined </span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/java/jdk1.8.0_40/</span><br><span class="line"></span><br><span class="line">IMAGE=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line">OPTIONS=<span class="string">""</span></span><br><span class="line">PORT=<span class="string">"<span class="variable">$2</span>"</span></span><br><span class="line"><span class="comment">#param validate</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -lt 2 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"you must use like this : ./deploy_run.sh &lt;image&gt; &lt;port&gt; [options]"</span>  </span><br><span class="line">  <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$3</span>"</span> != <span class="string">""</span> ]; <span class="keyword">then</span></span><br><span class="line">   OPTIONS=<span class="string">"<span class="variable">$3</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#拿到容器ID后kill掉并删除。</span></span><br><span class="line"><span class="function"><span class="title">delete_container</span></span>()&#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"the container id is <span class="variable">$1</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$1</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"delete container:"</span> <span class="variable">$1</span></span><br><span class="line">        docker stop <span class="variable">$1</span></span><br><span class="line">        docker rm -f <span class="variable">$1</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"&gt;&gt;&gt; Get old image <span class="variable">$IMAGE</span> container id"</span></span><br><span class="line">CID=$(docker ps | grep <span class="string">"<span class="variable">$&#123;IMAGE&#125;</span>"</span> | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br><span class="line"><span class="comment">#因为jenkins每次的build的时候，如果镜像的tag没有指定，那么新的镜像build成功后，之前的镜像名称就会变成none。</span></span><br><span class="line"><span class="comment">#所以我们找出为名字为none的就是之前的镜像。</span></span><br><span class="line"><span class="keyword">if</span> [ ! -n <span class="string">"<span class="variable">$CID</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"get old image id"</span></span><br><span class="line">        OLD_IMAGE_IDS=$(docker images --no-trunc| grep none | awk <span class="string">'&#123;print $3&#125;'</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">        <span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$OLD_IMAGE_IDS</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">if</span> [ -n <span class="variable">$&#123;OLD_IMAGE_IDS[1]&#125;</span> ]; <span class="keyword">then</span></span><br><span class="line">                <span class="keyword">for</span> OLD_IMAGE_ID <span class="keyword">in</span> <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">                <span class="keyword">do</span></span><br><span class="line">                    CID=$(docker ps | grep <span class="string">"<span class="variable">$&#123;OLD_IMAGE_ID:0:12&#125;</span>"</span> | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br><span class="line">                    delete_container <span class="variable">$CID</span></span><br><span class="line">                <span class="keyword">done</span></span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                delete_container <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">          <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        delete_container <span class="variable">$CID</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">#启动容器</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"docker run -d -v /mnt:/mnt -p <span class="variable">$&#123;PORT&#125;</span>:<span class="variable">$&#123;PORT&#125;</span> <span class="variable">$IMAGE</span> <span class="variable">$OPTIONS</span>"</span></span><br><span class="line">docker run -d -v /mnt:/mnt -p <span class="variable">$&#123;PORT&#125;</span>:<span class="variable">$&#123;PORT&#125;</span> <span class="variable">$IMAGE</span> <span class="variable">$OPTIONS</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"clean docker images"</span></span><br><span class="line"><span class="comment">#再次清理名称为none的docker镜像。</span></span><br><span class="line">docker images --no-trunc| grep none | awk <span class="string">'&#123;print $3&#125;'</span> | xargs -r docker rmi -f</span><br><span class="line"><span class="comment">#清理所有已经退出的容器</span></span><br><span class="line"><span class="comment">#docker rm `docker ps -a | grep Exited | awk '&#123;print $1&#125;'`</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"finished"</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mnt/web/scripts/docker_run.sh 10.168.248.36:5000/pin-user 9000 <span class="string">&quot;--config.profile=dev --config.host=10.168.248.36&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面我解释一下这个启动docker容器的脚本。<br>脚本后面跟了3个参数，一个是镜像名称，一个是端口号，一个是启动容器加在<code>ENTRYPOINT</code>的项目配置。<br>先找出之前镜像对应的containerId，把它删除掉，然后再用新的镜像启动容器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#defined </span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/java/jdk1.8.0_40/</span><br><span class="line"></span><br><span class="line">IMAGE=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line">OPTIONS=<span class="string">&quot;&quot;</span></span><br><span class="line">PORT=<span class="string">&quot;<span class="variable">$2</span>&quot;</span></span><br><span class="line"><span class="comment">#param validate</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -lt 2 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;you must use like this : ./deploy_run.sh &lt;image&gt; &lt;port&gt; [options]&quot;</span>  </span><br><span class="line">  <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$3</span>&quot;</span> != <span class="string">&quot;&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">   OPTIONS=<span class="string">&quot;<span class="variable">$3</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#拿到容器ID后kill掉并删除。</span></span><br><span class="line"><span class="function"><span class="title">delete_container</span></span>()&#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;the container id is <span class="variable">$1</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$1</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;delete container:&quot;</span> <span class="variable">$1</span></span><br><span class="line">        docker stop <span class="variable">$1</span></span><br><span class="line">        docker rm -f <span class="variable">$1</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&gt;&gt;&gt; Get old image <span class="variable">$IMAGE</span> container id&quot;</span></span><br><span class="line">CID=$(docker ps | grep <span class="string">&quot;<span class="variable">$&#123;IMAGE&#125;</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>)</span><br><span class="line"><span class="comment">#因为jenkins每次的build的时候，如果镜像的tag没有指定，那么新的镜像build成功后，之前的镜像名称就会变成none。</span></span><br><span class="line"><span class="comment">#所以我们找出为名字为none的就是之前的镜像。</span></span><br><span class="line"><span class="keyword">if</span> [ ! -n <span class="string">&quot;<span class="variable">$CID</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;get old image id&quot;</span></span><br><span class="line">        OLD_IMAGE_IDS=$(docker images --no-trunc| grep none | awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span>)</span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">        <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$OLD_IMAGE_IDS</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">if</span> [ -n <span class="variable">$&#123;OLD_IMAGE_IDS[1]&#125;</span> ]; <span class="keyword">then</span></span><br><span class="line">                <span class="keyword">for</span> OLD_IMAGE_ID <span class="keyword">in</span> <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">                <span class="keyword">do</span></span><br><span class="line">                    CID=$(docker ps | grep <span class="string">&quot;<span class="variable">$&#123;OLD_IMAGE_ID:0:12&#125;</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>)</span><br><span class="line">                    delete_container <span class="variable">$CID</span></span><br><span class="line">                <span class="keyword">done</span></span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">                delete_container <span class="variable">$OLD_IMAGE_IDS</span></span><br><span class="line">          <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        delete_container <span class="variable">$CID</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">#启动容器</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;docker run -d -v /mnt:/mnt -p <span class="variable">$&#123;PORT&#125;</span>:<span class="variable">$&#123;PORT&#125;</span> <span class="variable">$IMAGE</span> <span class="variable">$OPTIONS</span>&quot;</span></span><br><span class="line">docker run -d -v /mnt:/mnt -p <span class="variable">$&#123;PORT&#125;</span>:<span class="variable">$&#123;PORT&#125;</span> <span class="variable">$IMAGE</span> <span class="variable">$OPTIONS</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;clean docker images&quot;</span></span><br><span class="line"><span class="comment">#再次清理名称为none的docker镜像。</span></span><br><span class="line">docker images --no-trunc| grep none | awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span> | xargs -r docker rmi -f</span><br><span class="line"><span class="comment">#清理所有已经退出的容器</span></span><br><span class="line"><span class="comment">#docker rm `docker ps -a | grep Exited | awk &#x27;&#123;print $1&#125;&#x27;`</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;finished&quot;</span> </span><br></pre></td></tr></table></figure>
+
 <p>可能最好的方式还是每次用不同的tag来build镜像，不过我这里就偷懒了，等到发布到生产环境的时候再指定吧。<br>注意到<code>&quot;--config.profile=dev --config.host=10.168.248.36&quot;</code>这个参数配合<code>ENTRYPOINT</code>就可以针对生产环境和测试环境加载不同的配置文件了。<br>项目中的配置文件:</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">user</span></span><br><span class="line"><span class="attr">  cloud:</span></span><br><span class="line"><span class="attr">    config:</span></span><br><span class="line"><span class="attr">      uri:</span> <span class="attr">http://$&#123;config.host:192.168.99.100&#125;:8888</span></span><br><span class="line"><span class="attr">      profile:</span> <span class="string">$&#123;config.profile:dev&#125;</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">user</span></span><br><span class="line"></span><br><span class="line"><span class="attr">encrypt:</span></span><br><span class="line"><span class="attr">  failOnError:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">user</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">config:</span></span><br><span class="line">      <span class="attr">uri:</span> <span class="string">http://$&#123;config.host:192.168.99.100&#125;:8888</span></span><br><span class="line">      <span class="attr">profile:</span> <span class="string">$&#123;config.profile:dev&#125;</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">user</span></span><br><span class="line"></span><br><span class="line"><span class="attr">encrypt:</span></span><br><span class="line">  <span class="attr">failOnError:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
 <p>到此我们的一个基本的spring-cloud项目实践就完成了，其他特性和功能自行选择后再添加就可以了。<br>我接下来要继续加入的模块就是使用API网关构建微服务。概念如下</p>
-<p><a href="http://www.infoq.com/cn/articles/construct-micro-service-using-api-gateway/" target="_blank" rel="noopener">http://www.infoq.com/cn/articles/construct-micro-service-using-api-gateway/</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/construct-micro-service-using-api-gateway/">http://www.infoq.com/cn/articles/construct-micro-service-using-api-gateway/</a></p>
 
     </div>
 
@@ -310,7 +318,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
-              <a href="/tags/微服务/" rel="tag"># 微服务</a>
+              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
           </div>
 
         
@@ -319,11 +327,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2016/03/21/springcloud/Spring-cloud项目实践-二/" rel="prev" title="Spring cloud项目实践(二)">
+    <a href="/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%BA%8C/" rel="prev" title="Spring cloud项目实践(二)">
       <i class="fa fa-chevron-left"></i> Spring cloud项目实践(二)
     </a></div>
       <div class="post-nav-item">
-    <a href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0配置/" rel="next" title="Spring-cloud OAuth2.0配置">
+    <a href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0%E9%85%8D%E7%BD%AE/" rel="next" title="Spring-cloud OAuth2.0配置">
       Spring-cloud OAuth2.0配置 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -334,7 +342,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -390,7 +397,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#持续集成"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Maven的Docker插件"><span class="nav-number">1.1.</span> <span class="nav-text">Maven的Docker插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置jenkins"><span class="nav-number">1.2.</span> <span class="nav-text">配置jenkins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动脚本"><span class="nav-number">1.3.</span> <span class="nav-text">启动脚本</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Maven%E7%9A%84Docker%E6%8F%92%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">Maven的Docker插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEjenkins"><span class="nav-number">1.2.</span> <span class="nav-text">配置jenkins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="nav-number">1.3.</span> <span class="nav-text">启动脚本</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -406,14 +413,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -424,6 +431,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -441,19 +453,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -493,9 +504,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -504,7 +523,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,29 +13,29 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
-<meta name="keywords" content="spring-cloud,eureka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Eureka源码02-服务注册流程分析">
 <meta property="og:url" content="http://www.saily.top/2020/03/18/springcloud/eureka02/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200319222757757.png">
 <meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200319232127915.png">
-<meta property="og:updated_time" content="2020-04-12T06:19:06.241Z">
+<meta property="article:published_time" content="2020-03-18T12:05:39.000Z">
+<meta property="article:modified_time" content="2020-04-12T06:19:06.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="spring-cloud">
+<meta property="article:tag" content="eureka">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Eureka源码02-服务注册流程分析">
-<meta name="twitter:description" content="eureka client启动流程上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的： 12345678910">
-<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/eureka%20client启动流程.jpg">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200319222757757.png">
 
 <link rel="canonical" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
 
@@ -45,7 +45,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -80,6 +81,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -98,14 +100,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -116,32 +116,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -149,17 +150,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -173,10 +175,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -185,9 +186,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -195,14 +193,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/18/springcloud/eureka02/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,7 +219,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -230,14 +227,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：4月 12 2020 14:19:06" itemprop="dateModified" datetime="2020-04-12T14:19:06+08:00">4月 12 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -264,10 +261,13 @@
 
       
         <h1 id="eureka-client启动流程"><a href="#eureka-client启动流程" class="headerlink" title="eureka client启动流程"></a>eureka client启动流程</h1><p>上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This will be read by server internal discovery client. We need to salience it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectEurekaConfiguration</span><span class="params">()</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">  String myHostName = InetAddress.getLocalHost().getHostName();</span><br><span class="line">  String myServiceUrl = <span class="string">"http://"</span> + myHostName + <span class="string">":8080/v2/"</span>;</span><br><span class="line"></span><br><span class="line">  System.setProperty(<span class="string">"eureka.region"</span>, <span class="string">"default"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.name"</span>, <span class="string">"eureka"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.vipAddress"</span>, <span class="string">"eureka.mydomain.net"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.port"</span>, <span class="string">"8080"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.preferSameZone"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldUseDns"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.shouldFetchRegistry"</span>, <span class="string">"false"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.serviceUrl.default.defaultZone"</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsAccessId"</span>, <span class="string">"fake_aws_access_id"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.awsSecretKey"</span>, <span class="string">"fake_aws_secret_key"</span>);</span><br><span class="line">  System.setProperty(<span class="string">"eureka.numberRegistrySyncRetries"</span>, <span class="string">"0"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This will be read by server internal discovery client. We need to salience it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectEurekaConfiguration</span><span class="params">()</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">  String myHostName = InetAddress.getLocalHost().getHostName();</span><br><span class="line">  String myServiceUrl = <span class="string">&quot;http://&quot;</span> + myHostName + <span class="string">&quot;:8080/v2/&quot;</span>;</span><br><span class="line"></span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.region&quot;</span>, <span class="string">&quot;default&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.name&quot;</span>, <span class="string">&quot;eureka&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.vipAddress&quot;</span>, <span class="string">&quot;eureka.mydomain.net&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.port&quot;</span>, <span class="string">&quot;8080&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.preferSameZone&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.shouldUseDns&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.shouldFetchRegistry&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.serviceUrl.defaultZone&quot;</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.serviceUrl.default.defaultZone&quot;</span>, myServiceUrl);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.awsAccessId&quot;</span>, <span class="string">&quot;fake_aws_access_id&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.awsSecretKey&quot;</span>, <span class="string">&quot;fake_aws_secret_key&quot;</span>);</span><br><span class="line">  System.setProperty(<span class="string">&quot;eureka.numberRegistrySyncRetries&quot;</span>, <span class="string">&quot;0&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <a id="more"></a>
+
 <p>在main方法的第一行调用一下上面的方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> UnknownHostException </span>&#123;</span><br><span class="line">    injectEurekaConfiguration();</span><br><span class="line">    ExampleEurekaClient sampleClient = <span class="keyword">new</span> ExampleEurekaClient();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// create the client</span></span><br><span class="line">    ApplicationInfoManager applicationInfoManager = initializeApplicationInfoManager(<span class="keyword">new</span> MyDataCenterInstanceConfig());</span><br><span class="line">    EurekaClient client = initializeEurekaClient(applicationInfoManager, <span class="keyword">new</span> DefaultEurekaClientConfig());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use the client</span></span><br><span class="line">    sampleClient.sendRequestToServiceUsingEureka(client);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// shutdown the client</span></span><br><span class="line">    eurekaClient.shutdown();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>看下上面这个方法，这段逻辑几乎和上一篇文章中介绍的eureka server启动流程中，初始化eureka client逻辑的是一样的。</p>
 <ol>
 <li>读取eureka-client.properties配置文件，形成服务实例配置，基于接口对外提供服务实例配置项的读取。（MyDataCenterInstanceConfig）</li>
@@ -277,7 +277,7 @@
 <li>基于eureka client配置，和服务实例管理器构造了一个EurekaClient（DiscoveryClient），保存了一些配置，处理服务的注册和注册表的抓取，启动了几个线程池，启动了网络通信组件，启动了一些调度任务，注册了监控项。</li>
 </ol>
 <p>在DiscoveryClient的构造方法里，做了很多操作，具体可以看下图。</p>
-<h2 id="画图总结"><a href="#画图总结" class="headerlink" title="画图总结"></a>画图总结</h2><p><img src="/img/spring-cloud/eureka client启动流程.jpg" alt="eureka client启动流程"></p>
+<h2 id="画图总结"><a href="#画图总结" class="headerlink" title="画图总结"></a>画图总结</h2><p>![eureka client启动流程](/img/spring-cloud/eureka client启动流程.jpg)</p>
 <h1 id="eureka-client服务注册逻辑"><a href="#eureka-client服务注册逻辑" class="headerlink" title="eureka client服务注册逻辑"></a>eureka client服务注册逻辑</h1><p>上面的逻辑咱们理完了后，发现不知道服务注册是哪一个步骤完成的，实际上注册的逻辑，是在初始化调度任务那里，和心跳任务一起初始化的<code>InstanceInfoReplicator</code>任务里。<strong>这儿其实感觉比较奇怪，注册服务和实例信息复制，在我们常见的分布式系统里应该是不同的概念，比如redis、mongodb、elastic search里都有副本的概念（Replica），但是在eureka这里，这里面实际上却是注册服务的逻辑。</strong></p>
 <ol>
 <li><code>InstanceInfoReplicator</code>的start方法里，将自己作为一个线程放到一个调度线程池中去了，默认</li>
@@ -295,6 +295,9 @@
 </li>
 <li><p>然后实际上底层执行发送请求的逻辑，实在是非常难找，代码嵌套过多，最后在EurekaHttpClient的子类里，寻找和http库有关的类，我们找到了AbstractJersey2EurekaHttpClient，在这里的<code>register</code>方法，发现了实际发送注册请求的逻辑。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送请求，http://localhost:8080/v2/apps/ServiceA</span></span><br><span class="line"><span class="comment">// 发送的是post请求，服务实例的对象打成了一个json发送过去，包含了自己的主机，ip，端口号</span></span><br><span class="line"><span class="comment">// eureka server就知道这个ServiceA这个服务，有一个服务实例，比如是在172.16.21.33、dev-server、8080</span></span><br><span class="line">Builder resourceBuilder = jerseyClient.target(serviceUrl).path(urlPath).request();</span><br></pre></td></tr></table></figure>
+
+
+
 </li>
 </ol>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>eureka client在服务注册的这块代码，可以也是看到有用到工厂模式、装饰器模式，但是也有很多<strong>槽点</strong>：</p>
@@ -304,9 +307,11 @@
 </ol>
 <h1 id="eureka-server收到注册请求的处理"><a href="#eureka-server收到注册请求的处理" class="headerlink" title="eureka server收到注册请求的处理"></a>eureka server收到注册请求的处理</h1><p>上面分析到了，eureka client向eureka server发起了http请求进行注册，下面就看一下在eureka server中，是如何接收并处理注册请求的。</p>
 <p>因为eureka是基于jersey开发，所以我们去找/v2/apps/{appId}这样的post请求路径处理类，这个请求是在eureka-core模块中<code>ApplicationsResource</code>的<code>getApplicationResource</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Path</span>(<span class="string">"&#123;appId&#125;"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ApplicationResource <span class="title">getApplicationResource</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  @PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">  @<span class="title">PathParam</span><span class="params">(<span class="string">"appId"</span>)</span> String appId) </span>&#123;</span><br><span class="line">  CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> ApplicationResource(appId, serverConfig, registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Path(&quot;&#123;appId&#125;&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ApplicationResource <span class="title">getApplicationResource</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  <span class="meta">@PathParam(&quot;version&quot;)</span> String version,</span></span></span><br><span class="line"><span class="function"><span class="params">  <span class="meta">@PathParam(&quot;appId&quot;)</span> String appId)</span> </span>&#123;</span><br><span class="line">  CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> ApplicationResource(appId, serverConfig, registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>跟到ApplicationResource里去找处理post的方法，就找到了接收注册请求的逻辑。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@POST</span></span><br><span class="line"><span class="meta">@Consumes</span>(&#123;<span class="string">"application/json"</span>, <span class="string">"application/xml"</span>&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> Response <span class="title">addInstance</span><span class="params">(InstanceInfo info,</span></span></span><br><span class="line"><span class="function"><span class="params">                            @HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication) </span>&#123;</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@POST</span></span><br><span class="line"><span class="meta">@Consumes(&#123;&quot;application/json&quot;, &quot;application/xml&quot;&#125;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Response <span class="title">addInstance</span><span class="params">(InstanceInfo info,</span></span></span><br><span class="line"><span class="function"><span class="params">                            <span class="meta">@HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication)</span> </span>&#123;</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
 <p>接收的是InstanceInfo，代表了一个服务实例。</p>
 <p>在单元测试里，有一个ApplicationResourceTest类，包含了许多功能的测试。接下来，在ApplicationResourceTest里，用断点的方式执行testGoodRegistration方法，对注册流程进行调试和源码分析。</p>
 <p><img src="/img/spring-cloud/image-20200319222757757.png" alt="image-20200319222757757"></p>
@@ -324,12 +329,11 @@
 <li><p>调用registry.register(info, “true”.equals(isReplication));（PeerAwareInstanceRegistry）。向服务实例注册表里注册。</p>
 </li>
 <li><p>调用<a href="http://www.saily.top/2020/03/15/springcloud/eureka01/#%E5%A4%84%E7%90%86%E6%B3%A8%E5%86%8C%E7%9B%B8%E5%85%B3%E7%9A%84%E4%BA%8B%E6%83%85">PeerAwareInstanceRegistry</a>父类的register方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(InstanceInfo registrant, <span class="keyword">int</span> leaseDuration, <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    read.lock();</span><br><span class="line">    Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(registrant.getAppName());</span><br><span class="line">    REGISTER.increment(isReplication);</span><br><span class="line">    <span class="comment">// 如果是第一次注册，这个map肯定是null</span></span><br><span class="line">    <span class="comment">// 对Map进行初始化</span></span><br><span class="line">    <span class="keyword">if</span> (gMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">final</span> ConcurrentHashMap&lt;String, Lease&lt;InstanceInfo&gt;&gt; gNewMap = <span class="keyword">new</span> ConcurrentHashMap&lt;String, Lease&lt;InstanceInfo&gt;&gt;();</span><br><span class="line">      <span class="comment">// 一个服务会有多个实例，所以这样存</span></span><br><span class="line">      gMap = registry.putIfAbsent(registrant.getAppName(), gNewMap);</span><br><span class="line">      <span class="keyword">if</span> (gMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">        gMap = gNewMap;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第一次执行，这里肯定也是null</span></span><br><span class="line">    Lease&lt;InstanceInfo&gt; existingLease = gMap.get(registrant.getId());</span><br><span class="line">    ......省略部分代码</span><br><span class="line">    <span class="comment">// 如果是服务第一次注册，将服务实例信息放到map中</span></span><br><span class="line">    Lease&lt;InstanceInfo&gt; lease = <span class="keyword">new</span> Lease&lt;InstanceInfo&gt;(registrant, leaseDuration);</span><br><span class="line">    <span class="keyword">if</span> (existingLease != <span class="keyword">null</span>) &#123;</span><br><span class="line">      lease.setServiceUpTimestamp(existingLease.getServiceUpTimestamp());</span><br><span class="line">    &#125;</span><br><span class="line">    gMap.put(registrant.getId(), lease);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(InstanceInfo registrant, <span class="keyword">int</span> leaseDuration, <span class="keyword">boolean</span> isReplication)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    read.lock();</span><br><span class="line">    Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(registrant.getAppName());</span><br><span class="line">    REGISTER.increment(isReplication);</span><br><span class="line">    <span class="comment">// 如果是第一次注册，这个map肯定是null</span></span><br><span class="line">    <span class="comment">// 对Map进行初始化</span></span><br><span class="line">    <span class="keyword">if</span> (gMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">final</span> ConcurrentHashMap&lt;String, Lease&lt;InstanceInfo&gt;&gt; gNewMap = <span class="keyword">new</span> ConcurrentHashMap&lt;String, Lease&lt;InstanceInfo&gt;&gt;();</span><br><span class="line">      <span class="comment">// 一个服务会有多个实例，所以这样存</span></span><br><span class="line">      gMap = registry.putIfAbsent(registrant.getAppName(), gNewMap);</span><br><span class="line">      <span class="keyword">if</span> (gMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">        gMap = gNewMap;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第一次执行，这里肯定也是null</span></span><br><span class="line">    Lease&lt;InstanceInfo&gt; existingLease = gMap.get(registrant.getId());</span><br><span class="line">    ......省略部分代码</span><br><span class="line">    <span class="comment">// 如果是服务第一次注册，将服务实例信息放到map中</span></span><br><span class="line">    Lease&lt;InstanceInfo&gt; lease = <span class="keyword">new</span> Lease&lt;InstanceInfo&gt;(registrant, leaseDuration);</span><br><span class="line">    <span class="keyword">if</span> (existingLease != <span class="keyword">null</span>) &#123;</span><br><span class="line">      lease.setServiceUpTimestamp(existingLease.getServiceUpTimestamp());</span><br><span class="line">    &#125;</span><br><span class="line">    gMap.put(registrant.getId(), lease);</span><br><span class="line">      </span><br></pre></td></tr></table></figure>
+
 <p>这里的registry，他的数据结构里面就是保存的服务和实例信息：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"APP_A"</span>:&#123;</span><br><span class="line">    <span class="attr">"00000"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">"00001"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">"00002"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"APP_B"</span>:&#123;</span><br><span class="line">    <span class="attr">"10000"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line"> <span class="attr">"20001"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">"30002"</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;APP_A&quot;</span>:&#123;</span><br><span class="line">    <span class="attr">&quot;00000&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">&quot;00001&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">&quot;00002&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;APP_B&quot;</span>:&#123;</span><br><span class="line">    <span class="attr">&quot;10000&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line"> <span class="attr">&quot;20001&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">    <span class="attr">&quot;30002&quot;</span>:Lease&lt;InstanceInfo&gt;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol start="5">
 <li><p>将服务实例的服务名和实例ID访问一个队列中（recentRegisteredQueue）</p>
 </li>
 <li><p>再后面也是更新一些状态。</p>
@@ -372,7 +376,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -428,7 +431,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client启动流程"><span class="nav-number">1.</span> <span class="nav-text">eureka client启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#画图总结"><span class="nav-number">1.1.</span> <span class="nav-text">画图总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client服务注册逻辑"><span class="nav-number">2.</span> <span class="nav-text">eureka client服务注册逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-server收到注册请求的处理"><span class="nav-number">3.</span> <span class="nav-text">eureka server收到注册请求的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#画图总结-1"><span class="nav-number">3.1.</span> <span class="nav-text">画图总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">eureka client启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E5%9B%BE%E6%80%BB%E7%BB%93"><span class="nav-number">1.1.</span> <span class="nav-text">画图总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-client%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E9%80%BB%E8%BE%91"><span class="nav-number">2.</span> <span class="nav-text">eureka client服务注册逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eureka-server%E6%94%B6%E5%88%B0%E6%B3%A8%E5%86%8C%E8%AF%B7%E6%B1%82%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">eureka server收到注册请求的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E5%9B%BE%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.1.</span> <span class="nav-text">画图总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -444,14 +447,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -462,6 +465,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -479,19 +487,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -531,9 +538,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -542,7 +557,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

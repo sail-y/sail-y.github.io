@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,30 +13,30 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="先介绍一下.gitignore .gitignore项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。 1234567891011121314151617181920212223242526272829.gradle/build/!gradle/wrapper/gradle-wrapper.jar### STS ###.apt_gener">
-<meta name="keywords" content="git">
+  <meta name="description" content="先介绍一下**.gitignore** .gitignore项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。 1234567891011121314151617181920212223242526272829.gradle&#x2F;build&#x2F;!gradle&#x2F;wrapper&#x2F;gradle-wrapper.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git-分支">
 <meta property="og:url" content="http://www.saily.top/2017/09/21/git/git2/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="先介绍一下.gitignore .gitignore项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。 1234567891011121314151617181920212223242526272829.gradle/build/!gradle/wrapper/gradle-wrapper.jar### STS ###.apt_gener">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="先介绍一下**.gitignore** .gitignore项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。 1234567891011121314151617181920212223242526272829.gradle&#x2F;build&#x2F;!gradle&#x2F;wrapper&#x2F;gradle-wrapper.">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/git/git2-1.png">
 <meta property="og:image" content="http://www.saily.top/img/git/git2-2.png">
 <meta property="og:image" content="http://www.saily.top/img/git/git2-3.png">
 <meta property="og:image" content="http://www.saily.top/img/git/git2-4.png">
 <meta property="og:image" content="http://www.saily.top/img/git/git2-5.png">
-<meta property="og:updated_time" content="2018-08-25T14:32:27.889Z">
+<meta property="article:published_time" content="2017-09-21T13:35:29.000Z">
+<meta property="article:modified_time" content="2018-08-25T14:32:27.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git-分支">
-<meta name="twitter:description" content="先介绍一下.gitignore .gitignore项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。 1234567891011121314151617181920212223242526272829.gradle/build/!gradle/wrapper/gradle-wrapper.jar### STS ###.apt_gener">
 <meta name="twitter:image" content="http://www.saily.top/img/git/git2-1.png">
 
 <link rel="canonical" href="http://www.saily.top/2017/09/21/git/git2/">
@@ -47,7 +47,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -82,6 +83,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -100,14 +102,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -118,32 +118,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -151,17 +152,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -175,10 +177,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -187,9 +188,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -197,14 +195,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/21/git/git2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -224,7 +221,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -232,14 +229,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：8月 25 2018 22:32:27" itemprop="dateModified" datetime="2018-08-25T22:32:27+08:00">8月 25 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -265,94 +262,114 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>先介绍一下<strong>.gitignore</strong></p>
+        <p>先介绍一下**.gitignore**</p>
 <h2 id="gitignore"><a href="#gitignore" class="headerlink" title=".gitignore"></a>.gitignore</h2><p>项目里面经常有一些文件是不需要纳入版本控制的，例如我编译后的class文件，或者idea产生的一些配置文件等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">/build/</span><br><span class="line">!gradle/wrapper/gradle-wrapper.jar</span><br><span class="line"></span><br><span class="line">### STS ###</span><br><span class="line">.apt_generated</span><br><span class="line">.classpath</span><br><span class="line">.factorypath</span><br><span class="line">.project</span><br><span class="line">.settings</span><br><span class="line">.springBeans</span><br><span class="line"></span><br><span class="line">### IntelliJ IDEA ###</span><br><span class="line">.idea</span><br><span class="line">*.iws</span><br><span class="line">*.iml</span><br><span class="line">*.ipr</span><br><span class="line"></span><br><span class="line">### NetBeans ###</span><br><span class="line">nbproject/private/</span><br><span class="line">build/</span><br><span class="line">nbbuild/</span><br><span class="line">dist/</span><br><span class="line">nbdist/</span><br><span class="line">.nb-gradle/</span><br><span class="line"></span><br><span class="line">rebel.xml</span><br><span class="line"></span><br><span class="line">/out</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">&#x2F;build&#x2F;</span><br><span class="line">!gradle&#x2F;wrapper&#x2F;gradle-wrapper.jar</span><br><span class="line"></span><br><span class="line">### STS ###</span><br><span class="line">.apt_generated</span><br><span class="line">.classpath</span><br><span class="line">.factorypath</span><br><span class="line">.project</span><br><span class="line">.settings</span><br><span class="line">.springBeans</span><br><span class="line"></span><br><span class="line">### IntelliJ IDEA ###</span><br><span class="line">.idea</span><br><span class="line">*.iws</span><br><span class="line">*.iml</span><br><span class="line">*.ipr</span><br><span class="line"></span><br><span class="line">### NetBeans ###</span><br><span class="line">nbproject&#x2F;private&#x2F;</span><br><span class="line">build&#x2F;</span><br><span class="line">nbbuild&#x2F;</span><br><span class="line">dist&#x2F;</span><br><span class="line">nbdist&#x2F;</span><br><span class="line">.nb-gradle&#x2F;</span><br><span class="line"></span><br><span class="line">rebel.xml</span><br><span class="line"></span><br><span class="line">&#x2F;out</span><br></pre></td></tr></table></figure>
+
 <p>上面是我的一个项目的配置，看得出来是有一些规则的，使用起来很简单，将这些规则保存到一个<code>.gitignore</code>中后，在项目里面这些文件或者文件夹里面的所有修改操作都不会被纳入到git版本控制中，也不会提交。</p>
 <a id="more"></a>
+
 <h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h3><ul>
-<li><strong>*.a</strong> 忽略所有.a结尾的文件</li>
+<li>*<strong>.a</strong> 忽略所有.a结尾的文件</li>
 <li><strong>!lib.a</strong> 但lib.a除外</li>
 <li><strong>/TODO</strong> 仅仅忽略项目根目录下的TODO文件，但不包括subdir/TODO</li>
 <li><strong>build/</strong> 忽略build/目录下的所有文件</li>
-<li><strong>doc/*.txt</strong> 会忽略doc/notes.txt但不包括doc/server/arch.txt</li>
+<li>*<em>doc/</em>.txt** 会忽略doc/notes.txt但不包括doc/server/arch.txt</li>
 </ul>
 <h2 id="Git分支"><a href="#Git分支" class="headerlink" title="Git分支"></a>Git分支</h2><p>分支就是当你正在开发的时候，你可以基于当前的工作副本新开一条开发线，2边都可以进行单独的开发，当开发到某一个阶段的时候，可以合并到一起，这样2个分支的修改内容都能保留。</p>
 <p>————— master<br>————— new_branch</p>
 <h3 id="git-branch"><a href="#git-branch" class="headerlink" title="git branch"></a>git branch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
 <p>这个命令可以显示当前所在分支，当使用<code>git init</code>创建仓库的时候，git默认会为我们创建一个master分支。</p>
 <h4 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h4><p>创建一个新的分支并切换到新的分支上</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch new_branch</span><br><span class="line">➜  mygit git:(master) git branch</span><br><span class="line">* master</span><br><span class="line">  new_branch</span><br><span class="line">➜  mygit git:(master) git checkout new_branch</span><br><span class="line">Switched to branch <span class="string">'new_branch'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch new_branch</span><br><span class="line">➜  mygit git:(master) git branch</span><br><span class="line">* master</span><br><span class="line">  new_branch</span><br><span class="line">➜  mygit git:(master) git checkout new_branch</span><br><span class="line">Switched to branch <span class="string">&#x27;new_branch&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>这个时候2个分支上的文件还是一模一样的。</p>
 <h4 id="切换分支"><a href="#切换分支" class="headerlink" title="切换分支"></a>切换分支</h4><p>在<strong>new_branch</strong>分支上创建一个文件并提交，切换到master上查看，是没有这个文件的，这也说明2个不同分支上的文件是独立的，修改是互不影响的。</p>
 <p>切换分支的命令：<code>git checkout</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) <span class="built_in">echo</span> <span class="string">'test new branch'</span> &gt; test4.txt</span><br><span class="line">➜  mygit git:(new_branch) ✗ git add test4.txt </span><br><span class="line">➜  mygit git:(new_branch) ✗ git commit -m <span class="string">'add a new file'</span></span><br><span class="line">[new_branch 8013cc2] add a new file</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test4.txt</span><br><span class="line">➜  mygit git:(new_branch) git status</span><br><span class="line">On branch new_branch</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(new_branch) ls</span><br><span class="line">mydir               settings.properties test.txt            test4.txt</span><br><span class="line">➜  mygit git:(new_branch) git checkout master</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br><span class="line">➜  mygit git:(master) ls</span><br><span class="line">mydir               settings.properties test.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) <span class="built_in">echo</span> <span class="string">&#x27;test new branch&#x27;</span> &gt; test4.txt</span><br><span class="line">➜  mygit git:(new_branch) ✗ git add test4.txt </span><br><span class="line">➜  mygit git:(new_branch) ✗ git commit -m <span class="string">&#x27;add a new file&#x27;</span></span><br><span class="line">[new_branch 8013cc2] add a new file</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test4.txt</span><br><span class="line">➜  mygit git:(new_branch) git status</span><br><span class="line">On branch new_branch</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(new_branch) ls</span><br><span class="line">mydir               settings.properties test.txt            test4.txt</span><br><span class="line">➜  mygit git:(new_branch) git checkout master</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜  mygit git:(master) ls</span><br><span class="line">mydir               settings.properties test.txt</span><br></pre></td></tr></table></figure>
+
 <p>如果想在2个分支之间来回切换，可以使用<code>git checkout -</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br><span class="line">➜  mygit git:(master) git checkout -</span><br><span class="line">Switched to branch <span class="string">'new_branch'</span></span><br><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br><span class="line">➜  mygit git:(master) git checkout -</span><br><span class="line">Switched to branch <span class="string">'new_branch'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜  mygit git:(master) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;new_branch&#x27;</span></span><br><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜  mygit git:(master) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;new_branch&#x27;</span></span><br></pre></td></tr></table></figure>
 <h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><p>分支一样可以删除，命令：<code>git branch -d new_branch</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git branch -d new_branch</span><br><span class="line">error: Cannot delete branch <span class="string">'new_branch'</span> checked out at <span class="string">'/Users/xiaomai/code/zhanglong/git/mygit</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git branch -d new_branch</span><br><span class="line">error: Cannot delete branch <span class="string">&#x27;new_branch&#x27;</span> checked out at <span class="string">&#x27;/Users/xiaomai/code/zhanglong/git/mygit</span></span><br></pre></td></tr></table></figure>
 <p>报错了，为什么呢？因为你当前本来就在<strong>new_branch</strong>上，就好比你坐到一个凳子上怎么能把凳子挪走呢。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br><span class="line">➜  mygit git:(master) git branch -d new_branch</span><br><span class="line">error: The branch <span class="string">'new_branch'</span> is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run <span class="string">'git branch -D new_branch'</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜  mygit git:(master) git branch -d new_branch</span><br><span class="line">error: The branch <span class="string">&#x27;new_branch&#x27;</span> is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run <span class="string">&#x27;git branch -D new_branch&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
 <p>又出错了，说<strong>new_branch</strong>并没有合并过，不能删除，如果要删除要使用<code>git branch -D new_branch</code>。</p>
 <p>因为我们之前创建了test4.txt这个文件，它是存在于new_branch分支上的，如果直接删除这个分支，那么在这个分支上所做的修改就会丢失了，也就是test4.txt这个文件就没了。</p>
 <p>现在来测试一下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch -D new_branch</span><br><span class="line">Deleted branch new_branch (was 8013cc2).</span><br></pre></td></tr></table></figure>
+
 <p>下面的新创建了一个new_branch2分支，但是这次却可以直接删除，因为这2个分支是一样的，没有区别，不需要合并。 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch new_branch2</span><br><span class="line">➜  mygit git:(master) git checkout new_branch2  </span><br><span class="line">Switched to branch &apos;new_branch2&apos;</span><br><span class="line">➜  mygit git:(new_branch2) git checkout -</span><br><span class="line">Switched to branch &apos;master&apos;</span><br><span class="line">➜  mygit git:(master) git branch -d new_branch2  </span><br><span class="line">Deleted branch new_branch2 (was c7a801e).</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch new_branch2</span><br><span class="line">➜  mygit git:(master) git checkout new_branch2  </span><br><span class="line">Switched to branch &#39;new_branch2&#39;</span><br><span class="line">➜  mygit git:(new_branch2) git checkout -</span><br><span class="line">Switched to branch &#39;master&#39;</span><br><span class="line">➜  mygit git:(master) git branch -d new_branch2  </span><br><span class="line">Deleted branch new_branch2 (was c7a801e).</span><br></pre></td></tr></table></figure>
+
 <h4 id="创建并切换"><a href="#创建并切换" class="headerlink" title="创建并切换"></a>创建并切换</h4><p>创建分支并切换，我们之前是用了2个命令，Git也提供了简便的方式，用一条命令来完成这个操作。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout -b new_branch4</span><br><span class="line">Switched to a new branch <span class="string">'new_branch4'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout -b new_branch4</span><br><span class="line">Switched to a new branch <span class="string">&#x27;new_branch4&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <h4 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h4><p>刚才创建分支后删除，有提示到说没有合并，我们再创建一个分支，并对文件做一些修改。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch4) vi test.txt </span><br><span class="line">➜  mygit git:(new_branch4) ✗ git status</span><br><span class="line">On branch new_branch4</span><br><span class="line">Changes not staged <span class="keyword">for</span> commit:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to update what will be committed)</span><br><span class="line">  (use <span class="string">"git checkout -- &lt;file&gt;..."</span> to discard changes <span class="keyword">in</span> working directory)</span><br><span class="line"></span><br><span class="line">	modified:   test.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">"git add"</span> and/or <span class="string">"git commit -a"</span>)</span><br><span class="line">➜  mygit git:(new_branch4) ✗ git add .</span><br><span class="line">➜  mygit git:(new_branch4) ✗ git commit -m <span class="string">'add a new line in test'</span></span><br><span class="line">[new_branch4 41c3327] add a new line <span class="keyword">in</span> <span class="built_in">test</span></span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(new_branch4) git checkout -</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br><span class="line">➜  mygit git:(master) git branch</span><br><span class="line">* master</span><br><span class="line">  new_branch4</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(new_branch4) vi test.txt </span><br><span class="line">➜  mygit git:(new_branch4) ✗ git status</span><br><span class="line">On branch new_branch4</span><br><span class="line">Changes not staged <span class="keyword">for</span> commit:</span><br><span class="line">  (use <span class="string">&quot;git add &lt;file&gt;...&quot;</span> to update what will be committed)</span><br><span class="line">  (use <span class="string">&quot;git checkout -- &lt;file&gt;...&quot;</span> to discard changes <span class="keyword">in</span> working directory)</span><br><span class="line"></span><br><span class="line">	modified:   test.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">&quot;git add&quot;</span> and/or <span class="string">&quot;git commit -a&quot;</span>)</span><br><span class="line">➜  mygit git:(new_branch4) ✗ git add .</span><br><span class="line">➜  mygit git:(new_branch4) ✗ git commit -m <span class="string">&#x27;add a new line in test&#x27;</span></span><br><span class="line">[new_branch4 41c3327] add a new line <span class="keyword">in</span> <span class="built_in">test</span></span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(new_branch4) git checkout -</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br><span class="line">➜  mygit git:(master) git branch</span><br><span class="line">* master</span><br><span class="line">  new_branch4</span><br></pre></td></tr></table></figure>
+
 <p>Git里合并的命令是<code>git merge</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git merge new_branch4  </span><br><span class="line">Updating c7a801e..41c3327</span><br><span class="line">Fast-forward</span><br><span class="line"> test.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
 <p>这个命令的意思是，将<strong>new_branch4</strong>分支上的修改合并到<strong>master</strong>上。</p>
 <p>现在查看test.txt的文件内容，和我们在<strong>new_branch4</strong>上修改的内容一样了。</p>
 <p>再验证一下合并之后能不能成功删除。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git branch -d new_branch4  </span><br><span class="line">Deleted branch new_branch4 (was 41c3327).</span><br></pre></td></tr></table></figure>
+
 <p>因为<strong>new_branch4</strong>分支上的修改已经合并（merge）到master上了，所以可以正常删除。</p>
-<h3 id="分支的原理"><a href="#分支的原理" class="headerlink" title="分支的原理"></a>分支的原理</h3><p><img src="/img/git/git2-1.png" alt></p>
-<p>分支到底是什么呢，分支指的是一个commit对象链，它就像是一条<strong><em>工作记录线</em></strong>（或者时间线），这张图有4个commit，这4个commit共同组成了一个branch。</p>
+<h3 id="分支的原理"><a href="#分支的原理" class="headerlink" title="分支的原理"></a>分支的原理</h3><p><img src="/img/git/git2-1.png"></p>
+<p>分支到底是什么呢，分支指的是一个commit对象链，它就像是一条**<em>工作记录线**</em>（或者时间线），这张图有4个commit，这4个commit共同组成了一个branch。</p>
 <p>每一次提交都会记录上一次的commit id，我们看第一个提交的commit id是10dc7…，而第二次提交的parent属性正好是10dc7。而这也就把所有的commit连接起来了，在版本库只有一个分支的情况下，这些连接起来的线也就组成了分支的信息。</p>
 <h3 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h3><p>之前我们在使用<code>git rest HEAD</code>的时候，这个HEAD到底是什么意思呢？</p>
 <p>HEAD指向的是当前分支，master指向提交，什么意思呢，如下图所示，master是指向第3个提交，而HEAD是指向的master分支。</p>
-<p><img src="/img/git/git2-2.png" alt></p>
+<p><img src="/img/git/git2-2.png"></p>
 <p>下图就相当于在master分支上执行<code>git checkout -b dev</code>，创建并切换到dev分支：创建了一个叫dev的指针，它和master一样也指向同一个提交，并且HEAD指向当前分支上，也就是dev。</p>
-<p><img src="/img/git/git2-3.png" alt></p>
+<p><img src="/img/git/git2-3.png"></p>
 <p>这个我们可以通过命令来实战验证一下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout -b dev</span><br><span class="line">Switched to a new branch <span class="string">'dev'</span></span><br><span class="line">➜  mygit git:(dev) cat .git/HEAD </span><br><span class="line">ref: refs/heads/dev</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout -b dev</span><br><span class="line">Switched to a new branch <span class="string">&#x27;dev&#x27;</span></span><br><span class="line">➜  mygit git:(dev) cat .git/HEAD </span><br><span class="line">ref: refs/heads/dev</span><br></pre></td></tr></table></figure>
+
 <p>这张图又什么意思呢，相信很容易猜到了，就是在dev分支上产生了一次提交。</p>
-<p><img src="/img/git/git2-4.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(dev) vi test.txt </span><br><span class="line">➜  mygit git:(dev) ✗ git add .</span><br><span class="line">➜  mygit git:(dev) ✗ git commit -m &apos;add a new line in test.txt&apos;</span><br><span class="line">[dev bd1bf5d] add a new line in test.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/git/git2-4.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(dev) vi test.txt </span><br><span class="line">➜  mygit git:(dev) ✗ git add .</span><br><span class="line">➜  mygit git:(dev) ✗ git commit -m &#39;add a new line in test.txt&#39;</span><br><span class="line">[dev bd1bf5d] add a new line in test.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
 <p>下面的图意思是将dev合并到master分支上，因为master没有修改，所以这里不会产生冲突，直接将master的指针指向了第4个提交（这种没有冲突的提交也叫Fast-Forward）</p>
-<p><img src="/img/git/git2-5.png" alt></p>
+<p><img src="/img/git/git2-5.png"></p>
 <p><code>git log -3</code></p>
 <p>先看一下dev分支的提交日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -&gt; dev)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 15:14:45 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test.txt</span><br><span class="line"></span><br><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c (master)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -&gt; dev)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 15:14:45 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test.txt</span><br><span class="line"></span><br><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c (master)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br></pre></td></tr></table></figure>
 <hr>
 <p>再看一下master分支的提交日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c (HEAD -&gt; master)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br><span class="line"></span><br><span class="line">commit c7a801e2d02195a49d6741d61f1e6b471664b3f6</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 11:06:54 2017 +0800</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c (HEAD -&gt; master)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br><span class="line"></span><br><span class="line">commit c7a801e2d02195a49d6741d61f1e6b471664b3f6</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 11:06:54 2017 +0800</span><br></pre></td></tr></table></figure>
+
 <p>可以看到dev的第二个提交正好是master分支的第一个提交。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git merge dev</span><br><span class="line">Updating 41c3327..bd1bf5d</span><br><span class="line">Fast-forward</span><br><span class="line"> test.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
 <p>现在执行merge操作，可以看到update 41c3327，也就是dev的第一条提交，正好是master没有的，结合刚才的图来看，也就是把master指向了41c3327。</p>
 <hr>
 <p>看一下merge之后master分支上的<code>git log -3</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -&gt; master, dev)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 15:14:45 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test.txt</span><br><span class="line"></span><br><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br><span class="line"></span><br><span class="line">commit c7a801e2d02195a49d6741d61f1e6b471664b3f6</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 11:06:54 2017 +0800</span><br><span class="line"></span><br><span class="line">    gitignore</span><br><span class="line">(END)</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -&gt; master, dev)</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 15:14:45 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test.txt</span><br><span class="line"></span><br><span class="line">commit 41c3327a9cf94bcb85799f0253fba0707036292c</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 14:29:37 2017 +0800</span><br><span class="line"></span><br><span class="line">    add a new line in test</span><br><span class="line"></span><br><span class="line">commit c7a801e2d02195a49d6741d61f1e6b471664b3f6</span><br><span class="line">Author: 帆 &lt;test@test.com&gt;</span><br><span class="line">Date:   Thu Sep 21 11:06:54 2017 +0800</span><br><span class="line"></span><br><span class="line">    gitignore</span><br><span class="line">(END)</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>下面再看看我们在master和dev分支上都作一些修改，然后合并。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) <span class="built_in">echo</span> <span class="string">'hello java'</span> &gt; test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git add .</span><br><span class="line">➜  mygit git:(master) ✗ git commit -m <span class="string">'create a file test2.txxt'</span></span><br><span class="line">[master bc84a7f] create a file test2.txxt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test2.txt</span><br><span class="line">➜  mygit git:(master) git checkout dev</span><br><span class="line">Switched to branch <span class="string">'dev'</span></span><br><span class="line">➜  mygit git:(dev) ✗ <span class="built_in">echo</span> <span class="string">'hello kotlin'</span> &gt; test2.txt </span><br><span class="line">➜  mygit git:(dev) ✗ git add .</span><br><span class="line">➜  mygit git:(dev) ✗ git commit -m <span class="string">'create file test2.txt'</span></span><br><span class="line">[dev def3afc] create file test2.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test2.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) <span class="built_in">echo</span> <span class="string">&#x27;hello java&#x27;</span> &gt; test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git add .</span><br><span class="line">➜  mygit git:(master) ✗ git commit -m <span class="string">&#x27;create a file test2.txxt&#x27;</span></span><br><span class="line">[master bc84a7f] create a file test2.txxt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test2.txt</span><br><span class="line">➜  mygit git:(master) git checkout dev</span><br><span class="line">Switched to branch <span class="string">&#x27;dev&#x27;</span></span><br><span class="line">➜  mygit git:(dev) ✗ <span class="built_in">echo</span> <span class="string">&#x27;hello kotlin&#x27;</span> &gt; test2.txt </span><br><span class="line">➜  mygit git:(dev) ✗ git add .</span><br><span class="line">➜  mygit git:(dev) ✗ git commit -m <span class="string">&#x27;create file test2.txt&#x27;</span></span><br><span class="line">[dev def3afc] create file test2.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test2.txt</span><br></pre></td></tr></table></figure>
 <p>现在我们在master和dev上都创建了一个<code>test2.txt</code>，并且内容不一样。</p>
 <p>现在master和dev指向的commit都不一样，现在合并：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git merge dev</span><br><span class="line">Auto-merging test2.txt</span><br><span class="line">CONFLICT (add/add): Merge conflict <span class="keyword">in</span> test2.txt</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+
 <p>出现了冲突，git不知道如何处理这种冲突，需要我们自己解决，我们现在看一下<strong>test2.txt</strong>的内容是什么<br><code>vi test2.txt</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">hello java</span><br><span class="line">=======</span><br><span class="line">hello kotlin</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">hello java</span><br><span class="line">=======</span><br><span class="line">hello kotlin</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span><br></pre></td></tr></table></figure>
+
 <p>上面是HEAD（当前分支master）的内容，下面的dev分支的内容，现在我们手动处理一下冲突，编辑保留我们需要留下的内容。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ vi test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">You have unmerged paths.</span><br><span class="line">  (fix conflicts and run <span class="string">"git commit"</span>)</span><br><span class="line">  (use <span class="string">"git merge --abort"</span> to abort the merge)</span><br><span class="line"></span><br><span class="line">Unmerged paths:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to mark resolution)</span><br><span class="line"></span><br><span class="line">	both added:      test2.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">"git add"</span> and/or <span class="string">"git commit -a"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ vi test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">You have unmerged paths.</span><br><span class="line">  (fix conflicts and run <span class="string">&quot;git commit&quot;</span>)</span><br><span class="line">  (use <span class="string">&quot;git merge --abort&quot;</span> to abort the merge)</span><br><span class="line"></span><br><span class="line">Unmerged paths:</span><br><span class="line">  (use <span class="string">&quot;git add &lt;file&gt;...&quot;</span> to mark resolution)</span><br><span class="line"></span><br><span class="line">	both added:      test2.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">&quot;git add&quot;</span> and/or <span class="string">&quot;git commit -a&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>现在执行<code>git add test2.txt</code>表示冲突已经解决，可以提交</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ git add test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">All conflicts fixed but you are still merging.</span><br><span class="line">  (use <span class="string">"git commit"</span> to conclude merge)</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line"></span><br><span class="line">	modified:   test2.txt</span><br><span class="line"></span><br><span class="line">➜  mygit git:(master) ✗ git commit</span><br><span class="line">[master b4bd64b] Merge branch <span class="string">'dev'</span></span><br><span class="line">➜  mygit git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(master) cat test2.txt </span><br><span class="line">hello java</span><br><span class="line">hello kotlin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ git add test2.txt </span><br><span class="line">➜  mygit git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">All conflicts fixed but you are still merging.</span><br><span class="line">  (use <span class="string">&quot;git commit&quot;</span> to conclude merge)</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line"></span><br><span class="line">	modified:   test2.txt</span><br><span class="line"></span><br><span class="line">➜  mygit git:(master) ✗ git commit</span><br><span class="line">[master b4bd64b] Merge branch <span class="string">&#x27;dev&#x27;</span></span><br><span class="line">➜  mygit git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(master) cat test2.txt </span><br><span class="line">hello java</span><br><span class="line">hello kotlin</span><br></pre></td></tr></table></figure>
+
 <p>现在再回过头来看看dev分支下test2.txt的内容：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout dev</span><br><span class="line">Switched to branch <span class="string">'dev'</span></span><br><span class="line">➜  mygit git:(dev) cat test2.txt </span><br><span class="line">hello kotlin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git checkout dev</span><br><span class="line">Switched to branch <span class="string">&#x27;dev&#x27;</span></span><br><span class="line">➜  mygit git:(dev) cat test2.txt </span><br><span class="line">hello kotlin</span><br></pre></td></tr></table></figure>
+
 <p>内容还是跟之前的一样，如果这个时候我们执行<code>git merge master</code>，还会产生冲突吗？</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(dev) git merge master</span><br><span class="line">Updating def3afc..b4bd64b</span><br><span class="line">Fast-forward</span><br><span class="line"> test2.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(dev) cat test2.txt </span><br><span class="line">hello java</span><br><span class="line">hello kotlin</span><br></pre></td></tr></table></figure>
+
 <p>没有冲突，fast-forward直接成功，为什么呢？</p>
 <p>因为在master上合并后，指针移动了2次，一次是dev的提交，一次是合并的提交。</p>
 <p>现在在dev上再将master合并过来的时候，master的提交里已经包含了dev这次的提交，git检测到没有冲突，直接将指针指向了master的提交就可以了。</p>
@@ -415,7 +432,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -471,7 +487,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gitignore"><span class="nav-number">1.</span> <span class="nav-text">.gitignore</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规则"><span class="nav-number">1.1.</span> <span class="nav-text">规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git分支"><span class="nav-number">2.</span> <span class="nav-text">Git分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-branch"><span class="nav-number">2.1.</span> <span class="nav-text">git branch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建分支"><span class="nav-number">2.1.1.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#切换分支"><span class="nav-number">2.1.2.</span> <span class="nav-text">切换分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除分支"><span class="nav-number">2.1.3.</span> <span class="nav-text">删除分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建并切换"><span class="nav-number">2.1.4.</span> <span class="nav-text">创建并切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#合并"><span class="nav-number">2.1.5.</span> <span class="nav-text">合并</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分支的原理"><span class="nav-number">2.2.</span> <span class="nav-text">分支的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HEAD"><span class="nav-number">2.3.</span> <span class="nav-text">HEAD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fast-forward"><span class="nav-number">3.</span> <span class="nav-text">fast-forward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本回退"><span class="nav-number">4.</span> <span class="nav-text">版本回退</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gitignore"><span class="nav-number">1.</span> <span class="nav-text">.gitignore</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E5%88%99"><span class="nav-number">1.1.</span> <span class="nav-text">规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git%E5%88%86%E6%94%AF"><span class="nav-number">2.</span> <span class="nav-text">Git分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-branch"><span class="nav-number">2.1.</span> <span class="nav-text">git branch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E6%94%AF"><span class="nav-number">2.1.1.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF"><span class="nav-number">2.1.2.</span> <span class="nav-text">切换分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF"><span class="nav-number">2.1.3.</span> <span class="nav-text">删除分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B9%B6%E5%88%87%E6%8D%A2"><span class="nav-number">2.1.4.</span> <span class="nav-text">创建并切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%88%E5%B9%B6"><span class="nav-number">2.1.5.</span> <span class="nav-text">合并</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">分支的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HEAD"><span class="nav-number">2.3.</span> <span class="nav-text">HEAD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fast-forward"><span class="nav-number">3.</span> <span class="nav-text">fast-forward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80"><span class="nav-number">4.</span> <span class="nav-text">版本回退</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -487,14 +503,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -505,6 +521,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -522,19 +543,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -574,9 +594,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -585,7 +613,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

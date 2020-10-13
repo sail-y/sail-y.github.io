@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,29 +13,29 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存雪崩缓存雪崩这种场景，缓存架构中非常重要的一个环节，应对缓存雪崩的解决方案，避免缓存雪崩的时候，造成整个系统崩溃，带来巨大的经济损失">
-<meta name="keywords" content="多级缓存架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高可用缓存架构实战6-缓存雪崩及解决方案">
 <meta property="og:url" content="http://www.saily.top/2018/06/12/cache/cache06/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存雪崩缓存雪崩这种场景，缓存架构中非常重要的一个环节，应对缓存雪崩的解决方案，避免缓存雪崩的时候，造成整个系统崩溃，带来巨大的经济损失">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.saily.top/img/cache/缓存雪崩的过程和后果.png">
-<meta property="og:image" content="http://www.saily.top/img/cache/缓存雪崩的事前事中事后的解决方案.png">
-<meta property="og:image" content="http://www.saily.top/img/cache/缓存穿透的现象.png">
-<meta property="og:updated_time" content="2018-09-20T02:14:37.395Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E8%BF%87%E7%A8%8B%E5%92%8C%E5%90%8E%E6%9E%9C.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E4%BA%8B%E5%89%8D%E4%BA%8B%E4%B8%AD%E4%BA%8B%E5%90%8E%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E7%8E%B0%E8%B1%A1.png">
+<meta property="article:published_time" content="2018-06-12T13:19:12.000Z">
+<meta property="article:modified_time" content="2018-09-20T02:14:37.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="多级缓存架构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="高可用缓存架构实战6-缓存雪崩及解决方案">
-<meta name="twitter:description" content="此为龙果学院课程笔记，记录以供以后翻看 缓存雪崩缓存雪崩这种场景，缓存架构中非常重要的一个环节，应对缓存雪崩的解决方案，避免缓存雪崩的时候，造成整个系统崩溃，带来巨大的经济损失">
-<meta name="twitter:image" content="http://www.saily.top/img/cache/缓存雪崩的过程和后果.png">
+<meta name="twitter:image" content="http://www.saily.top/img/cache/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E8%BF%87%E7%A8%8B%E5%92%8C%E5%90%8E%E6%9E%9C.png">
 
 <link rel="canonical" href="http://www.saily.top/2018/06/12/cache/cache06/">
 
@@ -45,7 +45,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -80,6 +81,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -98,14 +100,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -116,32 +116,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -149,17 +150,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -173,10 +175,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -185,9 +186,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -195,14 +193,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/06/12/cache/cache06/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,7 +219,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -230,18 +227,18 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：9月 20 2018 10:14:37" itemprop="dateModified" datetime="2018-09-20T10:14:37+08:00">9月 20 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/高可用缓存架构实战/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a>
+                  <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a>
                 </span>
             </span>
 
@@ -266,6 +263,7 @@
         <p>此为龙果学院课程笔记，记录以供以后翻看</p>
 <h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><p>缓存雪崩这种场景，缓存架构中非常重要的一个环节，应对缓存雪崩的解决方案，避免缓存雪崩的时候，造成整个系统崩溃，带来巨大的经济损失</p>
 <a id="more"></a>
+
 <h2 id="缓存雪崩的过程和后果"><a href="#缓存雪崩的过程和后果" class="headerlink" title="缓存雪崩的过程和后果"></a>缓存雪崩的过程和后果</h2><p>缓存雪崩，一般首先是redis集群彻底崩溃，它导致崩溃的流程如下：</p>
 <ol>
 <li>redis集群彻底崩溃</li>
@@ -276,7 +274,7 @@
 <li>nginx无法访问缓存服务，redis和源服务，只能基于本地缓存提供服务，但是缓存过期后，没有数据提供</li>
 <li>网站崩溃</li>
 </ol>
-<p><img src="/img/cache/缓存雪崩的过程和后果.png" alt="缓存雪崩的过程和后果"></p>
+<p><img src="/img/cache/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E8%BF%87%E7%A8%8B%E5%92%8C%E5%90%8E%E6%9E%9C.png" alt="缓存雪崩的过程和后果"></p>
 <h1 id="缓存雪崩的解决方案"><a href="#缓存雪崩的解决方案" class="headerlink" title="缓存雪崩的解决方案"></a>缓存雪崩的解决方案</h1><p>相对来说，考虑的比较完善的一套方案，分为事前，事中，事后三个层次去思考怎么来应对缓存雪崩的场景</p>
 <h2 id="事前解决方案"><a href="#事前解决方案" class="headerlink" title="事前解决方案"></a>事前解决方案</h2><p>所谓事前解决方案，就是发生缓存雪崩之前，事情之前，怎么去避免redis彻底挂掉。</p>
 <p>那就是保证redis的高可用性，我们利用redis本身的高可用性，复制，主从架构等功能，操作主节点去读写，数据同步到从节点，一旦主节点挂掉，从节点就跟上。</p>
@@ -298,38 +296,53 @@
 </ol>
 <p>其实这套方案没什么东西，事前的Redis文章前面也说了，事中ehcache也做过了。但是，如何将缓存服务如何设计成高可用的架构，需要配合Hystrix来开发。我们的熔断，降级，限流等等操作都需要Hystrix的配合。</p>
 <p><a href="http://www.saily.top/categories/hystrix/">Hystrix系列文章</a></p>
-<p><img src="/img/cache/缓存雪崩的事前事中事后的解决方案.png" alt="缓存雪崩的事前事中事后的解决方案"></p>
+<p><img src="/img/cache/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E4%BA%8B%E5%89%8D%E4%BA%8B%E4%B8%AD%E4%BA%8B%E5%90%8E%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png" alt="缓存雪崩的事前事中事后的解决方案"></p>
 <h1 id="使用Hystrix对Redis进行资源隔离"><a href="#使用Hystrix对Redis进行资源隔离" class="headerlink" title="使用Hystrix对Redis进行资源隔离"></a>使用Hystrix对Redis进行资源隔离</h1><p>接下来就要对redis的访问这一块加上保护措施，给商品服务的访问加上限流的保护措施。redis这一块，全都用hystrix的command进行封装，做资源隔离，确保redis的访问只能在固定的线程池内的资源来进行访问，哪怕是redis访问的很慢，有等待和超时，也不要紧，只有少量额线程资源用来访问，缓存服务不会被拖垮。</p>
-<p>找到之前的缓存项目<a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a> ，引入Hystrix的依赖</p>
+<p>找到之前的缓存项目<a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache">https://github.com/sail-y/eshop-cache</a> ，引入Hystrix的依赖</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
 <p>在CacheServiceImpl里有几处用到redis的地方，我们就需要开发几个相应的command。</p>
 <h2 id="SaveProductInfo2RedisCacheCommand"><a href="#SaveProductInfo2RedisCacheCommand" class="headerlink" title="SaveProductInfo2RedisCacheCommand"></a>SaveProductInfo2RedisCacheCommand</h2><p><strong>SaveProductInfo2RedisCacheCommand.java</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveProductInfo2RedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">Boolean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ProductInfo productInfo;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SaveProductInfo2RedisCacheCommand</span><span class="params">(ProductInfo productInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>));</span><br><span class="line">        <span class="keyword">this</span>.productInfo = productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Boolean <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">"product_info_"</span> + productInfo.getId();</span><br><span class="line">        redisTemplate.opsForValue().set(key, JSON.toJSONString(productInfo));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveProductInfo2RedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">Boolean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ProductInfo productInfo;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SaveProductInfo2RedisCacheCommand</span><span class="params">(ProductInfo productInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;RedisGroup&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.productInfo = productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Boolean <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">&quot;product_info_&quot;</span> + productInfo.getId();</span><br><span class="line">        redisTemplate.opsForValue().set(key, JSON.toJSONString(productInfo));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>然后用command替换之前的实现</p>
 <p><strong>CacheServiceImpl.saveProductInfo2RedisCache</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将商品信息保存到redis中</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> productInfo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveProductInfo2RedisCache</span><span class="params">(ProductInfo productInfo)</span> </span>&#123;</span><br><span class="line">    SaveProductInfo2RedisCacheCommand command = <span class="keyword">new</span> SaveProductInfo2RedisCacheCommand(productInfo);</span><br><span class="line">    command.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <h2 id="SaveShopInfo2RedisCacheCommand"><a href="#SaveShopInfo2RedisCacheCommand" class="headerlink" title="SaveShopInfo2RedisCacheCommand"></a>SaveShopInfo2RedisCacheCommand</h2><p><strong>SaveShopInfo2RedisCacheCommand.java</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 保存商品信息到Redis</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveShopInfo2RedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">Boolean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ShopInfo shopInfo;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SaveShopInfo2RedisCacheCommand</span><span class="params">(ShopInfo shopInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>));</span><br><span class="line">        <span class="keyword">this</span>.shopInfo = shopInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Boolean <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">"shop_info_"</span> + shopInfo.getId();</span><br><span class="line">        redisTemplate.opsForValue().set(key, JSONObject.toJSONString(shopInfo));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 保存商品信息到Redis</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveShopInfo2RedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">Boolean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ShopInfo shopInfo;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SaveShopInfo2RedisCacheCommand</span><span class="params">(ShopInfo shopInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;RedisGroup&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.shopInfo = shopInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Boolean <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">&quot;shop_info_&quot;</span> + shopInfo.getId();</span><br><span class="line">        redisTemplate.opsForValue().set(key, JSONObject.toJSONString(shopInfo));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>然后用command替换之前的实现</p>
 <p><strong>CacheServiceImpl.saveShopInfo2RedisCache</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将店铺信息保存到redis中</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> shopInfo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveShopInfo2RedisCache</span><span class="params">(ShopInfo shopInfo)</span> </span>&#123;</span><br><span class="line">    SaveShopInfo2RedisCacheCommand command = <span class="keyword">new</span> SaveShopInfo2RedisCacheCommand(shopInfo);</span><br><span class="line">    command.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="GetProductInfoFromRedisCacheCommand"><a href="#GetProductInfoFromRedisCacheCommand" class="headerlink" title="GetProductInfoFromRedisCacheCommand"></a>GetProductInfoFromRedisCacheCommand</h2><p><strong>GetProductInfoFromRedisCacheCommand.java</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis获取商品Command</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoFromRedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoFromRedisCacheCommand</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>));</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">"product_info_"</span> + productId;</span><br><span class="line">        String json = redisTemplate.opsForValue().get(key);</span><br><span class="line">        <span class="keyword">if</span> (json != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> JSONObject.parseObject(json, ProductInfo.class);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis获取商品Command</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoFromRedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoFromRedisCacheCommand</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;RedisGroup&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">&quot;product_info_&quot;</span> + productId;</span><br><span class="line">        String json = redisTemplate.opsForValue().get(key);</span><br><span class="line">        <span class="keyword">if</span> (json != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> JSONObject.parseObject(json, ProductInfo.class);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <p>然后用command替换之前的实现</p>
 <p><strong>CacheServiceImpl.getProductInfoFromRedisCache</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis从获取商品信息</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> id</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ProductInfo <span class="title">getProductInfoFromRedisCache</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">    GetProductInfoFromRedisCacheCommand command = <span class="keyword">new</span> GetProductInfoFromRedisCacheCommand(id);</span><br><span class="line">    <span class="keyword">return</span> command.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="GetShopInfoFromRedisCacheCommand"><a href="#GetShopInfoFromRedisCacheCommand" class="headerlink" title="GetShopInfoFromRedisCacheCommand"></a>GetShopInfoFromRedisCacheCommand</h2><p><strong>GetShopInfoFromRedisCacheCommand.java</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis获取店铺信息Command</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetShopInfoFromRedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ShopInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long shopId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetShopInfoFromRedisCacheCommand</span><span class="params">(Long shopId)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>));</span><br><span class="line">        <span class="keyword">this</span>.shopId = shopId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ShopInfo <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">"shop_info_"</span> + shopId;</span><br><span class="line">        String json = redisTemplate.opsForValue().get(key);</span><br><span class="line">        <span class="keyword">if</span> (json != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> JSONObject.parseObject(json, ShopInfo.class);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis获取店铺信息Command</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetShopInfoFromRedisCacheCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ShopInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long shopId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetShopInfoFromRedisCacheCommand</span><span class="params">(Long shopId)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;RedisGroup&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.shopId = shopId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ShopInfo <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringRedisTemplate redisTemplate = SpringContext.getApplicationContext().getBean(StringRedisTemplate.class);</span><br><span class="line"></span><br><span class="line">        String key = <span class="string">&quot;shop_info_&quot;</span> + shopId;</span><br><span class="line">        String json = redisTemplate.opsForValue().get(key);</span><br><span class="line">        <span class="keyword">if</span> (json != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> JSONObject.parseObject(json, ShopInfo.class);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <p>然后用command替换之前的实现</p>
 <p><strong>CacheServiceImpl.getShopInfoFromRedisCache</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从Redis中获取商品店铺信息</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> id</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ShopInfo <span class="title">getShopInfoFromRedisCache</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">    GetShopInfoFromRedisCacheCommand command = <span class="keyword">new</span> GetShopInfoFromRedisCacheCommand(id);</span><br><span class="line">    <span class="keyword">return</span> command.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="使用Hystrix对Redis访问进行降级"><a href="#使用Hystrix对Redis访问进行降级" class="headerlink" title="使用Hystrix对Redis访问进行降级"></a>使用Hystrix对Redis访问进行降级</h1><p>上面已经通过hystrix command对redis的访问进行了资源隔离，避免redis访问频繁失败，或者频繁超时的时候，耗尽大量的tomcat容器的资源去hang在redis的访问上。</p>
 <p>这样就限定只有一部分线程资源可以用来访问redis，如果redis集群彻底崩溃了，这个时候，可能command对redis的访问大量的报错和timeout超时，熔断（短路），我们就需要对redis进行降级，用Hystrix的fallback机制。建议是使用fail silent模式，fallback里面直接返回一个空值，比如一个null，最简单。</p>
 <p>在外面调用redis的代码（CacheService类），只要你把timeout、熔断、熔断恢复、降级，都做好了，是感知不到redis的访问异常的。可能会出现的情况是，当redis集群崩溃的时候，CacheService会获取到的是大量的null空值。</p>
 <p>根据这个null空值，我们还可以去做多级缓存的降级访问，nginx本地缓存，redis分布式集群缓存，ehcache本地缓存等等。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>顺便回顾一下之前CacheController的代码，在从redis里获取null值以后，会自动去别的地方一步步获取。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/getProductInfo"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ProductInfo <span class="title">getProductInfo</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 先从Redis从获取数据</span></span><br><span class="line">    ProductInfo productInfo = cacheService.getProductInfoFromRedisCache(productId);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="string">"=================从redis中获取缓存，商品信息="</span> + productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        productInfo = cacheService.getProductInfoFromLocalCache(productId);</span><br><span class="line">        System.out.println(<span class="string">"================从ehcache从获取缓存，商品信息="</span> + productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 就需要从数据源重新拉取数据，重建缓存，模拟获取</span></span><br><span class="line">        String productInfoJSON = <span class="string">"&#123;\"id\": "</span> + productId + <span class="string">", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 2, \"modifiedTime\": \"2018-02-21 22:11:34\"&#125;"</span>;</span><br><span class="line">        productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);</span><br><span class="line">        <span class="comment">// 将数据推送到一个内存队列中</span></span><br><span class="line">        RebuildCacheQueue rebuildCacheQueue = RebuildCacheQueue.getInstance();</span><br><span class="line">        rebuildCacheQueue.putProductInfo(productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> productInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/getProductInfo&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ProductInfo <span class="title">getProductInfo</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 先从Redis从获取数据</span></span><br><span class="line">    ProductInfo productInfo = cacheService.getProductInfoFromRedisCache(productId);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;=================从redis中获取缓存，商品信息=&quot;</span> + productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        productInfo = cacheService.getProductInfoFromLocalCache(productId);</span><br><span class="line">        System.out.println(<span class="string">&quot;================从ehcache从获取缓存，商品信息=&quot;</span> + productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 就需要从数据源重新拉取数据，重建缓存，模拟获取</span></span><br><span class="line">        String productInfoJSON = <span class="string">&quot;&#123;\&quot;id\&quot;: &quot;</span> + productId + <span class="string">&quot;, \&quot;name\&quot;: \&quot;iphone7手机\&quot;, \&quot;price\&quot;: 5599, \&quot;pictureList\&quot;:\&quot;a.jpg,b.jpg\&quot;, \&quot;specification\&quot;: \&quot;iphone7的规格\&quot;, \&quot;service\&quot;: \&quot;iphone7的售后服务\&quot;, \&quot;color\&quot;: \&quot;红色,白色,黑色\&quot;, \&quot;size\&quot;: \&quot;5.5\&quot;, \&quot;shopId\&quot;: 2, \&quot;modifiedTime\&quot;: \&quot;2018-02-21 22:11:34\&quot;&#125;&quot;</span>;</span><br><span class="line">        productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);</span><br><span class="line">        <span class="comment">// 将数据推送到一个内存队列中</span></span><br><span class="line">        RebuildCacheQueue rebuildCacheQueue = RebuildCacheQueue.getInstance();</span><br><span class="line">        rebuildCacheQueue.putProductInfo(productInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> productInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>经过这样一个简单的改造，我们使用Hystrix对redis的线程资源隔离和降级都很容易的完成了。</p>
 <h1 id="Redis集群崩溃定制化熔断策略"><a href="#Redis集群崩溃定制化熔断策略" class="headerlink" title="Redis集群崩溃定制化熔断策略"></a>Redis集群崩溃定制化熔断策略</h1><p>缓存雪崩的事中解决方案</p>
 <p>redis集群崩溃的时候，Hystrix会怎么样？</p>
@@ -346,11 +359,13 @@
 <p>HystrixCommandProperties.Setter()<br>   .withCircuitBreakerRequestVolumeThreshold(int value)</p>
 <p>我们应该根据我们自己的平时的访问流量去设置，而不是用默认值，比如，我们认为平时一般的时候，流量也可以在每秒在QPS 100，10秒的滑动窗口就是1000，一般可以设置600或者800一个值，需要根据自己的系统的流量去设置。假如你设置的太少了，或者太多了，都不太合适。举个例子，你设置一个20，结果在晚上最低峰的时候，刚好是30，可能晚上的时候因为访问不频繁，大量的找不到缓存，可能超时频繁了一些，结果直接就给短路了。</p>
 <h3 id="circuitBreaker-errorThresholdPercentage"><a href="#circuitBreaker-errorThresholdPercentage" class="headerlink" title="circuitBreaker.errorThresholdPercentage"></a>circuitBreaker.errorThresholdPercentage</h3><p>设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter()</span><br><span class="line">   .withCircuitBreakerErrorThresholdPercentage(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter()</span><br><span class="line">   .withCircuitBreakerErrorThresholdPercentage(<span class="keyword">int</span> value)   </span><br></pre></td></tr></table></figure>
+
 <p>我们最好还是自己定制，自己设置，如果是要50%的时候才短路的话，会有什么情况呢?10%短路，也不太靠谱，90%异常，才短路也不行。这个值可以稍微高一些，如果redis集群彻底崩溃，那么基本上就是所有的请求，100%都会异常，所以一般设置60%，70%。也有可能偶然出现网络的抖动，导致比如就这10秒钟，访问延时高了一些，其实可能并不需要立即就短路，可能下个10秒马上就恢复了。</p>
 <p>金融支付类的接口，可能这个比例就会设置的很低，因为对异常系统必须要很敏感，可能就是10%异常了，就直接短路了，不让继续访问了。金融支付类的接口是很重要的，而且必须是很稳定，我们不能容忍任何的延迟或者是报错。一旦支付类的接口，有10%的异常的话，我们基本就可以认为这个接口已经出问题了，再继续访问的话，也许访问的就是有问题的接口，可能造成资金的错乱，给公司造成损失。所以直接熔断吧，不让访问了，走降级策略，这就是对整个系统的一个安全性保障。</p>
 <h3 id="circuitBreaker-sleepWindowInMilliseconds"><a href="#circuitBreaker-sleepWindowInMilliseconds" class="headerlink" title="circuitBreaker.sleepWindowInMilliseconds"></a>circuitBreaker.sleepWindowInMilliseconds</h3><p>设置在短路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新导half-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter()</span><br><span class="line">   .withCircuitBreakerSleepWindowInMilliseconds(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+
 <p>如果redis集群崩溃了，会在5s内就直接恢复。</p>
 <h1 id="Hystrix保护源服务，防止Mysql崩溃"><a href="#Hystrix保护源服务，防止Mysql崩溃" class="headerlink" title="Hystrix保护源服务，防止Mysql崩溃"></a>Hystrix保护源服务，防止Mysql崩溃</h1><p>做缓存服务，redis集群彻底崩溃的时候，除了对redis本身做资源隔离、超时控制、熔断策略。还要保护源服务，因为Redis集群崩溃后，大量的请求会高并发会去访问源服务-商品服务（提供商品数据）。如果QPS10000去访问商品服务，基于mysql去查询，那mysql肯定会挂掉，商品服务也就死掉了。</p>
 <p>所以要对商品服务这种源服务的访问施加限流的措施，限流怎么限，hystrix本身就是提供了两种机制，线程池（内部做了异步化处理，可以处理超时），semaphore（信号量，让tomcat线程执行运行逻辑，没有内部的异步化处理，一旦超时，会导致tomcat线程就hang住了）。</p>
@@ -358,7 +373,8 @@
 <p>我们这里是访问外部的商品服务，所以还是用线程池做限流，需要算一下，要限多少，怎么限？</p>
 <p>假设每次商品服务的访问性能在200ms，1个线程一秒可以执行5次访问，假设我们一个缓存服务实例对这个商品服务的访问每秒在150次。所以这个时候，我们就需要30个线程，每个线程每秒可以访问5次，总共每秒30个线程可以访问150次。</p>
 <p>我们算的这个每秒150次访问时正常情况下，如果是非正常情况下，每秒1000次，甚至1w次，此时就可以自然限流，因为我们的线程池就30个。在非正常情况下，直接线程池+等待队列全满，此时就会出现大量的reject操作，然后就会去调用降级逻辑。接着我们要做限流，设置的就是线程池的大小，还有等待队列的大小，30个线程可以每秒处理150个请求，但是偶尔会多一些出来，同时30个线程处理150个请求会快一些，不用花费1秒钟，等待队列给一些buffer，不要偶尔1秒钟来了200条请求，50条直接给reject掉了。等待队列设置150个，30个线程直接500ms处理完了，等待队列中的50个请求就可以继续处理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCommand</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"ProductInfoService"</span>))</span><br><span class="line">                .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">"GetProductInfoPool"</span>))</span><br><span class="line">                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()</span><br><span class="line">                        .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">12</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">8</span>)</span><br><span class="line">                        .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                        .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                        .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">50</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">100</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                        <span class="comment">// 多少个请求以上才会判断断路器是否需要开启。</span></span><br><span class="line">                        .withCircuitBreakerRequestVolumeThreshold(<span class="number">30</span>)</span><br><span class="line">                        <span class="comment">// 错误的请求达到40%的时候就开始断路。</span></span><br><span class="line">                        .withCircuitBreakerErrorThresholdPercentage(<span class="number">40</span>)</span><br><span class="line">                        <span class="comment">// 3秒以后尝试恢复</span></span><br><span class="line">                        .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">4000</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String productInfoJSON = <span class="string">"&#123;\"id\": "</span> + productId + <span class="string">", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:01:00\"&#125;"</span>;</span><br><span class="line">        <span class="keyword">return</span> JSONObject.parseObject(productInfoJSON, ProductInfo.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCommand</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCommand</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;ProductInfoService&quot;</span>))</span><br><span class="line">                .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">&quot;GetProductInfoPool&quot;</span>))</span><br><span class="line">                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()</span><br><span class="line">                        .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">12</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">8</span>)</span><br><span class="line">                        .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                        .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                        .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">50</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">100</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                        <span class="comment">// 多少个请求以上才会判断断路器是否需要开启。</span></span><br><span class="line">                        .withCircuitBreakerRequestVolumeThreshold(<span class="number">30</span>)</span><br><span class="line">                        <span class="comment">// 错误的请求达到40%的时候就开始断路。</span></span><br><span class="line">                        .withCircuitBreakerErrorThresholdPercentage(<span class="number">40</span>)</span><br><span class="line">                        <span class="comment">// 3秒以后尝试恢复</span></span><br><span class="line">                        .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">4000</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String productInfoJSON = <span class="string">&quot;&#123;\&quot;id\&quot;: &quot;</span> + productId + <span class="string">&quot;, \&quot;name\&quot;: \&quot;iphone7手机\&quot;, \&quot;price\&quot;: 5599, \&quot;pictureList\&quot;:\&quot;a.jpg,b.jpg\&quot;, \&quot;specification\&quot;: \&quot;iphone7的规格\&quot;, \&quot;service\&quot;: \&quot;iphone7的售后服务\&quot;, \&quot;color\&quot;: \&quot;红色,白色,黑色\&quot;, \&quot;size\&quot;: \&quot;5.5\&quot;, \&quot;shopId\&quot;: 1, \&quot;modifiedTime\&quot;: \&quot;2017-01-01 12:01:00\&quot;&#125;&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> JSONObject.parseObject(productInfoJSON, ProductInfo.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="源服务fallback降级机制"><a href="#源服务fallback降级机制" class="headerlink" title="源服务fallback降级机制"></a>源服务fallback降级机制</h2><p>现在nginx本地缓存没有，redis集群崩溃，ehcache也找不到这条数据对应的缓存，只能去源头服务里面查询，但是查询的请求又被限流了，现在请求到了这里，被限流了以后只能走降级逻辑。</p>
 <p>这里的一种降级机制叫做<a href="http://www.saily.top/2018/04/15/hystrix03/">stubbed fallback降级机制</a>（残缺的降级），就是用请求参数中少量的数据，加上纯内存中缓存的少量的数据来提供残缺的数据服务。</p>
 <h1 id="缓存雪崩预防和解决方案回顾"><a href="#缓存雪崩预防和解决方案回顾" class="headerlink" title="缓存雪崩预防和解决方案回顾"></a>缓存雪崩预防和解决方案回顾</h1><ol>
@@ -370,13 +386,14 @@
 </li>
 </ol>
 <h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><p>如果一直访问的根本不存在的时候，那么就会导致缓存穿透，所有的这种请求都会直接到mysql这边来。</p>
-<p><img src="/img/cache/缓存穿透的现象.png" alt="缓存穿透的现象"></p>
+<p><img src="/img/cache/%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E7%8E%B0%E8%B1%A1.png" alt="缓存穿透的现象"></p>
 <p>缓存穿透的解决方案其实非常简单，就是如果从源服务（商品服务）查询到的数据是空，就说明这个数据根本就不存在。那么如果这个数据不存在的话，我们也往redis和ehcache等缓存中写入一个数据，可以写入一个空的数据，比如空的productInfo的json串，给nginx也是，返回一个空的productInfo的json串。</p>
 <p>我们有异步监听数据变更的机制在里面，如果数据变更的话，某个数据本来是没有的，可能会导致缓存穿透，所以我们给了个空数据，但是现在这个数据有了，我们接收到这个变更的消息过后，就可以将数据再次从源服务中查询出来，然后设置到各级缓存中去了。</p>
 <h1 id="缓存失效"><a href="#缓存失效" class="headerlink" title="缓存失效"></a>缓存失效</h1><p>之前在nginx中设置本地的缓存的时候，给了一个过期的时间（10分钟）。10分钟以后自动过期，过期了以后，就会重新从redis中去获取数据。10分钟到期自动过期，就叫做缓存的失效。如果缓存失效以后，那么实际上此时，就会有大量的请求回到redis中去查询。</p>
 <p>如果同一时间来了1000个请求，都将缓存cache在了nginx自己的本地，缓存失效的时间都设置了10分钟，那么是不是可能导致10分钟过后，这些数据，就自动全部在同一时间失效了。如果同一时间全部失效，会不会导致同一时间大量的请求过来，在nginx里找不到缓存数据，全部高并发走到redis上去了。加重大量的网络请求，网络负载也会加重。</p>
 <p>解决方案很简单，就是把10分钟的时间改成一个随机数,随机一个失效的时间。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">math.randomseed(tostring(os.time()):reverse():sub(1, 7))</span><br><span class="line"><span class="built_in">local</span> expireTime = math.random(600, 1200)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">math.randomseed(tostring(os.time()):reverse():sub(1, 7))</span><br><span class="line"><span class="built_in">local</span> expireTime = math.random(600, 1200)  </span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -386,7 +403,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/多级缓存架构/" rel="tag"># 多级缓存架构</a>
+              <a href="/tags/%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" rel="tag"># 多级缓存架构</a>
           </div>
 
         
@@ -410,7 +427,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -466,7 +482,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">1.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩的过程和后果"><span class="nav-number">1.1.</span> <span class="nav-text">缓存雪崩的过程和后果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存雪崩的解决方案"><span class="nav-number">2.</span> <span class="nav-text">缓存雪崩的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#事前解决方案"><span class="nav-number">2.1.</span> <span class="nav-text">事前解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事中解决方案"><span class="nav-number">2.2.</span> <span class="nav-text">事中解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事后解决方案"><span class="nav-number">2.3.</span> <span class="nav-text">事后解决方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Hystrix对Redis进行资源隔离"><span class="nav-number">3.</span> <span class="nav-text">使用Hystrix对Redis进行资源隔离</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SaveProductInfo2RedisCacheCommand"><span class="nav-number">3.1.</span> <span class="nav-text">SaveProductInfo2RedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SaveShopInfo2RedisCacheCommand"><span class="nav-number">3.2.</span> <span class="nav-text">SaveShopInfo2RedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GetProductInfoFromRedisCacheCommand"><span class="nav-number">3.3.</span> <span class="nav-text">GetProductInfoFromRedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GetShopInfoFromRedisCacheCommand"><span class="nav-number">3.4.</span> <span class="nav-text">GetShopInfoFromRedisCacheCommand</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Hystrix对Redis访问进行降级"><span class="nav-number">4.</span> <span class="nav-text">使用Hystrix对Redis访问进行降级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis集群崩溃定制化熔断策略"><span class="nav-number">5.</span> <span class="nav-text">Redis集群崩溃定制化熔断策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#timeout设置"><span class="nav-number">5.1.</span> <span class="nav-text">timeout设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#熔断策略"><span class="nav-number">5.2.</span> <span class="nav-text">熔断策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-requestVolumeThreshold"><span class="nav-number">5.2.1.</span> <span class="nav-text">circuitBreaker.requestVolumeThreshold</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-errorThresholdPercentage"><span class="nav-number">5.2.2.</span> <span class="nav-text">circuitBreaker.errorThresholdPercentage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-sleepWindowInMilliseconds"><span class="nav-number">5.2.3.</span> <span class="nav-text">circuitBreaker.sleepWindowInMilliseconds</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hystrix保护源服务，防止Mysql崩溃"><span class="nav-number">6.</span> <span class="nav-text">Hystrix保护源服务，防止Mysql崩溃</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#源服务fallback降级机制"><span class="nav-number">6.1.</span> <span class="nav-text">源服务fallback降级机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存雪崩预防和解决方案回顾"><span class="nav-number">7.</span> <span class="nav-text">缓存雪崩预防和解决方案回顾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存穿透"><span class="nav-number">8.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存失效"><span class="nav-number">9.</span> <span class="nav-text">缓存失效</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">1.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E8%BF%87%E7%A8%8B%E5%92%8C%E5%90%8E%E6%9E%9C"><span class="nav-number">1.1.</span> <span class="nav-text">缓存雪崩的过程和后果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">缓存雪崩的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%89%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">事前解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%B8%AD%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.2.</span> <span class="nav-text">事中解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%90%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.3.</span> <span class="nav-text">事后解决方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Hystrix%E5%AF%B9Redis%E8%BF%9B%E8%A1%8C%E8%B5%84%E6%BA%90%E9%9A%94%E7%A6%BB"><span class="nav-number">3.</span> <span class="nav-text">使用Hystrix对Redis进行资源隔离</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SaveProductInfo2RedisCacheCommand"><span class="nav-number">3.1.</span> <span class="nav-text">SaveProductInfo2RedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SaveShopInfo2RedisCacheCommand"><span class="nav-number">3.2.</span> <span class="nav-text">SaveShopInfo2RedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GetProductInfoFromRedisCacheCommand"><span class="nav-number">3.3.</span> <span class="nav-text">GetProductInfoFromRedisCacheCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GetShopInfoFromRedisCacheCommand"><span class="nav-number">3.4.</span> <span class="nav-text">GetShopInfoFromRedisCacheCommand</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Hystrix%E5%AF%B9Redis%E8%AE%BF%E9%97%AE%E8%BF%9B%E8%A1%8C%E9%99%8D%E7%BA%A7"><span class="nav-number">4.</span> <span class="nav-text">使用Hystrix对Redis访问进行降级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E9%9B%86%E7%BE%A4%E5%B4%A9%E6%BA%83%E5%AE%9A%E5%88%B6%E5%8C%96%E7%86%94%E6%96%AD%E7%AD%96%E7%95%A5"><span class="nav-number">5.</span> <span class="nav-text">Redis集群崩溃定制化熔断策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#timeout%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.1.</span> <span class="nav-text">timeout设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%86%94%E6%96%AD%E7%AD%96%E7%95%A5"><span class="nav-number">5.2.</span> <span class="nav-text">熔断策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-requestVolumeThreshold"><span class="nav-number">5.2.1.</span> <span class="nav-text">circuitBreaker.requestVolumeThreshold</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-errorThresholdPercentage"><span class="nav-number">5.2.2.</span> <span class="nav-text">circuitBreaker.errorThresholdPercentage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#circuitBreaker-sleepWindowInMilliseconds"><span class="nav-number">5.2.3.</span> <span class="nav-text">circuitBreaker.sleepWindowInMilliseconds</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hystrix%E4%BF%9D%E6%8A%A4%E6%BA%90%E6%9C%8D%E5%8A%A1%EF%BC%8C%E9%98%B2%E6%AD%A2Mysql%E5%B4%A9%E6%BA%83"><span class="nav-number">6.</span> <span class="nav-text">Hystrix保护源服务，防止Mysql崩溃</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E6%9C%8D%E5%8A%A1fallback%E9%99%8D%E7%BA%A7%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.</span> <span class="nav-text">源服务fallback降级机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%A2%84%E9%98%B2%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%9B%9E%E9%A1%BE"><span class="nav-number">7.</span> <span class="nav-text">缓存雪崩预防和解决方案回顾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="nav-number">8.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88"><span class="nav-number">9.</span> <span class="nav-text">缓存失效</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -482,14 +498,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -500,6 +516,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -517,19 +538,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -569,9 +589,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -580,7 +608,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

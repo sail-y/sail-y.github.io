@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,33 +13,33 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Nexus篇在Centos上安装 如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。 下载地址：http://www.sonatype.org/nexus/archived 我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。 设置为系统自启动服务（使用root用户）12cd /etc/init.d/cp /usr/">
-<meta name="keywords" content="centos">
+  <meta name="description" content="Nexus篇在Centos上安装 如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。 下载地址：http:&#x2F;&#x2F;www.sonatype.org&#x2F;nexus&#x2F;archived 我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。 设置为系统自启动服务（使用root用户） 12cd &#x2F;etc&#x2F;init.d&#x2F;cp &#x2F;usr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS Jenkins + Sonar + Nexus 环境搭建">
-<meta property="og:url" content="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/index.html">
+<meta property="og:url" content="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="Nexus篇在Centos上安装 如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。 下载地址：http://www.sonatype.org/nexus/archived 我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。 设置为系统自启动服务（使用root用户）12cd /etc/init.d/cp /usr/">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="Nexus篇在Centos上安装 如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。 下载地址：http:&#x2F;&#x2F;www.sonatype.org&#x2F;nexus&#x2F;archived 我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。 设置为系统自启动服务（使用root用户） 12cd &#x2F;etc&#x2F;init.d&#x2F;cp &#x2F;usr">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20140826131504260?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20140826131615365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20140826131719653?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20140826131827217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2016-12-01T08:46:42.000Z">
+<meta property="article:published_time" content="2015-03-06T13:43:05.000Z">
+<meta property="article:modified_time" content="2016-12-01T08:46:42.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="centos">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS Jenkins + Sonar + Nexus 环境搭建">
-<meta name="twitter:description" content="Nexus篇在Centos上安装 如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。 下载地址：http://www.sonatype.org/nexus/archived 我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。 设置为系统自启动服务（使用root用户）12cd /etc/init.d/cp /usr/">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
-<link rel="canonical" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/">
+<link rel="canonical" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -82,6 +83,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -100,14 +102,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -118,32 +118,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -151,17 +152,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -175,10 +177,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -187,9 +188,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -197,15 +195,14 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -224,7 +221,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -232,14 +229,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -267,28 +264,40 @@
       
         <h1 id="Nexus篇"><a href="#Nexus篇" class="headerlink" title="Nexus篇"></a>Nexus篇</h1><p>在Centos上安装</p>
 <p>如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。</p>
-<p>下载地址：<a href="http://www.sonatype.org/nexus/archived" target="_blank" rel="noopener">http://www.sonatype.org/nexus/archived</a></p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://www.sonatype.org/nexus/archived">http://www.sonatype.org/nexus/archived</a></p>
 <p>我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。</p>
-<p>设置为系统自启动服务（使用root用户）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">cp /usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01/bin/jsw/linux-x86-64/nexus nexus</span><br></pre></td></tr></table></figure></p>
-<p>编辑<code>/etc/init.d/nexus</code>文件，添加以下变量定义：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_HOME=/usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01</span><br><span class="line">PLATFORM=linux-x86-64</span><br><span class="line">PLATFORM_DIR=<span class="string">"<span class="variable">$&#123;NEXUS_HOME&#125;</span>/bin/jsw/<span class="variable">$&#123;PLATFORM&#125;</span>"</span></span><br></pre></td></tr></table></figure></p>
+<p>设置为系统自启动服务（使用root用户）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">cp /usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01/bin/jsw/linux-x86-64/nexus nexus</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>/etc/init.d/nexus</code>文件，添加以下变量定义：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_HOME=/usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01</span><br><span class="line">PLATFORM=linux-x86-64</span><br><span class="line">PLATFORM_DIR=<span class="string">&quot;<span class="variable">$&#123;NEXUS_HOME&#125;</span>/bin/jsw/<span class="variable">$&#123;PLATFORM&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<p>修改如下变量，设置启动用户为ycftp(这里用你自己的用户)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN_AS_USER=ycftp</span><br></pre></td></tr></table></figure></p>
-<p>执行命令添加nexus自启动服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig –add nexus</span><br><span class="line">chkconfig –levels 345 nexus on</span><br></pre></td></tr></table></figure></p>
-<p>执行如下命令启动、停止nexus服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service nexus start</span><br><span class="line">service nexus stop</span><br></pre></td></tr></table></figure></p>
-<p>启动后可通过<a href="http://yourip:8081/nexus访问" target="_blank" rel="noopener">http://yourip:8081/nexus访问</a></p>
-<p>用admin/admin123登陆<br>登陆后点击左侧Repositories，将下图所示设置为true，就可以搜索了<br><img src="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br><img src="http://img.blog.csdn.net/20140826131504260?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>这个时候还搜索不到</p>
-<p>需要再右击选项点击 Repair Index如下所示<br><img src="http://img.blog.csdn.net/20140826131615365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>修复完成后便可以搜索了。</p>
-<h1 id="Jenkins篇"><a href="#Jenkins篇" class="headerlink" title="Jenkins篇"></a>Jenkins篇</h1><p>添加Jenkins的源（repository）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O/etc/yum.repos.d/jenkins.repo http://jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">sudo rpm--import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key</span><br></pre></td></tr></table></figure></p>
+
+<p>修改如下变量，设置启动用户为ycftp(这里用你自己的用户)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN_AS_USER=ycftp</span><br></pre></td></tr></table></figure>
+<p>执行命令添加nexus自启动服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig –add nexus</span><br><span class="line">chkconfig –levels 345 nexus on</span><br></pre></td></tr></table></figure>
+<p>执行如下命令启动、停止nexus服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service nexus start</span><br><span class="line">service nexus stop</span><br></pre></td></tr></table></figure>
+<p>启动后可通过<a target="_blank" rel="noopener" href="http://yourip:8081/nexus%E8%AE%BF%E9%97%AE">http://yourip:8081/nexus访问</a></p>
+<p>用admin/admin123登陆<br>登陆后点击左侧Repositories，将下图所示设置为true，就可以搜索了<br><img src="http://img.blog.csdn.net/20140826131253109?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"><br><img src="http://img.blog.csdn.net/20140826131504260?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"><br>这个时候还搜索不到</p>
+<p>需要再右击选项点击 Repair Index如下所示<br><img src="http://img.blog.csdn.net/20140826131615365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"><br>修复完成后便可以搜索了。</p>
+<h1 id="Jenkins篇"><a href="#Jenkins篇" class="headerlink" title="Jenkins篇"></a>Jenkins篇</h1><p>添加Jenkins的源（repository）:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O/etc/yum.repos.d/jenkins.repo http://jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">sudo rpm--import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key</span><br></pre></td></tr></table></figure>
 <p>不然你在启动jenkins服务的时候他会说你没有什么key啥的。</p>
-<p>安装Jenkins：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum installjenkins</span><br></pre></td></tr></table></figure></p>
+<p>安装Jenkins：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum installjenkins</span><br></pre></td></tr></table></figure>
 <p>安装完成后，有如下相关目录：</p>
 <p><code>/usr/lib/jenkins/</code>：jenkins安装目录，WAR包会放在这里。</p>
 <p>注意修改端口号</p>
-<p><code>/etc/sysconfig/jenkins</code>：jenkins配置文件，“端口”，“JENKINS_HOME”等都可以在这里配置。内容如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Path:        Development/Jenkins</span></span><br><span class="line"><span class="comment">## Description: Configuration for theJenkins continuous build server</span></span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "/var/lib/jenkins"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Directory where Jenkins store itsconfiguration and working</span></span><br><span class="line"><span class="comment"># files (checkouts, build reports, artifacts,...).</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HOME=<span class="string">"/var/lib/jenkins"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     ""</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Java executable to run Jenkins</span></span><br><span class="line"><span class="comment"># When left empty, we'll try to find thesuitable Java.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_CMD=<span class="string">""</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "jenkins"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unix user account that runs the Jenkinsdaemon</span></span><br><span class="line"><span class="comment"># Be careful when you change this, as youneed to update</span></span><br><span class="line"><span class="comment"># permissions of $JENKINS_HOME and/var/log/jenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_USER=<span class="string">"jenkins"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     "-Djava.awt.headless=true"</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Options to pass to java when runningJenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_OPTIONS=<span class="string">"-Djava.awt.headless=true"</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8080</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_PORT=<span class="string">"8085"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8009</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Ajp13 Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_AJP_PORT=<span class="string">"8019"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(1:9)</span></span><br><span class="line"><span class="comment">## Default:     5</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Debug level for logs -- the higher thevalue, the more verbose.</span></span><br><span class="line"><span class="comment"># 5 is INFO.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_DEBUG_LEVEL=<span class="string">"5"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        yesno</span></span><br><span class="line"><span class="comment">## Default:     no</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Whether to enable access logging or not.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ENABLE_ACCESS_LOG=<span class="string">"no"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     100</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of HTTP worker threads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_MAX=<span class="string">"100"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     20</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of idle HTTP workerthreads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_IDLE=<span class="string">"20"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     ""</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Pass arbitrary arguments to Jenkins.</span></span><br><span class="line"><span class="comment"># Full option list: java -jar jenkins.war--help</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ARGS=<span class="string">""</span></span><br></pre></td></tr></table></figure></p>
+<p><code>/etc/sysconfig/jenkins</code>：jenkins配置文件，“端口”，“JENKINS_HOME”等都可以在这里配置。内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Path:        Development/Jenkins</span></span><br><span class="line"><span class="comment">## Description: Configuration for theJenkins continuous build server</span></span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     &quot;/var/lib/jenkins&quot;</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Directory where Jenkins store itsconfiguration and working</span></span><br><span class="line"><span class="comment"># files (checkouts, build reports, artifacts,...).</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HOME=<span class="string">&quot;/var/lib/jenkins&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     &quot;&quot;</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Java executable to run Jenkins</span></span><br><span class="line"><span class="comment"># When left empty, we&#x27;ll try to find thesuitable Java.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_CMD=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     &quot;jenkins&quot;</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unix user account that runs the Jenkinsdaemon</span></span><br><span class="line"><span class="comment"># Be careful when you change this, as youneed to update</span></span><br><span class="line"><span class="comment"># permissions of $JENKINS_HOME and/var/log/jenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_USER=<span class="string">&quot;jenkins&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     &quot;-Djava.awt.headless=true&quot;</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Options to pass to java when runningJenkins.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_JAVA_OPTIONS=<span class="string">&quot;-Djava.awt.headless=true&quot;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8080</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_PORT=<span class="string">&quot;8085&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(0:65535)</span></span><br><span class="line"><span class="comment">## Default:     8009</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Ajp13 Port Jenkins is listening on.</span></span><br><span class="line"><span class="comment"># Set to -1 to disable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_AJP_PORT=<span class="string">&quot;8019&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer(1:9)</span></span><br><span class="line"><span class="comment">## Default:     5</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Debug level for logs -- the higher thevalue, the more verbose.</span></span><br><span class="line"><span class="comment"># 5 is INFO.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_DEBUG_LEVEL=<span class="string">&quot;5&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        yesno</span></span><br><span class="line"><span class="comment">## Default:     no</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Whether to enable access logging or not.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ENABLE_ACCESS_LOG=<span class="string">&quot;no&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     100</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of HTTP worker threads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_MAX=<span class="string">&quot;100&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        integer</span></span><br><span class="line"><span class="comment">## Default:     20</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Maximum number of idle HTTP workerthreads.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_HANDLER_IDLE=<span class="string">&quot;20&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">## Type:        string</span></span><br><span class="line"><span class="comment">## Default:     &quot;&quot;</span></span><br><span class="line"><span class="comment">## ServiceRestart: jenkins</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Pass arbitrary arguments to Jenkins.</span></span><br><span class="line"><span class="comment"># Full option list: java -jar jenkins.war--help</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">JENKINS_ARGS=<span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
 <p>我这里修改端口号为8085，避免和本机tomcat冲突</p>
-<p>启动Jenkins<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo servicejenkins start</span><br></pre></td></tr></table></figure></p>
-<p>启动后用 <code>http://yourip:8085/</code> 访问<br><img src="http://img.blog.csdn.net/20140826131719653?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
-<h1 id="Sonar篇"><a href="#Sonar篇" class="headerlink" title="Sonar篇"></a>Sonar篇</h1><p>首先下载<a href="http://www.sonarqube.org/downloads/" target="_blank" rel="noopener">http://www.sonarqube.org/downloads/</a></p>
+<p>启动Jenkins</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo servicejenkins start</span><br></pre></td></tr></table></figure>
+
+<p>启动后用 <code>http://yourip:8085/</code> 访问<br><img src="http://img.blog.csdn.net/20140826131719653?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"></p>
+<h1 id="Sonar篇"><a href="#Sonar篇" class="headerlink" title="Sonar篇"></a>Sonar篇</h1><p>首先下载<a target="_blank" rel="noopener" href="http://www.sonarqube.org/downloads/">http://www.sonarqube.org/downloads/</a></p>
 <p>我用的ftp工具上传到服务器。</p>
 <p>编辑~/.bash_profile，添加环境变量</p>
 <p>添加SONAR_RUNNER_HOME(就是sonar-runner-2.4的全路径名，比如/usr/local/sonar-runner-2.4)环境变量，并将SONAR_RUNNER_HOME/bin加入PATH变量中</p>
@@ -298,26 +307,32 @@
 <p>先配置Sonar要用的数据库环境：</p>
 <h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><ul>
 <li><p>在mysql中执行如下脚本创建数据库及mysql用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE sonar CHARACTER SET utf8 COLLATE utf8_general_ci;</span><br><span class="line">CREATE USER <span class="string">'sonar'</span> IDENTIFIED BY <span class="string">'sonar'</span>;</span><br><span class="line">GRANT ALL ON sonar.* TO <span class="string">'sonar'</span>@<span class="string">'%'</span> IDENTIFIED BY <span class="string">'sonar'</span>;</span><br><span class="line">GRANT ALL ON sonar.* TO <span class="string">'sonar'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'sonar'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE sonar CHARACTER SET utf8 COLLATE utf8_general_ci;</span><br><span class="line">CREATE USER <span class="string">&#x27;sonar&#x27;</span> IDENTIFIED BY <span class="string">&#x27;sonar&#x27;</span>;</span><br><span class="line">GRANT ALL ON sonar.* TO <span class="string">&#x27;sonar&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;sonar&#x27;</span>;</span><br><span class="line">GRANT ALL ON sonar.* TO <span class="string">&#x27;sonar&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;sonar&#x27;</span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>编辑${SONAR_HOME}/conf/sonar.properties配置数据库:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sonar.jdbc.username=sonar</span><br><span class="line">sonar.jdbc.password=sonar</span><br><span class="line"></span><br><span class="line">sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optionalproperties</span></span><br><span class="line"></span><br><span class="line">sonar.jdbc.driverClassName:com.mysql.jdbc.Driver</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置DB驱动包<br>如果使用Oracle数据库，必须手动复制驱动类到${SONAR_HOME}/extensions/jdbc-driver/oracle/目录下。其它支持的数据库默认提供了驱动，<a href="http://docs.codehaus.org/display/SONAR/Analysis+Parameters" target="_blank" rel="noopener">http://docs.codehaus.org/display/SONAR/Analysis+Parameters</a> 列举了一些常用的配置及默认值.</p>
+<li><p>配置DB驱动包<br>如果使用Oracle数据库，必须手动复制驱动类到${SONAR_HOME}/extensions/jdbc-driver/oracle/目录下。其它支持的数据库默认提供了驱动，<a target="_blank" rel="noopener" href="http://docs.codehaus.org/display/SONAR/Analysis+Parameters">http://docs.codehaus.org/display/SONAR/Analysis+Parameters</a> 列举了一些常用的配置及默认值.</p>
 </li>
 </ul>
 <h2 id="修改sonar配置文件"><a href="#修改sonar配置文件" class="headerlink" title="修改sonar配置文件"></a>修改sonar配置文件</h2><p>编辑sonar所在的目录（比如/usr/local/sonar-4.4）中conf/sonar.properties文件，配置数据库设置，默认已经提供了各类数据库的支持，只要将注释去掉就可以。这里使用mysql，因此取消mysql模块的注释，并将sonar中原有的嵌入式的数据库的jdbc.url注释掉。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#vi sonar.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#需要注释下面这条语句</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:h2:tcp://localhost:9092/sonar</span></span><br><span class="line"></span><br><span class="line">sonar.jdbc.username=sonar</span><br><span class="line"></span><br><span class="line">sonar.jdbc.password=sonar</span><br><span class="line"></span><br><span class="line">sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=<span class="literal">true</span>&amp;characterEncoding=</span><br><span class="line"></span><br><span class="line">utf8&amp;rewriteBatchedStatements=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optional properties</span></span><br><span class="line"></span><br><span class="line">sonar.jdbc.driverClassName=com.mysql.jdbc.Driver</span><br></pre></td></tr></table></figure>
-<h2 id="修改sonar-runner的配置文件"><a href="#修改sonar-runner的配置文件" class="headerlink" title="修改sonar-runner的配置文件"></a>修改sonar-runner的配置文件</h2><p>切换至sonar-runner的安装目录下，修改sonar-runner.properties根据实际使用数据库情况取消相应注释，这里需要和sonar.properties中保持一致。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Configure here general information about the environment， such as SonarQube DB details for example</span></span><br><span class="line"><span class="comment">#No information about specific project should appear here</span></span><br><span class="line"><span class="comment">#----- Default SonarQube server</span></span><br><span class="line">sonar.host.url=http://localhost:9000</span><br><span class="line"><span class="comment">#----- PostgreSQL</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:postgresql://localhost/sonar</span></span><br><span class="line"><span class="comment">#----- MySQL</span></span><br><span class="line">sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf8</span><br><span class="line">sonar.jdbc.driverClassName=com.mysql.jdbc.Driver</span><br><span class="line"><span class="comment">#----- Oracle</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:oracle:thin:@localhost/XE</span></span><br><span class="line"><span class="comment">#----- Microsoft SQLServer</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor</span></span><br><span class="line"><span class="comment">#----- Global database settings</span></span><br><span class="line">sonar.jdbc.username=sonar</span><br><span class="line">sonar.jdbc.password=sonar</span><br><span class="line"><span class="comment">#----- Default source code encoding</span></span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br><span class="line"><span class="comment">#----- Security (when 'sonar.forceAuthentication' is set to 'true')</span></span><br><span class="line">sonar.login=admin</span><br><span class="line">sonar.password=admin</span><br></pre></td></tr></table></figure></p>
-<p>运行如下命令启动sonar，其它操作系统sonar均提供了启动脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;SONAR_HOME&#125;</span>/bin/linux-x86-64/sonar.sh start</span><br></pre></td></tr></table></figure></p>
+<h2 id="修改sonar-runner的配置文件"><a href="#修改sonar-runner的配置文件" class="headerlink" title="修改sonar-runner的配置文件"></a>修改sonar-runner的配置文件</h2><p>切换至sonar-runner的安装目录下，修改sonar-runner.properties根据实际使用数据库情况取消相应注释，这里需要和sonar.properties中保持一致。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Configure here general information about the environment， such as SonarQube DB details for example</span></span><br><span class="line"><span class="comment">#No information about specific project should appear here</span></span><br><span class="line"><span class="comment">#----- Default SonarQube server</span></span><br><span class="line">sonar.host.url=http://localhost:9000</span><br><span class="line"><span class="comment">#----- PostgreSQL</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:postgresql://localhost/sonar</span></span><br><span class="line"><span class="comment">#----- MySQL</span></span><br><span class="line">sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=<span class="literal">true</span>&amp;characterEncoding=utf8</span><br><span class="line">sonar.jdbc.driverClassName=com.mysql.jdbc.Driver</span><br><span class="line"><span class="comment">#----- Oracle</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:oracle:thin:@localhost/XE</span></span><br><span class="line"><span class="comment">#----- Microsoft SQLServer</span></span><br><span class="line"><span class="comment">#sonar.jdbc.url=jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor</span></span><br><span class="line"><span class="comment">#----- Global database settings</span></span><br><span class="line">sonar.jdbc.username=sonar</span><br><span class="line">sonar.jdbc.password=sonar</span><br><span class="line"><span class="comment">#----- Default source code encoding</span></span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br><span class="line"><span class="comment">#----- Security (when &#x27;sonar.forceAuthentication&#x27; is set to &#x27;true&#x27;)</span></span><br><span class="line">sonar.login=admin</span><br><span class="line">sonar.password=admin</span><br></pre></td></tr></table></figure>
+<p>运行如下命令启动sonar，其它操作系统sonar均提供了启动脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;SONAR_HOME&#125;</span>/bin/linux-x86-64/sonar.sh start</span><br></pre></td></tr></table></figure>
 <p>如果遇到wrapper没有执行权限，用chmod命令赋予权限</p>
-<p>如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 wrapper</span><br></pre></td></tr></table></figure></p>
-<p>在浏览器中访问: <a href="http://yourip:9000/" target="_blank" rel="noopener">http://yourip:9000/</a> ，运行界面如下：<br><img src="http://img.blog.csdn.net/20140826131827217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt><br>配置为自启动服务</p>
+<p>如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 wrapper</span><br></pre></td></tr></table></figure>
+<p>在浏览器中访问: <a target="_blank" rel="noopener" href="http://yourip:9000/">http://yourip:9000/</a> ，运行界面如下：<br><img src="http://img.blog.csdn.net/20140826131827217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"><br>配置为自启动服务</p>
 <p>使用<code>root</code>账户或者开启<code>sudo</code>权限操作。</p>
 <p>创建自启动脚本文件<code>/etc/init.d/sonar</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi/etc/init.d/sonar</span><br></pre></td></tr></table></figure>
-<p>添加如下内容<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># rc file for SonarQube</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># chkconfig: 345 96 10</span></span><br><span class="line"><span class="comment"># description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">### BEGIN INIT INFO</span></span><br><span class="line"><span class="comment"># Provides: sonar</span></span><br><span class="line"><span class="comment"># Required-Start: $network</span></span><br><span class="line"><span class="comment"># Required-Stop: $network</span></span><br><span class="line"><span class="comment"># Default-Start: 3 4 5</span></span><br><span class="line"><span class="comment"># Default-Stop: 0 1 2 6</span></span><br><span class="line"><span class="comment"># Short-Description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment"># Description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment">### END INIT INFO</span></span><br><span class="line"></span><br><span class="line">/usr/bin/sonar $*</span><br></pre></td></tr></table></figure></p>
-<p>添加启动服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="variable">$SONAR_HOME</span>/bin/linux-x86-64/sonar.sh /usr/bin/sonar</span><br><span class="line">chmod 755 /etc/init.d/sonar</span><br><span class="line">chkconfig --add sonar</span><br></pre></td></tr></table></figure></p>
+
+<p>添加如下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># rc file for SonarQube</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># chkconfig: 345 96 10</span></span><br><span class="line"><span class="comment"># description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">### BEGIN INIT INFO</span></span><br><span class="line"><span class="comment"># Provides: sonar</span></span><br><span class="line"><span class="comment"># Required-Start: $network</span></span><br><span class="line"><span class="comment"># Required-Stop: $network</span></span><br><span class="line"><span class="comment"># Default-Start: 3 4 5</span></span><br><span class="line"><span class="comment"># Default-Stop: 0 1 2 6</span></span><br><span class="line"><span class="comment"># Short-Description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment"># Description: SonarQube system (www.sonarsource.org)</span></span><br><span class="line"><span class="comment">### END INIT INFO</span></span><br><span class="line"></span><br><span class="line">/usr/bin/sonar $*</span><br></pre></td></tr></table></figure>
+<p>添加启动服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="variable">$SONAR_HOME</span>/bin/linux-x86-64/sonar.sh /usr/bin/sonar</span><br><span class="line">chmod 755 /etc/init.d/sonar</span><br><span class="line">chkconfig --add sonar</span><br></pre></td></tr></table></figure>
 <h2 id="与Jenkins集成"><a href="#与Jenkins集成" class="headerlink" title="与Jenkins集成"></a>与Jenkins集成</h2><p>在jenkins的插件管理中选择安装sonar jenkins plugin，该插件可以使项目每次构建都调用sonar进行代码度量。具体配置方式不再叙述。</p>
 
     </div>
@@ -337,11 +352,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/" rel="prev" title="centos 6.5 安装gitlab安装需注意的问题">
+    <a href="/2015/02/06/linux/centos-6-5-%E5%AE%89%E8%A3%85gitlab%E5%AE%89%E8%A3%85%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="centos 6.5 安装gitlab安装需注意的问题">
       <i class="fa fa-chevron-left"></i> centos 6.5 安装gitlab安装需注意的问题
     </a></div>
       <div class="post-nav-item">
-    <a href="/2015/03/06/java/Spring-Mvc-3-1-之后如何配置messageConverters/" rel="next" title="Spring Mvc 3.1 之后如何配置messageConverters">
+    <a href="/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/" rel="next" title="Spring Mvc 3.1 之后如何配置messageConverters">
       Spring Mvc 3.1 之后如何配置messageConverters <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -352,7 +367,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -408,7 +422,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nexus篇"><span class="nav-number">1.</span> <span class="nav-text">Nexus篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins篇"><span class="nav-number">2.</span> <span class="nav-text">Jenkins篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sonar篇"><span class="nav-number">3.</span> <span class="nav-text">Sonar篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建数据库"><span class="nav-number">3.1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改sonar配置文件"><span class="nav-number">3.2.</span> <span class="nav-text">修改sonar配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改sonar-runner的配置文件"><span class="nav-number">3.3.</span> <span class="nav-text">修改sonar-runner的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与Jenkins集成"><span class="nav-number">3.4.</span> <span class="nav-text">与Jenkins集成</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nexus%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">Nexus篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins%E7%AF%87"><span class="nav-number">2.</span> <span class="nav-text">Jenkins篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sonar%E7%AF%87"><span class="nav-number">3.</span> <span class="nav-text">Sonar篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9sonar%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">修改sonar配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9sonar-runner%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">修改sonar-runner的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8EJenkins%E9%9B%86%E6%88%90"><span class="nav-number">3.4.</span> <span class="nav-text">与Jenkins集成</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -424,14 +438,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -442,6 +456,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -459,19 +478,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -511,9 +529,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -522,7 +548,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

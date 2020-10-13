@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,11 +13,11 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
@@ -26,11 +26,11 @@
 <meta property="og:url" content="http://www.saily.top/tags/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-14T15:13:21.078Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-14T15:12:47.000Z">
+<meta property="article:modified_time" content="2018-04-14T15:13:21.000Z">
+<meta property="article:author" content="帆">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="标签">
-<meta name="twitter:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
 
 <link rel="canonical" href="http://www.saily.top/tags/">
 
@@ -40,12 +40,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false
+    isPost : false,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>标签 | 帆的博客
-  </title>
+</title>
   
 
 
@@ -76,6 +77,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -94,14 +96,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -112,32 +112,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -145,17 +146,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -169,10 +171,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -181,9 +182,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -193,10 +191,9 @@
   
   
 
-          <div class="content">
+          <div class="content page posts-expand">
             
 
-  <div class="posts-expand">
     
     
     
@@ -222,7 +219,7 @@
               目前共计 43 个标签
             </div>
             <div class="tag-cloud-tags">
-              <a href="/tags/ElasticSearch/" style="font-size: 21.69px; color: #676767">ElasticSearch</a> <a href="/tags/Guava/" style="font-size: 12px; color: #ccc">Guava</a> <a href="/tags/JVM/" style="font-size: 25.85px; color: #3c3c3c">JVM</a> <a href="/tags/Java/" style="font-size: 13.38px; color: #bebebe">Java</a> <a href="/tags/Mongo/" style="font-size: 18.92px; color: #848484">Mongo</a> <a href="/tags/Netty/" style="font-size: 23.08px; color: #595959">Netty</a> <a href="/tags/Rest/" style="font-size: 12px; color: #ccc">Rest</a> <a href="/tags/Spring-Cloud/" style="font-size: 17.54px; color: #929292">Spring Cloud</a> <a href="/tags/Spring-Mvc/" style="font-size: 12px; color: #ccc">Spring Mvc</a> <a href="/tags/centos/" style="font-size: 16.15px; color: #a1a1a1">centos</a> <a href="/tags/docker/" style="font-size: 13.38px; color: #bebebe">docker</a> <a href="/tags/eureka/" style="font-size: 17.54px; color: #929292">eureka</a> <a href="/tags/fastjson/" style="font-size: 13.38px; color: #bebebe">fastjson</a> <a href="/tags/feign/" style="font-size: 16.15px; color: #a1a1a1">feign</a> <a href="/tags/git/" style="font-size: 20.31px; color: #767676">git</a> <a href="/tags/gitlab/" style="font-size: 13.38px; color: #bebebe">gitlab</a> <a href="/tags/hystrix/" style="font-size: 18.92px; color: #848484">hystrix</a> <a href="/tags/io/" style="font-size: 20.31px; color: #767676">io</a> <a href="/tags/java/" style="font-size: 30px; color: #111">java</a> <a href="/tags/jdk8/" style="font-size: 24.46px; color: #4b4b4b">jdk8</a> <a href="/tags/jenkins/" style="font-size: 13.38px; color: #bebebe">jenkins</a> <a href="/tags/kafka/" style="font-size: 12px; color: #ccc">kafka</a> <a href="/tags/memcached/" style="font-size: 12px; color: #ccc">memcached</a> <a href="/tags/messageConverters/" style="font-size: 12px; color: #ccc">messageConverters</a> <a href="/tags/mybatis/" style="font-size: 13.38px; color: #bebebe">mybatis</a> <a href="/tags/mysql/" style="font-size: 12px; color: #ccc">mysql</a> <a href="/tags/redis/" style="font-size: 16.15px; color: #a1a1a1">redis</a> <a href="/tags/ribnon/" style="font-size: 12px; color: #ccc">ribnon</a> <a href="/tags/sleuth/" style="font-size: 12px; color: #ccc">sleuth</a> <a href="/tags/spring/" style="font-size: 16.15px; color: #a1a1a1">spring</a> <a href="/tags/spring-mvc/" style="font-size: 13.38px; color: #bebebe">spring mvc</a> <a href="/tags/spring-security/" style="font-size: 12px; color: #ccc">spring security</a> <a href="/tags/spring-cloud/" style="font-size: 28.62px; color: #1f1f1f">spring-cloud</a> <a href="/tags/storm/" style="font-size: 12px; color: #ccc">storm</a> <a href="/tags/tomcat/" style="font-size: 13.38px; color: #bebebe">tomcat</a> <a href="/tags/zookeeper/" style="font-size: 12px; color: #ccc">zookeeper</a> <a href="/tags/zuul/" style="font-size: 14.77px; color: #afafaf">zuul</a> <a href="/tags/分布式自增ID算法/" style="font-size: 12px; color: #ccc">分布式自增ID算法</a> <a href="/tags/多级缓存架构/" style="font-size: 14.77px; color: #afafaf">多级缓存架构</a> <a href="/tags/并发/" style="font-size: 20.31px; color: #767676">并发</a> <a href="/tags/微服务/" style="font-size: 27.23px; color: #2e2e2e">微服务</a> <a href="/tags/枚举/" style="font-size: 12px; color: #ccc">枚举</a> <a href="/tags/灰度发布/" style="font-size: 13.38px; color: #bebebe">灰度发布</a>
+              <a href="/tags/ElasticSearch/" style="font-size: 21.69px; color: #676767">ElasticSearch</a> <a href="/tags/Guava/" style="font-size: 12px; color: #ccc">Guava</a> <a href="/tags/JVM/" style="font-size: 25.85px; color: #3c3c3c">JVM</a> <a href="/tags/Java/" style="font-size: 13.38px; color: #bebebe">Java</a> <a href="/tags/Mongo/" style="font-size: 18.92px; color: #848484">Mongo</a> <a href="/tags/Netty/" style="font-size: 23.08px; color: #595959">Netty</a> <a href="/tags/Rest/" style="font-size: 12px; color: #ccc">Rest</a> <a href="/tags/Spring-Cloud/" style="font-size: 17.54px; color: #929292">Spring Cloud</a> <a href="/tags/Spring-Mvc/" style="font-size: 12px; color: #ccc">Spring Mvc</a> <a href="/tags/centos/" style="font-size: 16.15px; color: #a1a1a1">centos</a> <a href="/tags/docker/" style="font-size: 13.38px; color: #bebebe">docker</a> <a href="/tags/eureka/" style="font-size: 17.54px; color: #929292">eureka</a> <a href="/tags/fastjson/" style="font-size: 13.38px; color: #bebebe">fastjson</a> <a href="/tags/feign/" style="font-size: 16.15px; color: #a1a1a1">feign</a> <a href="/tags/git/" style="font-size: 20.31px; color: #767676">git</a> <a href="/tags/gitlab/" style="font-size: 13.38px; color: #bebebe">gitlab</a> <a href="/tags/hystrix/" style="font-size: 18.92px; color: #848484">hystrix</a> <a href="/tags/io/" style="font-size: 20.31px; color: #767676">io</a> <a href="/tags/java/" style="font-size: 30px; color: #111">java</a> <a href="/tags/jdk8/" style="font-size: 24.46px; color: #4b4b4b">jdk8</a> <a href="/tags/jenkins/" style="font-size: 13.38px; color: #bebebe">jenkins</a> <a href="/tags/kafka/" style="font-size: 12px; color: #ccc">kafka</a> <a href="/tags/memcached/" style="font-size: 12px; color: #ccc">memcached</a> <a href="/tags/messageConverters/" style="font-size: 12px; color: #ccc">messageConverters</a> <a href="/tags/mybatis/" style="font-size: 13.38px; color: #bebebe">mybatis</a> <a href="/tags/mysql/" style="font-size: 12px; color: #ccc">mysql</a> <a href="/tags/redis/" style="font-size: 16.15px; color: #a1a1a1">redis</a> <a href="/tags/ribnon/" style="font-size: 12px; color: #ccc">ribnon</a> <a href="/tags/sleuth/" style="font-size: 12px; color: #ccc">sleuth</a> <a href="/tags/spring/" style="font-size: 16.15px; color: #a1a1a1">spring</a> <a href="/tags/spring-mvc/" style="font-size: 13.38px; color: #bebebe">spring mvc</a> <a href="/tags/spring-security/" style="font-size: 12px; color: #ccc">spring security</a> <a href="/tags/spring-cloud/" style="font-size: 28.62px; color: #1f1f1f">spring-cloud</a> <a href="/tags/storm/" style="font-size: 12px; color: #ccc">storm</a> <a href="/tags/tomcat/" style="font-size: 13.38px; color: #bebebe">tomcat</a> <a href="/tags/zookeeper/" style="font-size: 12px; color: #ccc">zookeeper</a> <a href="/tags/zuul/" style="font-size: 14.77px; color: #afafaf">zuul</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%87%AA%E5%A2%9EID%E7%AE%97%E6%B3%95/" style="font-size: 12px; color: #ccc">分布式自增ID算法</a> <a href="/tags/%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" style="font-size: 14.77px; color: #afafaf">多级缓存架构</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 20.31px; color: #767676">并发</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 27.23px; color: #2e2e2e">微服务</a> <a href="/tags/%E6%9E%9A%E4%B8%BE/" style="font-size: 12px; color: #ccc">枚举</a> <a href="/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" style="font-size: 13.38px; color: #bebebe">灰度发布</a>
             </div>
           </div>
         
@@ -236,7 +233,6 @@
     
     
     
-  </div>
 
 
           </div>
@@ -307,14 +303,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -325,6 +321,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -342,19 +343,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -394,9 +394,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -405,7 +413,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

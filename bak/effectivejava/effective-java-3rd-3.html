@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,25 +13,25 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
-<meta name="keywords" content="java">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型">
 <meta property="og:url" content="http://www.saily.top/bak/effectivejava/effective-java-3rd-3.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T14:56:34.000Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-21T13:08:04.000Z">
+<meta property="article:modified_time" content="2019-05-23T14:56:34.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型">
-<meta name="twitter:description" content="条款3：强制对单例属性使用私有构造方法或是枚举类型 A singleton is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system c">
 
 <link rel="canonical" href="http://www.saily.top/bak/effectivejava/effective-java-3rd-3">
 
@@ -41,12 +41,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false
+    isPost : false,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型 | 帆的博客
-  </title>
+</title>
   
 
 
@@ -77,6 +78,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -95,14 +97,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -113,32 +113,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -146,17 +147,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -170,10 +172,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -182,9 +183,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -194,10 +192,9 @@
   
   
 
-          <div class="content">
+          <div class="content page posts-expand">
             
 
-  <div class="posts-expand">
     
     
     
@@ -226,7 +223,11 @@
       
       <div class="post-body">
           <h1 id="条款3：强制对单例属性使用私有构造方法或是枚举类型"><a href="#条款3：强制对单例属性使用私有构造方法或是枚举类型" class="headerlink" title="条款3：强制对单例属性使用私有构造方法或是枚举类型"></a>条款3：强制对单例属性使用私有构造方法或是枚举类型</h1><blockquote>
-<p>A <em>singleton</em> is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system component that is intrinsically unique. <strong>Making a class a singleton can make it difficult to test its clients</strong> because it’s impossible to substitute a mock implementation for a singleton unless it implements an interface that serves as its type.<br><a id="more"></a><br>所谓单例，指的是只会实例化⼀次的类[Gamma95]。单例要么表示⼀个⽆状态的对象（⽐<br>如说函数，条款25），要么表示⼀个本质上独⼀⽆⼆的系统组件。将⼀个类设定为单例会使得其客户端难以测试，这是因为我们⽆法为单例替换模拟实现，除⾮它实现了作为其类型的接⼝。</p>
+<p>A <em>singleton</em> is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system component that is intrinsically unique. <strong>Making a class a singleton can make it difficult to test its clients</strong> because it’s impossible to substitute a mock implementation for a singleton unless it implements an interface that serves as its type.        </p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>所谓单例，指的是只会实例化⼀次的类[Gamma95]。单例要么表示⼀个⽆状态的对象（⽐<br>如说函数，条款25），要么表示⼀个本质上独⼀⽆⼆的系统组件。将⼀个类设定为单例会使得其客户端难以测试，这是因为我们⽆法为单例替换模拟实现，除⾮它实现了作为其类型的接⼝。</p>
 </blockquote>
 <p>单例是只实例化一次的简单类[Gamma95]。单例通常要么是一个无状态的对象，比如一个<del>功能</del>，要么是系统内固有且唯一的组件。类变成单例后会让他的客户端很难测试，因为无法为单例模拟一个替代的实现，除非这个类实现了一个接口作为它的类型。</p>
 <blockquote>
@@ -237,6 +238,7 @@
 </blockquote>
 <p>有两种常规方式实现单例模式。都是让构造方法保持私有，输出一个公共的静态成员以提供访问唯一的实例。一种实现的方法是成员是一个final的字段：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Singleton with public final field</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Elvis</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Elvis INSTANCE = <span class="keyword">new</span> Elvis();</span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="title">Elvis</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>The private constructor is called only once, to initialize the public static final field Elvis.INSTANCE. The lack of a public or protected constructor guarantees a “monoelvistic” universe: exactly one Elvis instance will exist once the Elvis class is initialized—no more, no less. Nothing that a client does can change this, with one caveat: a privileged client can invoke the private constructor reflectively (Item 65) with the aid of the AccessibleObject.setAccessible method. If you need to defend against this attack, modify the constructor to make it throw an exception if it’s asked to create a second instance.</p>
 </blockquote>
@@ -252,6 +254,7 @@
 </blockquote>
 <p>实现单例模式的第二种方法是public成员是一个静态的工厂方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Singleton with static factory</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Elvis</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Elvis INSTANCE = <span class="keyword">new</span> Elvis(); <span class="function"><span class="keyword">private</span> <span class="title">Elvis</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Elvis <span class="title">getInstance</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> INSTANCE; &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>All calls to Elvis.getInstance return the same object reference, and no other Elvis instance will ever be created (with the same caveat mentioned earlier).</p>
 </blockquote>
@@ -267,12 +270,12 @@
 </blockquote>
 <p>公共字段这种方法的主要好处是API清楚的表明这个类就是一个单例类：public static修饰的字段是final的，所以它始终都包含同一个对象引用。<del>第二种方法的好处</del>则是它更简单。</p>
 <blockquote>
-<p>One advantage of the static factory approach is that it gives you the flexibility to change your mind about whether the class is a singleton without changing its API. The factory method returns the sole instance, but it could be modified to return, say, a separate instance for each thread that invokes it. A second advantage is that you can write a generic singleton factory if your application requires it (Item 30). A final advantage of using a static factory is that a method reference can be used as a supplier, for example Elvis::instance is a Supplier<elvis>. Unless one of these advantages is relevant, the public field approach is preferable.</elvis></p>
+<p>One advantage of the static factory approach is that it gives you the flexibility to change your mind about whether the class is a singleton without changing its API. The factory method returns the sole instance, but it could be modified to return, say, a separate instance for each thread that invokes it. A second advantage is that you can write a generic singleton factory if your application requires it (Item 30). A final advantage of using a static factory is that a method reference can be used as a supplier, for example Elvis::instance is a Supplier<Elvis>. Unless one of these advantages is relevant, the public field approach is preferable.</p>
 </blockquote>
 <blockquote>
-<p>静态⼯⼚⽅式的⼀个优点在于，它赋予了你这样⼀种灵活性，即当你想要改变类的单例特性时，你⽆需修改其API。⼯⼚⽅法返回唯⼀的实例，不过你可以修改这个⽅法，使得每个线程调⽤它时都返回⼀个单独的实例。第⼆个优点则是，如果应⽤需要的话，你可以编写⼀个泛型的单例⼯⼚（条款30）。使⽤静态⼯⼚的第三个好处是，⽅法引⽤可以⽤作提供者，⽐如说Elvis::instance就是个Supplier<elvis>。除⾮上述这些好处存在⼀定程度的相关性，否则推荐使⽤公有字段⽅式。</elvis></p>
+<p>静态⼯⼚⽅式的⼀个优点在于，它赋予了你这样⼀种灵活性，即当你想要改变类的单例特性时，你⽆需修改其API。⼯⼚⽅法返回唯⼀的实例，不过你可以修改这个⽅法，使得每个线程调⽤它时都返回⼀个单独的实例。第⼆个优点则是，如果应⽤需要的话，你可以编写⼀个泛型的单例⼯⼚（条款30）。使⽤静态⼯⼚的第三个好处是，⽅法引⽤可以⽤作提供者，⽐如说Elvis::instance就是个Supplier<Elvis>。除⾮上述这些好处存在⼀定程度的相关性，否则推荐使⽤公有字段⽅式。</p>
 </blockquote>
-<p>静态工厂的方式的一个好处是给了你很大的灵活性，你可以不用修改API就能改变一个类是否是单例的。工厂方法返回唯一的实例，但是可以在返回之前修改它，比如说每一个调用它线程都享有单独的实例。第二个好处是如果你的应用有需求的话，你可以写一个泛型的单例工厂（条款30）。最后一个好处是静态工厂可以被当做一个supplier来使用，比如Elvis::instance就是一个Supplier<elvis>。<del>除非这些好处都用不着</del>，公共字段的方式才更可取。</elvis></p>
+<p>静态工厂的方式的一个好处是给了你很大的灵活性，你可以不用修改API就能改变一个类是否是单例的。工厂方法返回唯一的实例，但是可以在返回之前修改它，比如说每一个调用它线程都享有单独的实例。第二个好处是如果你的应用有需求的话，你可以写一个泛型的单例工厂（条款30）。最后一个好处是静态工厂可以被当做一个supplier来使用，比如Elvis::instance就是一个Supplier<Elvis>。<del>除非这些好处都用不着</del>，公共字段的方式才更可取。</p>
 <blockquote>
 <p>To make a singleton class that uses either of these approaches serializable (Chapter 12), it is not sufficient merely to add implements Serializable to its declaration. To maintain the singleton guarantee, declare all instance fields transient and provide a readResolve method (Item 89). Otherwise, each time a serialized instance is deserialized, a new instance will be created, leading, in the case of our example, to spurious Elvis sightings. To prevent this from happening, add this readResolve method to the Elvis class:</p>
 </blockquote>
@@ -281,6 +284,7 @@
 </blockquote>
 <p>要让使用这<del>两种方法之一</del>的单例类可序列化（第十二章），仅仅在声明的时候实现Serializable是不足够的。为了<del>维持保证</del>单例性，把所有instance的字段都用transient修饰，并且提供一个readResolve方法（条款89）。否则，序列化后的实例每次反序列化的时候都会生成一个新的实例，正如例子里的一样，<del>这会导致虚假的Elvis单例</del>。要避免这种情况，在Elvis类中添加readResolve方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// readResolve method to preserve singleton property</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Return the one true Elvis and let the garbage collector</span></span><br><span class="line">    <span class="comment">// take care of the Elvis impersonator.</span></span><br><span class="line">   <span class="keyword">return</span> INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>A third way to implement a singleton is to declare a single-element enum:</p>
 </blockquote>
@@ -288,7 +292,8 @@
 <p>实现单例的第三种⽅式是声明⼀个单元素的枚举：</p>
 </blockquote>
 <p>第三种实现单例的方式是声明一个只有一个元素的枚举：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Enum singleton - the preferred approach</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Elvis &#123;</span><br><span class="line">   INSTANCE;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Enum singleton - the preferred approach</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Elvis</span> </span>&#123;</span><br><span class="line">   INSTANCE;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leaveTheBuilding</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>This approach is similar to the public field approach, but it is more concise, provides the serialization machinery for free, and provides an ironclad guarantee against multiple instantiation, even in the face of sophisticated serialization or reflection attacks. This approach may feel a bit unnatural, but a single-element enum type is often the best way to implement a singleton. Note that you can’t use this approach if your singleton must extend a superclass other than Enum (though you can declare an enum to implement interfaces).</p>
 </blockquote>
@@ -314,7 +319,6 @@
     
     
     
-  </div>
 
 
           </div>
@@ -370,7 +374,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#条款3：强制对单例属性使用私有构造方法或是枚举类型"><span class="nav-number">1.</span> <span class="nav-text">条款3：强制对单例属性使用私有构造方法或是枚举类型</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE3%EF%BC%9A%E5%BC%BA%E5%88%B6%E5%AF%B9%E5%8D%95%E4%BE%8B%E5%B1%9E%E6%80%A7%E4%BD%BF%E7%94%A8%E7%A7%81%E6%9C%89%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%88%96%E6%98%AF%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">条款3：强制对单例属性使用私有构造方法或是枚举类型</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -386,14 +390,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -404,6 +408,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -421,19 +430,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -473,9 +481,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -484,7 +500,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

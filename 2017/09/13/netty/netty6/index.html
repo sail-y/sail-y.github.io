@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,21 +13,20 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Netty源码分析跟着代码的编写和运行流程来看看Netty的源码和原理，这里面包含了大量NIO的知识，所以我们要对NIO的基础知识要有掌握，不然看Netty的源码是很难受的。那么我们从哪里开始阅读源码呢，既然不知道从何下手，就从运行的例子一个一个往下看吧。 12345678910111213141516171819public class MyServer &amp;#123;    public sta">
-<meta name="keywords" content="java,Netty">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Netty-源码分析(一)">
 <meta property="og:url" content="http://www.saily.top/2017/09/13/netty/netty6/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="Netty源码分析跟着代码的编写和运行流程来看看Netty的源码和原理，这里面包含了大量NIO的知识，所以我们要对NIO的基础知识要有掌握，不然看Netty的源码是很难受的。那么我们从哪里开始阅读源码呢，既然不知道从何下手，就从运行的例子一个一个往下看吧。 12345678910111213141516171819public class MyServer &amp;#123;    public sta">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-7.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-1.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-2.png">
@@ -35,10 +34,12 @@
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-4.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-5.png">
 <meta property="og:image" content="http://www.saily.top/img/netty/netty6-6.png">
-<meta property="og:updated_time" content="2018-09-28T04:20:36.394Z">
+<meta property="article:published_time" content="2017-09-13T01:55:11.000Z">
+<meta property="article:modified_time" content="2018-09-28T04:20:36.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Netty-源码分析(一)">
-<meta name="twitter:description" content="Netty源码分析跟着代码的编写和运行流程来看看Netty的源码和原理，这里面包含了大量NIO的知识，所以我们要对NIO的基础知识要有掌握，不然看Netty的源码是很难受的。那么我们从哪里开始阅读源码呢，既然不知道从何下手，就从运行的例子一个一个往下看吧。 12345678910111213141516171819public class MyServer &amp;#123;    public sta">
 <meta name="twitter:image" content="http://www.saily.top/img/netty/netty6-7.png">
 
 <link rel="canonical" href="http://www.saily.top/2017/09/13/netty/netty6/">
@@ -49,7 +50,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -84,6 +86,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -102,14 +105,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -120,32 +121,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -153,17 +155,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -177,10 +180,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -189,9 +191,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -199,14 +198,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/13/netty/netty6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -226,7 +224,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -234,14 +232,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：9月 28 2018 12:20:36" itemprop="dateModified" datetime="2018-09-28T12:20:36+08:00">9月 28 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -272,41 +270,50 @@
 <a id="more"></a>
 <h2 id="NioEventLoopGroup"><a href="#NioEventLoopGroup" class="headerlink" title="NioEventLoopGroup"></a>NioEventLoopGroup</h2><p>还记得我们编写Netty服务端的时候，第一行代码就是<code>EventLoopGroup bossGroup = new NioEventLoopGroup();</code>，bossGroup是作为转发、分发任务的，而workerGroup才是真正执行任务的。</p>
 <p>EventLoopGroup底层是一个死循环，它会不停的去侦测输入输出的事件进行处理，处理完成后进行任务的执行。</p>
-<p>EventLoopGroup有一个参数，表示线程数量，如果不传的话，在<code>MultithreadEventLoopGroup</code>里有设置它的默认值是<code>Math.max(1, SystemPropertyUtil.getInt(
-                &quot;io.netty.eventLoopThreads&quot;, NettyRuntime.availableProcessors() * 2));</code>的计算结果，像bossGroup一般都会设置成1，因为分配任务的group，只需要一个线程就足以。</p>
+<p>EventLoopGroup有一个参数，表示线程数量，如果不传的话，在<code>MultithreadEventLoopGroup</code>里有设置它的默认值是<code>Math.max(1, SystemPropertyUtil.getInt(                 &quot;io.netty.eventLoopThreads&quot;, NettyRuntime.availableProcessors() * 2));</code>的计算结果，像bossGroup一般都会设置成1，因为分配任务的group，只需要一个线程就足以。</p>
 <p>最后创建线程的代码在<code>MultithreadEventExecutorGroup</code>的构造方法里面。<br><code>children[i] = newChild(executor, args);</code></p>
 <p>所以NioEventLoopGroup在初始化的时候就只是赋值和初始化属性，什么操作也没有做。</p>
 <h2 id="ServerBootstrap"><a href="#ServerBootstrap" class="headerlink" title="ServerBootstrap"></a>ServerBootstrap</h2><p>Bootstrap sub-class which allows easy bootstrap of ServerChannel。<br>意思就是ServerBootstrap就是用来启动ServerChannel的一个类。</p>
 <h3 id="group"><a href="#group" class="headerlink" title="group()"></a>group()</h3><p>接下来看ServerBootstrap.group()方法，先把父类AbstractBootstrap的group属性设置了，然后再设置自己的childGroup属性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ServerBootstrap <span class="title">group</span><span class="params">(EventLoopGroup parentGroup, EventLoopGroup childGroup)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.group(parentGroup);</span><br><span class="line">    <span class="keyword">if</span> (childGroup == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"childGroup"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.childGroup != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"childGroup set already"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.childGroup = childGroup;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ServerBootstrap <span class="title">group</span><span class="params">(EventLoopGroup parentGroup, EventLoopGroup childGroup)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.group(parentGroup);</span><br><span class="line">    <span class="keyword">if</span> (childGroup == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">&quot;childGroup&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.childGroup != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">&quot;childGroup set already&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.childGroup = childGroup;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="channel"><a href="#channel" class="headerlink" title="channel()"></a>channel()</h3><p>用于通过Class对象创建一个channel对象，源码是通过<strong>ReflectiveChannelFactory</strong>的反射代码调用无参构造方法创建的对象。<br>实际上是设置了一个channelFactory属性，只有在调用bind()方法的时候才会真正创建对象。</p>
 <h3 id="NioServerSocketChannel"><a href="#NioServerSocketChannel" class="headerlink" title="NioServerSocketChannel"></a>NioServerSocketChannel</h3><p>ServerSocketChannel implementation which uses NIO selector based implementation to accept new connections.</p>
 <p>ServerSocketChannel的实现，使用了基于NIO selector的实现接受连接。</p>
 <p>这个就是说NIO使用Selector基于事件的连接是一样的。</p>
 <h3 id="childHandler"><a href="#childHandler" class="headerlink" title="childHandler()"></a>childHandler()</h3><p>服务于用channel的请求，实现为赋值到childHandler的属性中。</p>
 <h3 id="bind"><a href="#bind" class="headerlink" title="bind()"></a>bind()</h3><p>在这个方法里才真正创建了一个新的channel，并且绑定到上面。</p>
-<p><img src="/img/netty/netty6-7.png" alt></p>
+<p><img src="/img/netty/netty6-7.png"></p>
 <p>最后调用到doBind方法，在netty中，do开头的基本都是私有方法。</p>
 <p><code>final ChannelFuture regFuture = initAndRegister();</code></p>
 <p>在initAndRegister()里就调用了<code>channelFactory.newChannel()</code>（<em>ReflectiveChannelFactory</em>）来创建Channel对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">newChannel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> clazz.getConstructor().newInstance();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ChannelException(<span class="string">"Unable to create Channel from class "</span> + clazz, t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">newChannel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> clazz.getConstructor().newInstance();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ChannelException(<span class="string">&quot;Unable to create Channel from class &quot;</span> + clazz, t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>那么我们传入的是<strong>NioServerSocketChannel</strong>,构造方法就调用到了<code>provider.openServerSocketChannel();</code>，这个就是Java NIO的代码了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">NioServerSocketChannel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(newSocket(DEFAULT_SELECTOR_PROVIDER));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>newSocket方法还提到了在github上的一个问题 <a href="https://github.com/netty/netty/issues/2308" target="_blank" rel="noopener">https://github.com/netty/netty/issues/2308</a> 。这里就出现了Netty调用了NIO的方法，像SelectionKey注册了OP_ACCEPT事件，表示可以接受连接了。并且在父类中调用了<code>ch.configureBlocking(false);</code>设置为非阻塞。<strong>AbstractNioChannel</strong>也包含了一个<strong>SelectableChannel</strong>的引用，这个其实就是对NIO的Channel的一个包装就体现出来了。</p>
+
+<p>newSocket方法还提到了在github上的一个问题 <a target="_blank" rel="noopener" href="https://github.com/netty/netty/issues/2308">https://github.com/netty/netty/issues/2308</a> 。这里就出现了Netty调用了NIO的方法，像SelectionKey注册了OP_ACCEPT事件，表示可以接受连接了。并且在父类中调用了<code>ch.configureBlocking(false);</code>设置为非阻塞。<strong>AbstractNioChannel</strong>也包含了一个<strong>SelectableChannel</strong>的引用，这个其实就是对NIO的Channel的一个包装就体现出来了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">NioServerSocketChannel</span><span class="params">(ServerSocketChannel channel)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(<span class="keyword">null</span>, channel, SelectionKey.OP_ACCEPT);</span><br><span class="line">    config = <span class="keyword">new</span> NioServerSocketChannelConfig(<span class="keyword">this</span>, javaChannel().socket());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <p>在获得Channel对象后，马上调用了init方法进行初始化。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">channel = channelFactory.newChannel();</span><br><span class="line">init(channel);</span><br></pre></td></tr></table></figure>
+
 <p>init方法本身也是做了很多事情，其中有一些option和attr的设置，还有就是Netty在这里也加了一个Handler。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">p.addLast(<span class="keyword">new</span> ChannelInitializer&lt;Channel&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(<span class="keyword">final</span> Channel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line">        ChannelHandler handler = config.handler();</span><br><span class="line">        <span class="keyword">if</span> (handler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            pipeline.addLast(handler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ch.eventLoop().execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                pipeline.addLast(<span class="keyword">new</span> ServerBootstrapAcceptor(</span><br><span class="line">                        ch, currentChildGroup, currentChildHandler, currentChildOptions, currentChildAttrs));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
 <p>这个有没有眼熟，我们自己写的childHanlder()注册的不就是<strong>ChannelInitializer</strong>的子类吗。还有<code>ChannelHandler handler = config.handler();</code>实际上就是serverBootstrap.handler()注册的自定义的Handler，是提供给bossGroup使用的，在这里被添加到ChannelPipeline的末端。</p>
 <p>bind(8899)返回了一个ChannelFuture，ChannelFuture最终是继承了<code>java.util.concurrent.Future</code>，返回Future的都是异步方法，结果只能通过get()方法获取，get()方法是阻塞的，会阻塞直到异步方法运行完成返回结果。</p>
 <p>netty自己写了一个Future，并加了几个方法来区别JDK只有isDone的不足，在JDK中，异步任务完成、取消、异常，isDone方法都会返回true，而netty为了更加细化这个状态，做了如下处理。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">*                                      +---------------------------+</span><br><span class="line">*                                      | Completed successfully    |</span><br><span class="line">*                                      +---------------------------+</span><br><span class="line">*                                 +----&gt;      isDone() = true      |</span><br><span class="line">* +--------------------------+    |    |   isSuccess() = true      |</span><br><span class="line">* |        Uncompleted       |    |    +===========================+</span><br><span class="line">* +--------------------------+    |    | Completed with failure    |</span><br><span class="line">* |      isDone() = false    |    |    +---------------------------+</span><br><span class="line">* |   isSuccess() = false    |----+----&gt;      isDone() = true      |</span><br><span class="line">* | isCancelled() = false    |    |    |       cause() = non-null  |</span><br><span class="line">* |       cause() = null     |    |    +===========================+</span><br><span class="line">* +--------------------------+    |    | Completed by cancellation |</span><br><span class="line">*                                 |    +---------------------------+</span><br><span class="line">*                                 +----&gt;      isDone() = true      |</span><br><span class="line">*                                      | isCancelled() = true      |</span><br><span class="line">*                                      +---------------------------+</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">*                                      +---------------------------+</span><br><span class="line">*                                      | Completed successfully    |</span><br><span class="line">*                                      +---------------------------+</span><br><span class="line">*                                 +----&gt;      isDone() &#x3D; true      |</span><br><span class="line">* +--------------------------+    |    |   isSuccess() &#x3D; true      |</span><br><span class="line">* |        Uncompleted       |    |    +&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+</span><br><span class="line">* +--------------------------+    |    | Completed with failure    |</span><br><span class="line">* |      isDone() &#x3D; false    |    |    +---------------------------+</span><br><span class="line">* |   isSuccess() &#x3D; false    |----+----&gt;      isDone() &#x3D; true      |</span><br><span class="line">* | isCancelled() &#x3D; false    |    |    |       cause() &#x3D; non-null  |</span><br><span class="line">* |       cause() &#x3D; null     |    |    +&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+</span><br><span class="line">* +--------------------------+    |    | Completed by cancellation |</span><br><span class="line">*                                 |    +---------------------------+</span><br><span class="line">*                                 +----&gt;      isDone() &#x3D; true      |</span><br><span class="line">*                                      | isCancelled() &#x3D; true      |</span><br><span class="line">*                                      +---------------------------+</span><br></pre></td></tr></table></figure>
+
+
 <p>除了状态的处理，还添加了<code>addListener</code>方法，这个方法会在任务运行完成的时候通知并回调，所以用户能更加准确的判断何时调用get()方法。</p>
 <p>Netty建议我们使用addListener，而不要使用await()，因为addListener是非阻塞的，await()会阻塞直到I/O完成。不要在<strong>ChannelHanlder</strong>中调用await()方法，因为<strong>ChannelHanlder</strong>的方法通常是被事件处理器调用的，如果await()被I/O操作线程的事件处理器调用，那么I/O操作就会一直阻塞造成死锁。比如在channelRead()中调用await()方法，等待I/O操作完成，而I/O操作又在等待channelRead()完成，就成了死锁，这种情况应该调用:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">future.addListener(<span class="keyword">new</span>  ChannelFutureListener() &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(ChannelFuture future)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// Perform post-closure operation</span></span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="Reactor模式"><a href="#Reactor模式" class="headerlink" title="Reactor模式"></a>Reactor模式</h2><h3 id="Doug-Lea"><a href="#Doug-Lea" class="headerlink" title="Doug Lea"></a>Doug Lea</h3><p>反应器模式，Netty整体架构是Reactor模式的完整体现。提到Reactor模式，就不得不拿出大神Doug Lea(Java并发包的作者)的文档：<a href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf" target="_blank" rel="noopener">《Scalable IO in Java》</a>，内容不多，里面涉及到传统IO的写法，NIO的设计思想。这个文档非常重要，一定要熟读。</p>
-<p><img src="/img/netty/netty6-1.png" alt></p>
+
+<h2 id="Reactor模式"><a href="#Reactor模式" class="headerlink" title="Reactor模式"></a>Reactor模式</h2><h3 id="Doug-Lea"><a href="#Doug-Lea" class="headerlink" title="Doug Lea"></a>Doug Lea</h3><p>反应器模式，Netty整体架构是Reactor模式的完整体现。提到Reactor模式，就不得不拿出大神Doug Lea(Java并发包的作者)的文档：<a target="_blank" rel="noopener" href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf">《Scalable IO in Java》</a>，内容不多，里面涉及到传统IO的写法，NIO的设计思想。这个文档非常重要，一定要熟读。</p>
+<p><img src="/img/netty/netty6-1.png"></p>
 <p>大多数的网络服务都是下面的流程：</p>
 <ol>
 <li>读取请求</li>
@@ -315,9 +322,10 @@
 <li>编码相应</li>
 <li>发送响应</li>
 </ol>
-<p><img src="/img/netty/netty6-2.png" alt></p>
+<p><img src="/img/netty/netty6-2.png"></p>
 <p>传统的网络服务设计方式如上图所示：客户端有多个，服务端每接受到一个请求就创建一个线程进行一系列的处理….</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ServerSocket ss = <span class="keyword">new</span> ServerSocket(PORT);</span><br><span class="line">            <span class="keyword">while</span> (!Thread.interrupted())</span><br><span class="line">                <span class="keyword">new</span> Thread(<span class="keyword">new</span> Handler(ss.accept())).start();</span><br><span class="line">            <span class="comment">// or, single-threaded, or a thread pool</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Socket socket;</span><br><span class="line"></span><br><span class="line">        Handler(Socket s) &#123;</span><br><span class="line">            socket = s;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">byte</span>[] input = <span class="keyword">new</span> <span class="keyword">byte</span>[MAX_INPUT];</span><br><span class="line">                socket.getInputStream().read(input);</span><br><span class="line">                <span class="keyword">byte</span>[] output = process(input);</span><br><span class="line">                socket.getOutputStream().write(output);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">byte</span>[] process(<span class="keyword">byte</span>[] cmd) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这种方式最大的问题就是线程太多了，如果线程持续上升，线程之间的切换非常耗费资源，服务器就支撑不了。</p>
 <ul>
 <li>Reactor通过分发恰当的处理器来响应IO事件（类似于AWT）</li>
@@ -327,9 +335,11 @@
 <p><img src="/img/netty/netty6-3.png" alt="单线程版Reactor模式"></p>
 <p>客户端保持不变，这里多了一个Reactor角色，它去检测客户端发起的请求和连接，将客户端的请求派发给特定的handler。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Reactor</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Selector selector;</span><br><span class="line">    <span class="keyword">final</span> ServerSocketChannel serverSocket;</span><br><span class="line"></span><br><span class="line">    Reactor(<span class="keyword">int</span> port) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        selector = Selector.open();</span><br><span class="line">        serverSocket = ServerSocketChannel.open();</span><br><span class="line">        serverSocket.socket().bind(</span><br><span class="line">                <span class="keyword">new</span> InetSocketAddress(port));</span><br><span class="line">        serverSocket.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">        SelectionKey sk =</span><br><span class="line">                serverSocket.register(selector,</span><br><span class="line">                        SelectionKey.OP_ACCEPT);</span><br><span class="line">        sk.attach(<span class="keyword">new</span> Acceptor());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    Alternatively, use explicit SPI provider: </span></span><br><span class="line"><span class="comment">    SelectorProvider p = SelectorProvider.provider(); </span></span><br><span class="line"><span class="comment">    selector = p.openSelector();</span></span><br><span class="line"><span class="comment">    serverSocket = p.openServerSocketChannel();</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  <span class="comment">// normally in a new Thread</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (!Thread.interrupted()) &#123;</span><br><span class="line">                selector.select();</span><br><span class="line">                Set selected = selector.selectedKeys();</span><br><span class="line">                Iterator it = selected.iterator();</span><br><span class="line">                <span class="keyword">while</span> (it.hasNext())</span><br><span class="line">                    dispatch((SelectionKey) (it.next()); selected.clear();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dispatch</span><span class="params">(SelectionKey k)</span> </span>&#123;</span><br><span class="line">        Runnable r = (Runnable) (k.attachment());</span><br><span class="line">        <span class="keyword">if</span> (r != <span class="keyword">null</span>)</span><br><span class="line">        	r.run();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Acceptor</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123; <span class="comment">// inner</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                SocketChannel c = serverSocket.accept();</span><br><span class="line">                <span class="keyword">if</span> (c != <span class="keyword">null</span>)</span><br><span class="line">                    <span class="keyword">new</span> Handler(selector, c);</span><br><span class="line">      <span class="keyword">catch</span>(IOException ex)&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>sk.attach(obj)可以放一个对象进去，在后面可以用attachment()取出来，这里放进去的是<strong>Acceptor</strong>。</p>
 <p>Reactor本身是不做任何处理的，run()方法里事件发生的时候，调用了dispatch()方法，交由<strong>Acceptor</strong>来分发，Handler实现：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> SocketChannel socket;</span><br><span class="line">    <span class="keyword">final</span> SelectionKey sk;</span><br><span class="line">    ByteBuffer input = ByteBuffer.allocate(MAXIN);</span><br><span class="line">    ByteBuffer output = ByteBuffer.allocate(MAXOUT);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> READING = <span class="number">0</span>, SENDING = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> state = READING;</span><br><span class="line"></span><br><span class="line">    Handler(Selector sel, SocketChannel c) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        socket = c;</span><br><span class="line">        c.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">        <span class="comment">// Optionally try first read now</span></span><br><span class="line">        sk = socket.register(sel, <span class="number">0</span>);</span><br><span class="line">        sk.attach(<span class="keyword">this</span>);</span><br><span class="line">        sk.interestOps(SelectionKey.OP_READ);</span><br><span class="line">        sel.wakeup();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">inputIsComplete</span><span class="params">()</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">outputIsComplete</span><span class="params">()</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">process</span><span class="params">()</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (state == READING) read();</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (state == SENDING) send();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        socket.read(input);</span><br><span class="line">        <span class="keyword">if</span> (inputIsComplete()) &#123;</span><br><span class="line">            process();</span><br><span class="line">            state = SENDING;</span><br><span class="line">			  <span class="comment">// Normally also do first write now </span></span><br><span class="line">			  sk.interestOps(SelectionKey.OP_WRITE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">send</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        socket.write(output);</span><br><span class="line">        <span class="keyword">if</span> (outputIsComplete()) sk.cancel();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这个handler可以对应到Netty中Netty提供的handler或者我们自己写的handler。因为最早注册的是OP_ACCEPT，所以这个handler要注册OP_READ。其中<code>sel.wakeup();</code>的意思是如果之前有select()方法阻塞了，那么让select()方法立即返回，如果当前没有select()方法阻塞的话，那么下一次调用select()会立即返回。然后执行run()方法，是通过判断状态的方式来决定是写还是读 ，这个在Netty3中就是需要这样实现handler代码的，需要自己判断状态来决定业务逻辑。Netty4已经改成各种回调了，比如channelRead，channelActive等。</p>
 <p>文档接着又描述了多线程版本的设计，增加多个Reactor线程，提高Reactor分发的速度，以及使用线程池来处理请求</p>
 <p><img src="/img/netty/netty6-4.png" alt="多线程版Reactor模式"></p>
@@ -390,7 +400,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -446,7 +455,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Netty源码分析"><span class="nav-number">1.</span> <span class="nav-text">Netty源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NioEventLoopGroup"><span class="nav-number">1.1.</span> <span class="nav-text">NioEventLoopGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ServerBootstrap"><span class="nav-number">1.2.</span> <span class="nav-text">ServerBootstrap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#group"><span class="nav-number">1.2.1.</span> <span class="nav-text">group()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channel"><span class="nav-number">1.2.2.</span> <span class="nav-text">channel()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NioServerSocketChannel"><span class="nav-number">1.2.3.</span> <span class="nav-text">NioServerSocketChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#childHandler"><span class="nav-number">1.2.4.</span> <span class="nav-text">childHandler()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind"><span class="nav-number">1.2.5.</span> <span class="nav-text">bind()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactor模式"><span class="nav-number">1.3.</span> <span class="nav-text">Reactor模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Doug-Lea"><span class="nav-number">1.3.1.</span> <span class="nav-text">Doug Lea</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reactor-siemens"><span class="nav-number">1.3.2.</span> <span class="nav-text">reactor-siemens</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Netty%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">Netty源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NioEventLoopGroup"><span class="nav-number">1.1.</span> <span class="nav-text">NioEventLoopGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ServerBootstrap"><span class="nav-number">1.2.</span> <span class="nav-text">ServerBootstrap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#group"><span class="nav-number">1.2.1.</span> <span class="nav-text">group()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channel"><span class="nav-number">1.2.2.</span> <span class="nav-text">channel()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NioServerSocketChannel"><span class="nav-number">1.2.3.</span> <span class="nav-text">NioServerSocketChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#childHandler"><span class="nav-number">1.2.4.</span> <span class="nav-text">childHandler()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind"><span class="nav-number">1.2.5.</span> <span class="nav-text">bind()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactor%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">Reactor模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Doug-Lea"><span class="nav-number">1.3.1.</span> <span class="nav-text">Doug Lea</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reactor-siemens"><span class="nav-number">1.3.2.</span> <span class="nav-text">reactor-siemens</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -462,14 +471,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -480,6 +489,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -497,19 +511,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -549,9 +562,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -560,7 +581,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

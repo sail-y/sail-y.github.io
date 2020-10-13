@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,25 +13,27 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="背景项目初期由于BUG和需求改动可能都会比较多，我们会很频繁的发布我们的应用。但是如果不进行处理，在升级的过程中会导致用户服务中断。">
-<meta name="keywords" content="spring-cloud,微服务,灰度发布">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud 不停机发布服务(0-downtime Blue&#x2F;Green deployments)">
 <meta property="og:url" content="http://www.saily.top/2018/04/14/springcloud/spring-cloud-gray/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="背景项目初期由于BUG和需求改动可能都会比较多，我们会很频繁的发布我们的应用。但是如果不进行处理，在升级的过程中会导致用户服务中断。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-28T03:33:35.783Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-14T06:06:48.000Z">
+<meta property="article:modified_time" content="2019-02-28T03:33:35.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="spring-cloud">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="灰度发布">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Cloud 不停机发布服务(0-downtime Blue&#x2F;Green deployments)">
-<meta name="twitter:description" content="背景项目初期由于BUG和需求改动可能都会比较多，我们会很频繁的发布我们的应用。但是如果不进行处理，在升级的过程中会导致用户服务中断。">
 
 <link rel="canonical" href="http://www.saily.top/2018/04/14/springcloud/spring-cloud-gray/">
 
@@ -41,7 +43,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -76,6 +79,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -94,14 +98,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -112,32 +114,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -145,17 +148,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -169,10 +173,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -181,9 +184,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -191,14 +191,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/04/14/springcloud/spring-cloud-gray/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -218,7 +217,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -226,14 +225,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:33:35" itemprop="dateModified" datetime="2019-02-28T11:33:35+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -259,43 +258,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>项目初期由于BUG和需求改动可能都会比较多，我们会很频繁的发布我们的应用。但是如果不进行处理，在升级的过程中会导致用户服务中断。<br><a id="more"></a></p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>项目初期由于BUG和需求改动可能都会比较多，我们会很频繁的发布我们的应用。但是如果不进行处理，在升级的过程中会导致用户服务中断。</p>
+<a id="more"></a>
+
 <p>通常我们需要发布的内容如下：</p>
 <ol>
 <li>某一个服务BUG紧急修复。</li>
 <li>某一个服务新的需求上线。</li>
 </ol>
-<p>实际上针对这两种情况，在传统的应用中我们是很容易做到不停机升级的。例如nginx负载均衡2台tomcat实例，在升级的时候切断其中一台访问，升级完成以后切换流量，再升级另外一台。但是我这里用的是Spring Cloud，所有的实例状态都维护在Eureka中，Eureka本身也提供了很多保护机制，所以你的服务在down掉的时候，不会立马从服务列表中剔除掉。具体的配置项可以周立老师一篇文章里查看：<a href="http://www.itmuch.com/spring-cloud-sum-eureka/" target="_blank" rel="noopener">如何解决Eureka Server不踢出已关停的节点的问题</a>。</p>
+<p>实际上针对这两种情况，在传统的应用中我们是很容易做到不停机升级的。例如nginx负载均衡2台tomcat实例，在升级的时候切断其中一台访问，升级完成以后切换流量，再升级另外一台。但是我这里用的是Spring Cloud，所有的实例状态都维护在Eureka中，Eureka本身也提供了很多保护机制，所以你的服务在down掉的时候，不会立马从服务列表中剔除掉。具体的配置项可以周立老师一篇文章里查看：<a target="_blank" rel="noopener" href="http://www.itmuch.com/spring-cloud-sum-eureka/">如何解决Eureka Server不踢出已关停的节点的问题</a>。</p>
 <p>所以如果我们想要做到不停机去升级/发布一个服务，需要我们从Spring Cloud架构本身上着手去进行一些改造。我们需要去了解Eureka的使用方式，Spring Retry的使用，Spring Cloud的负载均衡规则等等，最终达到这个目的。</p>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>如果一个不了解Spring Cloud的人来做这种不停机发布，比如运维部门的同事。他会将某个需要升级的实例新版本启动起来，然后将老版本的进程杀掉。但是因为Spring Cloud的特性，被干掉的实例并没有被踢出服务列表，客户端仍然会访问到一个不存在的实例，直接返回500错误。可能需要等1~2分钟以后才能恢复正常。</p>
 <p>我们知道这个是因为Eureka的机制问题，但是它注定不可能做成实时感知上下线的。Eureka是通过定期扫描去下线已经down掉的服务，不过他的默认时间是60秒，我们可以优化这个配置，让它能比较快的感知到服务已经下线。</p>
 <h2 id="关于Eureka的常见问题"><a href="#关于Eureka的常见问题" class="headerlink" title="关于Eureka的常见问题"></a>关于Eureka的常见问题</h2><ul>
-<li><p>问题可以参考：<a href="http://www.itmuch.com/spring-cloud-sum-eureka/" target="_blank" rel="noopener">Spring Cloud中，Eureka常见问题总结</a></p>
+<li><p>问题可以参考：<a target="_blank" rel="noopener" href="http://www.itmuch.com/spring-cloud-sum-eureka/">Spring Cloud中，Eureka常见问题总结</a></p>
 </li>
 <li><p>生产环境最佳配置：<a href="http://www.saily.top/2018/04/14/spring-cloud-eureka/">eureka缓存细节以及生产环境的最佳配置</a></p>
 </li>
 </ul>
 <p><strong>中小规模生产环境参考配置：</strong></p>
 <p><strong>Eureka Server</strong></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  server:</span></span><br><span class="line"><span class="attr">    enable-self-preservation:</span> <span class="literal">false</span>           <span class="comment"># 中小规模下，自我保护模式坑比好处多，所以关闭它</span></span><br><span class="line"><span class="attr">    eviction-interval-timer-in-ms:</span> <span class="number">5000</span>       <span class="comment"># 续期时间，即扫描失效服务的间隔时间（缺省为60*1000ms）从服务列表中剔除</span></span><br><span class="line"><span class="attr">    use-read-only-response-cache:</span> <span class="literal">false</span>       <span class="comment"># 禁用readOnlyCacheMap</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">      lease-renewal-interval-in-seconds:</span> <span class="number">5</span>      <span class="comment"># 心跳时间，即服务续约间隔时间（缺省为30s）</span></span><br><span class="line"><span class="attr">      lease-expiration-duration-in-seconds:</span> <span class="number">10</span>  <span class="comment"># 没有心跳的淘汰时间，10秒，即服务续约到期时间（缺省为90s）</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="string">$&#123;defaultZone:http://peer2:8760/eureka/&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">server:</span></span><br><span class="line">    <span class="attr">enable-self-preservation:</span> <span class="literal">false</span>           <span class="comment"># 中小规模下，自我保护模式坑比好处多，所以关闭它</span></span><br><span class="line">    <span class="attr">eviction-interval-timer-in-ms:</span> <span class="number">5000</span>       <span class="comment"># 续期时间，即扫描失效服务的间隔时间（缺省为60*1000ms）从服务列表中剔除</span></span><br><span class="line">    <span class="attr">use-read-only-response-cache:</span> <span class="literal">false</span>       <span class="comment"># 禁用readOnlyCacheMap</span></span><br><span class="line">  <span class="attr">instance:</span></span><br><span class="line">      <span class="attr">lease-renewal-interval-in-seconds:</span> <span class="number">5</span>      <span class="comment"># 心跳时间，即服务续约间隔时间（缺省为30s）</span></span><br><span class="line">      <span class="attr">lease-expiration-duration-in-seconds:</span> <span class="number">10</span>  <span class="comment"># 没有心跳的淘汰时间，10秒，即服务续约到期时间（缺省为90s）</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="attr">service-url:</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">$&#123;defaultZone:http://peer2:8760/eureka/&#125;</span></span><br></pre></td></tr></table></figure>
+
+
 <p><strong>Eureka Client</strong></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    lease-renewal-interval-in-seconds:</span> <span class="number">5</span>      <span class="comment"># 心跳时间，即服务续约间隔时间（缺省为30s）</span></span><br><span class="line"><span class="attr">    lease-expiration-duration-in-seconds:</span> <span class="number">10</span>  <span class="comment"># 没有心跳的淘汰时间，10秒，即服务续约到期时间（缺省为90s）</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line">    <span class="comment"># 向注册中心注册</span></span><br><span class="line"><span class="attr">    fetch-registry:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 服务清单的缓存更新时间，默认30秒一次</span></span><br><span class="line"><span class="attr">    registry-fetch-interval-seconds:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="string">$&#123;defaultZone:http://$&#123;DISCOVERY_URL:discovery&#125;:8761/eureka/&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">instance:</span></span><br><span class="line">    <span class="attr">lease-renewal-interval-in-seconds:</span> <span class="number">5</span>      <span class="comment"># 心跳时间，即服务续约间隔时间（缺省为30s）</span></span><br><span class="line">    <span class="attr">lease-expiration-duration-in-seconds:</span> <span class="number">10</span>  <span class="comment"># 没有心跳的淘汰时间，10秒，即服务续约到期时间（缺省为90s）</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="comment"># 向注册中心注册</span></span><br><span class="line">    <span class="attr">fetch-registry:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 服务清单的缓存更新时间，默认30秒一次</span></span><br><span class="line">    <span class="attr">registry-fetch-interval-seconds:</span> <span class="number">5</span></span><br><span class="line">    <span class="attr">service-url:</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">$&#123;defaultZone:http://$&#123;DISCOVERY_URL:discovery&#125;:8761/eureka/&#125;</span></span><br></pre></td></tr></table></figure>
+
 <p>通过优化Eureka配置，服务在启动后能够较快的被使用上，Eureka也能较快的感知到服务以及下线并踢出服务列表。</p>
-<h2 id="巧用Spring-Retry重试机制"><a href="#巧用Spring-Retry重试机制" class="headerlink" title="巧用Spring Retry重试机制"></a>巧用Spring Retry重试机制</h2><p>我在搜寻解决方案的时候，也看到了Github上讨论的一个issue：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/1290" target="_blank" rel="noopener">Best practices for using Eureka for 0-downtime Blue/Green deployments #1290</a>.</p>
+<h2 id="巧用Spring-Retry重试机制"><a href="#巧用Spring-Retry重试机制" class="headerlink" title="巧用Spring Retry重试机制"></a>巧用Spring Retry重试机制</h2><p>我在搜寻解决方案的时候，也看到了Github上讨论的一个issue：<a target="_blank" rel="noopener" href="https://github.com/spring-cloud/spring-cloud-netflix/issues/1290">Best practices for using Eureka for 0-downtime Blue/Green deployments #1290</a>.</p>
 <p>这里面讨论了利用重试机制去实现不停机发布的一种方式。前面的Eureka配置已经缩短了服务上线和服务下线的时间，但是这中间仍然一段延迟，可能还是会有请求随机访问一个不存在的服务实例上。</p>
 <p>重试机制的原理就是利用Spring Cloud提供的重试机制在请求访问出现错误的时候自动重试当前实例或者其他实例，而不是直接返回错误。</p>
 <p>主要配置如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="comment"># ribbon缓存时间</span></span><br><span class="line"><span class="attr">  ServerListRefreshInterval:</span> <span class="number">2000</span></span><br><span class="line"><span class="attr">  ReadTimeout:</span> <span class="number">30000</span></span><br><span class="line"><span class="attr">  ConnectTimeout:</span> <span class="number">30000</span></span><br><span class="line">  <span class="comment"># 是否所有操作都重试</span></span><br><span class="line">  <span class="comment"># OkToRetryOnAllOperations: true</span></span><br><span class="line">  <span class="comment"># 重试负载均衡其他的实例最大重试次数,不包括首次server</span></span><br><span class="line"><span class="attr">  MaxAutoRetriesNextServer:</span> <span class="number">0</span></span><br><span class="line">  <span class="comment"># 同一台实例最大重试次数,不包括首次调用</span></span><br><span class="line"><span class="attr">  MaxAutoRetries:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">zuul:</span></span><br><span class="line"><span class="attr">  retryable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="comment"># ribbon缓存时间</span></span><br><span class="line">  <span class="attr">ServerListRefreshInterval:</span> <span class="number">2000</span></span><br><span class="line">  <span class="attr">ReadTimeout:</span> <span class="number">30000</span></span><br><span class="line">  <span class="attr">ConnectTimeout:</span> <span class="number">30000</span></span><br><span class="line">  <span class="comment"># 是否所有操作都重试</span></span><br><span class="line">  <span class="comment"># OkToRetryOnAllOperations: true</span></span><br><span class="line">  <span class="comment"># 重试负载均衡其他的实例最大重试次数,不包括首次server</span></span><br><span class="line">  <span class="attr">MaxAutoRetriesNextServer:</span> <span class="number">0</span></span><br><span class="line">  <span class="comment"># 同一台实例最大重试次数,不包括首次调用</span></span><br><span class="line">  <span class="attr">MaxAutoRetries:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">retryable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
 <p>但是这里要注意一点，<code>OkToRetryOnAllOperations</code>如果设置为true，那么ribbon超时时间最好设置长一点，否则post等请求如果超时会被提交多次，还要注意hystrix的超时时间要大于ribbion的超时时间，否则hystrix会先超时。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hystrix:</span></span><br><span class="line"><span class="attr">  command:</span></span><br><span class="line"><span class="attr">    default:</span></span><br><span class="line"><span class="attr">      execution:</span></span><br><span class="line"><span class="attr">        isolation:</span></span><br><span class="line"><span class="attr">          thread:</span></span><br><span class="line"><span class="attr">            timeoutInMilliseconds:</span> <span class="number">40000</span></span><br></pre></td></tr></table></figure>
-<p>在不同的版本中，Spring Cloud的重试机制是比较混乱的，周立老师对重试机制的详细解释：<a href="http://www.itmuch.com/spring-cloud-sum/spring-cloud-retry/" target="_blank" rel="noopener">http://www.itmuch.com/spring-cloud-sum/spring-cloud-retry/</a></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hystrix:</span></span><br><span class="line">  <span class="attr">command:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">execution:</span></span><br><span class="line">        <span class="attr">isolation:</span></span><br><span class="line">          <span class="attr">thread:</span></span><br><span class="line">            <span class="attr">timeoutInMilliseconds:</span> <span class="number">40000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>在不同的版本中，Spring Cloud的重试机制是比较混乱的，周立老师对重试机制的详细解释：<a target="_blank" rel="noopener" href="http://www.itmuch.com/spring-cloud-sum/spring-cloud-retry/">http://www.itmuch.com/spring-cloud-sum/spring-cloud-retry/</a></p>
 <p>Feign本身也具备重试能力，在早期的Spring Cloud中，Feign使用的是 <code>feign.Retryer.Default#Default()</code> ，重试5次。但Feign整合了Ribbon，Ribbon也有重试的能力，此时，就可能会导致行为的混乱。</p>
 <p>Spring Cloud意识到了此问题，因此做了改进，将Feign的重试改为 <code>feign.Retryer#NEVER_RETRY</code> ，如需使用Feign的重试，只需使用Ribbon的重试配置即可。因此，对于Camden以及以后的版本，Feign的重试可使用如下属性进行配置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line"><span class="attr">  MaxAutoRetries:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  MaxAutoRetriesNextServer:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">  OkToRetryOnAllOperations:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p>相关Issue可参考：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/467" target="_blank" rel="noopener">https://github.com/spring-cloud/spring-cloud-netflix/issues/467</a></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="attr">MaxAutoRetries:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">MaxAutoRetriesNextServer:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">OkToRetryOnAllOperations:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>相关Issue可参考：<a target="_blank" rel="noopener" href="https://github.com/spring-cloud/spring-cloud-netflix/issues/467">https://github.com/spring-cloud/spring-cloud-netflix/issues/467</a></p>
 <p>结合之前对Eureka配置的优化，我们就可以愉快的进行测试了，开启2个服务访问几次，可以发现随机访问。然后干掉一个服务，再次访问，依然没有问题，不会出现500等情况。Feign自动为我们选择了另外可用的服务发送了重试请求。</p>
-<h2 id="灰度发布方案"><a href="#灰度发布方案" class="headerlink" title="灰度发布方案"></a>灰度发布方案</h2><p>还有一种特别的需求，我们除了想做到不停机发布，可能还需要做到某些用户测试新版本代码，实现降级、限流、滚动、灰度、AB、金丝雀等操作。我在Github上发现了一个开源的代码在一定程度上提供了很好的思路去做这个事情。地址：<a href="https://github.com/JeromeLiuLly/springcloud-gray" target="_blank" rel="noopener">https://github.com/JeromeLiuLly/springcloud-gray</a></p>
-<p>看这个实现方式可以看出来，他的方案是基于<a href="https://www.jianshu.com/p/37ee1e84900a" target="_blank" rel="noopener">spring cloud 实践-降级、限流、滚动、灰度、AB、金丝雀等等等等</a>的方案做的。</p>
+<h2 id="灰度发布方案"><a href="#灰度发布方案" class="headerlink" title="灰度发布方案"></a>灰度发布方案</h2><p>还有一种特别的需求，我们除了想做到不停机发布，可能还需要做到某些用户测试新版本代码，实现降级、限流、滚动、灰度、AB、金丝雀等操作。我在Github上发现了一个开源的代码在一定程度上提供了很好的思路去做这个事情。地址：<a target="_blank" rel="noopener" href="https://github.com/JeromeLiuLly/springcloud-gray">https://github.com/JeromeLiuLly/springcloud-gray</a></p>
+<p>看这个实现方式可以看出来，他的方案是基于<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/37ee1e84900a">spring cloud 实践-降级、限流、滚动、灰度、AB、金丝雀等等等等</a>的方案做的。</p>
 <p>因Spring Cloud都是客户端负载均衡，会从Eureka读取服务列表，然后通过一定的负载均衡规则来选择请求的服务器。这个方案就是重写了Ribbon负载均衡的策略，将一些自定义信息放入了Eureka的metdata-map中，在路由的时候根据这些信息来选择服务。我这里不再多说，大家可以自行去查看他们的文章和代码。</p>
 <p>这个方案灵活性非常大，你可以根据自定义的信息来构建任何你想做的策略，去实现AB Test等等功能，甚至我在开发环境中也能使用。举个例子，因为我们的服务太多了，如果在本机开发的时候，关联的服务较多，要启动比较多的服务才能够进行开发和测试，可能机器会有点吃不消。我基于上述方案让开发的同学们在启动服务的上将本机的IP添加到<code>metadata-map</code>中，这样我在路由的时候判断客户端请求过来的IP是多少，如果跟实例里的信息匹配，那么所有来自这个IP请求就转发到开发同学启动的那台实例上。</p>
 
@@ -308,8 +317,8 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
-              <a href="/tags/微服务/" rel="tag"># 微服务</a>
-              <a href="/tags/灰度发布/" rel="tag"># 灰度发布</a>
+              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
+              <a href="/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" rel="tag"># 灰度发布</a>
           </div>
 
         
@@ -333,7 +342,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -389,7 +397,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Eureka的常见问题"><span class="nav-number">3.</span> <span class="nav-text">关于Eureka的常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#巧用Spring-Retry重试机制"><span class="nav-number">4.</span> <span class="nav-text">巧用Spring Retry重试机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#灰度发布方案"><span class="nav-number">5.</span> <span class="nav-text">灰度发布方案</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EEureka%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">关于Eureka的常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A7%E7%94%A8Spring-Retry%E9%87%8D%E8%AF%95%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">巧用Spring Retry重试机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83%E6%96%B9%E6%A1%88"><span class="nav-number">5.</span> <span class="nav-text">灰度发布方案</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -405,14 +413,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -423,6 +431,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -440,19 +453,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -492,9 +504,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -503,7 +523,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

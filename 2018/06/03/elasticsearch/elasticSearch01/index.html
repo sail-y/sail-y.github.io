@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,30 +13,30 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 简介官网：http://www.elastic.co/products/elasticsearch 系列文章版本基于ElasticSearch5.2 什么是ElasticsearchElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开">
-<meta name="keywords" content="ElasticSearch">
+  <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 简介官网：http:&#x2F;&#x2F;www.elastic.co&#x2F;products&#x2F;elasticsearch 系列文章版本基于ElasticSearch5.2 什么是ElasticsearchElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ElasticSearch01-介绍">
 <meta property="og:url" content="http://www.saily.top/2018/06/03/elasticsearch/elasticSearch01/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 简介官网：http://www.elastic.co/products/elasticsearch 系列文章版本基于ElasticSearch5.2 什么是ElasticsearchElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.saily.top/img/es/01/什么是全文检索.png">
-<meta property="og:image" content="http://www.saily.top/img/es/01/什么是Elasticsearch.png">
-<meta property="og:image" content="http://www.saily.top/img/es/01/Elasticsearch近实时概念的解释.png">
-<meta property="og:image" content="http://www.saily.top/img/es/01/shard和replica的解释.png">
-<meta property="og:updated_time" content="2018-08-25T08:13:06.823Z">
+<meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 简介官网：http:&#x2F;&#x2F;www.elastic.co&#x2F;products&#x2F;elasticsearch 系列文章版本基于ElasticSearch5.2 什么是ElasticsearchElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/es/01/%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2.png">
+<meta property="og:image" content="http://www.saily.top/img/es/01/%E4%BB%80%E4%B9%88%E6%98%AFElasticsearch.png">
+<meta property="og:image" content="http://www.saily.top/img/es/01/Elasticsearch%E8%BF%91%E5%AE%9E%E6%97%B6%E6%A6%82%E5%BF%B5%E7%9A%84%E8%A7%A3%E9%87%8A.png">
+<meta property="og:image" content="http://www.saily.top/img/es/01/shard%E5%92%8Creplica%E7%9A%84%E8%A7%A3%E9%87%8A.png">
+<meta property="article:published_time" content="2018-06-03T03:46:54.000Z">
+<meta property="article:modified_time" content="2018-08-25T08:13:06.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="ElasticSearch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ElasticSearch01-介绍">
-<meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 简介官网：http://www.elastic.co/products/elasticsearch 系列文章版本基于ElasticSearch5.2 什么是ElasticsearchElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开">
-<meta name="twitter:image" content="http://www.saily.top/img/es/01/什么是全文检索.png">
+<meta name="twitter:image" content="http://www.saily.top/img/es/01/%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2.png">
 
 <link rel="canonical" href="http://www.saily.top/2018/06/03/elasticsearch/elasticSearch01/">
 
@@ -46,7 +46,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -81,6 +82,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -99,14 +101,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -117,32 +117,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -150,17 +151,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -174,10 +176,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -186,9 +187,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -196,14 +194,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/06/03/elasticsearch/elasticSearch01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -223,7 +220,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -231,14 +228,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：8月 25 2018 16:13:06" itemprop="dateModified" datetime="2018-08-25T16:13:06+08:00">8月 25 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -265,10 +262,11 @@
 
       
         <p>此为龙果学院课程学习笔记，记录以后翻看</p>
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官网：<a href="http://www.elastic.co/products/elasticsearch" target="_blank" rel="noopener">http://www.elastic.co/products/elasticsearch</a></p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官网：<a target="_blank" rel="noopener" href="http://www.elastic.co/products/elasticsearch">http://www.elastic.co/products/elasticsearch</a></p>
 <p>系列文章版本基于ElasticSearch5.2</p>
 <h2 id="什么是Elasticsearch"><a href="#什么是Elasticsearch" class="headerlink" title="什么是Elasticsearch"></a>什么是Elasticsearch</h2><p>ElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。</p>
 <a id="more"></a>
+
 <h3 id="什么是搜索？"><a href="#什么是搜索？" class="headerlink" title="什么是搜索？"></a>什么是搜索？</h3><p>百度：我们比如说想找寻任何的信息的时候，就会上百度去搜索一下，比如说找一部自己喜欢的电影，或者说找一本喜欢的书，或者找一条感兴趣的新闻（提到搜索的第一印象）<br>但是百度 != 搜索，这是不对的</p>
 <p>还有一种是垂直搜索（站内搜索）：</p>
 <p>互联网的搜索：电商网站，招聘网站，新闻网站，各种app<br>IT系统的搜索：OA软件，办公自动化软件，会议管理，日程管理，项目管理，员工管理，搜索“张三”，“张三儿”，“张小三”；有个电商网站，卖家，后台管理系统，搜索“牙膏”，订单，“牙膏相关的订单”</p>
@@ -282,20 +280,22 @@
 <p>而且用数据库来实现搜索，是不太靠谱的。通常来说，性能会很差。</p>
 <h3 id="什么是全文检索和Lucene？"><a href="#什么是全文检索和Lucene？" class="headerlink" title="什么是全文检索和Lucene？"></a>什么是全文检索和Lucene？</h3><ol>
 <li><p>全文检索，倒排索引</p>
-<p> <img src="/img/es/01/什么是全文检索.png" alt></p>
+<p> <img src="/img/es/01/%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2.png"></p>
 </li>
 <li><p>lucene，就是一个jar包，里面包含了封装好的各种建立倒排索引，以及进行搜索的代码，包括各种算法。我们就用java开发的时候，引入lucene jar，然后基于lucene的api进行去进行开发就可以了。用lucene，我们就可以去将已有的数据建立索引，lucene会在本地磁盘上面，给我们组织索引的数据结构。另外的话，我们也可以用lucene提供的一些功能和api来针对磁盘上额</p>
 </li>
 </ol>
-<h3 id="什么是Elasticsearch？"><a href="#什么是Elasticsearch？" class="headerlink" title="什么是Elasticsearch？"></a>什么是Elasticsearch？</h3><p><img src="/img/es/01/什么是Elasticsearch.png" alt></p>
+<h3 id="什么是Elasticsearch？"><a href="#什么是Elasticsearch？" class="headerlink" title="什么是Elasticsearch？"></a>什么是Elasticsearch？</h3><p><img src="/img/es/01/%E4%BB%80%E4%B9%88%E6%98%AFElasticsearch.png"></p>
 <h2 id="Elasticsearch功能介绍"><a href="#Elasticsearch功能介绍" class="headerlink" title="Elasticsearch功能介绍"></a>Elasticsearch功能介绍</h2><h3 id="分布式的搜索引擎和数据分析引擎"><a href="#分布式的搜索引擎和数据分析引擎" class="headerlink" title="分布式的搜索引擎和数据分析引擎"></a>分布式的搜索引擎和数据分析引擎</h3><p>搜索：百度，网站的站内搜索，IT系统的检索</p>
 <p>数据分析：电商网站，最近7天牙膏这种商品销量排名前10的商家有哪些；新闻网站，最近1个月访问量排名前3的新闻版块是哪些</p>
 <h3 id="全文检索，结构化检索，数据分析"><a href="#全文检索，结构化检索，数据分析" class="headerlink" title="全文检索，结构化检索，数据分析"></a>全文检索，结构化检索，数据分析</h3><ul>
-<li>全文检索：我想搜索商品名称包含牙膏的商品，<code>select * from products where product_name like &quot;%牙膏%&quot;</code></li>
+<li><p>全文检索：我想搜索商品名称包含牙膏的商品，<code>select * from products where product_name like &quot;%牙膏%&quot;</code></p>
+</li>
 <li><p>结构化检索：我想搜索商品分类为日化用品的商品都有哪些，<code>select * from products where category=&#39;日化用品&#39;</code></p>
 <p>  部分匹配、自动完成、搜索纠错、搜索推荐</p>
 </li>
-<li>数据分析：我们分析每一个商品分类下有多少个商品，<code>select category_id,count(*) from products group by category_id</code></li>
+<li><p>数据分析：我们分析每一个商品分类下有多少个商品，<code>select category_id,count(*) from products group by category_id</code></p>
+</li>
 </ul>
 <h3 id="对海量数据进行近实时的处理"><a href="#对海量数据进行近实时的处理" class="headerlink" title="对海量数据进行近实时的处理"></a>对海量数据进行近实时的处理</h3><ul>
 <li>分布式：ES自动可以将海量数据分散到多台服务器上去存储和检索</li>
@@ -330,46 +330,47 @@
 <p>关于elasticsearch的一个传说，有一个程序员失业了，陪着自己老婆去英国伦敦学习厨师课程。程序员在失业期间想给老婆写一个菜谱搜索引擎，觉得lucene实在太复杂了，就开发了一个封装了lucene的开源项目，compass。后来程序员找到了工作，是做分布式的高性能项目的，觉得compass不够，就写了elasticsearch，让lucene变成分布式的系统。</p>
 <h3 id="elasticsearch的核心概念"><a href="#elasticsearch的核心概念" class="headerlink" title="elasticsearch的核心概念"></a>elasticsearch的核心概念</h3><ol>
 <li><p>Near Realtime（NRT）：近实时，两个意思，从写入数据到数据可以被搜索到有一个小延迟（大概1秒）；基于es执行搜索和分析可以达到秒级</p>
-<p> <img src="/img/es/01/Elasticsearch近实时概念的解释.png" alt="Elasticsearch近实时概念的解释"></p>
+<p> <img src="/img/es/01/Elasticsearch%E8%BF%91%E5%AE%9E%E6%97%B6%E6%A6%82%E5%BF%B5%E7%9A%84%E8%A7%A3%E9%87%8A.png" alt="Elasticsearch近实时概念的解释"></p>
 </li>
 </ol>
 <ol start="2">
-<li>Cluster：集群，包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常</li>
-<li>Node：节点，集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群</li>
-<li>Document&amp;field：文档，es中的最小数据单元，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。一个document里面有多个field，每个field就是一个数据字段。</li>
-<li>Index：索引，包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</li>
+<li><p>Cluster：集群，包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常</p>
+</li>
+<li><p>Node：节点，集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群</p>
+</li>
+<li><p>Document&amp;field：文档，es中的最小数据单元，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。一个document里面有多个field，每个field就是一个数据字段。</p>
+</li>
+<li><p>Index：索引，包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</p>
+</li>
 <li><p>Type：类型，每个索引里都可以有一个或多个type，type是index中的一个逻辑数据分类，一个type下的document，都有相同的field，比如博客系统，有一个索引，可以定义用户数据type，博客数据type，评论数据type。</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">商品index，里面存放了所有的商品数据，商品document</span><br><span class="line"></span><br><span class="line">但是商品分很多种类，每个种类的document的field可能不太一样，比如说电器商品，可能还包含一些诸如售后时间范围这样的特殊field；生鲜商品，还包含一些诸如生鲜保质期之类的特殊field</span><br><span class="line"></span><br><span class="line">type，日化商品type，电器商品type，生鲜商品type</span><br><span class="line"></span><br><span class="line">日化商品type：product_id，product_name，product_desc，category_id，category_name</span><br><span class="line">电器商品type：product_id，product_name，product_desc，category_id，category_name，service_period</span><br><span class="line">生鲜商品type：product_id，product_name，product_desc，category_id，category_name，eat_period</span><br><span class="line"></span><br><span class="line">每一个type里面，都会包含一堆document</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;product_id&quot;: &quot;2&quot;,</span><br><span class="line">  &quot;product_name&quot;: &quot;长虹电视机&quot;,</span><br><span class="line">  &quot;product_desc&quot;: &quot;4k高清&quot;,</span><br><span class="line">  &quot;category_id&quot;: &quot;3&quot;,</span><br><span class="line">  &quot;category_name&quot;: &quot;电器&quot;,</span><br><span class="line">  &quot;service_period&quot;: &quot;1年&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;product_id&quot;: &quot;3&quot;,</span><br><span class="line">  &quot;product_name&quot;: &quot;基围虾&quot;,</span><br><span class="line">  &quot;product_desc&quot;: &quot;纯天然，冰岛产&quot;,</span><br><span class="line">  &quot;category_id&quot;: &quot;4&quot;,</span><br><span class="line">  &quot;category_name&quot;: &quot;生鲜&quot;,</span><br><span class="line">  &quot;eat_period&quot;: &quot;7天&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol start="7">
-<li>shard：单台机器无法存储大量数据，es可以将一个索引中的数据切分为多个shard，分布在多台服务器上存储。有了shard就可以横向扩展，存储更多数据，让搜索和分析等操作分布到多台服务器上去执行，提升吞吐量和性能。每个shard都是一个lucene index。</li>
+<li><p>shard：单台机器无法存储大量数据，es可以将一个索引中的数据切分为多个shard，分布在多台服务器上存储。有了shard就可以横向扩展，存储更多数据，让搜索和分析等操作分布到多台服务器上去执行，提升吞吐量和性能。每个shard都是一个lucene index。</p>
+</li>
 <li><p>replica：任何一个服务器随时可能故障或宕机，此时shard可能就会丢失，因此可以为每个shard创建多个replica副本。replica可以在shard故障时提供备用服务，保证数据不丢失，多个replica还可以提升搜索操作的吞吐量和性能。primary shard（建立索引时一次设置，不能修改，默认5个），replica shard（随时修改数量，默认1个），默认每个索引10个shard，5个primary shard，5个replica shard，最小的高可用配置，是2台服务器。</p>
-<p> <img src="/img/es/01/shard和replica的解释.png" alt="shard和replica的解释"></p>
+<p> <img src="/img/es/01/shard%E5%92%8Creplica%E7%9A%84%E8%A7%A3%E9%87%8A.png" alt="shard和replica的解释"></p>
 </li>
 </ol>
 <h3 id="elasticsearch核心概念-vs-数据库核心概念"><a href="#elasticsearch核心概念-vs-数据库核心概念" class="headerlink" title="elasticsearch核心概念 vs. 数据库核心概念"></a>elasticsearch核心概念 vs. 数据库核心概念</h3><table>
 <thead>
 <tr>
 <th>Elasticsearch</th>
-<th style="text-align:center">数据库</th>
+<th align="center">数据库</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>Document</td>
-<td style="text-align:center">行</td>
+<td align="center">行</td>
 </tr>
 <tr>
 <td>Type</td>
-<td style="text-align:center">表</td>
+<td align="center">表</td>
 </tr>
 <tr>
 <td>Index</td>
-<td style="text-align:center">库</td>
+<td align="center">库</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 
     </div>
 
@@ -403,7 +404,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -459,7 +459,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Elasticsearch"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Elasticsearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是搜索？"><span class="nav-number">1.1.1.</span> <span class="nav-text">什么是搜索？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果用数据库做搜索会怎么样？"><span class="nav-number">1.1.2.</span> <span class="nav-text">如果用数据库做搜索会怎么样？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是全文检索和Lucene？"><span class="nav-number">1.1.3.</span> <span class="nav-text">什么是全文检索和Lucene？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Elasticsearch？"><span class="nav-number">1.1.4.</span> <span class="nav-text">什么是Elasticsearch？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticsearch功能介绍"><span class="nav-number">1.2.</span> <span class="nav-text">Elasticsearch功能介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式的搜索引擎和数据分析引擎"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式的搜索引擎和数据分析引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全文检索，结构化检索，数据分析"><span class="nav-number">1.2.2.</span> <span class="nav-text">全文检索，结构化检索，数据分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对海量数据进行近实时的处理"><span class="nav-number">1.2.3.</span> <span class="nav-text">对海量数据进行近实时的处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch的适用场景"><span class="nav-number">1.2.4.</span> <span class="nav-text">Elasticsearch的适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch的特点"><span class="nav-number">1.2.5.</span> <span class="nav-text">Elasticsearch的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch核心概念"><span class="nav-number">1.3.</span> <span class="nav-text">ElasticSearch核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lucene和elasticsearch的前世今生"><span class="nav-number">1.3.1.</span> <span class="nav-text">lucene和elasticsearch的前世今生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch的核心概念"><span class="nav-number">1.3.2.</span> <span class="nav-text">elasticsearch的核心概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch核心概念-vs-数据库核心概念"><span class="nav-number">1.3.3.</span> <span class="nav-text">elasticsearch核心概念 vs. 数据库核心概念</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFElasticsearch"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Elasticsearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%90%9C%E7%B4%A2%EF%BC%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">什么是搜索？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%81%9A%E6%90%9C%E7%B4%A2%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">如果用数据库做搜索会怎么样？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2%E5%92%8CLucene%EF%BC%9F"><span class="nav-number">1.1.3.</span> <span class="nav-text">什么是全文检索和Lucene？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFElasticsearch%EF%BC%9F"><span class="nav-number">1.1.4.</span> <span class="nav-text">什么是Elasticsearch？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticsearch%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">Elasticsearch功能介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%92%8C%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%BC%95%E6%93%8E"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式的搜索引擎和数据分析引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2%EF%BC%8C%E7%BB%93%E6%9E%84%E5%8C%96%E6%A3%80%E7%B4%A2%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">全文检索，结构化检索，数据分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E8%BF%91%E5%AE%9E%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">1.2.3.</span> <span class="nav-text">对海量数据进行近实时的处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch%E7%9A%84%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.4.</span> <span class="nav-text">Elasticsearch的适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.2.5.</span> <span class="nav-text">Elasticsearch的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.</span> <span class="nav-text">ElasticSearch核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lucene%E5%92%8Celasticsearch%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F"><span class="nav-number">1.3.1.</span> <span class="nav-text">lucene和elasticsearch的前世今生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.2.</span> <span class="nav-text">elasticsearch的核心概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5-vs-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.3.</span> <span class="nav-text">elasticsearch核心概念 vs. 数据库核心概念</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -475,14 +475,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -493,6 +493,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -510,19 +515,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -562,9 +566,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -573,7 +585,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

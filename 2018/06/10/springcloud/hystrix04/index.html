@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,28 +13,29 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
-<meta name="keywords" content="spring-cloud,hystrix">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hystrix监控和运维">
 <meta property="og:url" content="http://www.saily.top/2018/06/10/springcloud/hystrix04/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running.png">
 <meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running2.png">
 <meta property="og:image" content="http://www.saily.top/img/hystrix/hystrix-running3.png">
-<meta property="og:updated_time" content="2020-04-12T06:19:40.357Z">
+<meta property="article:published_time" content="2018-06-10T10:03:59.000Z">
+<meta property="article:modified_time" content="2020-04-12T06:19:40.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="spring-cloud">
+<meta property="article:tag" content="hystrix">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hystrix监控和运维">
-<meta name="twitter:description" content="此为龙果学院课程学习笔记，记录以后翻看 监控为什么需要监控与报警？HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。">
 <meta name="twitter:image" content="http://www.saily.top/img/hystrix/hystrix-running.png">
 
 <link rel="canonical" href="http://www.saily.top/2018/06/10/springcloud/hystrix04/">
@@ -45,7 +46,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -80,6 +82,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -98,14 +101,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -116,32 +117,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -149,17 +151,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -173,10 +176,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -185,9 +187,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -195,14 +194,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/06/10/springcloud/hystrix04/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,7 +220,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -230,14 +228,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：4月 12 2020 14:19:40" itemprop="dateModified" datetime="2020-04-12T14:19:40+08:00">4月 12 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -264,7 +262,9 @@
 
       
         <p>此为龙果学院课程学习笔记，记录以后翻看</p>
-<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><h3 id="为什么需要监控与报警？"><a href="#为什么需要监控与报警？" class="headerlink" title="为什么需要监控与报警？"></a>为什么需要监控与报警？</h3><p>HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。<br><a id="more"></a><br>这些统计信息，无论是单独看，还是聚合起来看，都是很有用的。如果将一个请求中的多个command的统计信息拿出来单独查看，包括耗时的统计，对debug系统是很有帮助的。聚合起来的metric对于系统层面的行为来说，是很有帮助的，很适合做报警或者报表。hystrix dashboard就很适合。</p>
+<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><h3 id="为什么需要监控与报警？"><a href="#为什么需要监控与报警？" class="headerlink" title="为什么需要监控与报警？"></a>为什么需要监控与报警？</h3><p>HystrixCommand执行的时候，会生成一些执行耗时等方面的统计信息。这些信息对于系统的运维来说，是很有帮助的，因为我们通过这些统计信息可以看到整个系统是怎么运行的。hystrix对每个command key都会提供一份metric，而且是秒级统计粒度的。</p>
+<a id="more"></a>
+<p>这些统计信息，无论是单独看，还是聚合起来看，都是很有用的。如果将一个请求中的多个command的统计信息拿出来单独查看，包括耗时的统计，对debug系统是很有帮助的。聚合起来的metric对于系统层面的行为来说，是很有帮助的，很适合做报警或者报表。hystrix dashboard就很适合。</p>
 <h3 id="hystrix的事件类型"><a href="#hystrix的事件类型" class="headerlink" title="hystrix的事件类型"></a>hystrix的事件类型</h3><p>对于hystrix command来说，只会返回一个值，execute只有一个event type，fallback也只有一个event type，那么返回一个SUCCESS就代表着命令执行的结束</p>
 <p>对于hystrix observable command来说，多个值可能被返回，所以emit event代表一个value被返回，success代表成功，failure代表异常</p>
 <h4 id="execute-event-type"><a href="#execute-event-type" class="headerlink" title="execute event type"></a>execute event type</h4><p>EMIT                    observable command返回一个value<br>SUCCESS                 完成执行，并且没有报错<br>FAILURE                    执行时抛出了一个异常，会触发fallback<br>TIMEOUT                    开始执行了，但是在指定时间内没有完成执行，会触发fallback<br>BAD_REQUEST                执行的时候抛出了一个HystrixBadRequestException<br>SHORT_CIRCUITED            短路器打开了，触发fallback<br>THREAD_POOL_REJECTED    线程成的容量满了，被reject，触发fallback<br>SEMAPHORE_REJECTED        信号量的容量满了，被reject，触发fallback</p>
@@ -300,26 +300,31 @@
 <h4 id="metrics-healthSnapshot-intervalInMilliseconds"><a href="#metrics-healthSnapshot-intervalInMilliseconds" class="headerlink" title="metrics.healthSnapshot.intervalInMilliseconds"></a>metrics.healthSnapshot.intervalInMilliseconds</h4><p>控制成功和失败的百分比计算，与影响短路器之间的等待时间，默认值是500毫秒</p>
 <p>HystrixCommandProperties.Setter()<br>   .withMetricsHealthSnapshotIntervalInMilliseconds(int value)</p>
 <h2 id="监控部署"><a href="#监控部署" class="headerlink" title="监控部署"></a>监控部署</h2><p>找到之前的eshop-cache-ha项目，引入配置：</p>
-<p><a href="https://github.com/sail-y/eshop-cache-ha" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache-ha</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache-ha">https://github.com/sail-y/eshop-cache-ha</a></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>然后再注册一个servlet的bean</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ServletRegistrationBean <span class="title">indexServletRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ServletRegistrationBean registration = <span class="keyword">new</span> ServletRegistrationBean(<span class="keyword">new</span> HystrixMetricsStreamServlet());</span><br><span class="line">    registration.addUrlMappings(<span class="string">"/hystrix.stream"</span>);</span><br><span class="line">    <span class="keyword">return</span> registration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ServletRegistrationBean <span class="title">indexServletRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ServletRegistrationBean registration = <span class="keyword">new</span> ServletRegistrationBean(<span class="keyword">new</span> HystrixMetricsStreamServlet());</span><br><span class="line">    registration.addUrlMappings(<span class="string">&quot;/hystrix.stream&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> registration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <p><strong>Tomcat</strong></p>
 <p>准备一个tomcat部署HystrixDashboard，网上下载一个<code>hystrix-dashboard-1.5.12.war</code>，再装一个turbin，turbin是用来监控一个集群的，可以将一个集群的所有机器都配置在这里。</p>
 <p>在/WEB-INF/classes下添加一个配置文件，告诉turbin需要监控哪些实例。</p>
 <p><strong>config.properties</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">turbine.ConfigPropertyBasedDiscovery.default.instances=localhost</span><br><span class="line">turbine.instanceUrlSuffix=:8081/hystrix.stream</span><br></pre></td></tr></table></figure>
-<p><img src="/img/hystrix/hystrix-running.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">turbine.ConfigPropertyBasedDiscovery.default.instances&#x3D;localhost</span><br><span class="line">turbine.instanceUrlSuffix&#x3D;:8081&#x2F;hystrix.stream</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/hystrix/hystrix-running.png"></p>
 <p>然后启动我们自己的<code>eshop-cache-ha</code>项目，</p>
 <p>访问页面查看</p>
-<p><a href="http://localhost:8080/hystrix-dashboard/" target="_blank" rel="noopener">http://localhost:8080/hystrix-dashboard/</a></p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8080/hystrix-dashboard/">http://localhost:8080/hystrix-dashboard/</a></p>
 <p>填入我们要监控的URL.</p>
-<p><img src="/img/hystrix/hystrix-running2.png" alt></p>
-<p><a href="http://localhost:8081/hystrix.stream，监控单个机器" target="_blank" rel="noopener">http://localhost:8081/hystrix.stream，监控单个机器</a></p>
-<p><a href="http://localhost:8080/turbine/turbine.stream，监控整个集群" target="_blank" rel="noopener">http://localhost:8080/turbine/turbine.stream，监控整个集群</a></p>
+<p><img src="/img/hystrix/hystrix-running2.png"></p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8081/hystrix.stream%EF%BC%8C%E7%9B%91%E6%8E%A7%E5%8D%95%E4%B8%AA%E6%9C%BA%E5%99%A8">http://localhost:8081/hystrix.stream，监控单个机器</a></p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8080/turbine/turbine.stream%EF%BC%8C%E7%9B%91%E6%8E%A7%E6%95%B4%E4%B8%AA%E9%9B%86%E7%BE%A4">http://localhost:8080/turbine/turbine.stream，监控整个集群</a></p>
 <p>现在还看不到什么东西，我们对项目发送几个请求，再看看效果</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 监控请求测试</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/10</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixDashboardTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            HttpUtil.get(<span class="string">"http://localhost:8081/getProductInfo?productId=1"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/hystrix/hystrix-running3.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 监控请求测试</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/06/10</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixDashboardTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            HttpUtil.get(<span class="string">&quot;http://localhost:8081/getProductInfo?productId=1&quot;</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/hystrix/hystrix-running3.png"></p>
 <p>hystrix的dashboard可以支持实时监控metric</p>
 <p>netflix开始用这个dashboard的时候，大幅度优化了工程运维的操作，帮助节约了恢复系统的时间。大多数生产系统的故障持续时间变得很短，而且影响幅度小了很多，主要是因为hystrix dashborad提供了可视化的监控。</p>
 <p>截图说明，dashboard上的指标都是什么？</p>
@@ -373,7 +378,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -429,7 +433,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">1.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要监控与报警？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要监控与报警？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hystrix的事件类型"><span class="nav-number">1.2.</span> <span class="nav-text">hystrix的事件类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#execute-event-type"><span class="nav-number">1.2.1.</span> <span class="nav-text">execute event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fallback-event-type"><span class="nav-number">1.2.2.</span> <span class="nav-text">fallback event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他的event-type"><span class="nav-number">1.2.3.</span> <span class="nav-text">其他的event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thread-pool-event-type"><span class="nav-number">1.2.4.</span> <span class="nav-text">thread pool event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#collapser-event-type"><span class="nav-number">1.2.5.</span> <span class="nav-text">collapser event type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric-storage"><span class="nav-number">1.3.</span> <span class="nav-text">metric storage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric统计相关的配置"><span class="nav-number">1.4.</span> <span class="nav-text">metric统计相关的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-timeInMilliseconds"><span class="nav-number">1.4.1.</span> <span class="nav-text">metrics.rollingStats.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-numBuckets"><span class="nav-number">1.4.2.</span> <span class="nav-text">metrics.rollingStats.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-enabled"><span class="nav-number">1.4.3.</span> <span class="nav-text">metrics.rollingPercentile.enabled</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-timeInMilliseconds"><span class="nav-number">1.4.4.</span> <span class="nav-text">metrics.rollingPercentile.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-numBuckets"><span class="nav-number">1.4.5.</span> <span class="nav-text">metrics.rollingPercentile.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-bucketSize"><span class="nav-number">1.4.6.</span> <span class="nav-text">metrics.rollingPercentile.bucketSize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-healthSnapshot-intervalInMilliseconds"><span class="nav-number">1.4.7.</span> <span class="nav-text">metrics.healthSnapshot.intervalInMilliseconds</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控部署"><span class="nav-number">2.</span> <span class="nav-text">监控部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生产环境运维"><span class="nav-number">3.</span> <span class="nav-text">生产环境运维</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">1.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%8A%A5%E8%AD%A6%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要监控与报警？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hystrix%E7%9A%84%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">hystrix的事件类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#execute-event-type"><span class="nav-number">1.2.1.</span> <span class="nav-text">execute event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fallback-event-type"><span class="nav-number">1.2.2.</span> <span class="nav-text">fallback event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84event-type"><span class="nav-number">1.2.3.</span> <span class="nav-text">其他的event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thread-pool-event-type"><span class="nav-number">1.2.4.</span> <span class="nav-text">thread pool event type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#collapser-event-type"><span class="nav-number">1.2.5.</span> <span class="nav-text">collapser event type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric-storage"><span class="nav-number">1.3.</span> <span class="nav-text">metric storage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metric%E7%BB%9F%E8%AE%A1%E7%9B%B8%E5%85%B3%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.</span> <span class="nav-text">metric统计相关的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-timeInMilliseconds"><span class="nav-number">1.4.1.</span> <span class="nav-text">metrics.rollingStats.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingStats-numBuckets"><span class="nav-number">1.4.2.</span> <span class="nav-text">metrics.rollingStats.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-enabled"><span class="nav-number">1.4.3.</span> <span class="nav-text">metrics.rollingPercentile.enabled</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-timeInMilliseconds"><span class="nav-number">1.4.4.</span> <span class="nav-text">metrics.rollingPercentile.timeInMilliseconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-numBuckets"><span class="nav-number">1.4.5.</span> <span class="nav-text">metrics.rollingPercentile.numBuckets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-rollingPercentile-bucketSize"><span class="nav-number">1.4.6.</span> <span class="nav-text">metrics.rollingPercentile.bucketSize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metrics-healthSnapshot-intervalInMilliseconds"><span class="nav-number">1.4.7.</span> <span class="nav-text">metrics.healthSnapshot.intervalInMilliseconds</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2"><span class="nav-number">2.</span> <span class="nav-text">监控部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E8%BF%90%E7%BB%B4"><span class="nav-number">3.</span> <span class="nav-text">生产环境运维</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -445,14 +449,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -463,6 +467,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -480,19 +489,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -532,9 +540,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -543,7 +559,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

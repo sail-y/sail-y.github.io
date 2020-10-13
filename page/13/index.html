@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,11 +13,11 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
@@ -26,10 +26,9 @@
 <meta property="og:url" content="http://www.saily.top/page/13/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="帆">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="帆的博客">
-<meta name="twitter:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
 
 <link rel="canonical" href="http://www.saily.top/page/13/">
 
@@ -39,7 +38,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : true,
-    isPost : false
+    isPost : false,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -74,6 +74,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -92,14 +93,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -110,32 +109,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -143,17 +143,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -167,10 +168,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -179,9 +179,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -189,15 +186,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content index posts-expand">
             
-
-  <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/14/ci/jenkins和tomcat的持续集成/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/15/ci/jenkins%E9%85%8D%E5%90%88docker%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -209,15 +204,96 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/12/14/ci/jenkins和tomcat的持续集成/" class="post-title-link" itemprop="url">jenkins和tomcat的持续集成</a>
-        </h1>
+            <a href="/2015/12/15/ci/jenkins%E9%85%8D%E5%90%88docker%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/" class="post-title-link" itemprop="url">jenkins配合docker持续集成</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：12月 15 2015 12:53:45" itemprop="dateCreated datePublished" datetime="2015-12-15T12:53:45+08:00">12月 15 2015</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CI/" itemprop="url" rel="index"><span itemprop="name">CI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我这里用docker来做持续集成的思路和<a target="_blank" rel="noopener" href="http://sail-y.github.io/2015/12/14/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/">jenkins和tomcat的持续集成</a>是一样的。都是用jenkins拉取git的代码然后打war包，只不过重启tomcat步骤换成了docker的重启。<br>直接展示一下docker的脚本吧。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2015/12/15/ci/jenkins%E9%85%8D%E5%90%88docker%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/14/ci/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/12/14/ci/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/" class="post-title-link" itemprop="url">jenkins和tomcat的持续集成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -225,14 +301,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 16 2016 15:51:33" itemprop="dateModified" datetime="2016-12-16T15:51:33+08:00">12月 16 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -259,7 +335,7 @@
 <li>执行一个shell脚本，将正在运行的tomcat进程kill掉，把war包拷到tomcat目录的webapps下。然后在运行${TOMCAT_DIR}/bin/startup.sh。
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/12/14/ci/jenkins和tomcat的持续集成/#more" rel="contents">
+              <a class="btn" href="/2015/12/14/ci/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -279,11 +355,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/11/java/Mybatis-枚举存储/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/11/java/Mybatis-%E6%9E%9A%E4%B8%BE%E5%AD%98%E5%82%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -295,15 +371,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/12/11/java/Mybatis-枚举存储/" class="post-title-link" itemprop="url">Mybatis 枚举存储</a>
-        </h1>
+            <a href="/2015/12/11/java/Mybatis-%E6%9E%9A%E4%B8%BE%E5%AD%98%E5%82%A8/" class="post-title-link" itemprop="url">Mybatis 枚举存储</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -311,14 +387,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：1月 22 2017 14:56:22" itemprop="dateModified" datetime="2017-01-22T14:56:22+08:00">1月 22 2017</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -338,10 +414,10 @@
 
       
           <h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><p>我们在写程序的时候会遇到这种需求。就是我的对象里面有一个属性是一个枚举值，但是mybatis默认是不支持的，官方提供了一个typeHandler可以用枚举的ordinal()来进行存和取的自动转换。把它配置在<br><code>mybatis-configuration.xml</code>里。    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;typeHandlers&gt;</span><br><span class="line">        &lt;typeHandler handler=&quot;org.apache.ibatis.type.EnumOrdinalTypeHandler&quot; javaType=&quot;com.xxx.user.UserType&quot;/&gt;</span><br><span class="line">&lt;/typeHandlers&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;typeHandlers&gt;</span><br><span class="line">        &lt;typeHandler handler&#x3D;&quot;org.apache.ibatis.type.EnumOrdinalTypeHandler&quot; javaType&#x3D;&quot;com.xxx.user.UserType&quot;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;typeHandlers&gt;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/12/11/java/Mybatis-枚举存储/#more" rel="contents">
+              <a class="btn" href="/2015/12/11/java/Mybatis-%E6%9E%9A%E4%B8%BE%E5%AD%98%E5%82%A8/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -361,11 +437,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/08/linux/centos-6-5-安装docker/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/08/linux/centos-6-5-%E5%AE%89%E8%A3%85docker/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -377,15 +453,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/12/08/linux/centos-6-5-安装docker/" class="post-title-link" itemprop="url">centos 6.5 安装docker</a>
-        </h1>
+            <a href="/2015/12/08/linux/centos-6-5-%E5%AE%89%E8%A3%85docker/" class="post-title-link" itemprop="url">centos 6.5 安装docker</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -393,14 +469,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：1月 31 2018 11:13:22" itemprop="dateModified" datetime="2018-01-31T11:13:22+08:00">1月 31 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -420,17 +496,19 @@
 
       
           <p>先试试把开环境用docker来部署。</p>
-<p><a href="http://docs.docker.com/engine/installation/centos/" target="_blank" rel="noopener">http://docs.docker.com/engine/installation/centos/</a><br>直接按照这里安装就可以了，不过我在这里遇到了一点问题。<br>我是centos6.5，内核在 3.8 以上<br>通过以下命令查看您的 CentOS 内核：  </p>
+<p><a target="_blank" rel="noopener" href="http://docs.docker.com/engine/installation/centos/">http://docs.docker.com/engine/installation/centos/</a><br>直接按照这里安装就可以了，不过我在这里遇到了一点问题。<br>我是centos6.5，内核在 3.8 以上<br>通过以下命令查看您的 CentOS 内核：  </p>
 <p><code>uname -r</code></p>
 <p>如果执行以上命令后，输出的内核版本号低于 3.8，请参考下面的方法来来升级您的 Linux 内核。  </p>
 <p>对于 CentOS 6.5 而言，内核版本默认是 2.6。首先，可通过以下命令安装最新内核：  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm</span><br><span class="line">yum -y --enablerepo=elrepo-kernel install kernel<span class="_">-lt</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm</span><br><span class="line">yum -y --enablerepo=elrepo-kernel install kernel-lt</span><br></pre></td></tr></table></figure>
+
 <p>随后，编辑以下配置文件：  </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/grub.conf</span><br></pre></td></tr></table></figure>
-<p>将<code>default=1</code>修改为<code>default=0</code>。<br>
+
+<p>将<code>default=1</code>修改为<code>default=0</code>。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/12/08/linux/centos-6-5-安装docker/#more" rel="contents">
+              <a class="btn" href="/2015/12/08/linux/centos-6-5-%E5%AE%89%E8%A3%85docker/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -450,11 +528,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/10/29/git/gitlab替换nginx服务/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/10/29/git/gitlab%E6%9B%BF%E6%8D%A2nginx%E6%9C%8D%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -466,15 +544,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/10/29/git/gitlab替换nginx服务/" class="post-title-link" itemprop="url">gitlab替换nginx服务</a>
-        </h1>
+            <a href="/2015/10/29/git/gitlab%E6%9B%BF%E6%8D%A2nginx%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">gitlab替换nginx服务</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -482,14 +560,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -508,11 +586,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>之前在自己服务器上搭建服务器，这是之前的文章<br><a href="http://sail-y.github.io/2015/02/06/centos-6-5-%E5%AE%89%E8%A3%85gitlab%E5%AE%89%E8%A3%85%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener">gitlab安装需要注意的问题</a></p>
-<p>后来在按照官网上替换自带服务器上的nginx的时候出现了一点问题。也是找了很久才找到这么一篇帖子，我在这里把nginx的部分转载过来一下。<br>
+          <p>之前在自己服务器上搭建服务器，这是之前的文章<br><a target="_blank" rel="noopener" href="http://sail-y.github.io/2015/02/06/centos-6-5-%E5%AE%89%E8%A3%85gitlab%E5%AE%89%E8%A3%85%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98/">gitlab安装需要注意的问题</a></p>
+<p>后来在按照官网上替换自带服务器上的nginx的时候出现了一点问题。也是找了很久才找到这么一篇帖子，我在这里把nginx的部分转载过来一下。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/10/29/git/gitlab替换nginx服务/#more" rel="contents">
+              <a class="btn" href="/2015/10/29/git/gitlab%E6%9B%BF%E6%8D%A2nginx%E6%9C%8D%E5%8A%A1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -532,11 +610,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/04/22/java/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/04/22/java/-%E8%BD%AC-Twitter%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E8%87%AA%E5%A2%9EID%E7%AE%97%E6%B3%95Snowflake%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90%E5%8F%8A%E5%85%B6Java%E3%80%81Php%E5%92%8CPython%E7%89%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -548,15 +626,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/04/22/java/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/" class="post-title-link" itemprop="url">[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版</a>
-        </h1>
+            <a href="/2015/04/22/java/-%E8%BD%AC-Twitter%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E8%87%AA%E5%A2%9EID%E7%AE%97%E6%B3%95Snowflake%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90%E5%8F%8A%E5%85%B6Java%E3%80%81Php%E5%92%8CPython%E7%89%88/" class="post-title-link" itemprop="url">[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -564,14 +642,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -590,17 +668,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>转载：<a href="http://www.dengchuanhua.com/132.html" target="_blank" rel="noopener">http://www.dengchuanhua.com/132.html</a></p>
+          <p>转载：<a target="_blank" rel="noopener" href="http://www.dengchuanhua.com/132.html">http://www.dengchuanhua.com/132.html</a></p>
 <p>在分布式系统中，需要生成全局UID的场合还是比较多的，twitter的snowflake解决了这种需求，实现也还是很简单的，除去配置信息，核心代码就是毫秒级时间41位+机器ID 10位+毫秒内序列12位。</p>
-<p>该项目地址为：<a href="https://github.com/twitter/snowflake是用Scala实现的。" target="_blank" rel="noopener">https://github.com/twitter/snowflake是用Scala实现的。</a></p>
-<p>python版详见开源项目<a href="https://github.com/erans/pysnowflake。" target="_blank" rel="noopener">https://github.com/erans/pysnowflake。</a></p>
+<p>该项目地址为：<a target="_blank" rel="noopener" href="https://github.com/twitter/snowflake%E6%98%AF%E7%94%A8Scala%E5%AE%9E%E7%8E%B0%E7%9A%84%E3%80%82">https://github.com/twitter/snowflake是用Scala实现的。</a></p>
+<p>python版详见开源项目<a target="_blank" rel="noopener" href="https://github.com/erans/pysnowflake%E3%80%82">https://github.com/erans/pysnowflake。</a></p>
 <p>核心代码为其IdWorker这个类实现，其原理结构如下，我分别用一个0表示一位，用—分割开部分的作用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0---0000000000 0000000000 0000000000 0000000000 0 --- 00000 ---00000 ---0000000000 00</span><br></pre></td></tr></table></figure>
 <p>在上面的字符串中，第一位为未使用（实际上也可作为long的符号位），接下来的41位为毫秒级时间，然后5位datacenter标识位，5位机器ID（并不算标识符，实际是为线程标识），然后12位该毫秒内的当前毫秒内的计数，加起来刚好64位，为一个Long型。</p>
-<p>这样的好处是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞（由datacenter和机器ID作区分），并且效率较高，经测试，snowflake每秒能够产生26万ID左右，完全满足需要。<br>
+<p>这样的好处是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞（由datacenter和机器ID作区分），并且效率较高，经测试，snowflake每秒能够产生26万ID左右，完全满足需要。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/04/22/java/-转-Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版/#more" rel="contents">
+              <a class="btn" href="/2015/04/22/java/-%E8%BD%AC-Twitter%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E8%87%AA%E5%A2%9EID%E7%AE%97%E6%B3%95Snowflake%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90%E5%8F%8A%E5%85%B6Java%E3%80%81Php%E5%92%8CPython%E7%89%88/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -620,11 +698,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/31/java/Spring-MVC-接口版本管理/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/31/java/Spring-MVC-%E6%8E%A5%E5%8F%A3%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -636,15 +714,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/03/31/java/Spring-MVC-接口版本管理/" class="post-title-link" itemprop="url">Spring MVC 接口版本管理</a>
-        </h1>
+            <a href="/2015/03/31/java/Spring-MVC-%E6%8E%A5%E5%8F%A3%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Spring MVC 接口版本管理</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -652,14 +730,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -678,7 +756,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>随着我们的应用后台不断的发版，因为改动导致了数据结构的变化，这个时候就需要对HTTP API进行版本控制了。对原有的客户端进行兼容，搜索一番后找到一个方法。<br>先看这个文章，提供了一个解决方案。<br><a href="http://www.cnblogs.com/jcli/p/springmvc_restful_version.html" target="_blank" rel="noopener">http://www.cnblogs.com/jcli/p/springmvc_restful_version.html</a></p>
+          <p>随着我们的应用后台不断的发版，因为改动导致了数据结构的变化，这个时候就需要对HTTP API进行版本控制了。对原有的客户端进行兼容，搜索一番后找到一个方法。<br>先看这个文章，提供了一个解决方案。<br><a target="_blank" rel="noopener" href="http://www.cnblogs.com/jcli/p/springmvc_restful_version.html">http://www.cnblogs.com/jcli/p/springmvc_restful_version.html</a></p>
 <p>Spring MVC通过在方法上使用<code>RequestMapping</code>来确认应该使用哪个方法来响应相应的请求，而RequestMapping又通过各种RequestCondition的实现来完成各种过滤（比如：consumes，headers，methods，params，produces以及value等）。在Spring MVC框架中使用RequestConditionHolder和RequestMappingInfo这两个实现。</p>
 <h6 id="自定义RequestCondition"><a href="#自定义RequestCondition" class="headerlink" title="自定义RequestCondition"></a>自定义RequestCondition</h6><ul>
 <li>实现RequestCondition接口</li>
@@ -693,7 +771,7 @@
 </ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/03/31/java/Spring-MVC-接口版本管理/#more" rel="contents">
+              <a class="btn" href="/2015/03/31/java/Spring-MVC-%E6%8E%A5%E5%8F%A3%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -713,11 +791,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/10/ci/发现tomcat的一个bug/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/10/ci/%E5%8F%91%E7%8E%B0tomcat%E7%9A%84%E4%B8%80%E4%B8%AAbug/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -729,15 +807,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/03/10/ci/发现tomcat的一个bug/" class="post-title-link" itemprop="url">发现tomcat的一个bug</a>
-        </h1>
+            <a href="/2015/03/10/ci/%E5%8F%91%E7%8E%B0tomcat%E7%9A%84%E4%B8%80%E4%B8%AAbug/" class="post-title-link" itemprop="url">发现tomcat的一个bug</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -745,14 +823,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -771,8 +849,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在做项目的时候出现一个错误，看了半天没看出来是什么问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">root cause</span><br><span class="line">java.util.NoSuchElementException</span><br><span class="line">	java.util.ArrayList$Itr.next(ArrayList.java:834)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.getJspAttribute(Validator.java:1385)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:772)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:779)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:529)</span><br><span class="line">	org.apache.jasper.compiler.Node$JspRoot.accept(Node.java:564)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visit(Node.java:2435)</span><br><span class="line">	org.apache.jasper.compiler.Node$Root.accept(Node.java:474)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Validator.validateExDirectives(Validator.java:1841)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.generateJava(Compiler.java:217)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:373)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:353)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:340)</span><br><span class="line">	org.apache.jasper.JspCompilationContext.compile(JspCompilationContext.java:657)</span><br><span class="line">	org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:357)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:390)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.service(JspServlet.java:334)</span><br><span class="line">	javax.servlet.http.HttpServlet.service(HttpServlet.java:727)</span><br></pre></td></tr></table></figure></p>
-<p>找了半天才发现是tomcat的一个bug，换了一个tomcat版本就好了<br>导致这个错误的原因如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jsp:param name=&quot;test&quot; value=&quot;&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+          <p>在做项目的时候出现一个错误，看了半天没看出来是什么问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">root cause</span><br><span class="line">java.util.NoSuchElementException</span><br><span class="line">	java.util.ArrayList$Itr.next(ArrayList.java:834)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.getJspAttribute(Validator.java:1385)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:772)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:779)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:529)</span><br><span class="line">	org.apache.jasper.compiler.Node$JspRoot.accept(Node.java:564)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visit(Node.java:2435)</span><br><span class="line">	org.apache.jasper.compiler.Node$Root.accept(Node.java:474)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Validator.validateExDirectives(Validator.java:1841)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.generateJava(Compiler.java:217)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:373)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:353)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:340)</span><br><span class="line">	org.apache.jasper.JspCompilationContext.compile(JspCompilationContext.java:657)</span><br><span class="line">	org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:357)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:390)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.service(JspServlet.java:334)</span><br><span class="line">	javax.servlet.http.HttpServlet.service(HttpServlet.java:727)</span><br></pre></td></tr></table></figure>
+<p>找了半天才发现是tomcat的一个bug，换了一个tomcat版本就好了<br>导致这个错误的原因如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jsp:param name&#x3D;&quot;test&quot; value&#x3D;&quot;&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
 <p>如果是value是空值，在某些tomcat版本下就会出现这个情况，如果你遇见了，不妨换个版本试试。</p>
 
       
@@ -789,11 +869,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/java/Spring-Mvc-3-1-之后如何配置messageConverters/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -805,15 +885,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/03/06/java/Spring-Mvc-3-1-之后如何配置messageConverters/" class="post-title-link" itemprop="url">Spring Mvc 3.1 之后如何配置messageConverters</a>
-        </h1>
+            <a href="/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/" class="post-title-link" itemprop="url">Spring Mvc 3.1 之后如何配置messageConverters</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -821,14 +901,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 12 2017 16:15:59" itemprop="dateModified" datetime="2017-12-12T16:15:59+08:00">12月 12 2017</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -856,10 +936,11 @@
 <p>RequestMappingHandlerMapping<br>RequestMappingHandlerAdapter<br>ExceptionHandlerExceptionResolver<br>These classes are a replacement for the existing:</p>
 </blockquote>
 <blockquote>
-<p>DefaultAnnotationHandlerMapping<br>AnnotationMethodHandlerAdapter<br>AnnotationMethodHandlerExceptionResolver<br>
+<p>DefaultAnnotationHandlerMapping<br>AnnotationMethodHandlerAdapter<br>AnnotationMethodHandlerExceptionResolver</p>
+</blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/03/06/java/Spring-Mvc-3-1-之后如何配置messageConverters/#more" rel="contents">
+              <a class="btn" href="/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -879,11 +960,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -895,15 +976,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/" class="post-title-link" itemprop="url">CentOS Jenkins + Sonar + Nexus 环境搭建</a>
-        </h1>
+            <a href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">CentOS Jenkins + Sonar + Nexus 环境搭建</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -911,14 +992,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -939,13 +1020,16 @@
       
           <h1 id="Nexus篇"><a href="#Nexus篇" class="headerlink" title="Nexus篇"></a>Nexus篇</h1><p>在Centos上安装</p>
 <p>如果机器上是JDK1.6的话，nexus-2.5.1是最后一个支持JDK1.6的版本。</p>
-<p>下载地址：<a href="http://www.sonatype.org/nexus/archived" target="_blank" rel="noopener">http://www.sonatype.org/nexus/archived</a></p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://www.sonatype.org/nexus/archived">http://www.sonatype.org/nexus/archived</a></p>
 <p>我这里使用FTP工具上传到服务器上。执行命令的时候如果遇到没有权限的地方用chmod改变文件权限。</p>
-<p>设置为系统自启动服务（使用root用户）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">cp /usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01/bin/jsw/linux-x86-64/nexus nexus</span><br></pre></td></tr></table></figure></p>
-<p>编辑<code>/etc/init.d/nexus</code>文件，添加以下变量定义：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_HOME=/usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01</span><br><span class="line">PLATFORM=linux-x86-64</span><br><span class="line">PLATFORM_DIR=<span class="string">"<span class="variable">$&#123;NEXUS_HOME&#125;</span>/bin/jsw/<span class="variable">$&#123;PLATFORM&#125;</span>"</span></span><br></pre></td></tr></table></figure></p>
+<p>设置为系统自启动服务（使用root用户）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/init.d/</span><br><span class="line">cp /usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01/bin/jsw/linux-x86-64/nexus nexus</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>/etc/init.d/nexus</code>文件，添加以下变量定义：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_HOME=/usr/<span class="built_in">local</span>/jdk/nexus-2.5.1-01</span><br><span class="line">PLATFORM=linux-x86-64</span><br><span class="line">PLATFORM_DIR=<span class="string">&quot;<span class="variable">$&#123;NEXUS_HOME&#125;</span>/bin/jsw/<span class="variable">$&#123;PLATFORM&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-环境搭建/#more" rel="contents">
+              <a class="btn" href="/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -965,89 +1049,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/" class="post-title-link" itemprop="url">centos 6.5 安装gitlab安装需注意的问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2月 6 2015 23:30:50" itemprop="dateCreated datePublished" datetime="2015-02-06T23:30:50+08:00">2月 6 2015</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>安装gitlab<br>首先按照官网进行操作，环境为centos 6.5<br><a href="https://about.gitlab.com/downloads/" target="_blank" rel="noopener">https://about.gitlab.com/downloads/</a><br>注意安装过程中执行命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure></p>
-<p>出现错误，在<code>/etc/gitlab/gitlab.rb</code>中修改域名后再执行一次方可启动成功<br><img src="http://img.blog.csdn.net/20141207182607301?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWZpc2Fib3k=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="image"><br>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2015/02/06/linux/centos-6-5-安装gitlab安装需注意的问题/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-  </div>
 
   
   <nav class="pagination">
@@ -1119,14 +1120,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1137,6 +1138,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -1154,19 +1160,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -1206,9 +1211,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -1217,7 +1230,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

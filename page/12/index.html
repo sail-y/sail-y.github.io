@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,11 +13,11 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
@@ -26,10 +26,9 @@
 <meta property="og:url" content="http://www.saily.top/page/12/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="帆">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="帆的博客">
-<meta name="twitter:description" content="记录工作和学习中遇到的问题-工作笔记&amp;学习笔记">
 
 <link rel="canonical" href="http://www.saily.top/page/12/">
 
@@ -39,7 +38,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : true,
-    isPost : false
+    isPost : false,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -74,6 +74,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -92,14 +93,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -110,32 +109,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -143,17 +143,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -167,10 +168,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -179,9 +179,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -189,14 +186,98 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/10/31/jvm/JVM3/">
 
-  <div class="posts-expand">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/31/jvm/JVM3/" class="post-title-link" itemprop="url">JVM3-内存溢出异常实战</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：10月 31 2016 12:25:33" itemprop="dateCreated datePublished" datetime="2016-10-31T12:25:33+08:00">10月 31 2016</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2月 4 2017 13:23:32" itemprop="dateModified" datetime="2017-02-04T13:23:32+08:00">2月 4 2017</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在Java虚拟机规范的描述中，除了程序计数器，其他几个运行时区域都有发生OutOfMemoryError异常的可能。本文有两个目的：</p>
+<ol>
+<li>通过代码验证Java虚拟机规范中描述的各个运行时区域存储的内容。</li>
+<li>希望我们在工作中遇到问题的时候能迅速判断是哪个区域的内存溢出，知道什么样的代码会导致这些区域溢出，以及出现这些异常后该如何处理。</li>
+</ol>
+<p>这个图展示了如何在Idea中设置VM参数。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/31/jvm/JVM3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/10/28/jvm/JVM2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -209,15 +290,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2016/10/28/jvm/JVM2/" class="post-title-link" itemprop="url">JVM2-Java内存区域</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -225,14 +306,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：8月 24 2018 17:46:21" itemprop="dateModified" datetime="2018-08-24T17:46:21+08:00">8月 24 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -252,7 +333,7 @@
 
       
           <h1 id="Java内存区域"><a href="#Java内存区域" class="headerlink" title="Java内存区域"></a>Java内存区域</h1><p>下面从概念上介绍Java虚拟机内存的各个区域，讲解这些区域的作用、服务对象以及其中可能产生的问题，这是翻越虚拟机内存管理这堵围墙的第一步。</p>
-<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><p>Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，包含以下几个运行时数据区域。<br>
+<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><p>Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，包含以下几个运行时数据区域。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2016/10/28/jvm/JVM2/#more" rel="contents">
@@ -275,10 +356,10 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/10/28/jvm/JVM1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -291,15 +372,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2016/10/28/jvm/JVM1/" class="post-title-link" itemprop="url">JVM1-Java介绍</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -307,14 +388,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：8月 24 2018 17:08:53" itemprop="dateModified" datetime="2018-08-24T17:08:53+08:00">8月 24 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -366,11 +447,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/07/21/java/Java获取URL上的参数/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/07/21/java/Java%E8%8E%B7%E5%8F%96URL%E4%B8%8A%E7%9A%84%E5%8F%82%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -382,15 +463,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/07/21/java/Java获取URL上的参数/" class="post-title-link" itemprop="url">Java获取URL上的参数</a>
-        </h1>
+            <a href="/2016/07/21/java/Java%E8%8E%B7%E5%8F%96URL%E4%B8%8A%E7%9A%84%E5%8F%82%E6%95%B0/" class="post-title-link" itemprop="url">Java获取URL上的参数</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -398,14 +479,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -425,7 +506,8 @@
 
       
           <p>最近遇到一个需求需要在获取URL字符串上的kv键值对，我们都知道Java Web在请求是直接用request来获取值的。如果是字符串呢，就需要正则表达式来自己截取了。<br>自己写代码是比较麻烦的，下面推荐用Guava工具包，2行代码就可以解决这个需求了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private String getPara(String url, String name) &#123;</span><br><span class="line">    String params = url.substring(url.indexOf(&quot;?&quot;) + 1, url.length());</span><br><span class="line">    Map&lt;String, String&gt; split = Splitter.on(&quot;&amp;&quot;).withKeyValueSeparator(&quot;=&quot;).split(params);</span><br><span class="line">    return split.get(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private String getPara(String url, String name) &#123;</span><br><span class="line">    String params &#x3D; url.substring(url.indexOf(&quot;?&quot;) + 1, url.length());</span><br><span class="line">    Map&lt;String, String&gt; split &#x3D; Splitter.on(&quot;&amp;&quot;).withKeyValueSeparator(&quot;&#x3D;&quot;).split(params);</span><br><span class="line">    return split.get(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>先截取到?后面的字符串，然后再用<code>Splitter.on(&quot;&amp;&quot;).withKeyValueSeparator(&quot;=&quot;).split(params);</code>就轻松的解决了~</p>
 
       
@@ -442,10 +524,10 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -458,15 +540,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/" class="post-title-link" itemprop="url">Spring cloud @EnableOAuth2Client</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -474,14 +556,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:34:18" itemprop="dateModified" datetime="2019-02-28T11:34:18+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -503,7 +585,7 @@
           <p>Spring Cloud oauth2 开启客户端功能，并启用LoadBalanced</p>
 <p>如果不添加以下配置，只添加<code>@EnableOAuth2Client</code>注解，spring cloud默认是在web环境下使用的<code>AuthorizationCodeResourceDetails</code>。</p>
 <p>具体代码在<code>OAuth2RestOperationsConfiguration</code>类中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@ConditionalOnBean(OAuth2ClientConfiguration.class)</span><br><span class="line">@ConditionalOnWebApplication</span><br><span class="line">protected static class SessionScopedConfiguration &#123;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	@ConfigurationProperties(&quot;security.oauth2.client&quot;)</span><br><span class="line">	@Primary</span><br><span class="line">	public AuthorizationCodeResourceDetails oauth2RemoteResource() &#123;</span><br><span class="line">		AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();</span><br><span class="line">		return details;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public FilterRegistrationBean oauth2ClientFilterRegistration(</span><br><span class="line">			OAuth2ClientContextFilter filter, SecurityProperties security) &#123;</span><br><span class="line">		FilterRegistrationBean registration = new FilterRegistrationBean();</span><br><span class="line">		registration.setFilter(filter);</span><br><span class="line">		registration.setOrder(security.getFilterOrder() - 10);</span><br><span class="line">		return registration;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Configuration</span><br><span class="line">	protected static class ClientContextConfiguration &#123;</span><br><span class="line"></span><br><span class="line">		@Resource</span><br><span class="line">		@Qualifier(&quot;accessTokenRequest&quot;)</span><br><span class="line">		protected AccessTokenRequest accessTokenRequest;</span><br><span class="line"></span><br><span class="line">		@Bean</span><br><span class="line">		@Scope(value = &quot;session&quot;, proxyMode = ScopedProxyMode.INTERFACES)</span><br><span class="line">		public DefaultOAuth2ClientContext oauth2ClientContext() &#123;</span><br><span class="line">			return new DefaultOAuth2ClientContext(this.accessTokenRequest);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@ConditionalOnBean(OAuth2ClientConfiguration.class)</span><br><span class="line">@ConditionalOnWebApplication</span><br><span class="line">protected static class SessionScopedConfiguration &#123;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	@ConfigurationProperties(&quot;security.oauth2.client&quot;)</span><br><span class="line">	@Primary</span><br><span class="line">	public AuthorizationCodeResourceDetails oauth2RemoteResource() &#123;</span><br><span class="line">		AuthorizationCodeResourceDetails details &#x3D; new AuthorizationCodeResourceDetails();</span><br><span class="line">		return details;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public FilterRegistrationBean oauth2ClientFilterRegistration(</span><br><span class="line">			OAuth2ClientContextFilter filter, SecurityProperties security) &#123;</span><br><span class="line">		FilterRegistrationBean registration &#x3D; new FilterRegistrationBean();</span><br><span class="line">		registration.setFilter(filter);</span><br><span class="line">		registration.setOrder(security.getFilterOrder() - 10);</span><br><span class="line">		return registration;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Configuration</span><br><span class="line">	protected static class ClientContextConfiguration &#123;</span><br><span class="line"></span><br><span class="line">		@Resource</span><br><span class="line">		@Qualifier(&quot;accessTokenRequest&quot;)</span><br><span class="line">		protected AccessTokenRequest accessTokenRequest;</span><br><span class="line"></span><br><span class="line">		@Bean</span><br><span class="line">		@Scope(value &#x3D; &quot;session&quot;, proxyMode &#x3D; ScopedProxyMode.INTERFACES)</span><br><span class="line">		public DefaultOAuth2ClientContext oauth2ClientContext() &#123;</span><br><span class="line">			return new DefaultOAuth2ClientContext(this.accessTokenRequest);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2016/07/15/springcloud/Spring-cloudt-EnableOAuth2Client/#more" rel="contents">
@@ -526,10 +608,10 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/04/21/springcloud/spring-cloud-OAuth2RestTemplate-loadBalanced/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -542,15 +624,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2016/04/21/springcloud/spring-cloud-OAuth2RestTemplate-loadBalanced/" class="post-title-link" itemprop="url">spring cloud OAuth2RestTemplate loadBalanced</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -558,14 +640,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:33:56" itemprop="dateModified" datetime="2019-02-28T11:33:56+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -585,9 +667,10 @@
 
       
           <p>在项目中访问另一个微服务的时候我们可以这样用RestTemplate来调用其他服务:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private RestTemplate restTemplate;</span><br><span class="line">RestResponse response = restTemplate.postForObject(&quot;http://user-service/user/getUser&quot;, para, User.class);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private RestTemplate restTemplate;</span><br><span class="line">RestResponse response &#x3D; restTemplate.postForObject(&quot;http:&#x2F;&#x2F;user-service&#x2F;user&#x2F;getUser&quot;, para, User.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>在spring cloud环境下，这个注入的restTemplate是具备了客户端负载均衡功能的，也会用到eureka服务发现功能，<code>user-service</code>就是服务的名称。<br>我的项目启用了oauth2认证。spring cloud也提供了一个<code>OAuth2RestTemplate</code>来很方便的调用其他服务。但是在我测试的时候一直报错<code>UnknownHost</code>，我猜测他肯定是没有用到loadBalanced和eureka的服务发现功能。我翻遍了官方文档也没有找到相关的说明。</p>
-<p>Google搜了大半天后，看了作者在git也讨论过这个类loadBalanced功能之类的，还翻到一个没有什么用 @LoadBalanced<a href="https://github.com/spring-cloud/spring-cloud-security/issues/51" target="_blank" rel="noopener">注解</a>，翻了半天源码后终于在<code>OAuth2LoadBalancerClientAutoConfiguration</code>这样一个类中发现了一点蛛丝马迹。</p>
+<p>Google搜了大半天后，看了作者在git也讨论过这个类loadBalanced功能之类的，还翻到一个没有什么用 @LoadBalanced<a target="_blank" rel="noopener" href="https://github.com/spring-cloud/spring-cloud-security/issues/51">注解</a>，翻了半天源码后终于在<code>OAuth2LoadBalancerClientAutoConfiguration</code>这样一个类中发现了一点蛛丝马迹。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2016/04/21/springcloud/spring-cloud-OAuth2RestTemplate-loadBalanced/#more" rel="contents">
@@ -610,11 +693,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/31/springcloud/Spring-cloud-OAuth2-0配置/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/31/springcloud/Spring-cloud-OAuth2-0%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -626,15 +709,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0配置/" class="post-title-link" itemprop="url">Spring-cloud OAuth2.0配置</a>
-        </h1>
+            <a href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">Spring-cloud OAuth2.0配置</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -642,14 +725,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:33:51" itemprop="dateModified" datetime="2019-02-28T11:33:51+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -668,13 +751,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在spring cloud项目环境中配置oauth2.0认证。<br><img src="http://callistaenterprise.se/assets/blogg/build-microservices-part-3/system-landscape.png" alt>    </p>
-<p><a href="http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part-3-secure-APIs-with-OAuth/" target="_blank" rel="noopener">http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part-3-secure-APIs-with-OAuth/</a><br>可以先看看这篇文章。</p>
+          <p>在spring cloud项目环境中配置oauth2.0认证。<br><img src="http://callistaenterprise.se/assets/blogg/build-microservices-part-3/system-landscape.png">    </p>
+<p><a target="_blank" rel="noopener" href="http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part-3-secure-APIs-with-OAuth/">http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part-3-secure-APIs-with-OAuth/</a><br>可以先看看这篇文章。</p>
 <p>我花了不少时间才把这个调通，spring cloud的版本和文档也存在不一致的地方。<br>以下所有的操作都基于Brixton.RC1搭建，须保持所有相关项目都引用此parent。否则会出现各种莫名其妙的错误。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>Brixton.RC1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0配置/#more" rel="contents">
+              <a class="btn" href="/2016/03/31/springcloud/Spring-cloud-OAuth2-0%E9%85%8D%E7%BD%AE/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -694,11 +777,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud项目实践-三/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -710,15 +793,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/03/22/springcloud/Spring-cloud项目实践-三/" class="post-title-link" itemprop="url">Spring cloud项目实践(三)</a>
-        </h1>
+            <a href="/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/" class="post-title-link" itemprop="url">Spring cloud项目实践(三)</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -726,14 +809,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:34:06" itemprop="dateModified" datetime="2019-02-28T11:34:06+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -753,10 +836,10 @@
 
       
           <h1 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h1><p>配置jenkins构建项目，自动build出docker镜像，发布到docker私库中，或者从目标服务器中启动容器。</p>
-<h2 id="Maven的Docker插件"><a href="#Maven的Docker插件" class="headerlink" title="Maven的Docker插件"></a>Maven的Docker插件</h2><p><a href="http://www.cnblogs.com/skyblog/p/5163691.html" target="_blank" rel="noopener">http://www.cnblogs.com/skyblog/p/5163691.html</a> 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在<a href="https://github.com/spotify/docker-maven-plugin" target="_blank" rel="noopener">这里</a><br>
+<h2 id="Maven的Docker插件"><a href="#Maven的Docker插件" class="headerlink" title="Maven的Docker插件"></a>Maven的Docker插件</h2><p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/skyblog/p/5163691.html">http://www.cnblogs.com/skyblog/p/5163691.html</a> 有讲到如何用Dockerfile构建，下面是采用Maven插件的方式构建，插件的文档在<a target="_blank" rel="noopener" href="https://github.com/spotify/docker-maven-plugin">这里</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2016/03/22/springcloud/Spring-cloud项目实践-三/#more" rel="contents">
+              <a class="btn" href="/2016/03/22/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%B8%89/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -776,11 +859,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/21/springcloud/Spring-cloud项目实践-二/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%BA%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -792,15 +875,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/03/21/springcloud/Spring-cloud项目实践-二/" class="post-title-link" itemprop="url">Spring cloud项目实践(二)</a>
-        </h1>
+            <a href="/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%BA%8C/" class="post-title-link" itemprop="url">Spring cloud项目实践(二)</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -808,14 +891,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:34:01" itemprop="dateModified" datetime="2019-02-28T11:34:01+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -835,13 +918,15 @@
 
       
           <h1 id="配置中心和服务注册中心"><a href="#配置中心和服务注册中心" class="headerlink" title="配置中心和服务注册中心"></a>配置中心和服务注册中心</h1><p>我们先把配置中心和服务注册中心跑起来，这个先照着之前的教程做，很简单没什么变动。<br>就是git仓库需要密码的话加入下面的配置就好。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8888</span><br><span class="line"></span><br><span class="line">eureka:</span><br><span class="line">  instance:</span><br><span class="line">    hostname: configserver</span><br><span class="line">  client:</span><br><span class="line">    registerWithEureka: true</span><br><span class="line">    fetchRegistry: true</span><br><span class="line">    serviceUrl:</span><br><span class="line">      defaultZone: http://$&#123;config.host:192.168.99.100&#125;:8761/eureka/</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    config:</span><br><span class="line">      server:</span><br><span class="line">        git:</span><br><span class="line">          uri: yourgiturl</span><br><span class="line">          password: ****</span><br><span class="line">          username: ****</span><br></pre></td></tr></table></figure>
-<p>这里的<code>${config.host:192.168.99.100}</code>表示没有读到config.host就用192.168.99.100这个值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar cloud-simple-service-1.0.0.jar --config.host=localhost</span><br></pre></td></tr></table></figure>
-<p>这个用法就很灵活了，后面配合Dockerfile可以根据不同的环境来启动不同的配置。<br>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8888</span><br><span class="line"></span><br><span class="line">eureka:</span><br><span class="line">  instance:</span><br><span class="line">    hostname: configserver</span><br><span class="line">  client:</span><br><span class="line">    registerWithEureka: true</span><br><span class="line">    fetchRegistry: true</span><br><span class="line">    serviceUrl:</span><br><span class="line">      defaultZone: http:&#x2F;&#x2F;$&#123;config.host:192.168.99.100&#125;:8761&#x2F;eureka&#x2F;</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    config:</span><br><span class="line">      server:</span><br><span class="line">        git:</span><br><span class="line">          uri: yourgiturl</span><br><span class="line">          password: ****</span><br><span class="line">          username: ****</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>$&#123;config.host:192.168.99.100&#125;</code>表示没有读到config.host就用192.168.99.100这个值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar cloud-simple-service-1.0.0.jar --config.host&#x3D;localhost</span><br></pre></td></tr></table></figure>
+
+<p>这个用法就很灵活了，后面配合Dockerfile可以根据不同的环境来启动不同的配置。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2016/03/21/springcloud/Spring-cloud项目实践-二/#more" rel="contents">
+              <a class="btn" href="/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5-%E4%BA%8C/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -861,11 +946,11 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/21/springcloud/Spring-cloud项目实践/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/photo/bug.png">
@@ -877,15 +962,15 @@
       <meta itemprop="name" content="帆的博客">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2016/03/21/springcloud/Spring-cloud项目实践/" class="post-title-link" itemprop="url">Spring cloud项目实践(一)</a>
-        </h1>
+            <a href="/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">Spring cloud项目实践(一)</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -893,14 +978,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2月 28 2019 11:34:12" itemprop="dateModified" datetime="2019-02-28T11:34:12+08:00">2月 28 2019</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -919,7 +1004,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="基本概念和重要组件"><a href="#基本概念和重要组件" class="headerlink" title="基本概念和重要组件"></a>基本概念和重要组件</h1><p>最近看了一篇<a href="https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&amp;mid=400645575&amp;idx=1&amp;sn=da55d75db55117046c520de88dde1123&amp;scene=1&amp;srcid=0315vVImLcHZpO2tTRVKg1w8&amp;key=710a5d99946419d9ff6bc76720229c7216fbcf348001d543434dfad7944207441ed01f44e57b0d87a834f8e8b6f673b7&amp;ascene=0" target="_blank" rel="noopener">文章</a>，了解到微服务架构的组成部分和概念，以前有看过一点dubbo，文章里介绍到Netflix这么一个公司：</p>
+          <h1 id="基本概念和重要组件"><a href="#基本概念和重要组件" class="headerlink" title="基本概念和重要组件"></a>基本概念和重要组件</h1><p>最近看了一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=400645575&idx=1&sn=da55d75db55117046c520de88dde1123&scene=1&srcid=0315vVImLcHZpO2tTRVKg1w8&key=710a5d99946419d9ff6bc76720229c7216fbcf348001d543434dfad7944207441ed01f44e57b0d87a834f8e8b6f673b7&ascene=0">文章</a>，了解到微服务架构的组成部分和概念，以前有看过一点dubbo，文章里介绍到Netflix这么一个公司：</p>
 <blockquote>
 <p>Netflix是一家成功实践微服务架构的互联网公司，几年前，Netflix就把它的几乎整个微服务框架栈开源贡献给了社区，这些框架和组件包括</p>
 </blockquote>
@@ -937,10 +1022,10 @@
 <p>Netflix的开源框架组件已经在Netflix的大规模分布式微服务环境中经过多年的生产实战验证，正逐步被社区接受为构造微服务框架的标准组件。Pivotal去年推出的Spring Cloud开源产品，主要是基于对Netflix开源组件的进一步封装，方便Spring开发人员构建微服务基础框架。对于一些打算构建微服务框架体系的公司来说，充分利用或参考借鉴Netflix的开源微服务组件(或Spring Cloud)，在此基础上进行必要的企业定制，无疑是通向微服务架构的捷径。</p>
 </blockquote>
 <p>Spring Cloud是微服务工具包，为开发者提供了在分布式系统的配置管理、服务发现、断路器、智能路由、微代理、控制总线等开发工具包。</p>
-<p>觉得挺不错的，就找找资料尝试实战一下。<br>在此记录和回顾一下过程中遇到的问题和实际项目中需要解决的一些问题。<br>
+<p>觉得挺不错的，就找找资料尝试实战一下。<br>在此记录和回顾一下过程中遇到的问题和实际项目中需要解决的一些问题。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2016/03/21/springcloud/Spring-cloud项目实践/#more" rel="contents">
+              <a class="btn" href="/2016/03/21/springcloud/Spring-cloud%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -960,88 +1045,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/12/15/ci/jenkins配合docker持续集成/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/12/15/ci/jenkins配合docker持续集成/" class="post-title-link" itemprop="url">jenkins配合docker持续集成</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：12月 15 2015 12:53:45" itemprop="dateCreated datePublished" datetime="2015-12-15T12:53:45+08:00">12月 15 2015</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：12月 1 2016 16:46:42" itemprop="dateModified" datetime="2016-12-01T16:46:42+08:00">12月 1 2016</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CI/" itemprop="url" rel="index"><span itemprop="name">CI</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我这里用docker来做持续集成的思路和<a href="http://sail-y.github.io/2015/12/14/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/" target="_blank" rel="noopener">jenkins和tomcat的持续集成</a>是一样的。都是用jenkins拉取git的代码然后打war包，只不过重启tomcat步骤换成了docker的重启。<br>直接展示一下docker的脚本吧。<br>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2015/12/15/ci/jenkins配合docker持续集成/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-  </div>
 
   
   <nav class="pagination">
@@ -1113,14 +1116,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1131,6 +1134,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -1148,19 +1156,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -1200,9 +1207,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -1211,7 +1226,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

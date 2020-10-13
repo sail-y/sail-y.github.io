@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,27 +13,27 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Git远程仓库Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改推送(push)到远程机器上，然后别人再拉取(pull)合并我们的代码。 说到远程仓库呢，就不得不提一下Github，全球最大的同性交友社区（😄开个玩笑）。 https://github.com/ Github是免费使用">
-<meta name="keywords" content="git">
+  <meta name="description" content="Git远程仓库Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改推送(push)**到远程机器上，然后别人再拉取(pull)**合并我们的代码。 说到远程仓库呢，就不得不提一下Github，全球最大的同性交友社区（😄开个玩笑）。 https:&#x2F;&#x2F;github.com&#x2F; Github是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git-远程仓库">
 <meta property="og:url" content="http://www.saily.top/2017/09/29/git/git4/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="Git远程仓库Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改推送(push)到远程机器上，然后别人再拉取(pull)合并我们的代码。 说到远程仓库呢，就不得不提一下Github，全球最大的同性交友社区（😄开个玩笑）。 https://github.com/ Github是免费使用">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="Git远程仓库Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改推送(push)**到远程机器上，然后别人再拉取(pull)**合并我们的代码。 说到远程仓库呢，就不得不提一下Github，全球最大的同性交友社区（😄开个玩笑）。 https:&#x2F;&#x2F;github.com&#x2F; Github是">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/git/git4-1.png">
 <meta property="og:image" content="http://www.saily.top/img/git/git4-2.png">
-<meta property="og:updated_time" content="2017-11-12T12:15:48.000Z">
+<meta property="article:published_time" content="2017-09-29T07:07:22.000Z">
+<meta property="article:modified_time" content="2017-11-12T12:15:48.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git-远程仓库">
-<meta name="twitter:description" content="Git远程仓库Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改推送(push)到远程机器上，然后别人再拉取(pull)合并我们的代码。 说到远程仓库呢，就不得不提一下Github，全球最大的同性交友社区（😄开个玩笑）。 https://github.com/ Github是免费使用">
 <meta name="twitter:image" content="http://www.saily.top/img/git/git4-1.png">
 
 <link rel="canonical" href="http://www.saily.top/2017/09/29/git/git4/">
@@ -44,7 +44,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -79,6 +80,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -97,14 +99,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -115,32 +115,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -148,17 +149,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -172,10 +174,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -184,9 +185,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -194,14 +192,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/29/git/git4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -221,7 +218,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -229,14 +226,14 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：11月 12 2017 20:15:48" itemprop="dateModified" datetime="2017-11-12T20:15:48+08:00">11月 12 2017</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -262,47 +259,68 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Git远程仓库"><a href="#Git远程仓库" class="headerlink" title="Git远程仓库"></a>Git远程仓库</h2><p>Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改<strong>推送(push)</strong>到远程机器上，然后别人再<strong>拉取(pull)</strong>合并我们的代码。</p>
+        <h2 id="Git远程仓库"><a href="#Git远程仓库" class="headerlink" title="Git远程仓库"></a>Git远程仓库</h2><p>Git本身是一个分布式的版本控制系统，每个用户的机器上都会有一个完整的版本库。之前我们的操作都是在本地机器上操作的，最终别人需要获取我们的修改，需要我们将本地的修改<strong>推送(push)**到远程机器上，然后别人再</strong>拉取(pull)**合并我们的代码。</p>
 <p>说到远程仓库呢，就不得不提一下<strong>Github</strong>，全球最大的同性交友社区（😄开个玩笑）。</p>
-<p><a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/">https://github.com/</a></p>
 <p><strong>Github</strong>是免费使用的条件就是你在上面创建的代码都是开源的，开源被查看的，如果要想创建私有的仓库，就是需要收费的。那么应运而生的产生了一个叫<strong>Gitlab</strong>的开源产品可以让我们在公司的服务器搭建私有的仓库，让我们可以享受到免费的，私有的，内网的服务。</p>
 <a id="more"></a>
-<p>先注册一个<strong>Github</strong>的帐号吧，欢迎大家关注我<a href="https://github.com/sail-y。" target="_blank" rel="noopener">https://github.com/sail-y。</a></p>
+
+<p>先注册一个<strong>Github</strong>的帐号吧，欢迎大家关注我<a target="_blank" rel="noopener" href="https://github.com/sail-y%E3%80%82">https://github.com/sail-y。</a></p>
 <p>接下来就是要把本地的仓库要推送到远程，<strong>Github</strong>有一个叫<strong>README.md</strong>的文件用来描述项目，它是采用<strong>MarkDown</strong>语法编写的，跟我这篇文章的编写方式是一样的，可以去了解一下，很方便。</p>
 <p>现在新建一个仓库，创建几个文件多进行几次提交</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ls</span><br><span class="line">README.md test.txt</span><br><span class="line">➜  mygit git:(master) cat test.txt </span><br><span class="line">hello world</span><br><span class="line">add second line</span><br><span class="line">add a thrid line</span><br><span class="line">➜  mygit git:(master) cat README.md </span><br><span class="line"><span class="comment">## Git示例项目</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 开发者</span></span><br><span class="line"></span><br><span class="line">* 七七</span><br><span class="line">* 灰灰</span><br><span class="line">➜  mygit git:(master) git <span class="built_in">log</span></span><br><span class="line">commit ec41fdfefd806965a088cd160d1fe755c263c5a9 (HEAD -&gt; master)</span><br><span class="line">Author: 七七 &lt;qiqi@gmail.com&gt;</span><br><span class="line">Date:   Fri Sep 29 16:07:15 2017 +0800</span><br><span class="line"></span><br><span class="line">    add readme</span><br><span class="line"></span><br><span class="line">commit ef71fd488241a5276e89dce67681ae923072202e</span><br><span class="line">Author: 七七 &lt;qiqi@gmail.com&gt;</span><br><span class="line">Date:   Fri Sep 29 16:04:36 2017 +0800</span><br><span class="line"></span><br><span class="line">    third commit</span><br><span class="line"></span><br><span class="line">commit fee1876da354c9bb45d317ae3a9d00d8ffb50fa0</span><br><span class="line">Author: 七七 &lt;qiqi@gmail.com&gt;</span><br><span class="line">Date:   Fri Sep 29 16:04:08 2017 +0800</span><br><span class="line"></span><br><span class="line">    second commit</span><br><span class="line"></span><br><span class="line">commit e54c3751489948d4c0e3d81d71c9e5c2f02cf11a</span><br><span class="line">Author: 七七 &lt;qiqi@gmail.com&gt;</span><br><span class="line">Date:   Fri Sep 29 16:02:04 2017 +0800</span><br></pre></td></tr></table></figure>
+
 <p>接着我们在<strong>Github</strong>上创建一个远程仓库</p>
-<p><img src="/img/git/git4-1.png" alt></p>
+<p><img src="/img/git/git4-1.png"></p>
 <p>创建完成后<strong>Github</strong>就提示我们可以推送一个现有的仓库</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:sail-y/git_demo.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
-<p>执行完命令后，发现<strong>Github</strong>上已经出现了我们推送的仓库内容：<strong><a href="https://github.com/sail-y/git_demo" target="_blank" rel="noopener">https://github.com/sail-y/git_demo</a></strong></p>
-<p><img src="/img/git/git4-2.png" alt></p>
+
+<p>执行完命令后，发现<strong>Github</strong>上已经出现了我们推送的仓库内容：<strong><a target="_blank" rel="noopener" href="https://github.com/sail-y/git_demo">https://github.com/sail-y/git_demo</a></strong></p>
+<p><img src="/img/git/git4-2.png"></p>
 <p>第一次关联远程仓库并推送后，以后只需要执行<code>git push</code>就可以将当前分支推送到远程仓库了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) vi test.txt </span><br><span class="line">➜  mygit git:(master) ✗ git commit -am <span class="string">'forth commit'</span> </span><br><span class="line">[master c3b0d8b] forth commit</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(master) git push</span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 316 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:sail-y/git_demo.git</span><br><span class="line">   ec41fdf..c3b0d8b  master -&gt; master</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) vi test.txt </span><br><span class="line">➜  mygit git:(master) ✗ git commit -am <span class="string">&#x27;forth commit&#x27;</span> </span><br><span class="line">[master c3b0d8b] forth commit</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(master) git push</span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 316 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:sail-y/git_demo.git</span><br><span class="line">   ec41fdf..c3b0d8b  master -&gt; master</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
 <h3 id="查看远程仓库"><a href="#查看远程仓库" class="headerlink" title="查看远程仓库"></a>查看远程仓库</h3><p>前面我们在<strong>github</strong>上创建了一个远程仓库，并且跟本地仓库进行了关联，实际上git本地仓库是可以关联很多个远程仓库的。</p>
 <p>可以用<code>git remote show</code>查看所有的远程仓库。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git remote show</span><br><span class="line">origin</span><br></pre></td></tr></table></figure>
+
 <p>还可以查看详细信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git remote show origin</span><br><span class="line">* remote origin</span><br><span class="line">  Fetch URL: git@github.com:sail-y/git_demo.git</span><br><span class="line">  Push  URL: git@github.com:sail-y/git_demo.git</span><br><span class="line">  HEAD branch: master</span><br><span class="line">  Remote branch:</span><br><span class="line">    master tracked</span><br><span class="line">  Local branch configured <span class="keyword">for</span> <span class="string">'git pull'</span>:</span><br><span class="line">    master merges with remote master</span><br><span class="line">  Local ref configured <span class="keyword">for</span> <span class="string">'git push'</span>:</span><br><span class="line">    master pushes to master (up to date)</span><br></pre></td></tr></table></figure>
-<p>上面命令输出表示当前fetch（拉取）的地址是<a href="mailto:**git@github.com" target="_blank" rel="noopener">**git@github.com</a>:sail-y/git_demo.git<strong>，推送的地址是</strong><a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:sail-y/git_demo.git**，当前分支是master，远程关联的分支是master。<code>git pull</code>默认拉取的是master分支，<code>git push</code>默认推送的是master分支，并且已经是最新的了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git remote show origin</span><br><span class="line">* remote origin</span><br><span class="line">  Fetch URL: git@github.com:sail-y/git_demo.git</span><br><span class="line">  Push  URL: git@github.com:sail-y/git_demo.git</span><br><span class="line">  HEAD branch: master</span><br><span class="line">  Remote branch:</span><br><span class="line">    master tracked</span><br><span class="line">  Local branch configured <span class="keyword">for</span> <span class="string">&#x27;git pull&#x27;</span>:</span><br><span class="line">    master merges with remote master</span><br><span class="line">  Local ref configured <span class="keyword">for</span> <span class="string">&#x27;git push&#x27;</span>:</span><br><span class="line">    master pushes to master (up to date)</span><br></pre></td></tr></table></figure>
+
+
+<p>上面命令输出表示当前fetch（拉取）的地址是<strong><a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#46;&#x63;&#111;&#109;">&#x67;&#105;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#46;&#x63;&#111;&#109;</a>:sail-y/git_demo.git</strong>，推送的地址是<strong><a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#x6f;&#109;</a>:sail-y/git_demo.git</strong>，当前分支是master，远程关联的分支是master。<code>git pull</code>默认拉取的是master分支，<code>git push</code>默认推送的是master分支，并且已经是最新的了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ git branch -av</span><br><span class="line">* master                460b082 add fifth line</span><br><span class="line">  remotes/origin/master 460b082 add fifth line</span><br></pre></td></tr></table></figure>
+
 <p>加上<code>-a</code>参数可以看到远程分支。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ git commit -am <span class="string">'update test.txt'</span></span><br><span class="line">[master d04325a] update test.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is ahead of <span class="string">'origin/master'</span> by 1 commit.</span><br><span class="line">  (use <span class="string">"git push"</span> to publish your <span class="built_in">local</span> commits)</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(master) git branch -av</span><br><span class="line">* master                d04325a [ahead 1] update test.txt</span><br><span class="line">  remotes/origin/master 460b082 add fifth line</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) ✗ git commit -am <span class="string">&#x27;update test.txt&#x27;</span></span><br><span class="line">[master d04325a] update test.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">➜  mygit git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is ahead of <span class="string">&#x27;origin/master&#x27;</span> by 1 commit.</span><br><span class="line">  (use <span class="string">&quot;git push&quot;</span> to publish your <span class="built_in">local</span> commits)</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">➜  mygit git:(master) git branch -av</span><br><span class="line">* master                d04325a [ahead 1] update test.txt</span><br><span class="line">  remotes/origin/master 460b082 add fifth line</span><br></pre></td></tr></table></figure>
+
 <p>接着进行一次提交，<code>git status</code>提示本地的分支是超前了远程master分支的1个提交。<code>git branch -av</code>显示的结果也是2个分支最后一次提交的id，现在也不一样了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git push</span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 323 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 1), reused 0 (delta 0)</span><br><span class="line">remote: Resolving deltas: 100% (1/1), completed with 1 <span class="built_in">local</span> object.</span><br><span class="line">To github.com:sail-y/git_demo.git</span><br><span class="line">   460b082..d04325a  master -&gt; master</span><br><span class="line">➜  mygit git:(master) git branch -av</span><br><span class="line">* master                d04325a update test.txt</span><br><span class="line">  remotes/origin/master d04325a update test.txt</span><br></pre></td></tr></table></figure>
+
 <p>执行<code>git push</code>，将本地的推送到远程，再执行<code>git branch -av</code>,origin/master显示的最后一次提交发生了一次改变，我们可以理解为origin/master就是保存了一份远程分支的提交信息，是只读的。</p>
 <h3 id="处理冲突"><a href="#处理冲突" class="headerlink" title="处理冲突"></a>处理冲突</h3><p>当另外两个用户同时修改了一个文件，一个人先push，另一个也再push的时候，会被远程拒绝，此时需要处理冲突。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) git push</span><br><span class="line">To github.com:sail-y/git_demo.git</span><br><span class="line"> ! [rejected]        master -&gt; master (fetch first)</span><br><span class="line">error: failed to push some refs to <span class="string">'git@github.com:sail-y/git_demo.git'</span></span><br><span class="line">hint: Updates were rejected because the remote contains work that you <span class="keyword">do</span></span><br><span class="line">hint: not have locally. This is usually caused by another repository pushing</span><br><span class="line">hint: to the same ref. You may want to first integrate the remote changes</span><br><span class="line">hint: (e.g., <span class="string">'git pull ...'</span>) before pushing again.</span><br><span class="line">hint: See the <span class="string">'Note about fast-forwards'</span> <span class="keyword">in</span> <span class="string">'git push --help'</span> <span class="keyword">for</span> details.</span><br><span class="line">➜  mygit2 git:(master) git pull</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_demo</span><br><span class="line">   bb880c1..f162a21  master     -&gt; origin/master</span><br><span class="line">Auto-merging hello.txt</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> hello.txt</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) git push</span><br><span class="line">To github.com:sail-y/git_demo.git</span><br><span class="line"> ! [rejected]        master -&gt; master (fetch first)</span><br><span class="line">error: failed to push some refs to <span class="string">&#x27;git@github.com:sail-y/git_demo.git&#x27;</span></span><br><span class="line">hint: Updates were rejected because the remote contains work that you <span class="keyword">do</span></span><br><span class="line">hint: not have locally. This is usually caused by another repository pushing</span><br><span class="line">hint: to the same ref. You may want to first integrate the remote changes</span><br><span class="line">hint: (e.g., <span class="string">&#x27;git pull ...&#x27;</span>) before pushing again.</span><br><span class="line">hint: See the <span class="string">&#x27;Note about fast-forwards&#x27;</span> <span class="keyword">in</span> <span class="string">&#x27;git push --help&#x27;</span> <span class="keyword">for</span> details.</span><br><span class="line">➜  mygit2 git:(master) git pull</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_demo</span><br><span class="line">   bb880c1..f162a21  master     -&gt; origin/master</span><br><span class="line">Auto-merging hello.txt</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> hello.txt</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+
 <p><code>bb880c1..f162a21  master     -&gt; origin/master</code></p>
 <p>这个输出的意思是远程的master的commit同步到本地的origin/master。<br>然后发现有冲突，需要自己编辑文件来解决冲突，调用<code>git add</code>来标记冲突已解决，最后提交并push。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) ✗ vi hello.txt</span><br><span class="line">➜  mygit2 git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch and <span class="string">'origin/master'</span> have diverged,</span><br><span class="line">and have 1 and 1 different commits each, respectively.</span><br><span class="line">  (use <span class="string">"git pull"</span> to merge the remote branch into yours)</span><br><span class="line">You have unmerged paths.</span><br><span class="line">  (fix conflicts and run <span class="string">"git commit"</span>)</span><br><span class="line">  (use <span class="string">"git merge --abort"</span> to abort the merge)</span><br><span class="line"></span><br><span class="line">Unmerged paths:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to mark resolution)</span><br><span class="line"></span><br><span class="line">	both modified:   hello.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">"git add"</span> and/or <span class="string">"git commit -a"</span>)</span><br><span class="line">➜  mygit2 git:(master) ✗ git add hello.txt </span><br><span class="line">➜  mygit2 git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch and <span class="string">'origin/master'</span> have diverged,</span><br><span class="line">and have 1 and 1 different commits each, respectively.</span><br><span class="line">  (use <span class="string">"git pull"</span> to merge the remote branch into yours)</span><br><span class="line">All conflicts fixed but you are still merging.</span><br><span class="line">  (use <span class="string">"git commit"</span> to conclude merge)</span><br><span class="line"></span><br><span class="line">➜  mygit2 git:(master) git commit</span><br><span class="line">[master 02b63a9] Merge branch <span class="string">'master'</span> of github.com:sail-y/git_demo</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) ✗ vi hello.txt</span><br><span class="line">➜  mygit2 git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch and <span class="string">&#x27;origin/master&#x27;</span> have diverged,</span><br><span class="line">and have 1 and 1 different commits each, respectively.</span><br><span class="line">  (use <span class="string">&quot;git pull&quot;</span> to merge the remote branch into yours)</span><br><span class="line">You have unmerged paths.</span><br><span class="line">  (fix conflicts and run <span class="string">&quot;git commit&quot;</span>)</span><br><span class="line">  (use <span class="string">&quot;git merge --abort&quot;</span> to abort the merge)</span><br><span class="line"></span><br><span class="line">Unmerged paths:</span><br><span class="line">  (use <span class="string">&quot;git add &lt;file&gt;...&quot;</span> to mark resolution)</span><br><span class="line"></span><br><span class="line">	both modified:   hello.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use <span class="string">&quot;git add&quot;</span> and/or <span class="string">&quot;git commit -a&quot;</span>)</span><br><span class="line">➜  mygit2 git:(master) ✗ git add hello.txt </span><br><span class="line">➜  mygit2 git:(master) git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch and <span class="string">&#x27;origin/master&#x27;</span> have diverged,</span><br><span class="line">and have 1 and 1 different commits each, respectively.</span><br><span class="line">  (use <span class="string">&quot;git pull&quot;</span> to merge the remote branch into yours)</span><br><span class="line">All conflicts fixed but you are still merging.</span><br><span class="line">  (use <span class="string">&quot;git commit&quot;</span> to conclude merge)</span><br><span class="line"></span><br><span class="line">➜  mygit2 git:(master) git commit</span><br><span class="line">[master 02b63a9] Merge branch <span class="string">&#x27;master&#x27;</span> of github.com:sail-y/git_demo</span><br></pre></td></tr></table></figure>
+
+
 <p>git pull == git fetch + git merge</p>
 <p>git fetch表示把远程最新的修改拉回到本地，git merge表示将远程的修改合并到代码库里。</p>
 <p>我们可以分别测试一下这2个命令，也就是刚才说的先同步远程master信息到本地的origin/master。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) git branch -av</span><br><span class="line">* master                7660696 [ahead 1] hello23</span><br><span class="line">  remotes/origin/HEAD   -&gt; origin/master</span><br><span class="line">  remotes/origin/master 02b63a9 Merge branch <span class="string">'master'</span> of github.com:sail-y/git_demo</span><br><span class="line">➜  mygit2 git:(master) git fetch</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_demo</span><br><span class="line">   02b63a9..4ba6b0d  master     -&gt; origin/master</span><br><span class="line">➜  mygit2 git:(master) git branch -av</span><br><span class="line">* master                7660696 [ahead 1, behind 1] hello23</span><br><span class="line">  remotes/origin/HEAD   -&gt; origin/master</span><br><span class="line">  remotes/origin/master 4ba6b0d change hello.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) git branch -av</span><br><span class="line">* master                7660696 [ahead 1] hello23</span><br><span class="line">  remotes/origin/HEAD   -&gt; origin/master</span><br><span class="line">  remotes/origin/master 02b63a9 Merge branch <span class="string">&#x27;master&#x27;</span> of github.com:sail-y/git_demo</span><br><span class="line">➜  mygit2 git:(master) git fetch</span><br><span class="line">remote: Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (2/2), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (3/3), <span class="keyword">done</span>.</span><br><span class="line">From github.com:sail-y/git_demo</span><br><span class="line">   02b63a9..4ba6b0d  master     -&gt; origin/master</span><br><span class="line">➜  mygit2 git:(master) git branch -av</span><br><span class="line">* master                7660696 [ahead 1, behind 1] hello23</span><br><span class="line">  remotes/origin/HEAD   -&gt; origin/master</span><br><span class="line">  remotes/origin/master 4ba6b0d change hello.txt   </span><br></pre></td></tr></table></figure>
+
+
 <p>可以看到在执行<code>git fetch</code>之前，remotes/origin/master 的最新commit id是02b63a9，执行以后就变成了4ba6b0d。</p>
 <p>接着我们来合并</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit2 git:(master) git merge origin/master</span><br><span class="line">Auto-merging hello.txt</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> hello.txt</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+
 <p>就跟之前一样，解决冲突并提交。</p>
 <h3 id="分支设计技巧"><a href="#分支设计技巧" class="headerlink" title="分支设计技巧"></a>分支设计技巧</h3><ol>
 <li>Gitflow</li>
@@ -310,7 +328,8 @@
 </ol>
 <h3 id="Git命令别名"><a href="#Git命令别名" class="headerlink" title="Git命令别名"></a>Git命令别名</h3><p>git可以配置简短的字符串来替代长一些的命令，来方便用户。</p>
 <p>这里我们配置几个别名。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git config --global alias.br branch</span><br><span class="line">➜  mygit git:(master) git config --global alias.st status</span><br><span class="line">➜  mygit git:(master) git config --global alias.co checkout</span><br><span class="line">➜  mygit git:(master) git config --global alias.unstage <span class="string">'reset HEAD'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  mygit git:(master) git config --global alias.br branch</span><br><span class="line">➜  mygit git:(master) git config --global alias.st status</span><br><span class="line">➜  mygit git:(master) git config --global alias.co checkout</span><br><span class="line">➜  mygit git:(master) git config --global alias.unstage <span class="string">&#x27;reset HEAD&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <p>这个命令的结果是保存在了<code>~/.gitconfig</code>文件中，可以查看到。</p>
 <p>执行外部命令需要，也就是非git命令，需要在前面加感叹号。</p>
 <p><code>➜  mygit git:(master) git config --global alias.ui &#39;!gitk&#39;</code></p>
@@ -347,7 +366,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -403,7 +421,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git远程仓库"><span class="nav-number">1.</span> <span class="nav-text">Git远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看远程仓库"><span class="nav-number">1.1.</span> <span class="nav-text">查看远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理冲突"><span class="nav-number">1.2.</span> <span class="nav-text">处理冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分支设计技巧"><span class="nav-number">1.3.</span> <span class="nav-text">分支设计技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git命令别名"><span class="nav-number">1.4.</span> <span class="nav-text">Git命令别名</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">Git远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">查看远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%86%B2%E7%AA%81"><span class="nav-number">1.2.</span> <span class="nav-text">处理冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E8%AE%BE%E8%AE%A1%E6%8A%80%E5%B7%A7"><span class="nav-number">1.3.</span> <span class="nav-text">分支设计技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git%E5%91%BD%E4%BB%A4%E5%88%AB%E5%90%8D"><span class="nav-number">1.4.</span> <span class="nav-text">Git命令别名</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -419,14 +437,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -437,6 +455,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -454,19 +477,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -506,9 +528,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -517,7 +547,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 

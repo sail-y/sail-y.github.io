@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 3.9.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,30 +13,30 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="此为龙果学院课程笔记，记录以供以后翻看 上亿流量的商品详情页系统的多级缓存架构很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。">
-<meta name="keywords" content="多级缓存架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高可用缓存架构实战4-多级缓存架构.高并发读写方案.nginx流量分发方案.ZK分布式锁解决并发冲突方案">
 <meta property="og:url" content="http://www.saily.top/2018/02/18/cache/cache04/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="此为龙果学院课程笔记，记录以供以后翻看 上亿流量的商品详情页系统的多级缓存架构很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.saily.top/img/cache/三级缓存架构图.png">
-<meta property="og:image" content="http://www.saily.top/img/cache/多个缓存服务实例分布式重建的并发冲突问题.png">
-<meta property="og:image" content="http://www.saily.top/img/cache/基于zookeeper分布式锁的冲突解决方案.png">
-<meta property="og:image" content="http://www.saily.top/img/cache/复杂的数据库+缓存双写一致保障方案.png">
-<meta property="og:updated_time" content="2018-09-15T13:59:58.422Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E5%A4%9A%E4%B8%AA%E7%BC%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B%E5%88%86%E5%B8%83%E5%BC%8F%E9%87%8D%E5%BB%BA%E7%9A%84%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E5%9F%BA%E4%BA%8Ezookeeper%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png">
+<meta property="og:image" content="http://www.saily.top/img/cache/%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93+%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E4%BF%9D%E9%9A%9C%E6%96%B9%E6%A1%88.png">
+<meta property="article:published_time" content="2018-02-18T11:45:55.000Z">
+<meta property="article:modified_time" content="2018-09-15T13:59:58.000Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="多级缓存架构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="高可用缓存架构实战4-多级缓存架构.高并发读写方案.nginx流量分发方案.ZK分布式锁解决并发冲突方案">
-<meta name="twitter:description" content="此为龙果学院课程笔记，记录以供以后翻看 上亿流量的商品详情页系统的多级缓存架构很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。">
-<meta name="twitter:image" content="http://www.saily.top/img/cache/三级缓存架构图.png">
+<meta name="twitter:image" content="http://www.saily.top/img/cache/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
 
 <link rel="canonical" href="http://www.saily.top/2018/02/18/cache/cache04/">
 
@@ -46,7 +46,8 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -81,6 +82,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -99,14 +101,12 @@
 
   <div class="site-meta">
 
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">帆的博客</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">扬帆起航</p>
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">帆的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
   </div>
 
   <div class="site-nav-right">
@@ -117,32 +117,33 @@
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -150,17 +151,18 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="search-pop-overlay">
-  <div class="popup search-popup">
-      <div class="search-header">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
@@ -174,10 +176,9 @@
   </div>
 </div>
 
+    </div>
   </div>
-</div>
 
-  </div>
 </div>
     </header>
 
@@ -186,9 +187,6 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/sail-y" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 
     <main class="main">
@@ -196,14 +194,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/02/18/cache/cache04/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -223,7 +220,7 @@
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
@@ -231,18 +228,18 @@
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：9月 15 2018 21:59:58" itemprop="dateModified" datetime="2018-09-15T21:59:58+08:00">9月 15 2018</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/高可用缓存架构实战/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a>
+                  <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a>
                 </span>
             </span>
 
@@ -265,8 +262,10 @@
 
       
         <p>此为龙果学院课程笔记，记录以供以后翻看</p>
-<h2 id="上亿流量的商品详情页系统的多级缓存架构"><a href="#上亿流量的商品详情页系统的多级缓存架构" class="headerlink" title="上亿流量的商品详情页系统的多级缓存架构"></a>上亿流量的商品详情页系统的多级缓存架构</h2><p>很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。<br><a id="more"></a><br>通常采用三级缓存：<strong>nginx本地缓存+redis分布式缓存+tomcat堆缓存的多级缓存架构</strong></p>
-<p><img src="/img/cache/三级缓存架构图.png" alt></p>
+<h2 id="上亿流量的商品详情页系统的多级缓存架构"><a href="#上亿流量的商品详情页系统的多级缓存架构" class="headerlink" title="上亿流量的商品详情页系统的多级缓存架构"></a>上亿流量的商品详情页系统的多级缓存架构</h2><p>很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。</p>
+<a id="more"></a>
+<p>通常采用三级缓存：<strong>nginx本地缓存+redis分布式缓存+tomcat堆缓存的多级缓存架构</strong></p>
+<p><img src="/img/cache/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%9B%BE.png"></p>
 <p>时效性要求非常高的数据：<strong>库存</strong></p>
 <p>一般来说，显示的库存都是时效性要求会相对高一些，因为随着商品的不断的交易，库存会不断的变化。当然，我们就希望当库存变化的时候，尽可能更快将库存显示到页面上去，而不是说等了很长时间，库存才反应到页面上去。</p>
 <p>时效性要求不高的数据：<strong>商品的基本信息（名称. 颜色. 版本. 规格参数，等等）</strong>，时效性要求不高的数据，就还好，比如说你现在改变了商品的名称，稍微晚个几分钟反应到商品页面上，也是可以接受的。</p>
@@ -278,59 +277,67 @@
 <p><strong>tomcat jvm堆内存缓存</strong>，主要是抗redis大规模灾难的情况，如果redis出现了大规模的宕机，导致nginx大量流量直接涌入数据生产服务，那么最后的tomcat堆内存缓存至少可以再抗一下，不至于让数据库直接裸奔。同时tomcat jvm堆内存缓存，也可以抗住redis没有cache住的最后那少量的部分缓存。</p>
 <h3 id="多级缓存架构项目实例源码"><a href="#多级缓存架构项目实例源码" class="headerlink" title="多级缓存架构项目实例源码"></a>多级缓存架构项目实例源码</h3><p>时效性要求不高的数据，采取的是异步更新缓存的策略。缓存数据生产服务，监听一个消息队列，然后数据源服务（商品信息管理服务）发生了数据变更之后，就将数据变更的消息推送到消息队列中。缓存数据生产服务可以去消费这个数据变更的消息，然后根据消息的指示提取一些参数，然后调用对应的数据源服务的接口拉取数据，这个时候一般是从mysql库中拉取的。</p>
 <p>这里消息中间件，我们使用<code>kafka</code>，<a href="http://www.saily.top/2018/02/20/cache04-2/">zookeeper+kafka集群的安装部署</a></p>
-<p>项目源码地址：<a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a></p>
+<p>项目源码地址：<a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache">https://github.com/sail-y/eshop-cache</a></p>
 <h3 id="Nginx层缓存"><a href="#Nginx层缓存" class="headerlink" title="Nginx层缓存"></a>Nginx层缓存</h3><p>前面三层缓存架构中的本地堆缓存+redis分布式缓存都做好了，接下来就要来做三级缓存中的nginx那一层的缓存了。一般默认会部署多个nginx，在里面都会放一些缓存，默认情况下，此时缓存命中率是比较低的，因为流量会均分。</p>
 <p><strong>如何提升缓存命中率？</strong></p>
 <p>分发层+应用层，双层nginx。</p>
 <p>分发层nginx，负责流量分发的逻辑和策略，它可以用lua脚本开发一些规则，比如根据productId去进行hash，然后对后端的nginx数量取模，将某一个商品的访问的请求，就固定路由到一个nginx后端服务器上去，保证只会从redis中获取一次缓存数据，再次请求全都是走nginx本地缓存了。</p>
 <p>后端的nginx服务器，就称之为应用服务器; 最前端的nginx服务器，被称之为分发服务器。看似很简单，其实很有用，在实际的生产环境中，可以大幅度提升你的nginx本地缓存这一层的命中率，大幅度减少redis后端的压力，提升性能。</p>
 <p>这里会采用OpenResty的方式去部署nginx，而且会写一个nginx+lua开发的一个hello world。</p>
-<h4 id="部署第一个nginx，作为应用层nginx"><a href="#部署第一个nginx，作为应用层nginx" class="headerlink" title="部署第一个nginx，作为应用层nginx"></a>部署第一个nginx，作为应用层nginx</h4><p>我这里部署到我机器上192.168.2.201，教程参考<a href="http://jinnianshilongnian.iteye.com/blog/2186270" target="_blank" rel="noopener">http://jinnianshilongnian.iteye.com/blog/2186270</a></p>
-<h4 id="部署openresty"><a href="#部署openresty" class="headerlink" title="部署openresty"></a>部署openresty</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">yum install -y readline-devel pcre-devel openssl-devel gcc</span><br><span class="line"></span><br><span class="line">mkdir -p /usr/servers  </span><br><span class="line"><span class="built_in">cd</span> /usr/servers/</span><br><span class="line"></span><br><span class="line">wget http://openresty.org/download/ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">tar -xzvf ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line"><span class="built_in">cd</span> /usr/servers/ngx_openresty-1.7.7.2/</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle/LuaJIT-2.1-20150120/  </span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install  </span><br><span class="line">ln -sf luajit-2.1.0-alpha /usr/<span class="built_in">local</span>/bin/luajit</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle  </span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz  </span><br><span class="line">tar -xvf 2.3.tar.gz  </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle  </span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz  </span><br><span class="line">tar -xvf v0.3.0.tar.gz  </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/servers/ngx_openresty-1.7.7.2  </span><br><span class="line">./configure --prefix=/usr/servers --with-http_realip_module  --with-pcre  --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2  </span><br><span class="line">make &amp;&amp; make install </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/servers/  </span><br><span class="line">ll</span><br><span class="line"></span><br><span class="line">/usr/servers/luajit</span><br><span class="line">/usr/servers/lualib</span><br><span class="line">/usr/servers/nginx</span><br><span class="line">/usr/servers/nginx/sbin/nginx -v</span><br></pre></td></tr></table></figure>
+<h4 id="部署第一个nginx，作为应用层nginx"><a href="#部署第一个nginx，作为应用层nginx" class="headerlink" title="部署第一个nginx，作为应用层nginx"></a>部署第一个nginx，作为应用层nginx</h4><p>我这里部署到我机器上192.168.2.201，教程参考<a target="_blank" rel="noopener" href="http://jinnianshilongnian.iteye.com/blog/2186270">http://jinnianshilongnian.iteye.com/blog/2186270</a></p>
+<h4 id="部署openresty"><a href="#部署openresty" class="headerlink" title="部署openresty"></a>部署openresty</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">yum install -y readline-devel pcre-devel openssl-devel gcc</span><br><span class="line"></span><br><span class="line">mkdir -p /usr/servers  </span><br><span class="line"><span class="built_in">cd</span> /usr/servers/</span><br><span class="line"></span><br><span class="line">wget http://openresty.org/download/ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">tar -xzvf ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line"><span class="built_in">cd</span> /usr/servers/ngx_openresty-1.7.7.2/</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle/LuaJIT-2.1-20150120/  </span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install  </span><br><span class="line">ln -sf luajit-2.1.0-alpha /usr/<span class="built_in">local</span>/bin/luajit</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle  </span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz  </span><br><span class="line">tar -xvf 2.3.tar.gz  </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> bundle  </span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz  </span><br><span class="line">tar -xvf v0.3.0.tar.gz  </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/servers/ngx_openresty-1.7.7.2  </span><br><span class="line">./configure --prefix=/usr/servers --with-http_realip_module  --with-pcre  --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2  </span><br><span class="line">make &amp;&amp; make install </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /usr/servers/  </span><br><span class="line">ll</span><br><span class="line"></span><br><span class="line">/usr/servers/luajit</span><br><span class="line">/usr/servers/lualib</span><br><span class="line">/usr/servers/nginx</span><br><span class="line">/usr/servers/nginx/sbin/nginx -v </span><br></pre></td></tr></table></figure>
 <p>启动nginx: <code>/usr/servers/nginx/sbin/nginx</code></p>
-<h4 id="nginx-lua开发的hello-world"><a href="#nginx-lua开发的hello-world" class="headerlink" title="nginx+lua开发的hello world"></a>nginx+lua开发的hello world</h4><pre><code>vi /usr/servers/nginx/conf/nginx.conf
-</code></pre><p>在http部分添加：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lua_package_path &quot;/usr/servers/lualib/?.lua;;&quot;;  </span><br><span class="line">lua_package_cpath &quot;/usr/servers/lualib/?.so;;&quot;;</span><br></pre></td></tr></table></figure>
+<h4 id="nginx-lua开发的hello-world"><a href="#nginx-lua开发的hello-world" class="headerlink" title="nginx+lua开发的hello world"></a>nginx+lua开发的hello world</h4><pre><code>vi /usr/servers/nginx/conf/nginx.conf</code></pre>
+<p>在http部分添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lua_package_path &quot;&#x2F;usr&#x2F;servers&#x2F;lualib&#x2F;?.lua;;&quot;;  </span><br><span class="line">lua_package_cpath &quot;&#x2F;usr&#x2F;servers&#x2F;lualib&#x2F;?.so;;&quot;;  </span><br></pre></td></tr></table></figure>
+
 <p><code>/usr/servers/nginx/conf</code>下，创建一个<code>lua.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server &#123;  </span><br><span class="line">    listen       80;  </span><br><span class="line">    server_name  _;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server &#123;  </span><br><span class="line">    listen       80;  </span><br><span class="line">    server_name  _;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
 <p>在nginx.conf的http部分添加：</p>
-<pre><code>include lua.conf;
-</code></pre><p>验证配置是否正确：</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -t
-</code></pre><p>在lua.conf的server部分添加：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /lua &#123;  </span><br><span class="line">    default_type &apos;text/html&apos;;  </span><br><span class="line">    content_by_lua &apos;ngx.say(&quot;hello world&quot;)&apos;;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>include lua.conf;</code></pre>
 <p>验证配置是否正确：</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -t  
-</code></pre><p>重新nginx加载配置</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -s reload  
-</code></pre><p>访问： <a href="http://192.168.2.201/lua" target="_blank" rel="noopener">http://192.168.2.201/lua</a></p>
+<pre><code>/usr/servers/nginx/sbin/nginx -t</code></pre>
+<p>在lua.conf的server部分添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;lua &#123;  </span><br><span class="line">    default_type &#39;text&#x2F;html&#39;;  </span><br><span class="line">    content_by_lua &#39;ngx.say(&quot;hello world&quot;)&#39;;  </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>验证配置是否正确：</p>
+<pre><code>/usr/servers/nginx/sbin/nginx -t  </code></pre>
+<p>重新nginx加载配置</p>
+<pre><code>/usr/servers/nginx/sbin/nginx -s reload  </code></pre>
+<p>访问： <a target="_blank" rel="noopener" href="http://192.168.2.201/lua">http://192.168.2.201/lua</a></p>
 <p>成功输出 hello world</p>
 <hr>
 <p>接下来替换成lua脚本文件执行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/servers/nginx/conf/lua/</span><br><span class="line">vi /usr/servers/nginx/conf/lua/test.lua</span><br><span class="line">ngx.say(<span class="string">"hello world"</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/servers/nginx/conf/lua/</span><br><span class="line">vi /usr/servers/nginx/conf/lua/test.lua</span><br><span class="line">ngx.say(<span class="string">&quot;hello world&quot;</span>); </span><br></pre></td></tr></table></figure>
+
 <p>修改lua.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /lua &#123;  </span><br><span class="line">    default_type &apos;text/html&apos;;  </span><br><span class="line">    content_by_lua_file conf/lua/test.lua; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;lua &#123;  </span><br><span class="line">    default_type &#39;text&#x2F;html&#39;;  </span><br><span class="line">    content_by_lua_file conf&#x2F;lua&#x2F;test.lua; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>验证配置是否正确：</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -t  
-</code></pre><p>重新nginx加载配置</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -s reload  
-</code></pre><hr>
+<pre><code>/usr/servers/nginx/sbin/nginx -t  </code></pre>
+<p>重新nginx加载配置</p>
+<pre><code>/usr/servers/nginx/sbin/nginx -s reload  </code></pre>
+<hr>
 <p>查看异常日志</p>
-<pre><code>tail -f /usr/servers/nginx/logs/error.log
-</code></pre><h4 id="工程化的nginx-lua项目结构"><a href="#工程化的nginx-lua项目结构" class="headerlink" title="工程化的nginx+lua项目结构"></a>工程化的nginx+lua项目结构</h4><p>刚才只是写了一个hello world，在正式的项目中，脚本的目录结构一般是下面这样：</p>
+<pre><code>tail -f /usr/servers/nginx/logs/error.log</code></pre>
+<h4 id="工程化的nginx-lua项目结构"><a href="#工程化的nginx-lua项目结构" class="headerlink" title="工程化的nginx+lua项目结构"></a>工程化的nginx+lua项目结构</h4><p>刚才只是写了一个hello world，在正式的项目中，脚本的目录结构一般是下面这样：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br><span class="line">    hello.conf     </span><br><span class="line">    lua              </span><br><span class="line">      hello.lua</span><br><span class="line">    lualib            </span><br><span class="line">      *.lua</span><br><span class="line">      *.so</span><br></pre></td></tr></table></figure>
+
 <p>放在/usr/hello目录下，不会放在nginx所在文件夹里。</p>
 <p>配置如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/hello/lua</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'ngx.say("hello world");'</span> &gt;&gt; /usr/hello/lua/hello.lua</span><br><span class="line">cp -r /usr/servers/lualib /usr/hello</span><br><span class="line"></span><br><span class="line">vi /usr/hello/hello.conf</span><br><span class="line"></span><br><span class="line">server &#123;  </span><br><span class="line">    listen       80;  </span><br><span class="line">    server_name  _;  </span><br><span class="line">  </span><br><span class="line">    location /hello &#123;  </span><br><span class="line">        default_type <span class="string">'text/html'</span>;  </span><br><span class="line">        content_by_lua_file /usr/hello/lua/hello.lua;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/hello/lua</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;ngx.say(&quot;hello world&quot;);&#x27;</span> &gt;&gt; /usr/hello/lua/hello.lua</span><br><span class="line">cp -r /usr/servers/lualib /usr/hello</span><br><span class="line"></span><br><span class="line">vi /usr/hello/hello.conf</span><br><span class="line"></span><br><span class="line">server &#123;  </span><br><span class="line">    listen       80;  </span><br><span class="line">    server_name  _;  </span><br><span class="line">  </span><br><span class="line">    location /hello &#123;  </span><br><span class="line">        default_type <span class="string">&#x27;text/html&#x27;</span>;  </span><br><span class="line">        content_by_lua_file /usr/hello/lua/hello.lua;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>修改<code>nginx.conf</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/servers/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">worker_processes  2;  </span><br><span class="line"></span><br><span class="line">error_log  logs/error.log;  </span><br><span class="line"></span><br><span class="line">events &#123;  </span><br><span class="line">    worker_connections  1024;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">http &#123;  </span><br><span class="line">    include       mime.types;  </span><br><span class="line">    default_type  text/html;  </span><br><span class="line">  </span><br><span class="line">    lua_package_path <span class="string">"/usr/hello/lualib/?.lua;;"</span>;  </span><br><span class="line">    lua_package_cpath <span class="string">"/usr/hello/lualib/?.so;;"</span>; </span><br><span class="line">    include /usr/hello/hello.conf;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/servers/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">worker_processes  2;  </span><br><span class="line"></span><br><span class="line">error_log  logs/error.log;  </span><br><span class="line"></span><br><span class="line">events &#123;  </span><br><span class="line">    worker_connections  1024;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">http &#123;  </span><br><span class="line">    include       mime.types;  </span><br><span class="line">    default_type  text/html;  </span><br><span class="line">  </span><br><span class="line">    lua_package_path <span class="string">&quot;/usr/hello/lualib/?.lua;;&quot;</span>;  </span><br><span class="line">    lua_package_cpath <span class="string">&quot;/usr/hello/lualib/?.so;;&quot;</span>; </span><br><span class="line">    include /usr/hello/hello.conf;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>验证配置是否正确：</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -t  
-</code></pre><p>重新nginx加载配置</p>
-<pre><code>/usr/servers/nginx/sbin/nginx -s reload  
-</code></pre><p>如法炮制，在另外一个机器上，也用OpenResty部署一个nginx。</p>
+<pre><code>/usr/servers/nginx/sbin/nginx -t  </code></pre>
+<p>重新nginx加载配置</p>
+<pre><code>/usr/servers/nginx/sbin/nginx -s reload  </code></pre>
+<p>如法炮制，在另外一个机器上，也用OpenResty部署一个nginx。</p>
 <h4 id="开发和部署流量分发层"><a href="#开发和部署流量分发层" class="headerlink" title="开发和部署流量分发层"></a>开发和部署流量分发层</h4><p>我在eshop-cache02和eshop-cache03上都部署好了openresty。现在用eshop-cache01和eshop-cache02作为应用层nginx服务器，用eshop-cache03作为分发层nginx。</p>
 <p>现在在eshop-cache03，也就是分发层nginx中，编写lua脚本，完成基于商品id的流量分发策略：</p>
 <ol>
@@ -341,52 +348,60 @@
 <li>获取响应后返回</li>
 </ol>
 <p>这个就是基于商品id的定向流量分发的策略，lua脚本来编写和实现。作为一个流量分发的nginx，会发送http请求到后端的应用nginx上面去，所以要先引入lua http lib包。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua </span><br></pre></td></tr></table></figure>
+
 <p>然后我们编辑流量分发的代码：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="keyword">local</span> productId = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> hosts = &#123;<span class="string">"192.168.2.201"</span>, <span class="string">"192.168.2.202"</span>&#125;</span><br><span class="line"><span class="keyword">local</span> hash = ngx.crc32_long(productId)</span><br><span class="line"><span class="keyword">local</span> index = (hash % <span class="number">2</span>) + <span class="number">1</span></span><br><span class="line">backend = <span class="string">"http://"</span>..hosts[index]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> requestPath = uri_args[<span class="string">"requestPath"</span>]</span><br><span class="line">requestPath = <span class="string">"/"</span>..requestPath..<span class="string">"?productId="</span>..productId</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">"resty.http"</span>)</span><br><span class="line"><span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> resp, err = httpc:request_uri(backend, &#123;</span><br><span class="line">    method = <span class="string">"GET"</span>,</span><br><span class="line">    <span class="built_in">path</span> = requestPath</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> resp <span class="keyword">then</span></span><br><span class="line">   ngx.say(<span class="string">"request error :"</span>, err)</span><br><span class="line">   <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">ngx.say(resp.body)</span><br><span class="line"></span><br><span class="line">httpc:<span class="built_in">close</span>()</span><br></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="keyword">local</span> productId = uri_args[<span class="string">&quot;productId&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> hosts = &#123;<span class="string">&quot;192.168.2.201&quot;</span>, <span class="string">&quot;192.168.2.202&quot;</span>&#125;</span><br><span class="line"><span class="keyword">local</span> hash = ngx.crc32_long(productId)</span><br><span class="line"><span class="keyword">local</span> index = (hash % <span class="number">2</span>) + <span class="number">1</span></span><br><span class="line">backend = <span class="string">&quot;http://&quot;</span>..hosts[index]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> requestPath = uri_args[<span class="string">&quot;requestPath&quot;</span>]</span><br><span class="line">requestPath = <span class="string">&quot;/&quot;</span>..requestPath..<span class="string">&quot;?productId=&quot;</span>..productId</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">&quot;resty.http&quot;</span>)</span><br><span class="line"><span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> resp, err = httpc:request_uri(backend, &#123;</span><br><span class="line">    method = <span class="string">&quot;GET&quot;</span>,</span><br><span class="line">    <span class="built_in">path</span> = requestPath</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> resp <span class="keyword">then</span></span><br><span class="line">   ngx.say(<span class="string">&quot;request error :&quot;</span>, err)</span><br><span class="line">   <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">ngx.say(resp.body)</span><br><span class="line"></span><br><span class="line">httpc:<span class="built_in">close</span>()</span><br></pre></td></tr></table></figure>
+
 <p>访问测试：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br><span class="line">http://192.168.2.203/hello?productId=5&amp;requestPath=hello</span><br><span class="line">hello world. this is eshop-cache01</span><br></pre></td></tr></table></figure>
+
 <p>基于商品id的定向流量分发策略的lua脚本就开发完了。经过测试可以看到，如果请求的是固定的某一个商品，那么就一定会将流量分到固定的一个应用nginx上面去。</p>
 <h3 id="基于nginx-lua-java完成多级缓存架构的核心业务逻辑"><a href="#基于nginx-lua-java完成多级缓存架构的核心业务逻辑" class="headerlink" title="基于nginx+lua+java完成多级缓存架构的核心业务逻辑"></a>基于nginx+lua+java完成多级缓存架构的核心业务逻辑</h3><p>上面做了流量分发的demo测试，Java层级的缓存开发，接下来把他们对接起来，正式编写分发层和应用层的脚本。</p>
 <p>eshop-cache03机器上修改流量分发层配置和lua脚本：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vi hello.conf</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line">location /product &#123;</span><br><span class="line">    default_type <span class="string">'text/html'</span>;</span><br><span class="line">    content_by_lua_file /usr/hello/lua/distribute.lua;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> lua</span><br><span class="line">cp hello.lua distribute.lua</span><br><span class="line">vi distribute.lua</span><br><span class="line"><span class="comment"># 添加shopId</span></span><br><span class="line"><span class="built_in">local</span> shopId = uri_args[<span class="string">"shopId"</span>]</span><br><span class="line">requestPath = <span class="string">"/"</span>..requestPath..<span class="string">"?productId="</span>..productId..<span class="string">"&amp;shopId="</span>..shopId</span><br><span class="line"></span><br><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vi hello.conf</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line">location /product &#123;</span><br><span class="line">    default_type <span class="string">&#x27;text/html&#x27;</span>;</span><br><span class="line">    content_by_lua_file /usr/hello/lua/distribute.lua;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> lua</span><br><span class="line">cp hello.lua distribute.lua</span><br><span class="line">vi distribute.lua</span><br><span class="line"><span class="comment"># 添加shopId</span></span><br><span class="line"><span class="built_in">local</span> shopId = uri_args[<span class="string">&quot;shopId&quot;</span>]</span><br><span class="line">requestPath = <span class="string">&quot;/&quot;</span>..requestPath..<span class="string">&quot;?productId=&quot;</span>..productId..<span class="string">&quot;&amp;shopId=&quot;</span>..shopId</span><br><span class="line"></span><br><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>修改应用层配置和lua脚本：</p>
 <ol>
-<li>应用nginx的lua脚本接收到请求</li>
-<li>获取请求参数中的商品id，以及商品店铺id</li>
-<li>根据商品id和商品店铺id，在nginx本地缓存中尝试获取数据</li>
+<li><p>应用nginx的lua脚本接收到请求</p>
+</li>
+<li><p>获取请求参数中的商品id，以及商品店铺id</p>
+</li>
+<li><p>根据商品id和商品店铺id，在nginx本地缓存中尝试获取数据</p>
+</li>
 <li><p>如果在nginx本地缓存中没有获取到数据，那么就到redis分布式缓存中获取数据，如果获取到了数据，还要设置到nginx本地缓存中</p>
 <p> 这里有个问题，建议不要用nginx+lua直接去获取redis数据。因为openresty没有太好的redis cluster的支持包，所以建议是发送http请求到缓存数据生产服务，由该服务提供一个http接口。缓存数生产服务可以基于redis cluster api从redis中直接获取数据，并返回给nginx。</p>
 </li>
 <li><p>如果缓存数据生产服务没有在redis分布式缓存中没有获取到数据，那么就在自己本地ehcache中获取数据，返回数据给nginx，也要设置到nginx本地缓存中</p>
 </li>
-<li>如果ehcache本地缓存都没有数据，那么就需要去原始的服务中拉去数据，该服务会从mysql中查询，拉去到数据之后，返回给nginx，并重新设置到ehcache和redis中</li>
+<li><p>如果ehcache本地缓存都没有数据，那么就需要去原始的服务中拉去数据，该服务会从mysql中查询，拉去到数据之后，返回给nginx，并重新设置到ehcache和redis中</p>
+</li>
 <li><p>nginx最终利用获取到的数据，动态渲染网页模板</p>
 <p> 因为应用层也要访问http接口，所以也需要部署http依赖和模板的依赖</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/	master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua </span><br><span class="line"><span class="built_in">cd</span> /usr/hello/lualib/resty/</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua</span><br><span class="line">mkdir /usr/hello/lualib/resty/html</span><br><span class="line"><span class="built_in">cd</span> /usr/hello/lualib/resty/html</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template/html.lua</span><br></pre></td></tr></table></figure>
 <p> 在hello.conf的server中配置模板位置</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> <span class="variable">$template_location</span> <span class="string">"/templates"</span>;  </span><br><span class="line"><span class="built_in">set</span> <span class="variable">$template_root</span> <span class="string">"/usr/hello/templates"</span>;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> <span class="variable">$template_location</span> <span class="string">&quot;/templates&quot;</span>;  </span><br><span class="line"><span class="built_in">set</span> <span class="variable">$template_root</span> <span class="string">&quot;/usr/hello/templates&quot;</span>;</span><br></pre></td></tr></table></figure>
 <p> 编辑要显示的模板：</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/hello/templates</span><br><span class="line"><span class="built_in">cd</span> /usr/hello/templates</span><br><span class="line">vi product.html</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">		&lt;meta http-equiv=<span class="string">"Content-Type"</span> content=<span class="string">"text/html; charset=UTF-8"</span>&gt;</span><br><span class="line">		&lt;title&gt;商品详情页&lt;/title&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">商品id: &#123;* productId *&#125;&lt;br/&gt;</span><br><span class="line">商品名称: &#123;* productName *&#125;&lt;br/&gt;</span><br><span class="line">商品图片列表: &#123;* productPictureList *&#125;&lt;br/&gt;</span><br><span class="line">商品规格: &#123;* productSpecification *&#125;&lt;br/&gt;</span><br><span class="line">商品售后服务: &#123;* productService *&#125;&lt;br/&gt;</span><br><span class="line">商品颜色: &#123;* productColor *&#125;&lt;br/&gt;</span><br><span class="line">商品大小: &#123;* productSize *&#125;&lt;br/&gt;</span><br><span class="line">店铺id: &#123;* shopId *&#125;&lt;br/&gt;</span><br><span class="line">店铺名称: &#123;* shopName *&#125;&lt;br/&gt;</span><br><span class="line">店铺评级: &#123;* shopLevel *&#125;&lt;br/&gt;</span><br><span class="line">店铺好评率: &#123;* shopGoodCommentRate *&#125;&lt;br/&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-</li>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/hello/templates</span><br><span class="line"><span class="built_in">cd</span> /usr/hello/templates</span><br><span class="line">vi product.html</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">		&lt;meta http-equiv=<span class="string">&quot;Content-Type&quot;</span> content=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br><span class="line">		&lt;title&gt;商品详情页&lt;/title&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">商品id: &#123;* productId *&#125;&lt;br/&gt;</span><br><span class="line">商品名称: &#123;* productName *&#125;&lt;br/&gt;</span><br><span class="line">商品图片列表: &#123;* productPictureList *&#125;&lt;br/&gt;</span><br><span class="line">商品规格: &#123;* productSpecification *&#125;&lt;br/&gt;</span><br><span class="line">商品售后服务: &#123;* productService *&#125;&lt;br/&gt;</span><br><span class="line">商品颜色: &#123;* productColor *&#125;&lt;br/&gt;</span><br><span class="line">商品大小: &#123;* productSize *&#125;&lt;br/&gt;</span><br><span class="line">店铺id: &#123;* shopId *&#125;&lt;br/&gt;</span><br><span class="line">店铺名称: &#123;* shopName *&#125;&lt;br/&gt;</span><br><span class="line">店铺评级: &#123;* shopLevel *&#125;&lt;br/&gt;</span><br><span class="line">店铺好评率: &#123;* shopGoodCommentRate *&#125;&lt;br/&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li><p>将渲染后的网页模板作为http响应，返回给分发层nginx</p>
 <p> 在<code>nginx.conf</code>的http模块里添加：</p>
  <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 添加nginx本地缓存的支持</span><br><span class="line">lua_shared_dict my_cache <span class="number">128</span>m;</span><br></pre></td></tr></table></figure>
 <p> 修改<code>hello.conf</code>：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 添加路由</span><br><span class="line">location /product &#123;</span><br><span class="line">  	 default_type &apos;text/html&apos;;</span><br><span class="line">   	content_by_lua_file /usr/hello/lua/product.lua;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 添加路由</span><br><span class="line">location &#x2F;product &#123;</span><br><span class="line">  	 default_type &#39;text&#x2F;html&#39;;</span><br><span class="line">   	content_by_lua_file &#x2F;usr&#x2F;hello&#x2F;lua&#x2F;product.lua;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 修改lua/product.lua脚本，注意192.168.2.171是我本机的ip，启动了Java项目：</p>
- <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">vi lua/product.lua</span><br><span class="line"><span class="keyword">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="keyword">local</span> productId = uri_args[<span class="string">"productId"</span>]</span><br><span class="line"><span class="keyword">local</span> shopId = uri_args[<span class="string">"shopId"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> productCacheKey = <span class="string">"product_info_"</span>..productId</span><br><span class="line"><span class="keyword">local</span> shopCacheKey = <span class="string">"shop_info_"</span>..shopId</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> productCache = cache_ngx:get(productCacheKey)</span><br><span class="line"><span class="keyword">local</span> shopCache = cache_ngx:get(shopCacheKey)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> productCache == <span class="string">""</span> <span class="keyword">or</span> productCache == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">	<span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">"resty.http"</span>)</span><br><span class="line">	<span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">"http://192.168.2.171:8080"</span>,&#123;</span><br><span class="line">  		method = <span class="string">"GET"</span>,</span><br><span class="line">  		<span class="built_in">path</span> = <span class="string">"/getProductInfo?productId="</span>..productId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	productCache = resp.body</span><br><span class="line">	cache_ngx:set(productCacheKey, productCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> shopCache == <span class="string">""</span> <span class="keyword">or</span> shopCache == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">	<span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">"resty.http"</span>)</span><br><span class="line">	<span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">"http://192.168.2.171:8080"</span>,&#123;</span><br><span class="line">  		method = <span class="string">"GET"</span>,</span><br><span class="line">  		<span class="built_in">path</span> = <span class="string">"/getShopInfo?shopId="</span>..shopId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	shopCache = resp.body</span><br><span class="line">	cache_ngx:set(shopCacheKey, shopCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> cjson = <span class="built_in">require</span>(<span class="string">"cjson"</span>)</span><br><span class="line"><span class="keyword">local</span> productCacheJSON = cjson.decode(productCache)</span><br><span class="line"><span class="keyword">local</span> shopCacheJSON = cjson.decode(shopCache)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> context = &#123;</span><br><span class="line">	productId = productCacheJSON.id,</span><br><span class="line">	productName = productCacheJSON.name,</span><br><span class="line">	productPrice = productCacheJSON.price,</span><br><span class="line">	productPictureList = productCacheJSON.pictureList,</span><br><span class="line">	productSpecification = productCacheJSON.specification,</span><br><span class="line">	productService = productCacheJSON.service,</span><br><span class="line">	productColor = productCacheJSON.color,</span><br><span class="line">	productSize = productCacheJSON.size,</span><br><span class="line">	shopId = shopCacheJSON.id,</span><br><span class="line">	shopName = shopCacheJSON.name,</span><br><span class="line">	shopLevel = shopCacheJSON.level,</span><br><span class="line">	shopGoodCommentRate = shopCacheJSON.goodCommentRate</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> template = <span class="built_in">require</span>(<span class="string">"resty.template"</span>)</span><br><span class="line">template.render(<span class="string">"product.html"</span>, context)</span><br></pre></td></tr></table></figure>
-<p> 写到这里，应该去把java项目里的2个接口给补充一下。还是之前的项目：<a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a></p>
+ <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">vi lua/product.lua</span><br><span class="line"><span class="keyword">local</span> uri_args = ngx.req.get_uri_args()</span><br><span class="line"><span class="keyword">local</span> productId = uri_args[<span class="string">&quot;productId&quot;</span>]</span><br><span class="line"><span class="keyword">local</span> shopId = uri_args[<span class="string">&quot;shopId&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> productCacheKey = <span class="string">&quot;product_info_&quot;</span>..productId</span><br><span class="line"><span class="keyword">local</span> shopCacheKey = <span class="string">&quot;shop_info_&quot;</span>..shopId</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> productCache = cache_ngx:get(productCacheKey)</span><br><span class="line"><span class="keyword">local</span> shopCache = cache_ngx:get(shopCacheKey)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> productCache == <span class="string">&quot;&quot;</span> <span class="keyword">or</span> productCache == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">	<span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">&quot;resty.http&quot;</span>)</span><br><span class="line">	<span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">&quot;http://192.168.2.171:8080&quot;</span>,&#123;</span><br><span class="line">  		method = <span class="string">&quot;GET&quot;</span>,</span><br><span class="line">  		<span class="built_in">path</span> = <span class="string">&quot;/getProductInfo?productId=&quot;</span>..productId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	productCache = resp.body</span><br><span class="line">	cache_ngx:set(productCacheKey, productCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> shopCache == <span class="string">&quot;&quot;</span> <span class="keyword">or</span> shopCache == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">	<span class="keyword">local</span> http = <span class="built_in">require</span>(<span class="string">&quot;resty.http&quot;</span>)</span><br><span class="line">	<span class="keyword">local</span> httpc = http.new()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">local</span> resp, err = httpc:request_uri(<span class="string">&quot;http://192.168.2.171:8080&quot;</span>,&#123;</span><br><span class="line">  		method = <span class="string">&quot;GET&quot;</span>,</span><br><span class="line">  		<span class="built_in">path</span> = <span class="string">&quot;/getShopInfo?shopId=&quot;</span>..shopId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	shopCache = resp.body</span><br><span class="line">	cache_ngx:set(shopCacheKey, shopCache, <span class="number">10</span> * <span class="number">60</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> cjson = <span class="built_in">require</span>(<span class="string">&quot;cjson&quot;</span>)</span><br><span class="line"><span class="keyword">local</span> productCacheJSON = cjson.decode(productCache)</span><br><span class="line"><span class="keyword">local</span> shopCacheJSON = cjson.decode(shopCache)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> context = &#123;</span><br><span class="line">	productId = productCacheJSON.id,</span><br><span class="line">	productName = productCacheJSON.name,</span><br><span class="line">	productPrice = productCacheJSON.price,</span><br><span class="line">	productPictureList = productCacheJSON.pictureList,</span><br><span class="line">	productSpecification = productCacheJSON.specification,</span><br><span class="line">	productService = productCacheJSON.service,</span><br><span class="line">	productColor = productCacheJSON.color,</span><br><span class="line">	productSize = productCacheJSON.size,</span><br><span class="line">	shopId = shopCacheJSON.id,</span><br><span class="line">	shopName = shopCacheJSON.name,</span><br><span class="line">	shopLevel = shopCacheJSON.level,</span><br><span class="line">	shopGoodCommentRate = shopCacheJSON.goodCommentRate</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> template = <span class="built_in">require</span>(<span class="string">&quot;resty.template&quot;</span>)</span><br><span class="line">template.render(<span class="string">&quot;product.html&quot;</span>, context)</span><br></pre></td></tr></table></figure>
+<p> 写到这里，应该去把java项目里的2个接口给补充一下。还是之前的项目：<a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache">https://github.com/sail-y/eshop-cache</a></p>
 </li>
 </ol>
 <h3 id="分布式重建缓存的并发冲突问题"><a href="#分布式重建缓存的并发冲突问题" class="headerlink" title="分布式重建缓存的并发冲突问题"></a>分布式重建缓存的并发冲突问题</h3><p>之前在Java代码里会先去redis里面取数据，如果redis取不到，就会去ehcache里面取，如果还是取不到，就需要重建缓存了。</p>
 <p>但是重建缓存有一个问题，因为我们的服务可能是多实例的，虽然在nginx层我们通过流量分发将请求通过id分发到了不同的nginx应用层上。那么到了接口服务层，可能多次请求访问的是不同的实例，那么可能会导致多个机器去重建读取相同的数据，然后写入缓存中，这就有了<strong>分布式重建缓存的并发冲突问题。</strong></p>
 <p>问题就是可能2个实例获取到的数据快照不一样，但是新数据先写入缓存，如果这个时候另外一个实例的缓存后写入，就有问题了。</p>
-<p><img src="/img/cache/多个缓存服务实例分布式重建的并发冲突问题.png" alt="多个缓存服务实例分布式重建的并发冲突问题"></p>
+<p><img src="/img/cache/%E5%A4%9A%E4%B8%AA%E7%BC%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B%E5%88%86%E5%B8%83%E5%BC%8F%E9%87%8D%E5%BB%BA%E7%9A%84%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98.png" alt="多个缓存服务实例分布式重建的并发冲突问题"></p>
 <p>这个问题有好几种解决方案：</p>
 <ol>
-<li>一样的在应用层对id进行取模然后固定分发到不同的服务实例上</li>
+<li><p>一样的在应用层对id进行取模然后固定分发到不同的服务实例上</p>
+</li>
 <li><p>将更新缓存的请求发送到同一个分区的kafka消息中</p>
 <p> 一般来讲，每个服务实例都会监听kafka一个topic的某一个分区，所以具体去哪一个分区也得取模，保证是同一个实例消费到更新的请求。但问题是在nginx算出来的hash取模可能与kafka生产者的hash策略算出来的分区可能并不一致，还是可能有并发冲突问题。</p>
 </li>
@@ -394,13 +409,13 @@
 <p> 分布式锁，如果你有多个机器在访问同一个共享资源，加个锁让多个分布式的机器在访问共享资源的时候串行起来。</p>
 </li>
 </ol>
-<h4 id="zk分布式锁的解决并发冲突的方案"><a href="#zk分布式锁的解决并发冲突的方案" class="headerlink" title="zk分布式锁的解决并发冲突的方案"></a>zk分布式锁的解决并发冲突的方案</h4><p><img src="/img/cache/基于zookeeper分布式锁的冲突解决方案.png" alt></p>
+<h4 id="zk分布式锁的解决并发冲突的方案"><a href="#zk分布式锁的解决并发冲突的方案" class="headerlink" title="zk分布式锁的解决并发冲突的方案"></a>zk分布式锁的解决并发冲突的方案</h4><p><img src="/img/cache/%E5%9F%BA%E4%BA%8Ezookeeper%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png"></p>
 <ol>
 <li>变更缓存重建以及空缓存请求重建，更新redis之前，都需要先获取对应商品id的分布式锁</li>
 <li>拿到分布式锁之后，需要根据时间版本去比较一下，如果自己的版本新于redis中的版本，那么就更新，否则就不更新</li>
 <li>如果拿不到分布式锁，那么就等待，不断轮询等待，直到自己获取到分布式的锁</li>
 </ol>
-<p>方案源码实现：<a href="https://github.com/sail-y/eshop-cache" target="_blank" rel="noopener">https://github.com/sail-y/eshop-cache</a></p>
+<p>方案源码实现：<a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache">https://github.com/sail-y/eshop-cache</a></p>
 <p><code>ZooKeeperSession.java</code></p>
 <h2 id="经典的缓存-数据库读写的模式（cache-aside-pattern）"><a href="#经典的缓存-数据库读写的模式（cache-aside-pattern）" class="headerlink" title="经典的缓存+数据库读写的模式（cache aside pattern）"></a>经典的缓存+数据库读写的模式（cache aside pattern）</h2><ol>
 <li><p>读的时候，先读缓存，缓存没有的话，那么就读数据库，然后取出数据后放入缓存，同时返回响应</p>
@@ -418,7 +433,7 @@
 <p><strong>为什么上亿流量高并发场景下，缓存会出现这个问题？</strong></p>
 <p>只有在对一个数据在并发的进行读写的时候，才可能会出现这种问题。其实如果说你的并发量很低的话，特别是读并发很低，每天访问量就1万次，那么很少的情况下，会出现刚才描述的那种不一致的场景。但是问题是，如果每天的是上亿的流量，每秒并发读是几万，每秒只要有数据更新的请求，就可能会出现上述的数据库+缓存不一致的情况，高并发了以后，问题是很多的。</p>
 <p>解决方案：</p>
-<p><img src="/img/cache/复杂的数据库+缓存双写一致保障方案.png" alt></p>
+<p><img src="/img/cache/%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93+%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E4%BF%9D%E9%9A%9C%E6%96%B9%E6%A1%88.png"></p>
 <p><strong>数据库与缓存更新与读取操作进行异步串行化。</strong>更新数据的时候，根据数据的唯一标识（例如hash值取模），将操作路由之后，发送到一个jvm内部的队列中。读取数据的时候，如果发现数据不在缓存中，那么将重新读取数据+更新缓存的操作，根据唯一标识路由之后，也发送同一个jvm内部的队列中。一个队列对应一个工作线程，每个工作线程串行拿到对应的操作，然后一条一条的执行。</p>
 <p>这里有一个优化点，一个队列中，其实多个更新缓存请求串在一起是没意义的，因此可以做过滤，如果发现队列中已经有一个更新缓存的请求了，那么就不用再放个更新请求操作进去了，直接等待前面的更新操作请求完成即可。待那个队列对应的工作线程完成了上一个操作的数据库的修改之后，才会去执行下一个操作，也就是缓存更新的操作，此时会从数据库中读取最新的值，然后写入缓存中。如果请求还在等待时间范围内，不断轮询发现可以取到值了，那么就直接返回; 如果请求等待的时间超过一定时长，那么这一次直接从数据库中读取当前的旧值。</p>
 <p><strong>高并发的场景下，该解决方案要注意的问题</strong></p>
@@ -440,7 +455,7 @@
 <p> 万一某个商品的读写请求特别高，全部打到相同的机器的相同的队列里面去了，可能造成某台机器的压力过大。因为只有在商品数据更新的时候才会清空缓存，然后才会导致读写并发，所以更新频率不是太高的话，这个问题的影响并不是特别大，但是的确可能某些机器的负载会高一些。</p>
 </li>
 </ol>
-<h3 id="复杂的数据库-缓存双写一致保障方案项目实例源码"><a href="#复杂的数据库-缓存双写一致保障方案项目实例源码" class="headerlink" title="复杂的数据库+缓存双写一致保障方案项目实例源码"></a>复杂的数据库+缓存双写一致保障方案项目实例源码</h3><p><a href="https://github.com/sail-y/eshop-inventory" target="_blank" rel="noopener">https://github.com/sail-y/eshop-inventory</a></p>
+<h3 id="复杂的数据库-缓存双写一致保障方案项目实例源码"><a href="#复杂的数据库-缓存双写一致保障方案项目实例源码" class="headerlink" title="复杂的数据库+缓存双写一致保障方案项目实例源码"></a>复杂的数据库+缓存双写一致保障方案项目实例源码</h3><p><a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-inventory">https://github.com/sail-y/eshop-inventory</a></p>
 
     </div>
 
@@ -450,7 +465,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/多级缓存架构/" rel="tag"># 多级缓存架构</a>
+              <a href="/tags/%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" rel="tag"># 多级缓存架构</a>
           </div>
 
         
@@ -474,7 +489,6 @@
   
   
 
-  </div>
 
 
           </div>
@@ -530,7 +544,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#上亿流量的商品详情页系统的多级缓存架构"><span class="nav-number">1.</span> <span class="nav-text">上亿流量的商品详情页系统的多级缓存架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多级缓存架构中每一层的意义"><span class="nav-number">1.1.</span> <span class="nav-text">多级缓存架构中每一层的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多级缓存架构项目实例源码"><span class="nav-number">1.2.</span> <span class="nav-text">多级缓存架构项目实例源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx层缓存"><span class="nav-number">1.3.</span> <span class="nav-text">Nginx层缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#部署第一个nginx，作为应用层nginx"><span class="nav-number">1.3.1.</span> <span class="nav-text">部署第一个nginx，作为应用层nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署openresty"><span class="nav-number">1.3.2.</span> <span class="nav-text">部署openresty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx-lua开发的hello-world"><span class="nav-number">1.3.3.</span> <span class="nav-text">nginx+lua开发的hello world</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#工程化的nginx-lua项目结构"><span class="nav-number">1.3.4.</span> <span class="nav-text">工程化的nginx+lua项目结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发和部署流量分发层"><span class="nav-number">1.3.5.</span> <span class="nav-text">开发和部署流量分发层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于nginx-lua-java完成多级缓存架构的核心业务逻辑"><span class="nav-number">1.4.</span> <span class="nav-text">基于nginx+lua+java完成多级缓存架构的核心业务逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式重建缓存的并发冲突问题"><span class="nav-number">1.5.</span> <span class="nav-text">分布式重建缓存的并发冲突问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#zk分布式锁的解决并发冲突的方案"><span class="nav-number">1.5.1.</span> <span class="nav-text">zk分布式锁的解决并发冲突的方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#经典的缓存-数据库读写的模式（cache-aside-pattern）"><span class="nav-number">2.</span> <span class="nav-text">经典的缓存+数据库读写的模式（cache aside pattern）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存-数据库双写不一致问题分析"><span class="nav-number">3.</span> <span class="nav-text">缓存+数据库双写不一致问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最初级的缓存不一致问题以及解决方案"><span class="nav-number">3.1.</span> <span class="nav-text">最初级的缓存不一致问题以及解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较复杂的数据不一致问题分析"><span class="nav-number">3.2.</span> <span class="nav-text">比较复杂的数据不一致问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂的数据库-缓存双写一致保障方案项目实例源码"><span class="nav-number">3.3.</span> <span class="nav-text">复杂的数据库+缓存双写一致保障方案项目实例源码</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%BA%BF%E6%B5%81%E9%87%8F%E7%9A%84%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E9%A1%B5%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">上亿流量的商品详情页系统的多级缓存架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E4%B8%AD%E6%AF%8F%E4%B8%80%E5%B1%82%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">多级缓存架构中每一层的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E9%A1%B9%E7%9B%AE%E5%AE%9E%E4%BE%8B%E6%BA%90%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">多级缓存架构项目实例源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx%E5%B1%82%E7%BC%93%E5%AD%98"><span class="nav-number">1.3.</span> <span class="nav-text">Nginx层缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AAnginx%EF%BC%8C%E4%BD%9C%E4%B8%BA%E5%BA%94%E7%94%A8%E5%B1%82nginx"><span class="nav-number">1.3.1.</span> <span class="nav-text">部署第一个nginx，作为应用层nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2openresty"><span class="nav-number">1.3.2.</span> <span class="nav-text">部署openresty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx-lua%E5%BC%80%E5%8F%91%E7%9A%84hello-world"><span class="nav-number">1.3.3.</span> <span class="nav-text">nginx+lua开发的hello world</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E5%8C%96%E7%9A%84nginx-lua%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.4.</span> <span class="nav-text">工程化的nginx+lua项目结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%92%8C%E9%83%A8%E7%BD%B2%E6%B5%81%E9%87%8F%E5%88%86%E5%8F%91%E5%B1%82"><span class="nav-number">1.3.5.</span> <span class="nav-text">开发和部署流量分发层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Enginx-lua-java%E5%AE%8C%E6%88%90%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E6%A0%B8%E5%BF%83%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="nav-number">1.4.</span> <span class="nav-text">基于nginx+lua+java完成多级缓存架构的核心业务逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%87%8D%E5%BB%BA%E7%BC%93%E5%AD%98%E7%9A%84%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">分布式重建缓存的并发冲突问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#zk%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-number">1.5.1.</span> <span class="nav-text">zk分布式锁的解决并发冲突的方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E7%9A%84%E7%BC%93%E5%AD%98-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E7%9A%84%E6%A8%A1%E5%BC%8F%EF%BC%88cache-aside-pattern%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">经典的缓存+数据库读写的模式（cache aside pattern）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8C%E5%86%99%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">缓存+数据库双写不一致问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%88%9D%E7%BA%A7%E7%9A%84%E7%BC%93%E5%AD%98%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.1.</span> <span class="nav-text">最初级的缓存不一致问题以及解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">比较复杂的数据不一致问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93-%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E4%BF%9D%E9%9A%9C%E6%96%B9%E6%A1%88%E9%A1%B9%E7%9B%AE%E5%AE%9E%E4%BE%8B%E6%BA%90%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">复杂的数据库+缓存双写一致保障方案项目实例源码</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -546,14 +560,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -564,6 +578,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -581,19 +600,18 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-user"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">帆</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
@@ -633,9 +651,17 @@
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/pisces.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
 <script src="/js/next-boot.js"></script>
+
 
 
 
@@ -644,7 +670,9 @@
 
 
 
-  <script src="/js/local-search.js"></script>
+  
+<script src="/js/local-search.js"></script>
+
 
 
 
