@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"www.saily.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="JDK集合源码准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。 ListArrayList默认的构造函数，给了一个空数字，Object[]， {}，默认的初始化大小为10。 123456&#x2F;** * Constructs an empty list with an initial capacity of ten. *&#x2F;public Array">
+  <meta name="description" content="JDK集合源码准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。 ListArrayList基于数组的集合，默认的构造函数，给了一个空数组，Object[]， {}，默认的初始化大小为10。 123456&#x2F;** * Constructs an empty list with an initial capacity of ten. *&#x2F;publ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JDK集合源码">
 <meta property="og:url" content="http://www.saily.top/2020/10/13/jdk/jdk01/index.html">
 <meta property="og:site_name" content="帆的博客">
-<meta property="og:description" content="JDK集合源码准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。 ListArrayList默认的构造函数，给了一个空数字，Object[]， {}，默认的初始化大小为10。 123456&#x2F;** * Constructs an empty list with an initial capacity of ten. *&#x2F;public Array">
+<meta property="og:description" content="JDK集合源码准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。 ListArrayList基于数组的集合，默认的构造函数，给了一个空数组，Object[]， {}，默认的初始化大小为10。 123456&#x2F;** * Constructs an empty list with an initial capacity of ten. *&#x2F;publ">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-13T06:00:37.000Z">
-<meta property="article:modified_time" content="2020-10-13T11:44:11.886Z">
+<meta property="article:modified_time" content="2020-10-20T05:52:03.585Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="JDK源码">
@@ -219,10 +219,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：10月 13 2020 14:00:37 / 修改时间：19:44:11" itemprop="dateCreated datePublished" datetime="2020-10-13T14:00:37+08:00">10月 13 2020</time>
+              <time title="创建时间：10月 13 2020 14:00:37" itemprop="dateCreated datePublished" datetime="2020-10-13T14:00:37+08:00">10月 13 2020</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：10月 20 2020 13:52:03" itemprop="dateModified" datetime="2020-10-20T13:52:03+08:00">10月 20 2020</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -252,7 +258,7 @@
 
       
         <h1 id="JDK集合源码"><a href="#JDK集合源码" class="headerlink" title="JDK集合源码"></a>JDK集合源码</h1><p>准备写一些文章，把集合、并发、网络相关的JDK工具的使用和源码都在这里记录一下。首先从简单的集合源码开始。</p>
-<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>默认的构造函数，给了一个空数字，Object[]， {}，默认的初始化大小为10。</p>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>基于数组的集合，默认的构造函数，给了一个空数组，Object[]， {}，默认的初始化大小为10。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty list with an initial capacity of ten.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -310,6 +316,14 @@
 
 
 
+<h2 id="ConcurrentModificationException"><a href="#ConcurrentModificationException" class="headerlink" title="ConcurrentModificationException"></a>ConcurrentModificationException</h2><p>一个最常见的场景，就是在迭代这个集合的时候，对集合进行remove操作，就一定会遇到这个错误。</p>
+<p>这个是集合迭代器的fail-fast机制，每一种集合的数据结构，都有一个modCount的字段，新增和删除元素的时候，会对这个字段进行modCount++操作。</p>
+<p>然后在初始化迭代器的时候，会记录初始化的会记录modCount的值到expectedModCount中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;       <span class="comment">// index of next element to return</span></span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></span><br><span class="line">    <span class="comment">// 初始化的时候记录modCount的值</span></span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;</span><br></pre></td></tr></table></figure>
+
+<p>然后在后面迭代的的回收，会判断值是否发生改变，如果改变了，就直接抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -329,8 +343,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/" rel="prev" title="记一次线上故障排查并解决(Spring Cloud健康检查的坑)">
-      <i class="fa fa-chevron-left"></i> 记一次线上故障排查并解决(Spring Cloud健康检查的坑)
+    <a href="/2020/10/13/jdk/jdk02/" rel="prev" title="JDK集合源码-Map">
+      <i class="fa fa-chevron-left"></i> JDK集合源码-Map
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -396,7 +410,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK%E9%9B%86%E5%90%88%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">JDK集合源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#List"><span class="nav-number">1.1.</span> <span class="nav-text">List</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.1.1.</span> <span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#add-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">add()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">set()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#add-index-element-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">add(index, element)方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">get()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#remove-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">remove()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList"><span class="nav-number">1.1.2.</span> <span class="nav-text">LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">插入元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">获取元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">删除元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vector%E5%92%8CStack"><span class="nav-number">1.1.3.</span> <span class="nav-text">Vector和Stack</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK%E9%9B%86%E5%90%88%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">JDK集合源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#List"><span class="nav-number">1.1.</span> <span class="nav-text">List</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.1.1.</span> <span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#add-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">add()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">set()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#add-index-element-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">add(index, element)方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">get()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#remove-%E6%96%B9%E6%B3%95%E7%9A%84%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">remove()方法的源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList"><span class="nav-number">1.1.2.</span> <span class="nav-text">LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">插入元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">获取元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">删除元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vector%E5%92%8CStack"><span class="nav-number">1.1.3.</span> <span class="nav-text">Vector和Stack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConcurrentModificationException"><span class="nav-number">1.2.</span> <span class="nav-text">ConcurrentModificationException</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -412,7 +426,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
