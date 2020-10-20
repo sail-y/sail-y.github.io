@@ -192,6 +192,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/" class="post-title-link" itemprop="url">Spring Mvc 3.1 之后如何配置messageConverters</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：3月 6 2015 22:15:41" itemprop="dateCreated datePublished" datetime="2015-03-06T22:15:41+08:00">3月 6 2015</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：12月 12 2017 16:15:59" itemprop="dateModified" datetime="2017-12-12T16:15:59+08:00">12月 12 2017</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>&lt;mvc:annotation-driven /&gt;</code> 是一种简写形式，完全可以手动配置替代这种简写形式，简写形式可以让初学都快速应用默认配置方案。<code>&lt;mvc:annotation-driven /&gt;</code> 会自动注册<code>DefaultAnnotationHandlerMapping</code>与<code>AnnotationMethodHandlerAdapter</code> 两个bean,是spring MVC为@Controllers分发请求所必须的。</p>
+<p>这句话我在很多帖子都看到过，我自己的项目本身使用的Spring MVC 3.2，实际上在3.1之后，&lt;mvc:annotation-driven /&gt;注册的类发生了变化</p>
+<blockquote>
+<p>Spring Framework 3.1 introduces a new set of support classes for processing requests with annotated controllers:</p>
+</blockquote>
+<blockquote>
+<p>RequestMappingHandlerMapping<br>RequestMappingHandlerAdapter<br>ExceptionHandlerExceptionResolver<br>These classes are a replacement for the existing:</p>
+</blockquote>
+<blockquote>
+<p>DefaultAnnotationHandlerMapping<br>AnnotationMethodHandlerAdapter<br>AnnotationMethodHandlerExceptionResolver</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2015/03/06/java/Spring-Mvc-3-1-%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEmessageConverters/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/06/linux/CentOS-Jenkins-Sonar-Nexus-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -763,7 +854,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-count">137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
