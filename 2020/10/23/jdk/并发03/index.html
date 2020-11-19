@@ -27,12 +27,18 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="synchronizedsynchronized就是加锁，一旦加锁以后，就只能当前线程访问和修改加锁的变量，其他线程只能阻塞等待，这就保证了原子性。 synchronized可以锁两种对象，一种是对某个实例对象进行加锁，一种是对类进行加锁。对类加锁，本质上也是对实例加锁，只不过是对class对象进行加锁。 如果用synchronized修饰普通方法，那就是对当前类的实例进行加锁。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022162819834.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022163420129.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201027140545860.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201027154725975.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/AQS%E5%8E%9F%E7%90%86-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png">
 <meta property="article:published_time" content="2020-10-23T13:00:37.000Z">
-<meta property="article:modified_time" content="2020-11-19T07:14:27.802Z">
+<meta property="article:modified_time" content="2020-11-19T07:59:51.197Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="并发">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/jdk/image-20201022162819834.png">
 
 <link rel="canonical" href="http://www.saily.top/2020/10/23/jdk/%E5%B9%B6%E5%8F%9103/">
 
@@ -227,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：11月 19 2020 15:14:27" itemprop="dateModified" datetime="2020-11-19T15:14:27+08:00">11月 19 2020</time>
+                <time title="修改时间：11月 19 2020 15:59:51" itemprop="dateModified" datetime="2020-11-19T15:59:51+08:00">11月 19 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,10 +284,10 @@
 <p>这里就对同一个对象，加了两次锁，猜一下就知道，他原理肯定是每次进到synchronized(myObject)代码的时候，先看对象的monitor里的计数器是不是0，如果是0，就直接获取锁，并把对象里的monitor的计数器加1，如果不是0，看加锁的时候是不是同一个线程，如果是，就再加1，如果不是同一个线程呢，那就阻塞等待吧。</p>
 <p>然后执行代码代码块退出的时候，会执行monitorexit的指令，此时获取锁的线程就会对那个对象的monitor的计数器减1，如果有多次重入加锁就会对应多次减1，直到最后，计数器是0。</p>
 <p>然后之前阻塞的线程，再次竞争锁，但是只有一个线程可以拿到锁。</p>
-<p>![image-20201022162819834](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022162819834.png)</p>
+<p><img src="/img/jdk/image-20201022162819834.png" alt="image-20201022162819834"></p>
 <h2 id="wait-amp-notify"><a href="#wait-amp-notify" class="headerlink" title="wait&amp;notify"></a>wait&amp;notify</h2><p>对于有锁的代码，也就离不开wait和notify的使用，在加锁的代码中，可以wait挂起线程，并释放锁，除非其他线程对同一个对象调用notify，线程被唤醒，然后再次尝试获取锁。</p>
 <p>wait与notify，跟synchronized是同样的原理，都是monitor，对象的monitor里，除了计数器，还有一个叫wait set的变量，加锁的时候，会对对象的monitor的计数器+1，如果调用wait方法，会将当前线程的id之类的东西，加入到monitor的wait set中，如果对这个对象调用notifyAll()，就会清空wait set，并同时唤醒所有线程。</p>
-<p>![image-20201022163420129](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022163420129.png)</p>
+<p><img src="/img/jdk/image-20201022163420129.png" alt="image-20201022163420129"></p>
 <p>面试有个经常问的问题，wait与sleep的区别：前者释放锁，后者不释放锁</p>
 <p>wait()，必须是有人notify唤醒他</p>
 <p>wait(timeout)，阻塞一段时间，然后自己唤醒，继续争抢锁</p>
@@ -305,9 +311,9 @@
 
 <h2 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h2><p><strong>AbstractQueuedSynchronizer</strong>，抽象队列同步器。</p>
 <p>ReentractLock和ReadWriteReentractLock，这个锁的API都是基于AQS来实现的，我们一般也没有直接用AQS的API来做开发，但是并发包里的很多类，都是基于AQS来实现的。截图看下，除了锁，还有Semaphore，CountDownLatch，ThreadPoolExecutor这些。</p>
-<p>![image-20201027140545860](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201027140545860.png)</p>
+<p><img src="/img/jdk/image-20201027140545860.png" alt="image-20201027140545860"></p>
 <p>AQS是一个双向链表，或者说一个双端队列，原理大致如图，通过state核心变量控制是否加锁成功，并记录加锁的线程，等待锁的线程，放入队列中</p>
-<p>![image-20201027154725975](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201027154725975.png)</p>
+<p><img src="/img/jdk/image-20201027154725975.png" alt="image-20201027154725975"></p>
 <h3 id="lock加锁"><a href="#lock加锁" class="headerlink" title="lock加锁"></a>lock加锁</h3><p>AQS中使用了大量的CAS操作来实现加锁和释放锁的代码，AQS里有一个核心变量，state，代表了锁的状态，0就是没线程加锁，1就是有线程加锁了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The synchronization state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
 
@@ -329,7 +335,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果一个线程无法获取到锁的话，会进入一个阻塞等待的状态</span></span><br><span class="line"><span class="comment">// 卡住不动，线程挂起，阻塞状态又细分为很多种不同的阻塞状态：</span></span><br><span class="line"><span class="comment">// CANCELED、SIGNAL、CONDITION、PROPAGATE</span></span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> waitStatus;</span><br><span class="line"><span class="comment">// 一个节点可以有上一个节点，prev指针，指向了Node的上一个Node</span></span><br><span class="line"><span class="keyword">volatile</span> Node prev;</span><br><span class="line"><span class="comment">// 一个节点还可以有下一个节点，next指针，指向了Node的下一个Node</span></span><br><span class="line"><span class="keyword">volatile</span> Node next;</span><br><span class="line"><span class="comment">// Node里面封装了一个线程</span></span><br><span class="line"><span class="keyword">volatile</span> Thread thread;</span><br><span class="line"><span class="comment">// 可以认为是下一个等待线程</span></span><br><span class="line">Node nextWaiter;</span><br></pre></td></tr></table></figure>
 
 <p>加锁失败的话，就将当前线程封装成一个Node，并且有prev何next指针，所以如果有多个处于阻塞等待状态的线程，封装后的Node组成了一个双向链表，也就成了一个队列。</p>
-<p>![AQS原理-双向链表](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/AQS原理-双向链表.png)</p>
+<p><img src="/img/jdk/AQS%E5%8E%9F%E7%90%86-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="AQS原理-双向链表"></p>
 <p>接着看一下入队的代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AbstractQueuedSynchronizer.java</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">enq</span><span class="params">(<span class="keyword">final</span> Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="comment">// 1:第一个入队的Node，tail是null</span></span><br><span class="line">        <span class="comment">// 3: 循环第二次，tail=空Node</span></span><br><span class="line">        Node t = tail;</span><br><span class="line">        <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123; <span class="comment">// Must initialize</span></span><br><span class="line">            <span class="comment">// 2:走到这里，用cas将head设置为空节点，然后tail也是空节点</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetHead(<span class="keyword">new</span> Node()))</span><br><span class="line">                <span class="comment">// 循环没有退出，继续执行循环</span></span><br><span class="line">                tail = head;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 4:node.prev=空Node</span></span><br><span class="line">            node.prev = t;</span><br><span class="line">            <span class="comment">// 5：用cas将当前节点设置为tail</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetTail(t, node)) &#123;</span><br><span class="line">                <span class="comment">// 6：讲当前节点设置为之前tail的next</span></span><br><span class="line">                t.next = node;</span><br><span class="line">                <span class="keyword">return</span> t;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

@@ -27,12 +27,17 @@
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="volatile先说结论，volatile是非常常用的东西，他保证了可见性和有序性。这2个特性分别涉及了JVM的底层原理，最常用的场景，就是共享变量加volatile修饰，这样不同的线程来修改的时候，才能即时的识别到改变，比如标志位、开关等。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022104203084.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022105039663.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022135613828.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/07_volatile%E5%92%8C%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png">
 <meta property="article:published_time" content="2020-10-22T13:00:37.000Z">
-<meta property="article:modified_time" content="2020-10-27T05:47:59.581Z">
+<meta property="article:modified_time" content="2020-11-19T07:59:43.853Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="并发">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/jdk/image-20201022104203084.png">
 
 <link rel="canonical" href="http://www.saily.top/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/">
 
@@ -227,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：10月 27 2020 13:47:59" itemprop="dateModified" datetime="2020-10-27T13:47:59+08:00">10月 27 2020</time>
+                <time title="修改时间：11月 19 2020 15:59:43" itemprop="dateModified" datetime="2020-11-19T15:59:43+08:00">11月 19 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -267,10 +272,10 @@
 <p>我们得先知道，为什么在不加volatile的情况下，它不一定能看到最新的值。</p>
 <p>计算机如果频繁的跟主内存做交互的话，性能也是比较差的，所以CPU有自己的缓存，用来提升CPU计算的效率，我们买电脑，也会看到CPU参数里有L1,L2,L3缓存的。</p>
 <p>然后CPU读写数据，会先从主内存读取到缓存中，然后频繁的读写，都是在缓存里操作的，缓存的数据会不定时的刷入到主内存中。</p>
-<p>![image-20201022104203084](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022104203084.png)</p>
+<p><img src="/img/jdk/image-20201022104203084.png" alt="image-20201022104203084"></p>
 <h3 id="并发问题"><a href="#并发问题" class="headerlink" title="并发问题"></a>并发问题</h3><p>那么这么设计有什么问题呢，在正常情况下是没有问题的，但是在多线程并发的情况下，就会有问题了，可能每个线程持有flag的值，是不一样的。</p>
 <p>比如线程0先读取了falg=1，然后线程1写入了flag=7， 这时候主内存里已经是flag=7了，线程0和线程1看到flag的值，就是不一样的。</p>
-<p>![image-20201022105039663](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022105039663.png)</p>
+<p><img src="/img/jdk/image-20201022105039663.png" alt="image-20201022105039663"></p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>最早的时候，有一个总线加锁的机制，有点类似于悲观锁，一个CPU读取了一个数据后，会通过一个总线，就对这块内存（数据）进行加锁，然后其他CPU就无法再读和写这个数据了，只有当这个CPU修改完成后，其他CPU就可以读到最新的数据，这个效率比较低下，基本成串行化执行了。</p>
 <p>所以后面就有了MESI协议，缓存一致性协议。</p>
 <p>在MESI缓存一致性协议的保证下，就能保证在多线程并发读写变量，及时感知到了。</p>
@@ -285,7 +290,7 @@
 <li>store（将工作内存数据写入主存）</li>
 <li>write（将store过去的变量值赋值给主存中的变量）</li>
 </ul>
-<p>![image-20201022135613828](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022135613828.png)</p>
+<p><img src="/img/jdk/image-20201022135613828.png" alt="image-20201022135613828"></p>
 <p>以这个图为例，线程1从主内存读取flag变量，并进行了修改，写入到了工作内存，有可能它只是在工作内存中，没有存入主内存，也就是还没有执行store和write指令，那么线程2来读取flag变量，读到的就依然还是0。</p>
 <h2 id="volatile保证可见性"><a href="#volatile保证可见性" class="headerlink" title="volatile保证可见性"></a>volatile保证可见性</h2><p>如果变量加了volatile修饰，他就能保证<strong>线程1在执行了assign指令后，马上就跟着执行store+write指令</strong>，将数据写入到主内存中，然后还<strong>将其他线程的工作内存中值，标记为过期</strong>。线程2在发现变量过期以后，会<strong>重新从主内存中读取新的值</strong>，从而保证可见性。</p>
 <h2 id="volatile无法保证原子性"><a href="#volatile无法保证原子性" class="headerlink" title="volatile无法保证原子性"></a>volatile无法保证原子性</h2><p>在Java里，像i++这种操作，他在底层执行的时候是多个指令，分别是读取和写入，既然涉及2个操作，就完全有可能在2个线程都读取后，一个线程才完成写入操作，他们读取和写入值，就是一样的。</p>
@@ -310,7 +315,7 @@
 <p>对于volatile修饰变量的读写操作，都会加入内存屏障。</p>
 <p>每个volatile写操作前面，都会加入StoreStore屏障，禁止普通写和volatile写重排，每个volatile写操作后面，会加入StoreLoad屏障，禁止跟后面的volatile读/写重排。</p>
 <p>每个volatile读操作后面，加LoadLoad屏障，禁止下面的普通读和voaltile读重排；每个volatile读操作后面，加LoadStore屏障，禁止后面的普通写和volatile读重排</p>
-<p>![07_volatile和内存屏障](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/07_volatile和内存屏障.png)</p>
+<p><img src="/img/jdk/07_volatile%E5%92%8C%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="07_volatile和内存屏障"></p>
 
     </div>
 

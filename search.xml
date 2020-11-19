@@ -11581,10 +11581,10 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <p>我们得先知道，为什么在不加volatile的情况下，它不一定能看到最新的值。</p>
 <p>计算机如果频繁的跟主内存做交互的话，性能也是比较差的，所以CPU有自己的缓存，用来提升CPU计算的效率，我们买电脑，也会看到CPU参数里有L1,L2,L3缓存的。</p>
 <p>然后CPU读写数据，会先从主内存读取到缓存中，然后频繁的读写，都是在缓存里操作的，缓存的数据会不定时的刷入到主内存中。</p>
-<p>![image-20201022104203084](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022104203084.png)</p>
+<p><img src="/img/jdk/image-20201022104203084.png" alt="image-20201022104203084"></p>
 <h3 id="并发问题"><a href="#并发问题" class="headerlink" title="并发问题"></a>并发问题</h3><p>那么这么设计有什么问题呢，在正常情况下是没有问题的，但是在多线程并发的情况下，就会有问题了，可能每个线程持有flag的值，是不一样的。</p>
 <p>比如线程0先读取了falg=1，然后线程1写入了flag=7， 这时候主内存里已经是flag=7了，线程0和线程1看到flag的值，就是不一样的。</p>
-<p>![image-20201022105039663](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022105039663.png)</p>
+<p><img src="/img/jdk/image-20201022105039663.png" alt="image-20201022105039663"></p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>最早的时候，有一个总线加锁的机制，有点类似于悲观锁，一个CPU读取了一个数据后，会通过一个总线，就对这块内存（数据）进行加锁，然后其他CPU就无法再读和写这个数据了，只有当这个CPU修改完成后，其他CPU就可以读到最新的数据，这个效率比较低下，基本成串行化执行了。</p>
 <p>所以后面就有了MESI协议，缓存一致性协议。</p>
 <p>在MESI缓存一致性协议的保证下，就能保证在多线程并发读写变量，及时感知到了。</p>
@@ -11599,7 +11599,7 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <li>store（将工作内存数据写入主存）</li>
 <li>write（将store过去的变量值赋值给主存中的变量）</li>
 </ul>
-<p>![image-20201022135613828](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022135613828.png)</p>
+<p><img src="/img/jdk/image-20201022135613828.png" alt="image-20201022135613828"></p>
 <p>以这个图为例，线程1从主内存读取flag变量，并进行了修改，写入到了工作内存，有可能它只是在工作内存中，没有存入主内存，也就是还没有执行store和write指令，那么线程2来读取flag变量，读到的就依然还是0。</p>
 <h2 id="volatile保证可见性"><a href="#volatile保证可见性" class="headerlink" title="volatile保证可见性"></a>volatile保证可见性</h2><p>如果变量加了volatile修饰，他就能保证<strong>线程1在执行了assign指令后，马上就跟着执行store+write指令</strong>，将数据写入到主内存中，然后还<strong>将其他线程的工作内存中值，标记为过期</strong>。线程2在发现变量过期以后，会<strong>重新从主内存中读取新的值</strong>，从而保证可见性。</p>
 <h2 id="volatile无法保证原子性"><a href="#volatile无法保证原子性" class="headerlink" title="volatile无法保证原子性"></a>volatile无法保证原子性</h2><p>在Java里，像i++这种操作，他在底层执行的时候是多个指令，分别是读取和写入，既然涉及2个操作，就完全有可能在2个线程都读取后，一个线程才完成写入操作，他们读取和写入值，就是一样的。</p>
@@ -11624,7 +11624,7 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <p>对于volatile修饰变量的读写操作，都会加入内存屏障。</p>
 <p>每个volatile写操作前面，都会加入StoreStore屏障，禁止普通写和volatile写重排，每个volatile写操作后面，会加入StoreLoad屏障，禁止跟后面的volatile读/写重排。</p>
 <p>每个volatile读操作后面，加LoadLoad屏障，禁止下面的普通读和voaltile读重排；每个volatile读操作后面，加LoadStore屏障，禁止后面的普通写和volatile读重排</p>
-<p>![07_volatile和内存屏障](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/07_volatile和内存屏障.png)</p>
+<p><img src="/img/jdk/07_volatile%E5%92%8C%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="07_volatile和内存屏障"></p>
 ]]></content>
       <categories>
         <category>并发</category>
@@ -11665,7 +11665,7 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <p>这样就实现了分段CAS，减少并发</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">sum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Cell[] as = cells; Cell a;</span><br><span class="line">    <span class="keyword">long</span> sum = base;</span><br><span class="line">    <span class="keyword">if</span> (as != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; as.length; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((a = as[i]) != <span class="keyword">null</span>)</span><br><span class="line">                sum += a.value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>![image-20201022193908559](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022193908559.png)</p>
+<p><img src="/img/jdk/image-20201022193908559.png" alt="image-20201022193908559"></p>
 ]]></content>
       <categories>
         <category>并发</category>
@@ -11699,10 +11699,10 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <p>这里就对同一个对象，加了两次锁，猜一下就知道，他原理肯定是每次进到synchronized(myObject)代码的时候，先看对象的monitor里的计数器是不是0，如果是0，就直接获取锁，并把对象里的monitor的计数器加1，如果不是0，看加锁的时候是不是同一个线程，如果是，就再加1，如果不是同一个线程呢，那就阻塞等待吧。</p>
 <p>然后执行代码代码块退出的时候，会执行monitorexit的指令，此时获取锁的线程就会对那个对象的monitor的计数器减1，如果有多次重入加锁就会对应多次减1，直到最后，计数器是0。</p>
 <p>然后之前阻塞的线程，再次竞争锁，但是只有一个线程可以拿到锁。</p>
-<p>![image-20201022162819834](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022162819834.png)</p>
+<p><img src="/img/jdk/image-20201022162819834.png" alt="image-20201022162819834"></p>
 <h2 id="wait-amp-notify"><a href="#wait-amp-notify" class="headerlink" title="wait&amp;notify"></a>wait&amp;notify</h2><p>对于有锁的代码，也就离不开wait和notify的使用，在加锁的代码中，可以wait挂起线程，并释放锁，除非其他线程对同一个对象调用notify，线程被唤醒，然后再次尝试获取锁。</p>
 <p>wait与notify，跟synchronized是同样的原理，都是monitor，对象的monitor里，除了计数器，还有一个叫wait set的变量，加锁的时候，会对对象的monitor的计数器+1，如果调用wait方法，会将当前线程的id之类的东西，加入到monitor的wait set中，如果对这个对象调用notifyAll()，就会清空wait set，并同时唤醒所有线程。</p>
-<p>![image-20201022163420129](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201022163420129.png)</p>
+<p><img src="/img/jdk/image-20201022163420129.png" alt="image-20201022163420129"></p>
 <p>面试有个经常问的问题，wait与sleep的区别：前者释放锁，后者不释放锁</p>
 <p>wait()，必须是有人notify唤醒他</p>
 <p>wait(timeout)，阻塞一段时间，然后自己唤醒，继续争抢锁</p>
@@ -11726,9 +11726,9 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 
 <h2 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h2><p><strong>AbstractQueuedSynchronizer</strong>，抽象队列同步器。</p>
 <p>ReentractLock和ReadWriteReentractLock，这个锁的API都是基于AQS来实现的，我们一般也没有直接用AQS的API来做开发，但是并发包里的很多类，都是基于AQS来实现的。截图看下，除了锁，还有Semaphore，CountDownLatch，ThreadPoolExecutor这些。</p>
-<p>![image-20201027140545860](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201027140545860.png)</p>
+<p><img src="/img/jdk/image-20201027140545860.png" alt="image-20201027140545860"></p>
 <p>AQS是一个双向链表，或者说一个双端队列，原理大致如图，通过state核心变量控制是否加锁成功，并记录加锁的线程，等待锁的线程，放入队列中</p>
-<p>![image-20201027154725975](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/image-20201027154725975.png)</p>
+<p><img src="/img/jdk/image-20201027154725975.png" alt="image-20201027154725975"></p>
 <h3 id="lock加锁"><a href="#lock加锁" class="headerlink" title="lock加锁"></a>lock加锁</h3><p>AQS中使用了大量的CAS操作来实现加锁和释放锁的代码，AQS里有一个核心变量，state，代表了锁的状态，0就是没线程加锁，1就是有线程加锁了。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The synchronization state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
 
@@ -11750,7 +11750,7 @@ echo 511 &gt; /proc/sys/net/core/somaxconn</code></pre>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果一个线程无法获取到锁的话，会进入一个阻塞等待的状态</span></span><br><span class="line"><span class="comment">// 卡住不动，线程挂起，阻塞状态又细分为很多种不同的阻塞状态：</span></span><br><span class="line"><span class="comment">// CANCELED、SIGNAL、CONDITION、PROPAGATE</span></span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> waitStatus;</span><br><span class="line"><span class="comment">// 一个节点可以有上一个节点，prev指针，指向了Node的上一个Node</span></span><br><span class="line"><span class="keyword">volatile</span> Node prev;</span><br><span class="line"><span class="comment">// 一个节点还可以有下一个节点，next指针，指向了Node的下一个Node</span></span><br><span class="line"><span class="keyword">volatile</span> Node next;</span><br><span class="line"><span class="comment">// Node里面封装了一个线程</span></span><br><span class="line"><span class="keyword">volatile</span> Thread thread;</span><br><span class="line"><span class="comment">// 可以认为是下一个等待线程</span></span><br><span class="line">Node nextWaiter;</span><br></pre></td></tr></table></figure>
 
 <p>加锁失败的话，就将当前线程封装成一个Node，并且有prev何next指针，所以如果有多个处于阻塞等待状态的线程，封装后的Node组成了一个双向链表，也就成了一个队列。</p>
-<p>![AQS原理-双向链表](/Users/yangfan/Nutstore Files/code/blog/source/img/jdk/AQS原理-双向链表.png)</p>
+<p><img src="/img/jdk/AQS%E5%8E%9F%E7%90%86-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="AQS原理-双向链表"></p>
 <p>接着看一下入队的代码</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AbstractQueuedSynchronizer.java</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">enq</span><span class="params">(<span class="keyword">final</span> Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="comment">// 1:第一个入队的Node，tail是null</span></span><br><span class="line">        <span class="comment">// 3: 循环第二次，tail=空Node</span></span><br><span class="line">        Node t = tail;</span><br><span class="line">        <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123; <span class="comment">// Must initialize</span></span><br><span class="line">            <span class="comment">// 2:走到这里，用cas将head设置为空节点，然后tail也是空节点</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetHead(<span class="keyword">new</span> Node()))</span><br><span class="line">                <span class="comment">// 循环没有退出，继续执行循环</span></span><br><span class="line">                tail = head;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 4:node.prev=空Node</span></span><br><span class="line">            node.prev = t;</span><br><span class="line">            <span class="comment">// 5：用cas将当前节点设置为tail</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetTail(t, node)) &#123;</span><br><span class="line">                <span class="comment">// 6：讲当前节点设置为之前tail的next</span></span><br><span class="line">                t.next = node;</span><br><span class="line">                <span class="keyword">return</span> t;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
