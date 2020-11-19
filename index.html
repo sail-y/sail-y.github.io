@@ -192,6 +192,245 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/23/jdk/%E5%B9%B6%E5%8F%9103/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/23/jdk/%E5%B9%B6%E5%8F%9103/" class="post-title-link" itemprop="url">并发源码-锁</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：10月 23 2020 21:00:37" itemprop="dateCreated datePublished" datetime="2020-10-23T21:00:37+08:00">10月 23 2020</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：11月 19 2020 15:14:27" itemprop="dateModified" datetime="2020-11-19T15:14:27+08:00">11月 19 2020</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h1><p>synchronized就是加锁，一旦加锁以后，就只能当前线程访问和修改加锁的变量，其他线程只能阻塞等待，这就保证了原子性。</p>
+<p>synchronized可以锁两种对象，一种是对某个实例对象进行加锁，一种是对类进行加锁。对类加锁，本质上也是对实例加锁，只不过是对class对象进行加锁。</p>
+<p>如果用synchronized修饰普通方法，那就是对当前类的实例进行加锁。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/23/jdk/%E5%B9%B6%E5%8F%9103/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/" class="post-title-link" itemprop="url">并发源码-volatile</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：10月 22 2020 21:00:37" itemprop="dateCreated datePublished" datetime="2020-10-22T21:00:37+08:00">10月 22 2020</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：10月 27 2020 13:47:59" itemprop="dateModified" datetime="2020-10-27T13:47:59+08:00">10月 27 2020</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h1><p>先说结论，volatile是非常常用的东西，他保证了可见性和有序性。这2个特性分别涉及了JVM的底层原理，最常用的场景，就是共享变量加volatile修饰，这样不同的线程来修改的时候，才能即时的识别到改变，比如标志位、开关等。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/" class="post-title-link" itemprop="url">并发源码-Atomic</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：10月 22 2020 21:00:37 / 修改时间：19:39:35" itemprop="dateCreated datePublished" datetime="2020-10-22T21:00:37+08:00">10月 22 2020</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h1><p>AtomicInteger，可实现原子化的操作，不需要加锁，他底层是通过CAS实现的，看下使用方式</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/19/jdk/%E5%B9%B6%E5%8F%9101/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -223,7 +462,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：10月 20 2020 16:05:17" itemprop="dateModified" datetime="2020-10-20T16:05:17+08:00">10月 20 2020</time>
+                <time title="修改时间：10月 22 2020 14:31:51" itemprop="dateModified" datetime="2020-10-22T14:31:51+08:00">10月 22 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -773,252 +1012,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/05/09/springcloud/hystrix06/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/09/springcloud/hystrix06/" class="post-title-link" itemprop="url">HystrixCommand执行源码分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：5月 9 2020 21:03:59" itemprop="dateCreated datePublished" datetime="2020-05-09T21:03:59+08:00">5月 9 2020</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：5月 10 2020 22:16:00" itemprop="dateModified" datetime="2020-05-10T22:16:00+08:00">5月 10 2020</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HystrixCommand-execute源码细节"><a href="#HystrixCommand-execute源码细节" class="headerlink" title="HystrixCommand.execute源码细节"></a>HystrixCommand.execute源码细节</h1><p>HystrixCommand会将任务丢到异步线程池里去执行，通过Future获取执行完毕的结果。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HystrixCommand.java</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> R <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> queue().get();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> Exceptions.sneakyThrow(decomposeException(e));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>queue()方法，是用来异步执行的command逻辑的，他会将command扔到线程池里去执行，但是这个方法不会等待线程执行完毕command，他会拿到一个Future对象，通过Future对象去获取command执行完毕的响应结果。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/05/09/springcloud/hystrix06/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/29/springcloud/SpringCloud%E7%BB%84%E4%BB%B6%E7%9A%84%E5%90%84%E7%A7%8DMaxTotalConnections%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/29/springcloud/SpringCloud%E7%BB%84%E4%BB%B6%E7%9A%84%E5%90%84%E7%A7%8DMaxTotalConnections%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">SpringCloud组件的各种MaxTotalConnections详解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：4月 29 2020 22:05:39 / 修改时间：18:19:17" itemprop="dateCreated datePublished" datetime="2020-04-29T22:05:39+08:00">4月 29 2020</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在zuul网关中，有关于配置连接数量的配置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">zuul:</span></span><br><span class="line">  <span class="attr">host:</span></span><br><span class="line">    <span class="attr">max-per-route-connections:</span> <span class="number">20</span> <span class="comment">#默认值</span></span><br><span class="line">    <span class="attr">max-total-connections:</span> <span class="number">200</span> <span class="comment">#默认值</span></span><br></pre></td></tr></table></figure>
-
-<p>这个是只是的zuul调用静态路由配置的Http连接池数量，按照实际情况设置就好（请注意不要和Tomcat的maxConnections搞混了）。</p>
-<p>这个配置并不会对基于Ribbon的下游服务访问生效，如果要配置Ribbon相关的配置，需要配置以下的配置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="attr">MaxConnectionsPerHost:</span> <span class="number">50</span> <span class="comment">#默认值</span></span><br><span class="line">  <span class="attr">MaxTotalConnections:</span> <span class="number">200</span> <span class="comment">#默认值</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/29/springcloud/SpringCloud%E7%BB%84%E4%BB%B6%E7%9A%84%E5%90%84%E7%A7%8DMaxTotalConnections%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/19/springcloud/hystrix05/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/19/springcloud/hystrix05/" class="post-title-link" itemprop="url">Feign和Hystrix的结合使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：4月 19 2020 18:03:59" itemprop="dateCreated datePublished" datetime="2020-04-19T18:03:59+08:00">4月 19 2020</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：5月 10 2020 17:30:30" itemprop="dateModified" datetime="2020-05-10T17:30:30+08:00">5月 10 2020</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Feign和Hystrix结合使用"><a href="#Feign和Hystrix结合使用" class="headerlink" title="Feign和Hystrix结合使用"></a>Feign和Hystrix结合使用</h1><p>在@FeignClient中增加fallback配置，指定降级方法的执行</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;user&quot;,url = &quot;$&#123;user.url&#125;&quot;,fallback = UserFeignFallback.class</span></span><br><span class="line"><span class="meta">        /*fallbackFactory = UserFeignFactory.class*/)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserFeign</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">save</span><span class="params">(User user)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function">User <span class="title">getUserByID</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> String id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/19/springcloud/hystrix05/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1090,7 +1083,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">137</span>
+          <span class="site-state-item-count">140</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

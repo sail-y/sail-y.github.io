@@ -192,6 +192,254 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/02/26/java/jdk8-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/02/26/java/jdk8-7/" class="post-title-link" itemprop="url">JDK8-自定义收集器和注意事项</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2月 26 2017 14:10:04" itemprop="dateCreated datePublished" datetime="2017-02-26T14:10:04+08:00">2月 26 2017</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：9月 27 2018 10:43:18" itemprop="dateModified" datetime="2018-09-27T10:43:18+08:00">9月 27 2018</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk8/" itemprop="url" rel="index"><span itemprop="name">jdk8</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="自定义收集器"><a href="#自定义收集器" class="headerlink" title="自定义收集器"></a>自定义收集器</h3><p>之前我们简单说过了Collector接口，以及他的简单使用，现在我们来尝试自定义一个收集器，来进行更加深刻的理解。</p>
+<p>Collector的5个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Supplier&lt;A&gt; <span class="title">supplier</span><span class="params">()</span></span>;    </span><br><span class="line"><span class="function">BiConsumer&lt;A, T&gt; <span class="title">accumulator</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">BinaryOperator&lt;A&gt; <span class="title">combiner</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Function&lt;A, R&gt; <span class="title">finisher</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 收集器特性，只有3个值，CONCURRENT，UNORDERED，IDENTITY_FINISH</span></span><br><span class="line"><span class="comment">// CONCURRENT标识同一个结果容器可以由多个线程多次调用。</span></span><br><span class="line"><span class="comment">// UNORDERED标识收集器并不承诺保证流的顺序。</span></span><br><span class="line"><span class="comment">// IDENTITY_FINISH标识finisher函数就是identity函数。</span></span><br><span class="line"><span class="function">Set&lt;Characteristics&gt; <span class="title">characteristics</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/02/26/java/jdk8-7/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/02/26/java/jdk8-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/02/26/java/jdk8-6/" class="post-title-link" itemprop="url">JDK8-比较器Comparator</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2月 26 2017 11:08:13 / 修改时间：14:50:59" itemprop="dateCreated datePublished" datetime="2017-02-26T11:08:13+08:00">2月 26 2017</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk8/" itemprop="url" rel="index"><span itemprop="name">jdk8</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="比较器详解"><a href="#比较器详解" class="headerlink" title="比较器详解"></a>比较器详解</h3><p>关于比较器我们经常在排序的时候用到，按照某个属性排序。比如我们按照学生的成绩排序，如果成绩相等呢，我们再按照姓名排序。</p>
+<p>在Java 8中，Comparator新增了不少默认方法以及静态方法，我们要把这些东西用起来。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/02/26/java/jdk8-6/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/02/10/java/jdk8-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/photo/bug.png">
+      <meta itemprop="name" content="帆">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/02/10/java/jdk8-5/" class="post-title-link" itemprop="url">JDK8-Stream源码解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2月 10 2017 12:34:27" itemprop="dateCreated datePublished" datetime="2017-02-10T12:34:27+08:00">2月 10 2017</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2月 26 2017 14:50:48" itemprop="dateModified" datetime="2017-02-26T14:50:48+08:00">2月 26 2017</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk8/" itemprop="url" rel="index"><span itemprop="name">jdk8</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="collect"><a href="#collect" class="headerlink" title="collect"></a>collect</h3><p>我们看一下Stream API里很重要的collect函数。</p>
+<ol>
+<li>collect是一个收集器。</li>
+<li>Collector作为collect方法的参数</li>
+<li>Collector是一个接口，它是一个可变的汇聚操作，将输入元素累积到一个可变的结果容器中；它会在所有元素都处理完毕之后，将累积的结果转换为一个最终的表示（这是一个可选操作）；它支持串行与并行两种方式执行。</li>
+<li>Collectors提供了关于Collector的常见汇聚实现，Collectors本身实际上是一个工厂。</li>
+<li>为了确保串行与并行操作结果的等价性，Collector函数需要满足两个条件：identity（同一性）与associativity（结合性）</li>
+<li>a == combiner.apply(a, supplier.get())</li>
+<li>函数式编程最大的特点：表示做什么，而不是如何做。
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/02/10/java/jdk8-5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/02/05/java/jdk8-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -760,260 +1008,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/12/08/springcloud/spring-boot-jwt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/12/08/springcloud/spring-boot-jwt/" class="post-title-link" itemprop="url">集成JWT到Spring Boot项目</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：12月 8 2016 14:46:56" itemprop="dateCreated datePublished" datetime="2016-12-08T14:46:56+08:00">12月 8 2016</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2月 28 2019 11:33:21" itemprop="dateModified" datetime="2019-02-28T11:33:21+08:00">2月 28 2019</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-boot-cloud/" itemprop="url" rel="index"><span itemprop="name">spring boot/cloud</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这篇文章我们来讲一下如何集成JWT到Spring Boot项目中来完成接口的权限验证。</p>
-<h1 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h1><p>JWT是一种用于双方之间传递安全信息的简洁的、URL安全的表述性声明规范。JWT作为一个开放的标准（ RFC 7519 ），定义了一种简洁的，自包含的方法用于通信双方之间以Json对象的形式安全的传递信息。因为数字签名的存在，这些信息是可信的，JWT可以使用HMAC算法或者是RSA的公私秘钥对进行签名。<br>如何使用JWT？</p>
-<p>在身份鉴定的实现中，传统方法是在服务端存储一个session，给客户端返回一个cookie，而使用JWT之后，当用户使用它的认证信息登陆系统之后，会返回给用户一个JWT，用户只需要本地保存该token（通常使用local storage，也可以使用cookie）即可。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/08/springcloud/spring-boot-jwt/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/12/08/concurrency/concurrency5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/12/08/concurrency/concurrency5/" class="post-title-link" itemprop="url">并发编程5-基础构建模块</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：12月 8 2016 9:45:43" itemprop="dateCreated datePublished" datetime="2016-12-08T09:45:43+08:00">12月 8 2016</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：9月 3 2018 18:37:55" itemprop="dateModified" datetime="2018-09-03T18:37:55+08:00">9月 3 2018</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="基础构建模块"><a href="#基础构建模块" class="headerlink" title="基础构建模块"></a>基础构建模块</h1><p>第4章介绍了构造线程安全类时采用的一些技术，例如将线程安全性委托给现有的线程安全类。委托是创建线程安全类的一个最有效的策略：只需让现有的线程安全类管理所有的状态即可。<br>下面将介绍一些JDK提供的工具类。</p>
-<h2 id="同步容器类"><a href="#同步容器类" class="headerlink" title="同步容器类"></a>同步容器类</h2><p>同步容器类包括Vector和Hashtable。这些类实现线程安全的方式是：将它们的状态封装起来，并对每个共有方法都进行同步，使得每次只有一个线程能访问容器的状态。</p>
-<h3 id="同步容器类的问题"><a href="#同步容器类的问题" class="headerlink" title="同步容器类的问题"></a>同步容器类的问题</h3><p>同步容器类都是线程安全的，但在某些情况下需要加锁来保护复合操作。例如2个线程都在进行「若没有，则添加」的运算，如果没有对这个复合操作加锁，就可能会出问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/08/concurrency/concurrency5/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/12/06/concurrency/concurrency4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/photo/bug.png">
-      <meta itemprop="name" content="帆">
-      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="帆的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/12/06/concurrency/concurrency4/" class="post-title-link" itemprop="url">并发编程4-对象的组合</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：12月 6 2016 9:45:58" itemprop="dateCreated datePublished" datetime="2016-12-06T09:45:58+08:00">12月 6 2016</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：9月 3 2018 18:03:41" itemprop="dateModified" datetime="2018-09-03T18:03:41+08:00">9月 3 2018</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="对象的组合"><a href="#对象的组合" class="headerlink" title="对象的组合"></a>对象的组合</h1><p>本章将介绍一些组合模式，这些模式能够使一个类更容易成为线程安全的，并且在维护这些类时不会无意中破坏类的安全性保证。</p>
-<h2 id="设计线程安全的类"><a href="#设计线程安全的类" class="headerlink" title="设计线程安全的类"></a>设计线程安全的类</h2><p>在设计线程安全类的过程中，需要包含以下三个基本要素：</p>
-<ul>
-<li>找出构成对象状态的所有变量</li>
-<li>找出约束状态变量的不变性条件</li>
-<li>建立对象状态的并发访问管理策略</li>
-</ul>
-<h3 id="收集同步需求"><a href="#收集同步需求" class="headerlink" title="收集同步需求"></a>收集同步需求</h3><p>要确保的类的线程安全性，就需要确保它的不变性条件不会在并发访问的情况下被破坏，这就需要对其状态进行推断。        </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/06/concurrency/concurrency4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1085,7 +1079,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">137</span>
+          <span class="site-state-item-count">140</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
