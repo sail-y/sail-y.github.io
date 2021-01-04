@@ -29,10 +29,12 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022104203084.png">
 <meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022105039663.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201225131810021.png">
+<meta property="og:image" content="http://www.saily.top/img/jdk/image-20201225143117638.png">
 <meta property="og:image" content="http://www.saily.top/img/jdk/image-20201022135613828.png">
 <meta property="og:image" content="http://www.saily.top/img/jdk/07_volatile%E5%92%8C%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png">
 <meta property="article:published_time" content="2020-10-22T13:00:37.000Z">
-<meta property="article:modified_time" content="2020-12-22T08:26:16.928Z">
+<meta property="article:modified_time" content="2020-12-25T08:47:24.233Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="并发">
@@ -232,7 +234,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：12月 22 2020 16:26:16" itemprop="dateModified" datetime="2020-12-22T16:26:16+08:00">12月 22 2020</time>
+                <time title="修改时间：12月 25 2020 16:47:24" itemprop="dateModified" datetime="2020-12-25T16:47:24+08:00">12月 25 2020</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,7 +281,20 @@
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>最早的时候，有一个总线加锁的机制，有点类似于悲观锁，一个CPU读取了一个数据后，会通过一个总线，就对这块内存（数据）进行加锁，然后其他CPU就无法再读和写这个数据了，只有当这个CPU修改完成后，其他CPU就可以读到最新的数据，这个效率比较低下，基本成串行化执行了。</p>
 <p>所以后面就有了MESI协议，缓存一致性协议。</p>
 <p>在MESI缓存一致性协议的保证下，就能保证在多线程并发读写变量，及时感知到了。</p>
-<p><strong>未完。。待补充</strong></p>
+<h2 id="可见性涉及的硬件概念"><a href="#可见性涉及的硬件概念" class="headerlink" title="可见性涉及的硬件概念"></a>可见性涉及的硬件概念</h2><h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>每个处理器都有自己的寄存器（register），所以多个处理器各自运行一个线程的时候，可能导致某个变量给放到寄存器里去，接着就会导致各个线程没法看到其他处理器寄存器里的变量的值修改了。</p>
+<p>所以在寄存器这里，就有可能会导致变量副本的更新，无法被其他线程看到。</p>
+<h3 id="缓冲"><a href="#缓冲" class="headerlink" title="缓冲"></a>缓冲</h3><p>一个处理器运行的线程对变量的写操作都是针对写缓冲来的（store buffer）并不是直接更新主内存，所以很可能导致一个线程更新了变量，但是仅仅是在写缓冲区里罢了，没有更新到主内存里去。</p>
+<p>这个时候，其他处理器的线程是没法读到他的写缓冲区的变量值的，所以此时就是会有可见性的问题，这是第二个可见性发生的场景。</p>
+<h3 id="高速缓存"><a href="#高速缓存" class="headerlink" title="高速缓存"></a>高速缓存</h3><p>即使这个时候一个处理器的线程更新了写缓冲区之后，将更新同步到了自己的高速缓存里（cache，或者是主内存），然后还把这个更新通知给了其他的处理器，但是其他处理器可能就是把这个更新放到无效队列里去，没有更新他的高速缓存，此时其他处理器的线程从高速缓存里读数据的时候，读到的还是过时的旧值。</p>
+<p><img src="/img/jdk/image-20201225131810021.png" alt="image-20201225131810021"></p>
+<h3 id="MESI"><a href="#MESI" class="headerlink" title="MESI"></a>MESI</h3><p>要实现可见性，其中一个方法就是MESI协议，这个协议有很多不同的实现，根据底层硬件的不同，实现方式也不同。</p>
+<h4 id="flush处理器缓存"><a href="#flush处理器缓存" class="headerlink" title="flush处理器缓存"></a>flush处理器缓存</h4><p>flush处理器缓存，是把自己更新的值刷新到高速缓存里去（或者是主内存），因为必须要刷到高速缓存（或者是主内存）里，才有可能在后续通过一些特殊的机制让其他的处理器从自己的高速缓存（或者是主内存）里读取到更新的值。</p>
+<p>除了flush以外，他还会发送一个消息到总线（bus），通知其他处理器，某个变量的值被他给修改了。</p>
+<h4 id="refresh处理器缓存"><a href="#refresh处理器缓存" class="headerlink" title="refresh处理器缓存"></a>refresh处理器缓存</h4><p>refresh处理器缓存，是指处理器中的线程在读取一个变量的值的时候，如果发现其他处理器的线程更新了变量的值，必须从其他处理器的高速缓存（或者是主内存）里，读取这个最新的值，更新到自己的高速缓存中。</p>
+<p>所以为了保证可见性，在底层是通过MESI协议、flush处理器缓存和refresh处理器缓存，这一整套机制来保障的。</p>
+<p><strong>要记住，flush和refresh，这两个操作，flush是强制刷新数据到高速缓存（主内存），不要仅仅停留在写缓冲器里面；refresh，是从总线嗅探发现某个变量被修改，必须强制从其他处理器的高速缓存（或者主内存）加载变量的最新值到自己的高速缓存里去。</strong></p>
+<p><img src="/img/jdk/image-20201225143117638.png" alt="image-20201225143117638"></p>
+<p>对一个变量加了volatile修饰之后，对这个变量的写操作，会执行flush处理器缓存，把数据刷到高速缓存（或者是主内存）中，然后对这个变量的读操作，会执行refresh处理器缓存，从其他处理器的高速缓存（或者是主内存）中，读取最新的值。</p>
 <h2 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><p>Java内存模型跟CPU缓存模型是类似的，它是基于CPU模型来建立的Java内存模型，只是Java内存模型是标准化的，屏蔽了底层计算机和操作系统的区别。</p>
 <p>在Java里，内存分线程工作内存和主内存，他们之间的读写，是用JVM底层的指令完成的。</p>
 <ul>
@@ -316,6 +331,20 @@
 <p>每个volatile写操作前面，都会加入StoreStore屏障，禁止普通写和volatile写重排，每个volatile写操作后面，会加入StoreLoad屏障，禁止跟后面的volatile读/写重排。</p>
 <p>每个volatile读操作后面，加LoadLoad屏障，禁止下面的普通读和voaltile读重排；每个volatile读操作后面，加LoadStore屏障，禁止后面的普通写和volatile读重排</p>
 <p><img src="/img/jdk/07_volatile%E5%92%8C%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="07_volatile和内存屏障"></p>
+<h3 id="再谈内存屏障"><a href="#再谈内存屏障" class="headerlink" title="再谈内存屏障"></a>再谈内存屏障</h3><p>线程1：</p>
+<p>Release屏障</p>
+<p>isRunning = false;</p>
+<p>Store屏障</p>
+<p>线程2： </p>
+<p>Load屏障</p>
+<p>while(isRunning) {</p>
+<p>Acquire屏障</p>
+<p>// 代码逻辑</p>
+<p>}</p>
+<p>在volatile变量写操作的前面会加入一个Release屏障，然后在之后会加入一个Store屏障，这样就可以保证volatile写跟Release屏障之前的任何读写操作都不会指令重排，然后Store屏障保证了，写完数据之后，立马会执行flush处理器缓存的操作</p>
+<p>在volatile变量读操作的前面会加入一个Load屏障，这样就可以保证对这个变量的读取时，如果被别的处理器修改过了，必须得从其他处理器的高速缓存（或者主内存）中加载到自己本地高速缓存里，保证读到的是最新数据；在之后会加入一个Acquire屏障，禁止volatile读操作之后的任何读写操作会跟volatile读指令重排序。</p>
+<p>其实Acquire屏障就是LoadLoad屏障 + LoadStore屏障，Release屏障其实就是StoreLoad屏障 + StoreStore屏障。</p>
+<p>不同版本的JVM，不同的底层硬件，都可能会导致加的内存屏障有一些区别，这个本来就没完全一致的。只要知道内存屏障是如何保证volatile的可见性和有序性的就可以了。</p>
 
     </div>
 
@@ -405,7 +434,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">1.</span> <span class="nav-text">volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%86%85%E5%AD%98%E4%BB%A5%E5%8F%8Acpu%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">主内存以及cpu的多级缓存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">并发问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.2.</span> <span class="nav-text">解决方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Java内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E4%BF%9D%E8%AF%81%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-number">1.3.</span> <span class="nav-text">volatile保证可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E6%97%A0%E6%B3%95%E4%BF%9D%E8%AF%81%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">volatile无法保证原子性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">volatile底层原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lock%E6%8C%87%E4%BB%A4"><span class="nav-number">1.5.1.</span> <span class="nav-text">lock指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%EF%BC%9A%E7%A6%81%E6%AD%A2%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="nav-number">1.5.2.</span> <span class="nav-text">内存屏障：禁止重排序</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">1.</span> <span class="nav-text">volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%86%85%E5%AD%98%E4%BB%A5%E5%8F%8Acpu%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">主内存以及cpu的多级缓存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">并发问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.2.</span> <span class="nav-text">解决方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%81%E6%80%A7%E6%B6%89%E5%8F%8A%E7%9A%84%E7%A1%AC%E4%BB%B6%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.</span> <span class="nav-text">可见性涉及的硬件概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.2.1.</span> <span class="nav-text">寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%86%B2"><span class="nav-number">1.2.2.</span> <span class="nav-text">缓冲</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.3.</span> <span class="nav-text">高速缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MESI"><span class="nav-number">1.2.4.</span> <span class="nav-text">MESI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#flush%E5%A4%84%E7%90%86%E5%99%A8%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">flush处理器缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#refresh%E5%A4%84%E7%90%86%E5%99%A8%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">refresh处理器缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">Java内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E4%BF%9D%E8%AF%81%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">volatile保证可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E6%97%A0%E6%B3%95%E4%BF%9D%E8%AF%81%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-number">1.5.</span> <span class="nav-text">volatile无法保证原子性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">1.6.</span> <span class="nav-text">volatile底层原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lock%E6%8C%87%E4%BB%A4"><span class="nav-number">1.6.1.</span> <span class="nav-text">lock指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%EF%BC%9A%E7%A6%81%E6%AD%A2%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="nav-number">1.6.2.</span> <span class="nav-text">内存屏障：禁止重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E8%B0%88%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="nav-number">1.6.3.</span> <span class="nav-text">再谈内存屏障</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -421,7 +450,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">142</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -466,7 +495,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
