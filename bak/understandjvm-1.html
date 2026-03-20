@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
+<meta property="og:type" content="website">
+<meta property="og:title" content="深入理解JVM01-类加载">
+<meta property="og:url" content="http://www.saily.top/bak/understandjvm-1.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="类加载在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。  类加载常见的行为是将磁盘上的class文件加载到内存中 连接将是类与类之间的关系处理好 初始化对一些静态的变量进行赋值">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-12-02T07:55:41.000Z">
+<meta property="article:modified_time" content="2026-03-20T14:43:40.244Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="JVM">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.saily.top/bak/understandjvm-1">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/bak/understandjvm-1.html","path":"bak/understandjvm-1.html","title":"深入理解JVM01-类加载"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入理解JVM01-类加载 | 帆的博客
+</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">类加载深入剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">Java虚拟机的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E3%80%81%E8%BF%9E%E7%BB%AD%E3%80%81%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">类的加载、连续、与初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8C%E5%8D%B8%E8%BD%BD"><span class="nav-number">1.3.</span> <span class="nav-text">类的使用和卸载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD"><span class="nav-number">1.4.</span> <span class="nav-text">类的加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B1"><span class="nav-number">1.4.1.</span> <span class="nav-text">例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B2"><span class="nav-number">1.4.2.</span> <span class="nav-text">例2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B3"><span class="nav-number">1.4.3.</span> <span class="nav-text">例3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B4"><span class="nav-number">1.4.4.</span> <span class="nav-text">例4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B5"><span class="nav-number">1.4.5.</span> <span class="nav-text">例5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B6"><span class="nav-number">1.4.6.</span> <span class="nav-text">例6</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">深入理解JVM01-类加载
+</h1>
+
+<div class="post-meta-container">
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><p>在Java代码中，类型的加载、连接与初始化过程都是在程序运行期间完成的。</p>
+<ol>
+<li>类加载常见的行为是将磁盘上的class文件加载到内存中</li>
+<li>连接将是类与类之间的关系处理好</li>
+<li>初始化对一些静态的变量进行赋值</li>
+</ol>
+<span id="more"></span>
+
+<p>这提供了更大的灵活性，增加了更多的可能性。</p>
+<h2 id="类加载深入剖析"><a href="#类加载深入剖析" class="headerlink" title="类加载深入剖析"></a>类加载深入剖析</h2><p>加载类的工具，叫做类加载器</p>
+<h3 id="Java虚拟机的生命周期"><a href="#Java虚拟机的生命周期" class="headerlink" title="Java虚拟机的生命周期"></a>Java虚拟机的生命周期</h3><p>在如下几种情况，Java虚拟机将结束生命周期</p>
+<ul>
+<li>执行了System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+</ul>
+<h2 id="类的加载、连续、与初始化"><a href="#类的加载、连续、与初始化" class="headerlink" title="类的加载、连续、与初始化"></a>类的加载、连续、与初始化</h2><ul>
+<li><p>加载：查找并加载类的二进制数据</p>
+</li>
+<li><p>连接</p>
+<ul>
+<li>验证：确保被加载的类的正确性</li>
+<li>准备：为类的静态变量分配内存，并将其初始化为默认值</li>
+<li>解析：把类中的符号引用转换为直接引用</li>
+</ul>
+</li>
+<li><p>初始化：为类的静态变量赋予正确的初始值。</p>
+</li>
+</ul>
+<h2 id="类的使用和卸载"><a href="#类的使用和卸载" class="headerlink" title="类的使用和卸载"></a>类的使用和卸载</h2><ul>
+<li>使用</li>
+<li>卸载</li>
+</ul>
+<p>Java对类的使用方式可以分为两种，主动使用和被动使用。所有的Java虚拟机实现必须在每个类或接口被Java程序<strong>首次主动使用</strong>时才初始化他们，这也意味着被动使用不会初始化他们。</p>
+<p>主动使用一共有其七种情况：</p>
+<ol>
+<li>创建类的实例</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值（getstatic,putstatic）</li>
+<li>调用类的静态方法（invokestatic）</li>
+<li>反射（如Class.forName(“com.test.Test”)）</li>
+<li>初始化一个类的子类</li>
+<li>Java虚拟机启动时被标明为启动类的类（Java Test）</li>
+<li>JDK1.7开始提供的动态语言支持：java.lang.invoke.MethodHandle实例的解析结果<code>REF_getStatic</code>，<code>REF_putStatic</code>，<code>REF_invokeStatic</code>句柄对应的类没有初始化，则初始化</li>
+</ol>
+<p>除了以上其中情况，其他使用Java类的方式都被看做是对类的被动使用，都不会导致类的初始化。</p>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><p>类的加载指的是将类的.class文件中的二进制数据读入到内存中，将其放在运行时数据区的方法区内，然后在内存中创建一个java.lang.Class对象（规范未说明Class对象位于哪里，HotSpot虚拟机将其放在了方法区中）用来封装类在方法区内的数据结构（JDK8以后没有方法区了，叫做MetaSpace）</p>
+<p>加载.class文件的几种方式：</p>
+<ol>
+<li>从本地系统中直接加载</li>
+<li>通过网络下载.class文件</li>
+<li>从zip,jar等归档文件中加载.class文件</li>
+<li>从专有数据库中提取.class文件</li>
+<li>将Java源文件动态编译为.class文件</li>
+</ol>
+<h3 id="例1"><a href="#例1" class="headerlink" title="例1"></a>例1</h3><p>下面给一个类加载的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * -XX:+TraceClassLoading，用于追踪类的加载信息并打印出来</span></span><br><span class="line"><span class="comment"> *	</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/12/03</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="comment">// MyTest1就是启动类，会先加载</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 这里MyChild1里面的静态代码块并不会执行</span></span><br><span class="line">        <span class="comment">// 因为没有主动使用MyChild1</span></span><br><span class="line">        <span class="comment">// 虽然MyChild1没有初始化，但是它被加载了，在加了-XX:+TraceClassLoading参数后可以看到</span></span><br><span class="line">        System.out.println(MyChild1.str);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对于静态字段来说，只有直接定义了该字段的类才会被初始化</span></span><br><span class="line">        <span class="comment">// 当一个类在初始化时，要求其父类全部都已经初始化完毕</span></span><br><span class="line"><span class="comment">//        System.out.println(MyChild1.st2);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyParent1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;MyParent1 static block&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyChild1</span> <span class="keyword">extends</span> <span class="title class_">MyParent1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">st2</span> <span class="operator">=</span> <span class="string">&quot;welcome&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;MyChild1 static block&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里用到了一个JVM参数，其实我们大多数时候，可能只是调整一下堆大小，其他的参数用得比较少，其实这个参数是有规律可循的。</p>
+<p><code>-XX:+&lt;option&gt;</code>，表示开启option选项		<br><code>-XX:-&lt;option&gt;</code>，表示关闭option选项		<br><code>-XX:&lt;option&gt;=value</code>，表示将option选项的值设置为value</p>
+<h3 id="例2"><a href="#例2" class="headerlink" title="例2"></a>例2</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用javap反编译后</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * classes javap -c com.sail.jvm.classloader.MyTest2</span></span><br><span class="line"><span class="comment"> * Compiled from &quot;MyTest2.java&quot;</span></span><br><span class="line"><span class="comment"> * public class com.sail.jvm.classloader.MyTest2 &#123;</span></span><br><span class="line"><span class="comment"> *   public com.sail.jvm.classloader.MyTest2();</span></span><br><span class="line"><span class="comment"> *     Code:</span></span><br><span class="line"><span class="comment"> *        0: aload_0</span></span><br><span class="line"><span class="comment"> *        1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line"><span class="comment"> *        4: return</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *   public static void main(java.lang.String[]);</span></span><br><span class="line"><span class="comment"> *     Code:</span></span><br><span class="line"><span class="comment"> *        0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment"> *        3: ldc           #4                  // String hello world</span></span><br><span class="line"><span class="comment"> *        5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line"><span class="comment"> *        8: return</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 助记符：</span></span><br><span class="line"><span class="comment"> * ldc表示将int，float或是String类型的常量值从常量池推送至栈顶</span></span><br><span class="line"><span class="comment"> * bipush表示将单字节(-128 ~ 127)的常量值推送至栈顶</span></span><br><span class="line"><span class="comment"> * sipush表示将一个短整型常量值(-32768 ~ 32767)推送至栈顶</span></span><br><span class="line"><span class="comment"> * iconst_1表示将int类型1推送至栈顶(iconst_m1 ~ iconst_5)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/12/04</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest2</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(MyParent2.str);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyParent2</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 在编译阶段，这个常量会存入到调用这个常量的方法所在的类的常量池中，</span></span><br><span class="line"><span class="comment">     * 本质上调用类并没有直接引用到定义常量的类，因此并不会触发定义常量的类的初始化</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 即str会被放置到MyTest2的常量池中，之后MyTest2与MyParent2就没有任何关系了，</span></span><br><span class="line"><span class="comment">     * 甚至，我们可以将MyParent2的class删除</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">short</span> <span class="variable">s</span> <span class="operator">=</span> <span class="number">127</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">m</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;MyParent2 static block&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其实这些助记符在rt.jar里都能找到，比如iconst就在com.sun.org.apache.bcel.internal.generic.ICONST里。</p>
+<h3 id="例3"><a href="#例3" class="headerlink" title="例3"></a>例3</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当一个常量的值并非编译期间可以确定的，那么其值就不会被放到调用类的常量池中，</span></span><br><span class="line"><span class="comment"> * 这时程序在运行时，会导致主动使用这个常量所在的类，显然会导致这个类被初始化。</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(MyParent3.str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyParent3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> UUID.randomUUID().toString();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;MyParent3 static code&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="例4"><a href="#例4" class="headerlink" title="例4"></a>例4</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对于数组实例来说，其类型是由JVM在运行期动态生成的，表示为class [Lcom.sail.jvm.classloader.MyParent4</span></span><br><span class="line"><span class="comment"> * 这种形式。动态生成的类型，其父类型就是Object。</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 对于数组来说，JavaDoc经常将构成数组的元素称为Component，实际上就是将数组降低一个未读后的类型。</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 助记符：</span></span><br><span class="line"><span class="comment"> * anewarray：表示创建一个引用类型的（如类、接口、数组）数组，并将其引用值亚茹栈顶</span></span><br><span class="line"><span class="comment"> * newarray：表示创建一个指定的原始类型（如int、float、char等）的数组，并将其引用值压入栈顶</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest4</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 首次主动使用</span></span><br><span class="line"><span class="comment">//        MyParent4 myParent4 = new MyParent4();</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 不会输出，并没有使用</span></span><br><span class="line">        MyParent4[] myParent4s = <span class="keyword">new</span> <span class="title class_">MyParent4</span>[<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// class [Lcom.sail.jvm.classloader.MyParent4;</span></span><br><span class="line">        System.out.println(myParent4s.getClass());</span><br><span class="line"></span><br><span class="line">        MyParent4[][] myParent4s1 = <span class="keyword">new</span> <span class="title class_">MyParent4</span>[<span class="number">1</span>][<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// class [[Lcom.sail.jvm.classloader.MyParent4;</span></span><br><span class="line">        System.out.println(myParent4s1.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// class java.lang.Object</span></span><br><span class="line">        System.out.println(myParent4s.getClass().getSuperclass());</span><br><span class="line">        <span class="comment">// class java.lang.Object</span></span><br><span class="line">        System.out.println(myParent4s1.getClass().getSuperclass());</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;=======&quot;</span>);</span><br><span class="line">        <span class="type">int</span>[] ints = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// class [I</span></span><br><span class="line">        System.out.println(ints.getClass());</span><br><span class="line">        <span class="comment">// class java.lang.Object</span></span><br><span class="line">        System.out.println(ints.getClass().getSuperclass());</span><br><span class="line"></span><br><span class="line">        <span class="type">char</span>[] chars = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">1</span>];</span><br><span class="line">        System.out.println(chars.getClass());</span><br><span class="line">        <span class="type">boolean</span>[] booleans = <span class="keyword">new</span> <span class="title class_">boolean</span>[<span class="number">1</span>];</span><br><span class="line">        System.out.println(booleans.getClass());</span><br><span class="line">        <span class="type">short</span>[] shorts = <span class="keyword">new</span> <span class="title class_">short</span>[<span class="number">1</span>];</span><br><span class="line">        System.out.println(shorts.getClass());</span><br><span class="line">        <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1</span>];</span><br><span class="line">        System.out.println(bytes.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyParent4</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// 会输出</span></span><br><span class="line">        System.out.println(<span class="string">&quot;MyParent4 static block&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">public class com.sail.jvm.classloader.MyTest4 &#123;</span></span><br><span class="line"><span class="comment">  public com.sail.jvm.classloader.MyTest4();</span></span><br><span class="line"><span class="comment">    Code:</span></span><br><span class="line"><span class="comment">       0: aload_0</span></span><br><span class="line"><span class="comment">       1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line"><span class="comment">       4: return</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  public static void main(java.lang.String[]);</span></span><br><span class="line"><span class="comment">    Code:</span></span><br><span class="line"><span class="comment">       0: iconst_1</span></span><br><span class="line"><span class="comment">       1: anewarray     #2                  // class com/sail/jvm/classloader/MyParent4</span></span><br><span class="line"><span class="comment">       4: astore_1</span></span><br><span class="line"><span class="comment">       5: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">       8: aload_1</span></span><br><span class="line"><span class="comment">       9: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      15: iconst_1</span></span><br><span class="line"><span class="comment">      16: iconst_1</span></span><br><span class="line"><span class="comment">      17: multianewarray #6,  2             // class &quot;[[Lcom/sail/jvm/classloader/MyParent4;&quot;</span></span><br><span class="line"><span class="comment">      21: astore_2</span></span><br><span class="line"><span class="comment">      22: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">      25: aload_2</span></span><br><span class="line"><span class="comment">      26: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      29: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      32: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">      35: aload_1</span></span><br><span class="line"><span class="comment">      36: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      39: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      42: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      45: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">      48: aload_2</span></span><br><span class="line"><span class="comment">      49: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      52: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      55: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      58: iconst_1</span></span><br><span class="line"><span class="comment">      59: newarray       int</span></span><br><span class="line"><span class="comment">      61: astore_3</span></span><br><span class="line"><span class="comment">      62: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">      65: aload_3</span></span><br><span class="line"><span class="comment">      66: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      69: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      72: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line"><span class="comment">      75: aload_3</span></span><br><span class="line"><span class="comment">      76: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      79: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;</span></span><br><span class="line"><span class="comment">      82: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span></span><br><span class="line"><span class="comment">      85: return</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="例5"><a href="#例5" class="headerlink" title="例5"></a>例5</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当一个接口在初始化时，并不要求其父接口都完成了初始化</span></span><br><span class="line"><span class="comment"> * 只有在真正使用到父接口的时候（如引用接口中定义的常量时），才会初始化</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest5</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 删除MyParent5.class文件后再运行</span></span><br><span class="line">        <span class="comment">// 把MyChild5.class删了，也没有问题</span></span><br><span class="line">        System.out.println(MyChild5.b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MyParent5</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MyChild5</span> <span class="keyword">extends</span> <span class="title class_">MyParent5</span> &#123;</span><br><span class="line"><span class="comment">//    int b = 6;</span></span><br><span class="line">    <span class="comment">// 此时要求MyParent5.class必须存在</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(<span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="例6"><a href="#例6" class="headerlink" title="例6"></a>例6</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019/03/26</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest6</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Singleton</span> <span class="variable">singleton</span> <span class="operator">=</span> Singleton.getInstance();</span><br><span class="line">        System.out.println(<span class="string">&quot;counter:1 &quot;</span> + Singleton.counter1);</span><br><span class="line">        System.out.println(<span class="string">&quot;counter:2 &quot;</span> + Singleton.counter2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> counter1;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在这里输出1</span></span><br><span class="line"><span class="comment">//    public static int counter2 = 0;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Singleton</span> <span class="variable">singleton</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;</span><br><span class="line">        counter1++;</span><br><span class="line">        counter2++; <span class="comment">// 准备阶段的重要意义（分配内存，给默认值）</span></span><br><span class="line"></span><br><span class="line">        System.out.println(counter1);</span><br><span class="line">        System.out.println(counter2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在这里输出0</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">counter2</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+      
+      
+    </div>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

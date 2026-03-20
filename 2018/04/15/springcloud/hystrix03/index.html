@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hystrix高级进阶">
+<meta property="og:url" content="http://www.saily.top/2018/04/15/springcloud/hystrix03/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-15T02:33:01.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:04:05.651Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="hystrix">
+<meta property="article:tag" content="spring-cloud">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.saily.top/2018/04/15/springcloud/hystrix03/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2018/04/15/springcloud/hystrix03/","path":"2018/04/15/springcloud/hystrix03/","title":"Hystrix高级进阶"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hystrix高级进阶 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6%E6%8A%80%E6%9C%AF"><span class="nav-number">1.</span> <span class="nav-text">请求合并技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6%E6%9C%89%E5%A4%9A%E7%A7%8D%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">请求合并有多种级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6%E6%8A%80%E6%9C%AF%E7%9A%84%E5%BC%80%E9%94%80%E6%9C%89%E5%A4%9A%E5%A4%A7"><span class="nav-number">1.2.</span> <span class="nav-text">请求合并技术的开销有多大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">1.3.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#collapser%E5%BC%80%E5%8F%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">collapser开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91"><span class="nav-number">1.3.2.</span> <span class="nav-text">批量查询接口开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.3.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%A1%B9"><span class="nav-number">1.4.</span> <span class="nav-text">配置项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fail-fast%E5%92%8Cfail-silent"><span class="nav-number">2.</span> <span class="nav-text">fail-fast和fail-silent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stubbed-fallback"><span class="nav-number">2.1.</span> <span class="nav-text">stubbed fallback</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E9%99%8D%E7%BA%A7"><span class="nav-number">2.2.</span> <span class="nav-text">多级降级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%99%8D%E7%BA%A7"><span class="nav-number">2.3.</span> <span class="nav-text">手动降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/04/15/springcloud/hystrix03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hystrix高级进阶 | 帆的博客">
+      <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hystrix高级进阶
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：4月 15 2018 10:33:01" itemprop="dateCreated datePublished" datetime="2018-04-15T10:33:01+08:00">4月 15 2018</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:04:05" itemprop="dateModified" datetime="2026-03-21T00:04:05+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解相关技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>此为龙果学院课程学习笔记，记录以后翻看</p>
+<h2 id="请求合并技术"><a href="#请求合并技术" class="headerlink" title="请求合并技术"></a>请求合并技术</h2><p>前面的两篇文章讲解了hystrix的入门，以及它的原理和执行流程。</p>
+<p>之前我们有提到<a href="http://www.saily.top/2018/03/26/hystrix02/#Request-Cache">Request Cache</a>，在一次请求上下文中，如果有多个command，参数都是一样的，调用的接口也是一样的，其实结果可以认为也是一样的。</p>
+<span id="more"></span>
+
+<p>但是如果获取多个商品，需要发送多次网络请求，调用多次接口才能拿到结果。Hystrix还为我们提供了一种叫做请求合并的技术，可以使用HystrixCollapser将多个HystrixCommand合并到一起，多个command放在一个command里面去执行，发送一次网络请求，就拉取到多条数据。用请求合并技术，将多个请求合并起来，可以减少高并发访问下需要使用的线程数量以及网络连接数量，可以提升性能。</p>
+<h3 id="请求合并有多种级别"><a href="#请求合并有多种级别" class="headerlink" title="请求合并有多种级别"></a>请求合并有多种级别</h3><ol>
+<li>global context，tomcat所有调用线程，对一个依赖服务的任何一个command调用都可以被合并在一起，hystrix就传递一个HystrixRequestContext</li>
+<li>user request context，tomcat内某一个调用线程，将某一个tomcat线程对某个依赖服务的多个command调用合并在一起</li>
+<li>object modeling，基于对象的请求合并，如果有几百个对象，遍历后依次调用每个对象的某个方法，可能导致发起几百次网络请求，基于hystrix可以自动将对多个对象模型的调用合并到一起</li>
+</ol>
+<h3 id="请求合并技术的开销有多大"><a href="#请求合并技术的开销有多大" class="headerlink" title="请求合并技术的开销有多大"></a>请求合并技术的开销有多大</h3><p>使用请求合并技术的开销就是导致延迟大幅度增加，因为需要一定的时间将多个请求合并起来。比如发送过来10个请求，每个请求本来大概是2ms可以返回，要把10个请求合并在一个command内，统一一起执行，先后等待一下，可能就需要5ms（延时翻N倍了）。</p>
+<p>所以说，要考量一下使用请求合并技术是否合适，如果一个请求本来耗费的时间就比较长，那么进行请求合并，增加一些延迟影响并不大，这样可以大幅度削减你的线程池的资源耗费，也可以减少后端服务的网络资源开销。如果一个请求本来就很快，用请求合并后反而还变慢了很多倍了，那就没有必要了。</p>
+<blockquote>
+<p>每个请求就2ms，batch，8<del>10ms，延迟增加了4</del>5倍</p>
+</blockquote>
+<blockquote>
+<p>每个请求本来就30ms<del>50ms，batch，35ms</del>55ms，延迟增加不太明显</p>
+</blockquote>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>批量查询本质上我们还是采用HystrixObservableCommand，HystrixCommand+request cache，依然每个商品发起一次网络请求。</p>
+<p>什么意思？就是一个批量的商品过来以后，我们还是多个command的方式去执行，request collapser+request cache，相同的商品还是就查询一次，不同的商品合并到一起通过一个网络请求得到结果，我们结合之前的request cache开发。</p>
+<p>我们需要开发合并请求的命令，还需要开发一个批量查询商品的接口。</p>
+<h4 id="collapser开发"><a href="#collapser开发" class="headerlink" title="collapser开发"></a>collapser开发</h4><p><a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-cache-ha/blob/master/src/main/java/com/roncoo/eshop/cache/ha/hystrix/command/GetProductInfosCollapser.java">https://github.com/sail-y/eshop-cache-ha/blob/master/src/main/java/com/roncoo/eshop/cache/ha/hystrix/command/GetProductInfosCollapser.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/04/15</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GetProductInfosCollapser</span> <span class="keyword">extends</span> <span class="title class_">HystrixCollapser</span>&lt;List&lt;ProductInfo&gt;, ProductInfo, Long&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">GetProductInfosCollapser</span><span class="params">(Long productId)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getRequestArgument</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> HystrixCommand&lt;List&lt;ProductInfo&gt;&gt; <span class="title function_">createCommand</span><span class="params">(Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">params</span> <span class="operator">=</span> requests.stream().map(CollapsedRequest::getArgument).map(Object::toString).collect(Collectors.joining(<span class="string">&quot;,&quot;</span>));</span><br><span class="line">        System.out.println(<span class="string">&quot;createCommand方法执行，params=&quot;</span> + params);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BatchCommand</span>(requests);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">mapResponseToRequests</span><span class="params">(List&lt;ProductInfo&gt; batchResponse, Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (CollapsedRequest&lt;ProductInfo, Long&gt; request : requests) &#123;</span><br><span class="line">            request.setResponse(batchResponse.get(count++));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">BatchCommand</span> <span class="keyword">extends</span> <span class="title class_">HystrixCommand</span>&lt;List&lt;ProductInfo&gt;&gt; &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">BatchCommand</span><span class="params">(Collection&lt;CollapsedRequest&lt;ProductInfo, Long&gt;&gt; requests)</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;ProductInfoService&quot;</span>))</span><br><span class="line">                    .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">&quot;GetProductInfosCollapserBatchCommand&quot;</span>)));</span><br><span class="line">            <span class="built_in">this</span>.requests = requests;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> List&lt;ProductInfo&gt; <span class="title function_">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将一个批次内的商品id给拼接到了一起</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">params</span> <span class="operator">=</span> requests.stream().map(CollapsedRequest::getArgument).map(Object::toString).collect(Collectors.joining(<span class="string">&quot;,&quot;</span>));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将多个商品id合并到一个batch内，直接发送一次网络请求，获取所有的商品</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8082/getProductInfos?productIds=&quot;</span> + params;</span><br><span class="line"></span><br><span class="line">            <span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> HttpUtil.get(url);</span><br><span class="line"></span><br><span class="line">            List&lt;ProductInfo&gt; productInfos = JSONArray.parseArray(response, ProductInfo.class);</span><br><span class="line">            <span class="keyword">for</span> (ProductInfo productInfo : productInfos) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;BatchCommand内部， productInfo=&quot;</span> + JSON.toJSONString(productInfo));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> productInfos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="批量查询接口开发"><a href="#批量查询接口开发" class="headerlink" title="批量查询接口开发"></a>批量查询接口开发</h4><p><a target="_blank" rel="noopener" href="https://github.com/sail-y/eshop-product-ha/blob/master/src/main/java/com/roncoo/esjop/product/ha/controller/ProductController.java">https://github.com/sail-y/eshop-product-ha/blob/master/src/main/java/com/roncoo/esjop/product/ha/controller/ProductController.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/getProductInfos&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getProductInfos</span><span class="params">(String productIds)</span> &#123;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;getProductInfos接收到一次请求，productIds=&quot;</span> + productIds);</span><br><span class="line"></span><br><span class="line">    <span class="type">JSONArray</span> <span class="variable">jsonArray</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONArray</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (String productId : productIds.split(<span class="string">&quot;,&quot;</span>)) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;id\&quot;: &quot;</span> + productId + <span class="string">&quot;, \&quot;name\&quot;: \&quot;iphone7手机\&quot;, \&quot;price\&quot;: 5599, \&quot;pictureList\&quot;:\&quot;a.jpg,b.jpg\&quot;, \&quot;specification\&quot;: \&quot;iphone7的规格\&quot;, \&quot;service\&quot;: \&quot;iphone7的售后服务\&quot;, \&quot;color\&quot;: \&quot;红色,白色,黑色\&quot;, \&quot;size\&quot;: \&quot;5.5\&quot;, \&quot;shopId\&quot;: 2, \&quot;modifiedTime\&quot;: \&quot;2018-02-21 21:11:34\&quot;, \&quot;cityId\&quot;: 1&#125;&quot;</span>;</span><br><span class="line">        jsonArray.add(JSON.parse(json));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> jsonArray.toJSONString();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 请求合并测试</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestCollapserTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        HttpUtil.get(<span class="string">&quot;http://localhost:8081/getProductInfos?productIds=1,2,3,4,5,6,7&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>CacheController#getProductInfos</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Future&lt;ProductInfo&gt;&gt; futures = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (String productId : productIds.split(<span class="string">&quot;,&quot;</span>)) &#123;</span><br><span class="line">    <span class="type">GetProductInfosCollapser</span> <span class="variable">getProductInfosCollapser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GetProductInfosCollapser</span>(Long.valueOf(productId));</span><br><span class="line">    futures.add(getProductInfosCollapser.queue());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (Future&lt;ProductInfo&gt; future : futures) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;CacheController结果：&quot;</span> + future.get());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException | ExecutionException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把所有需要查询的商品通过HystrixCollapser发送，HystrixCollapser会为自动为我们讲请求合并以后访问。可能第一次访问的时候会超时，因为开发环境项目刚启动，第一次访问比较慢，第二次就好了。</p>
+<p><strong>输出结果</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">createCommand方法执行，params=1,2,3,4,5,6,7</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:1,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:2,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:3,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:4,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:5,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:6,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">BatchCommand内部， productInfo=&#123;&quot;cityId&quot;:1,&quot;color&quot;:&quot;红色,白色,黑色&quot;,&quot;id&quot;:7,&quot;modifiedTime&quot;:&quot;2018-02-21 21:11:34&quot;,&quot;name&quot;:&quot;iphone7手机&quot;,&quot;pictureList&quot;:&quot;a.jpg,b.jpg&quot;,&quot;price&quot;:5599.0,&quot;service&quot;:&quot;iphone7的售后服务&quot;,&quot;shopId&quot;:2,&quot;size&quot;:&quot;5.5&quot;,&quot;specification&quot;:&quot;iphone7的规格&quot;&#125;</span><br><span class="line">CacheController结果：ProductInfo(id=1, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=2, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=3, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=4, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=5, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=6, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br><span class="line">CacheController结果：ProductInfo(id=7, name=iphone7手机, price=5599.0, pictureList=a.jpg,b.jpg, specification=iphone7的规格, service=iphone7的售后服务, color=红色,白色,黑色, size=5.5, shopId=2, modifiedTime=2018-02-21 21:11:34, cityId=1, cityName=null, brandId=null, brandName=null)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>HystrixCollapser提供了一些配置：</p>
+<ol>
+<li><p>maxRequestsInBatch</p>
+<p> 控制一个Batch中最多允许多少个request被合并，然后才会触发一个batch的执行</p>
+</li>
+<li><p>timerDelayInMilliseconds</p>
+<p> 控制一个batch创建之后，多长时间以后就自动触发batch的执行，默认是10毫秒</p>
+</li>
+</ol>
+<h2 id="fail-fast和fail-silent"><a href="#fail-fast和fail-silent" class="headerlink" title="fail-fast和fail-silent"></a>fail-fast和fail-silent</h2><p>HystrixCommand如果命令执行执行中出错了，或者抛异常了它有两种方式后续逻辑：</p>
+<ul>
+<li>fail-fast，就是不给fallback降级逻辑，HystrixCommand.run()，会直接从Hystrix的线程池中抛出异常，打印出日志，无法在调用方捕获</li>
+<li>fail-silent，给一个fallback降级逻辑，如果HystrixCommand.run()，报错了，会走fallback降级，但是降级逻辑返回一个null值</li>
+</ul>
+<p>很少会用fail-fast模式，比较常用的可能还是fail-silent，不过既然都到了fallback里面，肯定要做点降级的事情。</p>
+<h3 id="stubbed-fallback"><a href="#stubbed-fallback" class="headerlink" title="stubbed fallback"></a>stubbed fallback</h3><p>stubbed fallback: 残缺的降级</p>
+<p>用请求中的部分数据拼装成结果，然后再填充一些默认值返回。比如说你发起了一个请求，然后请求中可能本身就附带了一些信息，如果主请求失败了，走到降级逻辑。在降级逻辑里面，可以将这个请求中的数据，以及部分本地缓存有的数据拼装在一起，再给数据填充一些简单的默认值<br>然后尽可能将自己有的数据返回到请求方。</p>
+<h3 id="多级降级"><a href="#多级降级" class="headerlink" title="多级降级"></a>多级降级</h3><p>先降一级，尝试用一个备用方案去执行，如果备用方案失败了，再用最后下一个备用方案去执行。</p>
+<p>hystrix command fallback语义，很容易就可以实现多级降级的策略，command嵌套command就可以达到多级降级的效果，第二个command其实是第一级降级策略。常见的多级降级的做法有一个操作，如果访问MySQL数据库，mysql数据库访问报错，降级，去redis中获取数据，如果说redis又挂了，然后就去从本地ehcache缓存中获取数据。</p>
+<p>伪代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> ProductInfo <span class="title function_">getFallback</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FirstLevelFallbackCommand</span>(productId).execute();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">FirstLevelFallbackCommand</span> <span class="keyword">extends</span> <span class="title class_">HystrixCommand</span>&lt;ProductInfo&gt; &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Long productId;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">FirstLevelFallbackCommand</span><span class="params">(Long productId)</span> &#123;</span><br><span class="line">		<span class="comment">// 第一级的降级策略，因为这个command是运行在fallback中的</span></span><br><span class="line">		<span class="comment">// 所以至关重要的一点是，在做多级降级的时候，要将降级command的线程池单独做一个出来</span></span><br><span class="line">		<span class="comment">// 如果主流程的command都失败了，可能线程池都已经被占满了</span></span><br><span class="line">		<span class="comment">// 降级command必须用自己的独立的线程池</span></span><br><span class="line">		<span class="built_in">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;ProductInfoService&quot;</span>))</span><br><span class="line">					.andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">&quot;FirstLevelFallbackCommand&quot;</span>))</span><br><span class="line">					.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">&quot;FirstLevelFallbackPool&quot;</span>))</span><br><span class="line">		);  </span><br><span class="line">		<span class="built_in">this</span>.productId = productId;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> ProductInfo <span class="title function_">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		<span class="comment">// 这里，因为是第一级降级的策略，所以说呢，其实是要从备用机房的机器去调用接口</span></span><br><span class="line">		<span class="comment">// 但是，我们这里没有所谓的备用机房，所以说还是调用同一个服务来模拟</span></span><br><span class="line">		<span class="keyword">if</span>(productId.equals(-<span class="number">2L</span>)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Exception</span>();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://127.0.0.1:8082/getProductInfo?productId=&quot;</span> + productId;</span><br><span class="line">		<span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> HttpClientUtils.sendGetRequest(url);</span><br><span class="line">		<span class="keyword">return</span> JSONObject.parseObject(response, ProductInfo.class);  </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> ProductInfo <span class="title function_">getFallback</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="comment">// 第二级降级策略，第一级降级策略，都失败了</span></span><br><span class="line">		<span class="type">ProductInfo</span> <span class="variable">productInfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ProductInfo</span>();</span><br><span class="line">		<span class="comment">// 从请求参数中获取到的唯一条数据</span></span><br><span class="line">		productInfo.setId(productId); </span><br><span class="line">		<span class="comment">// 从本地缓存中获取一些数据</span></span><br><span class="line">		productInfo.setBrandId(BrandCache.getBrandId(productId));</span><br><span class="line">		productInfo.setBrandName(BrandCache.getBrandName(productInfo.getBrandId()));  </span><br><span class="line">		productInfo.setCityId(LocationCache.getCityId(productId)); </span><br><span class="line">		productInfo.setCityName(LocationCache.getCityName(productInfo.getCityId()));  </span><br><span class="line">		<span class="comment">// 手动填充一些默认的数据</span></span><br><span class="line">		productInfo.setColor(<span class="string">&quot;默认颜色&quot;</span>);  </span><br><span class="line">		productInfo.setModifiedTime(<span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>).format(<span class="keyword">new</span> <span class="title class_">Date</span>()));</span><br><span class="line">		productInfo.setName(<span class="string">&quot;默认商品&quot;</span>);  </span><br><span class="line">		productInfo.setPictureList(<span class="string">&quot;default.jpg&quot;</span>);  </span><br><span class="line">		productInfo.setPrice(<span class="number">0.0</span>);  </span><br><span class="line">		productInfo.setService(<span class="string">&quot;默认售后服务&quot;</span>);  </span><br><span class="line">		productInfo.setShopId(-<span class="number">1L</span>);  </span><br><span class="line">		productInfo.setSize(<span class="string">&quot;默认大小&quot;</span>);  </span><br><span class="line">		productInfo.setSpecification(<span class="string">&quot;默认规格&quot;</span>);   </span><br><span class="line">		<span class="keyword">return</span> productInfo;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="手动降级"><a href="#手动降级" class="headerlink" title="手动降级"></a>手动降级</h3><ul>
+<li><p>手动降级实现方式是写一个command，在这个command它的主流程中，根据一个标识位，判断要执行哪个流程，可以执行主流程，也可以执行一个备用降级的command。</p>
+</li>
+<li><p>它的使用场景：一般来说都是去执行一个主流程的command，如果说你现在知道主流程有问题了，希望能够手动降级的话，动态给服务发送个请求。在请求中修改标识位，自动就让command以后都直接过来执行备用command。</p>
+</li>
+<li><p>一般会嵌套3个command，套在最外面的command，是用semaphore信号量做限流和资源隔离的，因为这个command不用去care timeout的问题，嵌套调用的command会自己去管理timeout超时的</p>
+</li>
+</ul>
+<p>代码片段如下，通过<code>IsDegrade.isDegrade()</code>可以设置是否手动降级。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yangfan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/04/15</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GetProductInfoFacadeCommand</span> <span class="keyword">extends</span> <span class="title class_">HystrixCommand</span>&lt;ProductInfo&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">GetProductInfoFacadeCommand</span><span class="params">(Long productId)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">&quot;ProductInfoService&quot;</span>))</span><br><span class="line">                .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">&quot;GetProductInfoFacadeCommand&quot;</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                        .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.SEMAPHORE)</span><br><span class="line">                        .withExecutionIsolationSemaphoreMaxConcurrentRequests(<span class="number">15</span>)));</span><br><span class="line">        <span class="built_in">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> ProductInfo <span class="title function_">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">if</span>(!IsDegrade.isDegrade()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">GetProductInfoCommand</span>(productId).execute();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">GetProductInfoFromMySQLCommand</span>(productId).execute();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> ProductInfo <span class="title function_">getFallback</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ProductInfo</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看了这么多Hystrix的配置和使用方式，我们在生产环境里最需要关注的点是什么？</p>
+<ol>
+<li>线程池大小设置</li>
+<li>timeout时长设置</li>
+</ol>
+<p>这个配置也没有说固定是多少，但是有一些规律可循。一般一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量。然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
+<ol>
+<li>一开始先不要设置timeout超时时长，默认就是1000ms，也就是1s</li>
+<li>一开始也不要设置线程池大小，默认就是10</li>
+<li>直接部署hystrix到生产环境，如果运行的很良好，那么就让它这样运行好了</li>
+<li>让hystrix应用，24小时运行在生产环境中</li>
+<li>依赖标准的监控和报警机制来捕获到系统的异常运行情况</li>
+<li>在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字</li>
+<li>直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控</li>
+<li>看看修改配置后的系统表现有没有改善</li>
+</ol>
+<p><strong>最佳方案：</strong></p>
+<ol>
+<li>线程池大小：假设一个请求200ms，QPS30。那么每秒的高峰访问次数 * 99%的访问延时 + buffer &#x3D; 30 * 0.2 + 4 &#x3D; 10线程，10个线程每秒处理30次访问应该足够了，每个线程处理3次访问。</li>
+<li>timeout：合理的timeout设置应该为300ms，也就是99.5%的访问延时，计算方法是，因为判断每次访问延时最多在250ms（TP99如果是200ms的话），再加一次重试时间50ms，就是300ms，感觉也应该足够了</li>
+</ol>
+<p>如果线程池设置得比较死，那么如果某个服务高峰期来了线程不够用，别的服务又占着线程池不用，这样就很不合理了，所以Hystrix也为我们提供了动态调整线程池的方案。</p>
+<ol>
+<li><p>coreSize</p>
+<p> 设置线程池的大小，默认是10</p>
+<p> HystrixThreadPoolProperties.Setter()<br>.withCoreSize(int value)</p>
+</li>
+<li><p>maximumSize</p>
+<p> 设置线程池的最大大小，只有在设置<code>allowMaximumSizeToDivergeFromCoreSize</code>的时候才能生效</p>
+<p> 默认是10</p>
+<p> &#96;HystrixThreadPoolProperties.Setter().withMaximumSize(int value)</p>
+</li>
+</ol>
+<p>&#96;<br>3. keepAliveTimeMinutes</p>
+<pre><code>设置保持存活的时间，单位是分钟，默认是1
+
+如果设置`allowMaximumSizeToDivergeFromCoreSize`为true，那么coreSize就不等于maxSize，此时线程池大小是可以动态调整的，可以获取新的线程，也可以释放一些线程
+
+如果coreSize &lt; maxSize，那么这个参数就设置了一个线程多长时间空闲之后，就会被释放掉
+
+`HystrixThreadPoolProperties.Setter().withKeepAliveTimeMinutes(int value)`
+</code></pre>
+<ol start="4">
+<li><p>allowMaximumSizeToDivergeFromCoreSize</p>
+<p> 允许线程池大小自动动态调整，设置为true之后，maxSize就生效了，此时如果一开始是coreSize个线程，随着并发量上来，那么就会自动获取新的线程，但是如果线程在keepAliveTimeMinutes内空闲，就会被自动释放掉</p>
+<p> 默认是false</p>
+<p> <code>HystrixThreadPoolProperties.Setter().withAllowMaximumSizeToDivergeFromCoreSize(boolean value)</code></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+              <a href="/tags/hystrix/" rel="tag"># hystrix</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/04/14/springcloud/spring-cloud-gray/" rel="prev" title="Spring Cloud 不停机发布服务(0-downtime Blue&#x2F;Green deployments)">
+                  <i class="fa fa-angle-left"></i> Spring Cloud 不停机发布服务(0-downtime Blue/Green deployments)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/03/elasticsearch/elasticSearch01/" rel="next" title="ElasticSearch01-介绍">
+                  ElasticSearch01-介绍 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

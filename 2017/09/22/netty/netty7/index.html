@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解Netty-源码分析(二)技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty-源码分析(二)">
+<meta property="og:url" content="http://www.saily.top/2017/09/22/netty/netty7/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解Netty-源码分析(二)技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/netty/netty7-4.png">
+<meta property="og:image" content="http://www.saily.top/img/netty/netty7-1.png">
+<meta property="og:image" content="http://www.saily.top/img/netty/netty7-2.png">
+<meta property="og:image" content="http://www.saily.top/img/netty/netty7-3.png">
+<meta property="article:published_time" content="2017-09-22T12:12:18.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:03:14.777Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="Netty">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/netty/netty7-4.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2017/09/22/netty/netty7/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2017/09/22/netty/netty7/","path":"2017/09/22/netty/netty7/","title":"Netty-源码分析(二)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Netty-源码分析(二) | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%8C"><span class="nav-number">1.</span> <span class="nav-text">源码分析(二)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelPipeline"><span class="nav-number">1.1.</span> <span class="nav-text">ChannelPipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelOption"><span class="nav-number">1.2.</span> <span class="nav-text">ChannelOption</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AttributeMap"><span class="nav-number">1.3.</span> <span class="nav-text">AttributeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ServerBootstrapAcceptor"><span class="nav-number">1.4.</span> <span class="nav-text">ServerBootstrapAcceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelHandler"><span class="nav-number">1.5.</span> <span class="nav-text">ChannelHandler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelInitializer"><span class="nav-number">1.6.</span> <span class="nav-text">ChannelInitializer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelHandlerContext"><span class="nav-number">1.7.</span> <span class="nav-text">ChannelHandlerContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactor%E6%A8%A1%E5%BC%8F%E5%9C%A8Netty%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0"><span class="nav-number">1.8.</span> <span class="nav-text">Reactor模式在Netty中的体现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel"><span class="nav-number">1.9.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventLoopGroup"><span class="nav-number">1.10.</span> <span class="nav-text">EventLoopGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK%E7%9A%84Futuer%E5%92%8CNetty%E7%9A%84Futuer"><span class="nav-number">1.11.</span> <span class="nav-text">JDK的Futuer和Netty的Futuer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ctx-write-%E5%92%8Cctx-channel-write-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.12.</span> <span class="nav-text">ctx.write()和ctx.channel().write()的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.13.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="nav-number">1.13.1.</span> <span class="nav-text">关键要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.13.2.</span> <span class="nav-text">实践建议</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2017/09/22/netty/netty7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Netty-源码分析(二) | 帆的博客">
+      <meta itemprop="description" content="本文讲解Netty-源码分析(二)技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Netty-源码分析(二)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：9月 22 2017 20:12:18" itemprop="dateCreated datePublished" datetime="2017-09-22T20:12:18+08:00">9月 22 2017</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:03:14" itemprop="dateModified" datetime="2026-03-21T00:03:14+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解Netty-源码分析(二)技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="源码分析-二"><a href="#源码分析-二" class="headerlink" title="源码分析(二)"></a>源码分析(二)</h1><p>在理解了Reactor模式后，因为Netty框架本身就是基于Reactor模式的一种实现，所以回过头来再看源码，才能更好的理解代码中一些类的角色和意义。</p>
+<p>ServerBootStrap在调用bind()方法后，通过<strong>channelFactory</strong>反射的方式创建了我们指定的Channel（<em><strong>NioServerSocketChannel.class</strong></em>）对象，然后调用了init(channel)方法对channel进行了初始化设置。</p>
+<p>看一下<strong>ServerBootStrap.init()</strong>，初始化Channel的代码，<code>ChannelPipeline p = channel.pipeline();</code>这里面就出现了一个Netty中一个又一个非常核心的类<strong>ChannelPipeline</strong>，它是在<strong>Channel</strong>的父类<strong>AbstractChannel</strong>初始化的时候创建的。</p>
+<h2 id="ChannelPipeline"><a href="#ChannelPipeline" class="headerlink" title="ChannelPipeline"></a>ChannelPipeline</h2><p><strong>ChannelPipeline</strong>里面是一个一个的ChannelHandler，当客户端的请求到来或者出去的的时候，会一个一个的通过这些处理器，就像一个过滤器一样。每一个<strong>Channel</strong>都拥有自己的<strong>ChannelPipeline</strong>，当一个<strong>Channel</strong>被创建的时候，<strong>ChannelPipeline</strong>也跟着被创建了。I&#x2F;O事件只能被ChannelInboundHandler和ChannelOutboundHandler其中之一所处理，处理完成后再传递到别的处理器中（ChannelHandlerContext#fireChannelRead(Object)或者ChannelHandlerContext#write(Object)）。</p>
+<span id="more"></span>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">*                                                 I/O Request</span><br><span class="line">*                                            via &#123;@link Channel&#125; or</span><br><span class="line">*                                        &#123;@link ChannelHandlerContext&#125;</span><br><span class="line">*                                                      |</span><br><span class="line">*  +---------------------------------------------------+---------------+</span><br><span class="line">*  |                           ChannelPipeline         |               |</span><br><span class="line">*  |                                                  \|/              |</span><br><span class="line">*  |    +---------------------+            +-----------+----------+    |</span><br><span class="line">*  |    | Inbound Handler  N  |            | Outbound Handler  1  |    |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |              /|\                                  |               |</span><br><span class="line">*  |               |                                  \|/              |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |    | Inbound Handler N-1 |            | Outbound Handler  2  |    |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |              /|\                                  .               |</span><br><span class="line">*  |               .                                   .               |</span><br><span class="line">*  | ChannelHandlerContext.fireIN_EVT() ChannelHandlerContext.OUT_EVT()|</span><br><span class="line">*  |        [ method call]                       [method call]         |</span><br><span class="line">*  |               .                                   .               |</span><br><span class="line">*  |               .                                  \|/              |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |    | Inbound Handler  2  |            | Outbound Handler M-1 |    |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |              /|\                                  |               |</span><br><span class="line">*  |               |                                  \|/              |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |    | Inbound Handler  1  |            | Outbound Handler  M  |    |</span><br><span class="line">*  |    +----------+----------+            +-----------+----------+    |</span><br><span class="line">*  |              /|\                                  |               |</span><br><span class="line">*  +---------------+-----------------------------------+---------------+</span><br><span class="line">*                  |                                  \|/</span><br><span class="line">*  +---------------+-----------------------------------+---------------+</span><br><span class="line">*  |               |                                   |               |</span><br><span class="line">*  |       [ Socket.read() ]                    [ Socket.write() ]     |</span><br><span class="line">*  |                                                                   |</span><br><span class="line">*  |  Netty Internal I/O Threads (Transport Implementation)            |</span><br><span class="line">*  +-------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>上面的流程图很清楚的描述了一个请求进和出两个方向是如何被Netty处理的。</p>
+<h2 id="ChannelOption"><a href="#ChannelOption" class="headerlink" title="ChannelOption"></a>ChannelOption</h2><p>提供协议相关的配置，比如TCP的一些配置，它是类型安全的，实现了<strong>Constant</strong>接口，通过<strong>ConstantPool</strong>维护。ChannelOption本身就是Key的信息，真正的值是在ConstantPool中。详情可以查看<strong>ChannelConfig</strong>，ChannelOption只是Key。</p>
+<h2 id="AttributeMap"><a href="#AttributeMap" class="headerlink" title="AttributeMap"></a>AttributeMap</h2><p><img src="/img/netty/netty7-4.png"></p>
+<p>AttributeMap接口只有一个attr()方法，接收一个AttributeKey类型的key，返回一个Attribute类型的value。AttributeMap这是是绑定在Channel或者ChannelHandlerContext上的一个附件，相当于依附在这两个对象上的寄生虫一样，相当于附件一样。</p>
+<p>AttributeKey相当于Map中的key，AttributeMap相当于Map, Attribute相当于Map中的value，它的实现方式和<strong>ChannelOption</strong>是类似的，都是继承了<strong>AbstractConstant</strong>，包含了一个<strong>ConstantPool</strong>的属性。</p>
+<p>在Netty4.0中，每一个ChannelHandlerContext都是ChannelHandler和ChannelPipeline之间连接的桥梁，每一个ChannelHandlerContext都<br>有属于自己的上下文，也就说每一个ChannelHandlerContext上如果有AttributeMap都是绑定上下文的，也就说如果A的ChannelHandlerContext中的AttributeMap，B的ChannelHandlerContext是无法读取到的</p>
+<p>但是Channel上的AttributeMap就是大家共享的，每一个ChannelHandler都能获取到。</p>
+<p><strong>不过在Netty4.1中，这个情况发生了改变，只在Channel中维护了一个Map，ChannelHanlderContext也是用的Channel中的Map。他们的attr()方法是等价的。</strong></p>
+<h2 id="ServerBootstrapAcceptor"><a href="#ServerBootstrapAcceptor" class="headerlink" title="ServerBootstrapAcceptor"></a>ServerBootstrapAcceptor</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">p.addLast(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;Channel&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(<span class="keyword">final</span> Channel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">ChannelPipeline</span> <span class="variable">pipeline</span> <span class="operator">=</span> ch.pipeline();</span><br><span class="line">        <span class="type">ChannelHandler</span> <span class="variable">handler</span> <span class="operator">=</span> config.handler();</span><br><span class="line">        <span class="keyword">if</span> (handler != <span class="literal">null</span>) &#123;</span><br><span class="line">            pipeline.addLast(handler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ch.eventLoop().execute(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                pipeline.addLast(<span class="keyword">new</span> <span class="title class_">ServerBootstrapAcceptor</span>(</span><br><span class="line">                        ch, currentChildGroup, currentChildHandler, currentChildOptions, currentChildAttrs));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>继续看init()代码，上一篇文章也提到了Netty在pipeline里添加了一个处理器，将<code>ocnfig.handler</code>也就是代码中的<code>LoggingHandler</code>添加到了channelPipeline中(注意这个是通过handler()方法注册的，也就是提供给BossGroup使用的)。然后紧接着添加了一个<strong>ServerBootstrapAcceptor</strong>，在看完Reactor模式后，这个类是不是觉得很眼熟，它的角色也就是Reactor模式当中的<strong>Acceptor</strong>。</p>
+<h2 id="ChannelHandler"><a href="#ChannelHandler" class="headerlink" title="ChannelHandler"></a>ChannelHandler</h2><p>  接受连接或创建他们只是你的应用程序的一部分，虽然这些任务很重要，但是一个网络应用程序往往是更复杂的，需要更多的代码编写，如处理传入和传出的数据。Netty提供了一个强大的处理这些事情的功能，允许用户自定义ChannelHandler的实现来处理数据。使得ChannelHandler更强大的是可以连接每个ChannelHandler来实现任务，这有助于代码的整洁和重用。但是处理数据只是ChannelHandler所做的事情之一，也可以压制I&#x2F;O操作，例如写请求。所有这些都可以动态实现。<br>ChannelHandler就是入站(InBound)和出站(OutBound)处理器。</p>
+<h2 id="ChannelInitializer"><a href="#ChannelInitializer" class="headerlink" title="ChannelInitializer"></a>ChannelInitializer</h2><p>ChannelInitializer本身也是一个特殊的Inbound处理器，用来初始化channel。</p>
+<h2 id="ChannelHandlerContext"><a href="#ChannelHandlerContext" class="headerlink" title="ChannelHandlerContext"></a>ChannelHandlerContext</h2><p>每创建一个ChannelHandler，随之也会创建一个ChannelHandlerContext。</p>
+<p>ChannelPipeline里面真实存放的对象实际上是<strong>ChannelHandlerContext</strong>，ChannelHandlerContext里又维护了ChannelHannlder。所以ChannelHandlerContext实际上是ChannelPipeline和ChannelHandler的桥梁，它提供了api可以获取Channel对象，和与之关联的ChannelHandler对象、ChannelPipeline对象。</p>
+<h2 id="Reactor模式在Netty中的体现"><a href="#Reactor模式在Netty中的体现" class="headerlink" title="Reactor模式在Netty中的体现"></a>Reactor模式在Netty中的体现</h2><p><img src="/img/netty/netty7-1.png"></p>
+<p>通过这个图我们可以看到，客户端向BossGroup发起连接请求，BossGroup本身监听的是一个<code>OP_ACCEPT</code>事件（NioServerSocketChannel的构造方法中可以找到注册事件的代码），一旦<code>OP_ACCEPT</code>事件产生之后，<code>select()</code>方法就会返回<strong>SelectionKey</strong>的集合，那么<strong>SelectionKey</strong>本身也是包装了<strong>SocketChannel</strong>对象，就是与客户端真正建立连接的<strong>SocketChannel</strong>对象。对于Netty来说，会将<strong>SocketChannel</strong>包装成<strong>NIOSocketChannel</strong>，接着又将<strong>NIOSocketChannel</strong>注册到了<strong>WorkerGroup</strong>的<strong>selector</strong>中。<strong>WorkerGroup</strong>的<strong>Selector</strong>监听的是<code>OP_READ</code>，所以当数据发送过来的时候，就不再跟<strong>BossGroup</strong>打交道了，转而和<strong>WorkerGroup</strong>进行数据的传递。</p>
+<p>下面这一段就是<strong>channelFactory</strong>通过反射创建<strong>NioServerSocketChannel</strong>对象的时候，注册了<em><strong>OP_ACCEPT</strong></em>事件，并进行一个包装。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">NioServerSocketChannel</span><span class="params">(ServerSocketChannel channel)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="literal">null</span>, channel, SelectionKey.OP_ACCEPT);</span><br><span class="line">    config = <span class="keyword">new</span> <span class="title class_">NioServerSocketChannelConfig</span>(<span class="built_in">this</span>, javaChannel().socket());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>NioServerSocketChannelConfig</strong>代码跟进去看，实际上是调用的父类的构造方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">DefaultChannelConfig</span><span class="params">(Channel channel)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(channel, <span class="keyword">new</span> <span class="title class_">AdaptiveRecvByteBufAllocator</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>AdaptiveRecvByteBufAllocator</strong>是干什么用的呢？它会根据反馈自动调整Channel所关联的buffer的大小。它的规则是如果上次读取的时候填满了Buffer，那么就会增加，反之连续2次没有填充满，就会减少。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_MINIMUM</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL</span> <span class="operator">=</span> <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_MAXIMUM</span> <span class="operator">=</span> <span class="number">65536</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这3个变量也定义了默认的Buffer的最小值，初始值和最大值。</p>
+<p>其中有一个<strong>SIZE_TABLE</strong>在静态代码块中定义了初始化大小变化的一个数组，通过getSizeTableIndex来引用数组里面的值，动态调整Buffer大小就取数组里面的值来调整。内部类<strong>HandleImpl</strong>（记录每次读取的大小来猜测下一次的大小–动态调整）的父类<strong>MaxMessageHandle</strong>里有一个很重要的方法<strong>allocate()</strong>，通过平台来判断是使用<strong>directBuffer</strong>还是<strong>heapBuffer</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> ByteBuf <span class="title function_">ioBuffer</span><span class="params">(<span class="type">int</span> initialCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (PlatformDependent.hasUnsafe()) &#123;</span><br><span class="line">        <span class="keyword">return</span> directBuffer(initialCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> heapBuffer(initialCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中堆内Buffer是Netty用数组自己实现的，而DirectBuffer最终可以跟踪到<strong>UnpooledUnsafeDirectByteBuf.allocateDirect()</strong>，又发现我们很熟悉的NIO代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> ByteBuffer <span class="title function_">allocateDirect</span><span class="params">(<span class="type">int</span> initialCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ByteBuffer.allocateDirect(initialCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><p>Channel是针对于网络套接字的一个连接点，也可以认为它是一个可以执行I&#x2F;O操作的组件。</p>
+<p>它提供以下功能：</p>
+<ul>
+<li>获取Channel当前的状态（open,connected)</li>
+<li>channel配置参数(buffer size)</li>
+<li>IO操作（read,write,connect,bind)</li>
+<li>提供一个<strong>ChannelPipline</strong>，可以处理所有当前Channel关联的所有的I&#x2F;O事件和请求。</li>
+</ul>
+<h2 id="EventLoopGroup"><a href="#EventLoopGroup" class="headerlink" title="EventLoopGroup"></a>EventLoopGroup</h2><ol>
+<li><p>一个EventLoopGroup中会包含一个或多个EventLoop。</p>
+</li>
+<li><p>一个EventLoop在它的整个生命周期当中都只会与唯一一个Thread进行绑定。</p>
+</li>
+<li><p>所有由EventLoop所处理的各种I&#x2F;O事件都将在它所关联的那个Thread上进行处理。</p>
+<p> <img src="/img/netty/netty7-2.png"></p>
+<blockquote>
+<p>我们可以在**SingleThreadEventExecutor.execute()**发现这段代码。</p>
+</blockquote>
+</li>
+<li><p>一个Channel在它的整个生命周期中只会注册在一个EventLoop上。</p>
+</li>
+<li><p>一个EventLoop在运行过程当中，会被分配给一个或者多个Channel。</p>
+<p> <img src="/img/netty/netty7-3.png"></p>
+</li>
+</ol>
+<p>重要结论：<strong>在Netty中，Channel的实现一定是线程安全的；基于此，我们可以存储一个Channel的引用，并且在需要向远程端点发送数据时，通过这个引用来调用Channel相应的方法；即便当时有很多线程都在使用她也不会出现多线程问题；而且，消息一定会按照顺序发送出去。</strong></p>
+<p><strong>我们在业务开发中，不要将长时间执行的耗时任务放入到EventLoop的执行队列中，因为它将会一直阻塞该线程所对应的所有Channel上的其他执行任务，如果我们需要进行阻塞调用或是耗时的操作（实际开发中很常见），那么我们就需要使用一个专门的EventExecutor（业务线程池）。</strong></p>
+<p>通常会有两种实现方式：</p>
+<ol>
+<li>在ChannelHandler的回调方法中，使用自己定义的业务线程池，这样就可以实现异步调用。</li>
+<li>借助于Netty提供的向ChannelPipeline添加ChannelHandler时调用的addLast方法来传递EventExecutor。</li>
+</ol>
+<p>说明：默认情况下（调用addLast(handler))，ChannelHandler中的回调方法都是由I&#x2F;O线程所执行，如果调用了<code>ChannelPipeline addLast(EventExecutorGroup group, ChannelHandler... handlers)</code>方法，那么ChannelHandler中的回调方法就是由参数中的group线程组来执行的。</p>
+<h2 id="JDK的Futuer和Netty的Futuer"><a href="#JDK的Futuer和Netty的Futuer" class="headerlink" title="JDK的Futuer和Netty的Futuer"></a>JDK的Futuer和Netty的Futuer</h2><p>JDK所提供的Future只能通过手工方式检查执行结果，而这个操作是会阻塞的；Netty则对ChannelFuture进行了增强，通过ChannelFutureListener以回调的方式来获取执行结果，去除了手工检查阻塞的操作；值得注意的是：ChannelFutureListener的operationComplete方法是由I&#x2F;O线程执行的，因此要注意的是不要在这里执行耗时的操作，否则需要通过另外的线程或线程池来执行。</p>
+<h2 id="ctx-write-和ctx-channel-write-的区别"><a href="#ctx-write-和ctx-channel-write-的区别" class="headerlink" title="ctx.write()和ctx.channel().write()的区别"></a>ctx.write()和ctx.channel().write()的区别</h2><p>在Netty中有两种发送消息的方式，可以直接写到Channel中，也可以写到与ChannelHandler所关联的那个ChannelHandlerContext中。对于前一种方式来说，消息会从ChannelPipeline的末尾开始流动；对于后一种方式来说，消息将从ChannelPipeline中的下一个ChannelHandler开始流动。</p>
+<p>结论：</p>
+<ol>
+<li>ChannelHandlerContext与ChannelHandler之间是关联绑定关系是永远都不会发生改变的，因此对其进行缓存是没有任何问题的。</li>
+<li>对于与Channel的同名方法来说，ChannelHandlerContext方法将会产生更短的事件流，所以我们应该在可能的情况下利用这个特性来提升应用性能。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li>理解核心技术原理</li>
+<li>掌握实际应用方法</li>
+<li>学习最佳实践和注意事项</li>
+</ul>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li>结合实际项目练习</li>
+<li>深入研究官方文档</li>
+<li>持续学习和实践</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/Netty/" rel="tag"># Netty</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/09/21/git/git2/" rel="prev" title="Git-分支">
+                  <i class="fa fa-angle-left"></i> Git-分支
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/09/28/java/jdk8-11/" rel="next" title="JDK8-Fork&#x2F;Join和CompletableFuture的使用">
+                  JDK8-Fork/Join和CompletableFuture的使用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

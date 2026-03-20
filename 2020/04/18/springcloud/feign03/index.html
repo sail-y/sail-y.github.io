@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feign03-Feign请求处理机制分析">
+<meta property="og:url" content="http://www.saily.top/2020/04/18/springcloud/feign03/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E4%B8%8EMethodHandler%E6%98%A0%E5%B0%84map%E7%9A%84%E7%94%9F%E6%88%90%E6%9C%BA%E5%88%B6.jpg">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/Feign%E5%9F%BA%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E7%9A%84%E6%9C%BA%E5%88%B6.jpg">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/Feign%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6-7217603.jpg">
+<meta property="article:published_time" content="2020-04-18T08:05:39.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:04:05.147Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="feign">
+<meta property="article:tag" content="spring-cloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E4%B8%8EMethodHandler%E6%98%A0%E5%B0%84map%E7%9A%84%E7%94%9F%E6%88%90%E6%9C%BA%E5%88%B6.jpg">
+
+
+<link rel="canonical" href="http://www.saily.top/2020/04/18/springcloud/feign03/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2020/04/18/springcloud/feign03/","path":"2020/04/18/springcloud/feign03/","title":"Feign03-Feign请求处理机制分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Feign03-Feign请求处理机制分析 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E4%B8%8EMethodHandler%E6%98%A0%E5%B0%84map%E7%9A%84%E7%94%9F%E6%88%90%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">接口方法与MethodHandler映射map的生成机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E4%B8%AA%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">画个图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Feign%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86%E5%A4%A7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Feign请求处理大体流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">请求流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%8B%A6%E6%88%AAClient%E6%89%80%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">动态代理拦截Client所有的方法调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E6%96%B9%E6%B3%95%E4%B8%8A%E7%9A%84%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%B0%81%E8%A3%85%E5%88%B0RequestTemplate%E9%87%8C"><span class="nav-number">3.2.</span> <span class="nav-text">将方法上的请求参数封装到RequestTemplate里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%89%80%E6%9C%89%E7%9A%84RequestInterceptor"><span class="nav-number">3.3.</span> <span class="nav-text">执行所有的RequestInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%BE%97%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%99%A8%E9%80%89%E6%8B%A9%E6%9C%8D%E5%8A%A1%E5%8F%91%E8%B5%B7%E8%AF%B7%E6%B1%82"><span class="nav-number">3.4.</span> <span class="nav-text">获得负载均衡器选择服务发起请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feign%E6%98%AF%E5%A6%82%E4%BD%95%E4%B8%8ERibbon%E8%BF%9B%E8%A1%8C%E6%95%B4%E5%90%88%E7%9A%84"><span class="nav-number">3.5.</span> <span class="nav-text">Feign是如何与Ribbon进行整合的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FeignLoadBalancer%E5%A6%82%E4%BD%95%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%80%89%E6%8B%A9Server"><span class="nav-number">3.6.</span> <span class="nav-text">FeignLoadBalancer如何负载均衡选择Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B6%E5%88%B0%E5%93%8D%E5%BA%94%E5%90%8E%E5%B0%86json%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%88%90%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.7.</span> <span class="nav-text">收到响应后将json串转换成对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E4%B8%AA%E5%9B%BE%E6%80%BB%E7%BB%93"><span class="nav-number">3.8.</span> <span class="nav-text">画个图总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.9.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/04/18/springcloud/feign03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Feign03-Feign请求处理机制分析 | 帆的博客">
+      <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Feign03-Feign请求处理机制分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：4月 18 2020 16:05:39" itemprop="dateCreated datePublished" datetime="2020-04-18T16:05:39+08:00">4月 18 2020</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:04:05" itemprop="dateModified" datetime="2026-03-21T00:04:05+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解相关技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="接口方法与MethodHandler映射map的生成机制"><a href="#接口方法与MethodHandler映射map的生成机制" class="headerlink" title="接口方法与MethodHandler映射map的生成机制"></a>接口方法与MethodHandler映射map的生成机制</h1><p>在开始之前，先说一下FeignClient接口的上的SpringMVC注解是如何被解析的，回顾到之前生成动态代理的时候，有个nameToHandler的map，有一句非常关键的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, MethodHandler&gt; nameToHandler = targetToHandlersByName.apply(target);</span><br></pre></td></tr></table></figure>
+
+<p>这里面就完成了SpringMVCContract对方法的解析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ReflectiveFeign.java</span></span><br><span class="line"><span class="keyword">public</span> Map&lt;String, MethodHandler&gt; <span class="title function_">apply</span><span class="params">(Target key)</span> &#123;</span><br><span class="line">  <span class="comment">// 这就用contract完成了方法上的SpringMVC注解的转换</span></span><br><span class="line">  <span class="comment">// ServiceAClient的每一个方法都会被解析成MethodMetadata</span></span><br><span class="line">  <span class="comment">// 对各种SpringMVC的注解进行解析，将解析出来的header，method，path，body,form param，返回值等等等，放入了MethodMetadata中</span></span><br><span class="line">  List&lt;MethodMetadata&gt; metadata = contract.parseAndValidatateMetadata(key.type());</span><br><span class="line">  Map&lt;String, MethodHandler&gt; result = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;String, MethodHandler&gt;();</span><br><span class="line">  <span class="comment">// 遍历方法元数据</span></span><br><span class="line">  <span class="keyword">for</span> (MethodMetadata md : metadata) &#123;</span><br><span class="line">    BuildTemplateByResolvingArgs buildTemplate;</span><br><span class="line">    <span class="keyword">if</span> (!md.formParams().isEmpty() &amp;&amp; md.template().bodyTemplate() == <span class="literal">null</span>) &#123;</span><br><span class="line">      buildTemplate = <span class="keyword">new</span> <span class="title class_">BuildFormEncodedTemplateFromArgs</span>(md, encoder);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (md.bodyIndex() != <span class="literal">null</span>) &#123;</span><br><span class="line">      buildTemplate = <span class="keyword">new</span> <span class="title class_">BuildEncodedTemplateFromArgs</span>(md, encoder);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      buildTemplate = <span class="keyword">new</span> <span class="title class_">BuildTemplateByResolvingArgs</span>(md);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 在这里就创建了SynchronousMethodHandler，key就是方法名</span></span><br><span class="line">    <span class="comment">// SynchronousMethodHandler就是所有的方法被代理后实际处理的处理器</span></span><br><span class="line">    result.put(md.configKey(),</span><br><span class="line">               factory.create(key, md, buildTemplate, options, decoder, errorDecoder));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="画个图"><a href="#画个图" class="headerlink" title="画个图"></a>画个图</h2><p><img src="/img/spring-cloud/%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E4%B8%8EMethodHandler%E6%98%A0%E5%B0%84map%E7%9A%84%E7%94%9F%E6%88%90%E6%9C%BA%E5%88%B6.jpg" alt="接口方法与MethodHandler映射map的生成机制"></p>
+<h1 id="Feign请求处理大体流程"><a href="#Feign请求处理大体流程" class="headerlink" title="Feign请求处理大体流程"></a>Feign请求处理大体流程</h1><p><img src="/img/spring-cloud/Feign%E5%9F%BA%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E7%9A%84%E6%9C%BA%E5%88%B6.jpg" alt="Feign基于动态代理处理请求的机制"></p>
+<h1 id="请求流程分析"><a href="#请求流程分析" class="headerlink" title="请求流程分析"></a>请求流程分析</h1><h2 id="动态代理拦截Client所有的方法调用"><a href="#动态代理拦截Client所有的方法调用" class="headerlink" title="动态代理拦截Client所有的方法调用"></a>动态代理拦截Client所有的方法调用</h2><p>在动态代理生成以后，动态代理所有的调用都会被FeignInvocationHandler拦截，所以我们分析实际的请求流程，需要去查看invoke方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ReflectiveFeign.java</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="comment">// 排除掉equals等方法</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="string">&quot;equals&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">Object</span></span><br><span class="line">          <span class="variable">otherHandler</span> <span class="operator">=</span></span><br><span class="line">          args.length &gt; <span class="number">0</span> &amp;&amp; args[<span class="number">0</span>] != <span class="literal">null</span> ? Proxy.getInvocationHandler(args[<span class="number">0</span>]) : <span class="literal">null</span>;</span><br><span class="line">      <span class="keyword">return</span> equals(otherHandler);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;hashCode&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">    <span class="keyword">return</span> hashCode();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;toString&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">    <span class="keyword">return</span> toString();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 这个dispatch，就是Map&lt;Method, MethodHandler&gt; dispatch;</span></span><br><span class="line">  <span class="comment">// 那么拿到的对象就是SynchronousMethodHandler，然后将参数传过去了</span></span><br><span class="line">  <span class="keyword">return</span> dispatch.get(method).invoke(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="将方法上的请求参数封装到RequestTemplate里"><a href="#将方法上的请求参数封装到RequestTemplate里" class="headerlink" title="将方法上的请求参数封装到RequestTemplate里"></a>将方法上的请求参数封装到RequestTemplate里</h2><p>Map&lt;Method, MethodHandler&gt; dispatch;维护了方法对象和SynchronousMethodHandler的映射，所以流程到这里，直接跟到SynchronousMethodHandler利的invoke方法去看看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SynchronousMethodHandler.java</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object[] argv)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="comment">// 又是关键代码，用于替换PathVariable、@RequestParam以及RequestBody</span></span><br><span class="line">  <span class="type">RequestTemplate</span> <span class="variable">template</span> <span class="operator">=</span> buildTemplateFromArgs.create(argv);</span><br><span class="line">  <span class="type">Retryer</span> <span class="variable">retryer</span> <span class="operator">=</span> <span class="built_in">this</span>.retryer.clone();</span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 发起调用</span></span><br><span class="line">      <span class="keyword">return</span> executeAndDecode(template);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RetryableException e) &#123;</span><br><span class="line">      retryer.continueOrPropagate(e);</span><br><span class="line">      <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">        logger.logRetry(metadata.configKey(), logLevel);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将拿到的参数拼到url上，例如 &#x2F;user&#x2F;{id}拼接成， &#x2F;user&#x2F;1?name&#x3D;xxx&amp;age&#x3D;19</p>
+<h2 id="执行所有的RequestInterceptor"><a href="#执行所有的RequestInterceptor" class="headerlink" title="执行所有的RequestInterceptor"></a>执行所有的RequestInterceptor</h2><p>然后开始调用executeAndDecode方法，执行http调用的逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SynchronousMethodHandler.java</span></span><br><span class="line">Object <span class="title function_">executeAndDecode</span><span class="params">(RequestTemplate template)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="comment">// 遍历请求拦截器，将每个请求拦截都应用到RequestTemplate模板上去，也就是让每个请求拦截器对请求进行处理</span></span><br><span class="line">  <span class="comment">// 并创建可用于发送请求的Request对象</span></span><br><span class="line">  <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> targetRequest(template);</span><br><span class="line">	</span><br><span class="line">  <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">    logger.logRequest(metadata.configKey(), logLevel, request);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Response response;</span><br><span class="line">  <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 将请求的参数都传入了进去，连接超时时间都是10s，读超时时间是60s</span></span><br><span class="line">    response = client.execute(request, options);</span><br><span class="line">    <span class="comment">// ensure the request is set. <span class="doctag">TODO:</span> remove in Feign 10</span></span><br><span class="line">    response.toBuilder().request(request).build();</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 遍历请求拦截器，将每个请求拦截都应用到RequestTemplate模板上去，也就是让每个请求拦截器对请求进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Request <span class="title function_">targetRequest</span><span class="params">(RequestTemplate template)</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (RequestInterceptor interceptor : requestInterceptors) &#123;</span><br><span class="line">    interceptor.apply(template);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> target.apply(<span class="keyword">new</span> <span class="title class_">RequestTemplate</span>(template));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>遍历请求拦截器，将每个请求拦截都应用到RequestTemplate模板上去，也就是让每个请求拦截器对请求进行处理</li>
+<li>基于RequestTemplate创建一个Request对象，用于发送请求</li>
+<li>将请求的参数都传入了进去，连接超时时间都是10s，读超时时间是60s。基于LoadBalancerFeignClient进行了请求的处理和发送，同时获取了Response。</li>
+</ol>
+<h2 id="获得负载均衡器选择服务发起请求"><a href="#获得负载均衡器选择服务发起请求" class="headerlink" title="获得负载均衡器选择服务发起请求"></a>获得负载均衡器选择服务发起请求</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LoadBalancerFeignClient.execute</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Response <span class="title function_">execute</span><span class="params">(Request request, Request.Options options)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">URI</span> <span class="variable">asUri</span> <span class="operator">=</span> URI.create(request.url());</span><br><span class="line">      <span class="comment">// 获取请求的服务名称，也就是ServiceA</span></span><br><span class="line">      <span class="type">String</span> <span class="variable">clientName</span> <span class="operator">=</span> asUri.getHost();</span><br><span class="line">      <span class="comment">// 从请求URL中剔除了服务名称，</span></span><br><span class="line">      <span class="type">URI</span> <span class="variable">uriWithoutHost</span> <span class="operator">=</span> cleanUrl(request.url(), clientName);</span><br><span class="line">      <span class="comment">// 基于去除了服务名称的地址创建了一个RibbonRequest</span></span><br><span class="line">      FeignLoadBalancer.<span class="type">RibbonRequest</span> <span class="variable">ribbonRequest</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FeignLoadBalancer</span>.RibbonRequest(</span><br><span class="line">            <span class="built_in">this</span>.delegate, request, uriWithoutHost);</span><br><span class="line">			<span class="comment">// 这是ribbon的配置</span></span><br><span class="line">      <span class="type">IClientConfig</span> <span class="variable">requestConfig</span> <span class="operator">=</span> getClientConfig(options, clientName);</span><br><span class="line">      <span class="comment">// 创建FeignLoadBalancer，封装了ribbon的ILoadBalancer（重点）</span></span><br><span class="line">      <span class="keyword">return</span> lbClient(clientName).executeWithLoadBalancer(ribbonRequest,</span><br><span class="line">            requestConfig).toResponse();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">catch</span> (ClientException e) &#123;</span><br><span class="line">      <span class="type">IOException</span> <span class="variable">io</span> <span class="operator">=</span> findIOException(e);</span><br><span class="line">      <span class="keyword">if</span> (io != <span class="literal">null</span>) &#123;</span><br><span class="line">         <span class="keyword">throw</span> io;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>获取请求的服务名称，也就是ServiceA</li>
+<li>从请求URL中剔除了服务名称</li>
+<li>基于去除了服务名称的地址创建了一个RibbonRequest</li>
+<li>读取某个服务ribbon的配置IClientConfig</li>
+<li>创建FeignLoadBalancer，封装了ribbon的ILoadBalancer（重点）</li>
+</ol>
+<h2 id="Feign是如何与Ribbon进行整合的"><a href="#Feign是如何与Ribbon进行整合的" class="headerlink" title="Feign是如何与Ribbon进行整合的"></a>Feign是如何与Ribbon进行整合的</h2><p>上面已经创建了FeignLoadBalancer，他内部封装了Ribbon的ILoadBalancer，所以要重点分析下他究竟是如何与Ribbon进行整合的，用的是Ribbon的哪一个ILoadBalancer。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CachingSpringLoadBalancerFactory.java</span></span><br><span class="line"><span class="keyword">public</span> FeignLoadBalancer <span class="title function_">create</span><span class="params">(String clientName)</span> &#123;</span><br><span class="line">   <span class="keyword">if</span> (<span class="built_in">this</span>.cache.containsKey(clientName)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.cache.get(clientName);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="type">IClientConfig</span> <span class="variable">config</span> <span class="operator">=</span> <span class="built_in">this</span>.factory.getClientConfig(clientName);</span><br><span class="line">   <span class="comment">// 从SpringClientFactory获取，SpringClientFactory就是Ribbon初始化的时候创建的，所以这里获取到的是ZoneAwareLoadBalancer</span></span><br><span class="line">   <span class="type">ILoadBalancer</span> <span class="variable">lb</span> <span class="operator">=</span> <span class="built_in">this</span>.factory.getLoadBalancer(clientName);</span><br><span class="line">   <span class="type">ServerIntrospector</span> <span class="variable">serverIntrospector</span> <span class="operator">=</span> <span class="built_in">this</span>.factory.getInstance(clientName, ServerIntrospector.class);</span><br><span class="line">   <span class="type">FeignLoadBalancer</span> <span class="variable">client</span> <span class="operator">=</span> enableRetry ? <span class="keyword">new</span> <span class="title class_">RetryableFeignLoadBalancer</span>(lb, config, serverIntrospector,</span><br><span class="line">      loadBalancedRetryPolicyFactory, loadBalancedBackOffPolicyFactory, loadBalancedRetryListenerFactory) : <span class="keyword">new</span> <span class="title class_">FeignLoadBalancer</span>(lb, config, serverIntrospector);</span><br><span class="line">   <span class="built_in">this</span>.cache.put(clientName, client);</span><br><span class="line">   <span class="keyword">return</span> client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从SpringClientFactory获取ILoadBalancer等组件，SpringClientFactory就是Ribbon初始化的时候创建的，所以这里获取到的是ZoneAwareLoadBalancer，这里也就自然的与Eureka完成了整合。</p>
+<h2 id="FeignLoadBalancer如何负载均衡选择Server"><a href="#FeignLoadBalancer如何负载均衡选择Server" class="headerlink" title="FeignLoadBalancer如何负载均衡选择Server"></a>FeignLoadBalancer如何负载均衡选择Server</h2><p>进入到executeWithLoadBalancer方法中构造了一个LoadBalancerCommand，然后下面的submit方法，有一个匿名内部类ServerOperation的的实现传进去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AbstractLoadBalancerAwareClient.executeWithLoadBalancer</span></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">executeWithLoadBalancer</span><span class="params">(<span class="keyword">final</span> S request, <span class="keyword">final</span> IClientConfig requestConfig)</span> <span class="keyword">throws</span> ClientException &#123;</span><br><span class="line">    LoadBalancerCommand&lt;T&gt; command = buildLoadBalancerCommand(request, requestConfig);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 这提交了一个匿名内部类进去，那么ServerOperation.call方法就一定会在submit方法里被调用</span></span><br><span class="line">        <span class="keyword">return</span> command.submit(</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">ServerOperation</span>&lt;T&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> Observable&lt;T&gt; <span class="title function_">call</span><span class="params">(Server server)</span> &#123;</span><br><span class="line">                    <span class="type">URI</span> <span class="variable">finalUri</span> <span class="operator">=</span> reconstructURIWithServer(server, request.getUri());</span><br><span class="line">                    <span class="type">S</span> <span class="variable">requestForServer</span> <span class="operator">=</span> (S) request.replaceUri(finalUri);</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> Observable.just(AbstractLoadBalancerAwareClient.<span class="built_in">this</span>.execute(requestForServer, requestConfig));</span><br><span class="line">                    &#125; </span><br><span class="line">                    <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        <span class="keyword">return</span> Observable.error(e);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .toBlocking()</span><br><span class="line">            .single();</span><br><span class="line">      .....</span><br></pre></td></tr></table></figure>
+
+<p>提交了一个匿名内部类作为参数，那么ServerOperation.call方法就一定会在submit方法里被调用，跟到submit方法里去看下，因为是第一次进入，所以server肯定是null，selectServer()方法，看名字明显就是调用负载均衡选择服务实例的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LoadBalancerCommand.java</span></span><br><span class="line"><span class="keyword">public</span> Observable&lt;T&gt; <span class="title function_">submit</span><span class="params">(<span class="keyword">final</span> ServerOperation&lt;T&gt; operation)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ExecutionInfoContext</span> <span class="variable">context</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExecutionInfoContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (listenerInvoker != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            listenerInvoker.onExecutionStart();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (AbortExecutionException e) &#123;</span><br><span class="line">            <span class="keyword">return</span> Observable.error(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ribbon的重试参数</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">maxRetrysSame</span> <span class="operator">=</span> retryHandler.getMaxRetriesOnSameServer();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">maxRetrysNext</span> <span class="operator">=</span> retryHandler.getMaxRetriesOnNextServer();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Use the load balancer</span></span><br><span class="line">    <span class="comment">// selectServer 负载均衡选择实例</span></span><br><span class="line">    Observable&lt;T&gt; o = </span><br><span class="line">            (server == <span class="literal">null</span> ? selectServer() : Observable.just(server))</span><br><span class="line">      ......省略部分代码</span><br><span class="line">      <span class="comment">// 选择出服务实例后，对operation进行回调，进行url的替换，然后发起真正的http请求</span></span><br><span class="line">      <span class="keyword">return</span> operation.call(server)...</span><br><span class="line">      ......胜率部分代码</span><br><span class="line">      </span><br><span class="line"><span class="comment">// 选择一个服务实例</span></span><br><span class="line"><span class="keyword">private</span> Observable&lt;Server&gt; <span class="title function_">selectServer</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Observable.create(<span class="keyword">new</span> <span class="title class_">OnSubscribe</span>&lt;Server&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">call</span><span class="params">(Subscriber&lt;? <span class="built_in">super</span> Server&gt; next)</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 读取host信息，也就是服务名，然后调用负载均衡器chooseServer方法选择一个服务实例</span></span><br><span class="line">                <span class="type">Server</span> <span class="variable">server</span> <span class="operator">=</span> loadBalancerContext.getServerFromLoadBalancer(loadBalancerURI, loadBalancerKey);   </span><br><span class="line">                next.onNext(server);</span><br><span class="line">                next.onCompleted();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                next.onError(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>构造了一个LoadBalancerCommand</li>
+<li>构造了一个ServerOperation，包含了发起http调用的逻辑，作为参数传入LoadBalancerCommand.submit方法，后面会进行回调</li>
+<li>在submit方法中，会调用selectServer方法，选择服务实例</li>
+<li>selectServer方法调用loadBalancerContext.getServerFromLoadBalancer，最终调用负载均衡器<a href="http://www.saily.top/2020/03/31/springcloud/ribbon01/#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E4%B8%80%E4%B8%AAserver">chooseServer</a>方法选择一个服务实例，</li>
+<li>拿到服务实例后，将Server对象传入ServerOperation的call方法进行回调</li>
+<li>ServerOperation用server的信息替换host里的服务名，拿到真正的请求地址</li>
+<li>再调用子类也就是FeignLoadBalancer.execute方法执行http请求</li>
+<li>默认的connectTimeout和readTimeout都是1000毫秒</li>
+<li>响应结果封装为RibbonResponse</li>
+</ol>
+<h2 id="收到响应后将json串转换成对象"><a href="#收到响应后将json串转换成对象" class="headerlink" title="收到响应后将json串转换成对象"></a>收到响应后将json串转换成对象</h2><p>回到最初的SynchronousMethodHandler方法里，在executeAndDecode方法中，<code>response = client.execute(request, options);</code>在拿到RibbonResponse以后，开始进行对响应的处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">Object <span class="title function_">executeAndDecode</span><span class="params">(RequestTemplate template)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> targetRequest(template);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">    logger.logRequest(metadata.configKey(), logLevel, request);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Response response;</span><br><span class="line">  <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.nanoTime();</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 前面已经执行完这里的代码了，拿到了RibbonResponse</span></span><br><span class="line">    response = client.execute(request, options);</span><br><span class="line">    <span class="comment">// ensure the request is set. <span class="doctag">TODO:</span> remove in Feign 10</span></span><br><span class="line">    response.toBuilder().request(request).build();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">      logger.logIOException(metadata.configKey(), logLevel, e, elapsedTime(start));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> errorExecuting(request, e);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">long</span> <span class="variable">elapsedTime</span> <span class="operator">=</span> TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);</span><br><span class="line"></span><br><span class="line">  <span class="type">boolean</span> <span class="variable">shouldClose</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">      response =</span><br><span class="line">          logger.logAndRebufferResponse(metadata.configKey(), logLevel, response, elapsedTime);</span><br><span class="line">      <span class="comment">// ensure the request is set. <span class="doctag">TODO:</span> remove in Feign 10</span></span><br><span class="line">      response.toBuilder().request(request).build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (Response.class == metadata.returnType()) &#123;</span><br><span class="line">      <span class="keyword">if</span> (response.body() == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (response.body().length() == <span class="literal">null</span> ||</span><br><span class="line">              response.body().length() &gt; MAX_RESPONSE_BUFFER_SIZE) &#123;</span><br><span class="line">        shouldClose = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Ensure the response body is disconnected</span></span><br><span class="line">      <span class="type">byte</span>[] bodyData = Util.toByteArray(response.body().asInputStream());</span><br><span class="line">      <span class="keyword">return</span> response.toBuilder().body(bodyData).build();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (response.status() &gt;= <span class="number">200</span> &amp;&amp; response.status() &lt; <span class="number">300</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">void</span>.class == metadata.returnType()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 关键代码在这里</span></span><br><span class="line">        <span class="keyword">return</span> decode(response);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (decode404 &amp;&amp; response.status() == <span class="number">404</span> &amp;&amp; <span class="keyword">void</span>.class != metadata.returnType()) &#123;</span><br><span class="line">      <span class="keyword">return</span> decode(response);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> errorDecoder.decode(metadata.configKey(), response);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">      logger.logIOException(metadata.configKey(), logLevel, e, elapsedTime);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> errorReading(request, response, e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (shouldClose) &#123;</span><br><span class="line">      ensureClosed(response.body());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拿到响应以后，执行decode方法，这个decoder默认是ResponseEntityDecoder，将json字符串转换成java对象，也就是方法的返回类型，metadata.returnType()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Object <span class="title function_">decode</span><span class="params">(Response response)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> decoder.decode(response, metadata.returnType());</span><br><span class="line">  &#125; <span class="keyword">catch</span> (FeignException e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> e;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">DecodeException</span>(e.getMessage(), e);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="画个图总结"><a href="#画个图总结" class="headerlink" title="画个图总结"></a>画个图总结</h2><p><img src="/img/spring-cloud/Feign%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6-7217603.jpg" alt="Feign请求处理机制"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+              <a href="/tags/feign/" rel="tag"># feign</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/18/springcloud/feign02/" rel="prev" title="Feign02-动态代理创建FeignClient的实例">
+                  <i class="fa fa-angle-left"></i> Feign02-动态代理创建FeignClient的实例
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/18/springcloud/feign04/" rel="next" title="Feign04-Feign超时和重试分析">
+                  Feign04-Feign超时和重试分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

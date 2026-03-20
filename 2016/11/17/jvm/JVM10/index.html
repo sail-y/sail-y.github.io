@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解JVM10-运行期优化技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM10-运行期优化">
+<meta property="og:url" content="http://www.saily.top/2016/11/17/jvm/JVM10/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解JVM10-运行期优化技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-11-17T09:01:49.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:03:11.262Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="JVM">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.saily.top/2016/11/17/jvm/JVM10/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2016/11/17/jvm/JVM10/","path":"2016/11/17/jvm/JVM10/","title":"JVM10-运行期优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JVM10-运行期优化 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HotSpot%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E7%9A%84%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">HotSpot虚拟机内的即时编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A%E5%99%A8%E4%B8%8E%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">解释器与编译器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%A7%A6%E5%8F%91%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">编译对象与触发条件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">1.2.1.</span> <span class="nav-text">方法调用计数器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E8%BE%B9%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">回边计数器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E6%A6%82%E8%A7%88"><span class="nav-number">1.4.</span> <span class="nav-text">优化技术概览</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E5%85%B1%E5%AD%90%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B6%88%E9%99%A4"><span class="nav-number">1.4.1.</span> <span class="nav-text">公共子表达式消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E8%BE%B9%E7%95%8C%E6%A3%80%E6%9F%A5%E6%B6%88%E9%99%A4"><span class="nav-number">1.4.2.</span> <span class="nav-text">数组边界检查消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%86%85%E8%81%94"><span class="nav-number">1.4.3.</span> <span class="nav-text">方法内联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90"><span class="nav-number">1.4.4.</span> <span class="nav-text">逃逸分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">关键要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.2.</span> <span class="nav-text">实践建议</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2016/11/17/jvm/JVM10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JVM10-运行期优化 | 帆的博客">
+      <meta itemprop="description" content="本文讲解JVM10-运行期优化技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JVM10-运行期优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：11月 17 2016 17:01:49" itemprop="dateCreated datePublished" datetime="2016-11-17T17:01:49+08:00">11月 17 2016</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:03:11" itemprop="dateModified" datetime="2026-03-21T00:03:11+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解JVM10-运行期优化技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Java程序最初是通过解释器进行解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为『热点代码』。为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器称为即时编译器。</p>
+<h2 id="HotSpot虚拟机内的即时编译器"><a href="#HotSpot虚拟机内的即时编译器" class="headerlink" title="HotSpot虚拟机内的即时编译器"></a>HotSpot虚拟机内的即时编译器</h2><h3 id="解释器与编译器"><a href="#解释器与编译器" class="headerlink" title="解释器与编译器"></a>解释器与编译器</h3><p>HotSpot虚拟机是采用解释器与编译器并存的架构。解释器和编译器各有优势：当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序运行后，随着时间的推移，编译器逐渐发挥作用，把越来越多的代码编译成本地代码之后，可以获取更高的执行效率。</p>
+<h3 id="编译对象与触发条件"><a href="#编译对象与触发条件" class="headerlink" title="编译对象与触发条件"></a>编译对象与触发条件</h3><p>在运行过程中被即时编译器编译的『热点代码』有两类：</p>
+<ul>
+<li>被多次调用的方法</li>
+<li>被多次执行的循环体</li>
+</ul>
+<span id="more"></span>
+
+<p>前者很好理解，一个方法被调用得多了，方法体内代码执行的次数自然就多，他成为”热点代码”也是理所当然。而后者则是为了解决一个方法只被调用过一次或者少量的几次，但是方法体内部存在循环次数较多的循环体问题，这样循环体的代码也被重复执行多次，因此这些代码也应该认为是”热点代码”。</p>
+<p>判断一段代码是不是热点代码，是不是需要触发即时编译，这样的行为称为热点探测，目前主要有两种方式：</p>
+<ul>
+<li>基于采样的热点探测</li>
+<li>基于计数器的热点探测</li>
+</ul>
+<p>HotSpot是使用的第二种，基于计数器的热点探测方法，因此它为每个方法准备了两类计数器：方法调用计数器和回边计数器。在确定虚拟机运行参数的前提下，这两个计数器都有一个确定的阀值，超过这个阀值，就会触发JIT编译。</p>
+<h4 id="方法调用计数器"><a href="#方法调用计数器" class="headerlink" title="方法调用计数器"></a>方法调用计数器</h4><p>这个计数器就是统计方法被调用的次数，默认阀值在Client模式下是1500次，在Server模式下是10000次，这个阀值可以通过虚拟机参数-XX:CompileThreshold来设置。<br>当一个方法被调用时，会检查方法是否存在被JIT编译过的版本，如果存在，则优先使用编译后的本地代码来执行。如果不存在已被编译过的版本，则将此方法的调用计数器值加1，然后判断方法调用计数器和回边计数器值之和是否超过方法调用计数器的阈值。如果已经超过阈值，那么将会向即时编译器提交一个该方法的代码编译请求。</p>
+<p>如果不做任何设置，执行引擎并不会同步等待编译请求完成，而是直接进入解释器按照解释方法执行字节码，直到提交的请求被编译器编译完成。当编译工作完成之后，这个方法的调用入口地址就会被系统自动改写成新的，下一次调用该方法时就会使用已编译的版本。</p>
+<p>如果不做任何设置，方法调用计数器统计的并不是方法被调用的绝对次数，而是一个相对的执行频率，即一段时间之内方法被调用的次数。当超过一定的时间限度，如果方法的调用次数仍然不足以让它提交给即时编译器编译，那这个方法的调用计数器就会少一半，这个过程称为方法的调用计数器热度的衰减，而这段时间就称为此方法统计的半衰周期。进行热度衰减的动作是在虚拟机进行垃圾回收时顺便进行的，可以使用虚拟机参数-XX:-UseCounterDecay来关闭热度衰减，让方法计数器统计方法调用的绝对次数，这样，只要系统运行时间足够长，绝大部分方法都会被编译成本地代码。另外，可以使用-XX:CounterHalfLifeTime参数设置半衰周期的时间，单位是秒。</p>
+<h4 id="回边计数器"><a href="#回边计数器" class="headerlink" title="回边计数器"></a>回边计数器</h4><p>它的作用是统计一个方法中循环体代码执行的次数，在字节码中遇到控制流向后跳转的指令称为”回边”。显然，建立回边计数器统计的目的就是为了触发OSR编译。</p>
+<p>关于回边计数器的阈值，虽然HotSpot也提供了一个类似于方法调用计数器阈值-XX:CompileThreshold的参数-XX:BackEdgeThreshold供用户设置，但是当前虚拟机实际上并未使用此参数，因此我们需要设置另外一个参数-XX:OnStackReplacePercentage来间接调整回边计数器的阈值，其计算公式如下：</p>
+<ol>
+<li><p>Client模式		<br> 方法调用计数器阈值 × OSR比率 &#x2F; 1000，其中OSR比率默认值933，如果都取默认值，Client模式下回边计数器的阈值应该是13995</p>
+</li>
+<li><p>Server模式		<br> 方法调用计数器阈值 × (OSR比率 - 解释器监控比率) &#x2F; 100，其中OSR比率默认140，解释器监控比率默认33，如果都取默认值，Server模式下回边计数器阈值应该是10700</p>
+</li>
+</ol>
+<p>当解释器遇到一条回边指令时，会先查找将要执行的代码片段中是否有已经编译好的版本，如果有，它将会优先执行已编译好的代码，否则就把回边计时器的值加1，然后判断方法调用计数器与回边计数器值之和是否已经超过回边计数器的阈值。当超过阈值之后，将会提交一个OSR编译请求，并且把回边计数器的值降低一些，以便继续在解释器中执行循环，等待编译器输出编译结果。</p>
+<p>与方法计数器不同，回边计数器没有热度衰减的过程，因此这个计数器统计的就是该方法循环执行的绝对次数。当计数器溢出的时候，它还会把方法计数器的值也调整到溢出状态，这样下次再进入该方法的时候就会执行标准编译过程。</p>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>在默认设置下，无论是方法调用产生的即时编译请求，还是OSR编译请求，虚拟机在代码编译器还未完成的时候，都仍然按照解释方式继续执行，而编译动作则在后台的编译线程中进行。用户可以通过-XX:-BackgroundCompilation来禁止后台编译，在禁止后台编译后，一旦达到JIT的编译条件，执行线程向虚拟机提交编译请求后将会一直等待，直到编译过程完成后再开始执行编译器输出的本地代码。</p>
+<p>对于Client Compiler（C1编译器）来说，它是一个简单快速的三段式编译，主要关注点在于局部性的优化，而放弃了许多耗时间长的全局优化手段。</p>
+<p>对于Sever Compiler（C2编译器）来说，它则是专门面向服务端的典型应用并为服务端的性能配置特别调整过的编译器，也是一个充分优化过的高级编译器，几乎能达到GNU C++编译器使用-O2参数时的优化强度，它会执行所有经典的优化动作，如无用代码消除、循环展开、常量传播、基本块重排序等，还会实施一些与Java语言特性密切相关的优化技术，如范围检查消除、空值检查消除等，另外，还有可能根据解释器或Client Compiler提供的性能监控信息，进行一些不稳定的激进优化，如守护内联、分支频率预测等，下一部分将讲解上述的一部分优化手段。</p>
+<p>Server Compiler从即时编译的标准来看，无疑是比较缓慢的，但它的编译速度依然远远超过传统的静态优化编译器，而且它相对于Client Compiler编译输出的代码质量有所提高，可以减少本地代码的执行时间，从而抵消了额外的编译时间开销，所以也有很多非服务端的应用选择使用Server模式的虚拟机运行。</p>
+<h3 id="优化技术概览"><a href="#优化技术概览" class="headerlink" title="优化技术概览"></a>优化技术概览</h3><p>在Sun官方的Wiki上，HotSpot虚拟机设计团队列出了一个相对比较全面、在即时编译器中采用的优化技术列表，其中有不少经典编译器的优化手段，也有许多针对Java语言（准确地说是运行在Java虚拟机上得所有语言）本身进行的优化技术，下面主要看几项最有代表性的优化技术：</p>
+<ul>
+<li>语言无关的经典优化技术之一：公共子表达式消除</li>
+<li>语言无关的经典优化技术之一：数组范围检查消除</li>
+<li>最重要的优化技术之一：方法内联</li>
+<li>最前沿的优化技术之一：逃逸分析</li>
+</ul>
+<h4 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h4><p>公共子表达式消除的含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有变量的值都没有发生变化，那么E的这次出现就成了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面的计算结果代替E就可以了。如果这种优化仅限于程序的基本块内，便称为局部公共子表达式消除，如果这种优化的范围涵盖了多个基本块，那就称为全局公共子表达式消除。下面举例说明：<br>	<br>	int d &#x3D; (c * b) * 12 + a + (a + b * c);<br>	<br>如果这段代码交给javac编译器则不会进行任何优化，但进入虚拟机即时编译器后，它将会进行如下优化：**编译器检测到“c*b”与“b*c”是一样的表达式，而且在计算期间b与c的值是不会变的。**因此这条表达式就可能被视为：</p>
+<pre><code>int d = E * 12 + a + (a + E)
+</code></pre>
+<p>还有可能进行代数简化：</p>
+<pre><code>int d = E * 13 + a * 2
+</code></pre>
+<p>表达式进行交换之后，再计算起来就可以节省一些时间了。</p>
+<h4 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h4><p>我们知道Java语言是一门动态安全的语言，对数组的读写访问也不像C、C++那样在本质上是裸指针操作。如果有一个数组foo[]，在Java语言中访问数组元素foo[i]的时候系统将会自动进行上下界的范围检查，即检查i必须满足i&gt;&#x3D;0&amp;&amp;i&lt;foo.length这个条件，否则将抛出一个运行时异常：java.lang.ArrayIndexOutOfBoundsException。这对软件开发者来说是一件很好的事情，即使程序员没有专门编写防御代码，也可以避免大部分的溢出攻击。但是对于虚拟机的执行子系统来说，每次数组元素的读写都带有一次隐含的判定条件，对于拥有大量数组访问的程序代码，这无疑也是一种性能负担。</p>
+<p>无论如何，为了安全，数组边界检查肯定是必须做的，但数组边界检查是不是在运行时每次都做则不一定。例如：数组下标是一个常量，如foo[3]，只要在编译期根据数据流分析来确定foo.length的值，并判断下表“3”没有越界，执行的时候就无须判断了。更加常见的情况是数组访问发生在循环之中，如果编译器只要通过数据流分析就可以判定循环变量的取值范围永远在区间[0,foo.length])内，那在整个循环中就可以把数组的上下界检查消除，这可以节省很多次的条件判断操作。</p>
+<h4 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h4><p>它是编译器最重要的优化手段之一，除了消除方法调用的成本之外，它更重要的意义是为其他优化手段建立良好的基础。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">foo</span><span class="params">(Object obj)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(obj!=<span class="literal">null</span>) &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;do something&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testInline</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">	Object = <span class="literal">null</span>;</span><br><span class="line">	foo(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>采用方法内联后大致成这样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testInline</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">	Object = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">if</span>(obj!=<span class="literal">null</span>) &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;do something&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为有了方法内联的基础，这段代码还能被继续优化，删除不可能被执行的dead code。<br>只有<a target="_blank" rel="noopener" href="http://sail-y.github.io/2016/11/15/JVM9/#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8">非虚方法</a>才能直接内联，虚方法需要运行时确定调用目标，所以虚拟机还有一套“类型继承关系分析”的技术来确定目前已加载的类中，某个接口是否有多余一种的实现，某个类是否存在子类、子类是否为抽象类等信息。</p>
+<h4 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h4><p>逃逸分析是目前Java虚拟机中比较前沿的优化技术，他与类型继承关系分析一样，并不是直接优化代码的手段，而是为其他优化手段提供依据的分析技术。逃逸分析的基本行为就是分析对象动态作用域。</p>
+<blockquote>
+<p>当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他方法中，称为方法逃逸。甚至还有可能被外部线程访问到，譬如赋值给类变量或可以在其他线程中访问的实例变量，称为线程逃逸。</p>
+</blockquote>
+<p>如果能证明一个对象不会逃逸到方法或线程之外，也就是别的方法或线程无法通过任何途径访问到这个对象，则可能为这个变量进行一些高校的优化。如下：</p>
+<ul>
+<li>栈上分配：Java虚拟机中，对象在堆上分配，Java堆中的对象对于各个线程都是共享可见的。虚拟机的垃圾收集系统可以回收堆中不再使用的对象，但回收动作无论是筛选可回收对象还是回收和整理内存都要耗费时间。如果确定一个对象不会逃逸出方法之外，那么让这个对象在栈上分配将会是一个不错的主意，对象所占用的内存空间就可以随着栈帧出栈而销毁，这样垃圾收集系统的压力将会小很多。</li>
+<li>同步消除：线程同步本身是一个相对耗时的过程，如果逃逸分析能够确定一个变量不会逃逸出线程，无法被其他线程访问，那这个变量的读写肯定就不会有竞争，对这个变量实施的同步措施也就可以消除掉。</li>
+<li>标量替换：标量是指一个数据已经无法再分解成更小的数据来表示了，Java虚拟机中的原始数据类型(int、long等)都不能进一步分解，它们就可以称为标量。相对的，如果一个数据可以继续分解那它就称作聚合量，Java中的对象就是最典型的聚合量。如果把一个Java对象拆散，根据程序访问的情况，将其使用到的成员变量恢复原始类型来访问就叫做标量替换。如果逃逸分析证明一个对象不会被外部访问，并且这个对象可以被拆散的话，那程序真正执行的时候将可能不创建这个对象，而改为直接创建它的若干个被这个方法使用到的成员变量来代替。将对象拆分后除了可以让对象的成员变量在栈上分配和读写之外，还可以为后续进一步的优化手段创建条件。</li>
+</ul>
+<p>关于逃逸分析的论文在1999年就已经发表，但直到Sun SDK1.6才实现了逃逸分析，而且直到现在这项优化尚未足够成熟，仍有很大的改进余地。不成熟的原因主要是不能保证逃逸分析的性能收益必定高于它的消耗。虽然在实际测试结果中，实施逃逸分析后的程序往往能运行出不错的成绩，但是在实际的应用程序，尤其是大型程序中反而发现实施逃逸分析可能出现效果不稳定的情况，或因分析过程耗时但却无法有效判别出非逃逸对象而导致性能有所下降。</p>
+<p>如果有需要，并且确认对程序运行有益，可以使用参数-XX:+DoEscapeAnalysis来手动开启逃逸分析，开启之后可以通过参数-XX:+PrintEscapeAnalysis来查看分析结果。有了逃逸分析支持之后，就可以使用参数-XX:+EliminateAllocations来开启标量替换，使用参数-XX:+EliminatLocks来开启同步消除，使用参数-XX:+PrintEliminateAllocations查看标量的替换情况。</p>
+<p>尽管目前逃逸分析技术仍不是十分成熟，但是在今后的虚拟机中，逃逸分析技术肯定会支撑起一系列实用有效的优化技术。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li>理解核心技术原理</li>
+<li>掌握实际应用方法</li>
+<li>学习最佳实践和注意事项</li>
+</ul>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li>结合实际项目练习</li>
+<li>深入研究官方文档</li>
+<li>持续学习和实践</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/JVM/" rel="tag"># JVM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/11/15/jvm/JVM9/" rel="prev" title="JVM9-虚拟机字节码执行引擎">
+                  <i class="fa fa-angle-left"></i> JVM9-虚拟机字节码执行引擎
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/11/25/jvm/JVM11/" rel="next" title="JVM11-Java内存模型与线程">
+                  JVM11-Java内存模型与线程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

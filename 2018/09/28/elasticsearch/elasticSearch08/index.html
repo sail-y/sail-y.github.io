@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解ElasticSearch08-内核原理技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch08-内核原理">
+<meta property="og:url" content="http://www.saily.top/2018/09/28/elasticsearch/elasticSearch08/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解ElasticSearch08-内核原理技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1102.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1105.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1106.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1107.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1108.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1109.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1110.png">
+<meta property="og:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1111.png">
+<meta property="article:published_time" content="2018-09-28T07:12:35.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:03:18.864Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="ElasticSearch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1102.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2018/09/28/elasticsearch/elasticSearch08/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2018/09/28/elasticsearch/elasticSearch08/","path":"2018/09/28/elasticsearch/elasticSearch08/","title":"ElasticSearch08-内核原理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ElasticSearch08-内核原理 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95"><span class="nav-number">1.</span> <span class="nav-text">倒排索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E5%86%99%E5%85%A5%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">文档写入原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%86%99%E5%85%A5%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">优化写入流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E5%AD%98%E5%82%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">可靠存储实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D"><span class="nav-number">4.1.</span> <span class="nav-text">数据恢复</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AE%B5%E5%90%88%E5%B9%B6"><span class="nav-number">5.</span> <span class="nav-text">段合并</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#optimize-API"><span class="nav-number">5.1.</span> <span class="nav-text">optimize API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="nav-number">5.2.1.</span> <span class="nav-text">关键要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.2.2.</span> <span class="nav-text">实践建议</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/09/28/elasticsearch/elasticSearch08/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ElasticSearch08-内核原理 | 帆的博客">
+      <meta itemprop="description" content="本文讲解ElasticSearch08-内核原理技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ElasticSearch08-内核原理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：9月 28 2018 15:12:35" itemprop="dateCreated datePublished" datetime="2018-09-28T15:12:35+08:00">9月 28 2018</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:03:18" itemprop="dateModified" datetime="2026-03-21T00:03:18+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解ElasticSearch08-内核原理技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h1><p>如何使文本被搜索到是搜索引擎很重要的一部分，倒排索引是很适合搜索的。</p>
+<p>因为它的结构：</p>
+<ol>
+<li>包含这个关键词的document list</li>
+<li>包含这个关键词的所有document的数量：IDFinverse document frequency. </li>
+<li>这个关键词在每个document中出现的次数：TFterm frequency.</li>
+</ol>
+<span id="more"></span>
+<ol>
+<li>这个关键词在这个document中的次序</li>
+<li>每个document的长度：length norm</li>
+<li>包含这个关键词的所有document的平均长度</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Term  | Doc <span class="number">1</span> | Doc <span class="number">2</span> | Doc <span class="number">3</span> | ...</span><br><span class="line">------------------------------------</span><br><span class="line">brown |   X   |       |  X    | ...</span><br><span class="line">fox   |   X   |   X   |  X    | ...</span><br><span class="line">quick |   X   |   X   |       | ...</span><br><span class="line">the   |   X   |       |  X    | ...</span><br></pre></td></tr></table></figure>
+
+<p>倒排索引是不可变的，它的好处如下：</p>
+<ul>
+<li>不需要锁，提升并发能力，避免锁的问题</li>
+<li>数据不变，一直保存在os cache中，只要cache内存足够</li>
+<li>filter cache一直驻留在内存，因为数据不变</li>
+<li>可以压缩，节省cpu和io开销</li>
+</ul>
+<p>当然，一个不变的索引也有不好的地方。主要事实是它是不可变的! 你不能修改它。如果你需要让一个新的文档 可被搜索，你需要重建整个索引。这要么对一个索引所能包含的数据量造成了很大的限制，要么对索引可被更新的频率造成了很大的限制。</p>
+<h1 id="文档写入原理"><a href="#文档写入原理" class="headerlink" title="文档写入原理"></a>文档写入原理</h1><p>文档在写入的时候，ES的流程如下：</p>
+<ol>
+<li>新文档写入buffer</li>
+<li>commit point</li>
+<li>buffer中的数据写入新的index segment</li>
+<li>等待在os cache中的index segment被fsync强制刷到磁盘上</li>
+<li>新的index sgement被打开，供search使用</li>
+<li>buffer被清空</li>
+</ol>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1102.png"></p>
+<p><strong>删除和更新</strong></p>
+<p>每次commit point时，会有一个.del文件，标记了哪些segment中的哪些document被标记为deleted了。	<br>搜索的时候，会依次查询所有的segment，从旧的到新的，比如被修改过的document，在旧的segment中，会标记为deleted，在新的segment中会有其新的数据。</p>
+<h1 id="优化写入流程"><a href="#优化写入流程" class="headerlink" title="优化写入流程"></a>优化写入流程</h1><p>现有流程的问题，每次都必须等待fsync将segment刷入磁盘，才能将segment打开供search使用，这样的话从一个document写入，到它可以被搜索，可能会超过1分钟！这就不是近实时的搜索了！主要瓶颈在于fsync实际发生磁盘IO写数据进磁盘，是很耗时的。</p>
+<p>写入流程被改进如下：</p>
+<ol>
+<li>数据写入buffer</li>
+<li>每隔一定时间，buffer中的数据被写入segment文件，但是先写入os cache</li>
+<li>只要segment写入os cache，那就直接打开供search使用，不立即执行commit</li>
+</ol>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1105.png"></p>
+<p>数据写入os cache，并被打开供搜索的过程，叫做refresh，默认是每隔1秒refresh一次。也就是说，每隔一秒就会将buffer中的数据写入一个新的index segment file，先写入os cache中。所以es是近实时的，数据写入到可以被搜索，默认是1秒。</p>
+<p>POST &#x2F;my_index&#x2F;_refresh，可以手动refresh，一般不需要手动执行，没必要这样，让es自己搞就可以了。</p>
+<p>比如说，我们现在的时效性要求比较低，只要求一条数据写入es，一分钟以后才让我们搜索到就可以了，那么就可以调整refresh interval。如果写的并发量和数据量比较大的话，refresh设置长一点可以优化写入速度，因为频繁的写入index segment file会比较占用资源。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;refresh_interval&quot;</span><span class="punctuation">:</span> <span class="string">&quot;60s&quot;</span> </span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="可靠存储实现"><a href="#可靠存储实现" class="headerlink" title="可靠存储实现"></a>可靠存储实现</h1><p>再次优化的写入流程</p>
+<ol>
+<li>数据写入buffer缓冲和translog日志文件</li>
+<li>每隔一秒钟，buffer中的数据被写入新的segment file，并进入os cache，此时segment被打开并供search使用</li>
+<li>buffer被清空</li>
+<li>重复1~3，新的segment不断添加，buffer不断被清空，而translog中的数据不断累加</li>
+<li>当translog长度达到一定程度的时候，commit操作发生<ol>
+<li>buffer中的所有数据写入一个新的segment，并写入os cache，打开供使用</li>
+<li>buffer被清空</li>
+<li>一个commit ponit被写入磁盘，标明了所有的index segment</li>
+<li>filesystem cache中的所有index segment file缓存数据，被fsync强行刷到磁盘上</li>
+<li>现有的translog被清空，创建一个新的translog</li>
+</ol>
+</li>
+</ol>
+<p><strong>新的文档被添加到内存缓冲区并且被追加到了事务日志</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1106.png" alt="新的文档被添加到内存缓冲区并且被追加到了事务日志"></p>
+<p><strong>刷新（refresh）完成后, 缓存被清空但是事务日志不会</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1107.png"></p>
+<p><strong>事务日志不断积累文档</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1108.png"></p>
+<p><strong>在刷新（flush）之后，段被全量提交，并且事务日志被清空</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1109.png"></p>
+<h2 id="数据恢复"><a href="#数据恢复" class="headerlink" title="数据恢复"></a>数据恢复</h2><p>OS cache中积累了不少数据，这个时候如果机器宕机了，虽然os cache的数据丢失了，但是translog的数据是存在的，可以基于translog和commit point进行数据恢复。</p>
+<p>fsync+清空translog，就是flush，默认每隔30分钟flush一次，或者当translog过大的时候，也会flush。</p>
+<p>POST &#x2F;my_index&#x2F;_flush，一般来说别手动flush，让它自动执行就可以了。</p>
+<p><strong>translog</strong></p>
+<p>translog本身，每隔5秒被fsync一次到磁盘上。在一次增删改操作之后，当fsync在primary shard和replica shard都成功之后，那次增删改操作才会成功。</p>
+<p>但是这种在一次增删改时强行fsync translog可能会导致部分操作比较耗时，也可以允许部分数据丢失，设置异步fsync translog。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_settings</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;index.translog.durability&quot;</span><span class="punctuation">:</span> <span class="string">&quot;async&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;index.translog.sync_interval&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5s&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你不确定这个行为的后果，最好是使用默认的参数（ “index.translog.durability”: “request” ）来避免数据丢失。</p>
+<h1 id="段合并"><a href="#段合并" class="headerlink" title="段合并"></a>段合并</h1><p>前面说了，refresh操作默认是每秒一次，每秒生成一个新的segment file，这样文件太多了，而且每次search都要搜索所有的segment，很耗时。</p>
+<p>ES默认会在后台执行segment merge操作，在merge的时候，被标记为deleted的document也会被彻底物理删除。</p>
+<p>每次merge操作的执行流程：</p>
+<ol>
+<li>选择一些有相似大小的segment，merge成一个大的segment</li>
+<li>将新的segment flush到磁盘上去</li>
+<li>写一个新的commit point，包括了新的segment，并且排除旧的那些segment</li>
+<li>将新的segment打开供搜索</li>
+<li>将旧的segment删除</li>
+</ol>
+<p><strong>两个提交了的段和一个未提交的段正在被合并到一个更大的段</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1110.png"></p>
+<p><strong>一旦合并结束，老的段被删除</strong></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_1111.png"></p>
+<h2 id="optimize-API"><a href="#optimize-API" class="headerlink" title="optimize API"></a>optimize API</h2><p>optimize API大可看做是 强制合并 API 。它会将一个分片强制合并到 max_num_segments 参数指定大小的段数目。 这样做的意图是减少段的数量（通常减少到一个），来提升搜索性能。</p>
+<p>POST &#x2F;my_index&#x2F;_optimize?max_num_segments&#x3D;1，尽量不要手动执行，让它自动默认执行就可以了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li>理解核心技术原理</li>
+<li>掌握实际应用方法</li>
+<li>学习最佳实践和注意事项</li>
+</ul>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li>结合实际项目练习</li>
+<li>深入研究官方文档</li>
+<li>持续学习和实践</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ElasticSearch/" rel="tag"># ElasticSearch</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/09/27/elasticsearch/elasticSearch07/" rel="prev" title="ElasticSearch07-索引管理">
+                  <i class="fa fa-angle-left"></i> ElasticSearch07-索引管理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/11/springcloud/zuul-change-uri/" rel="next" title="Spring Cloud Zuul中修改URI">
+                  Spring Cloud Zuul中修改URI <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

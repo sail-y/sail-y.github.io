@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑)">
+<meta property="og:url" content="http://www.saily.top/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604221611065.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604222132779.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200604223511793.png">
+<meta property="article:published_time" content="2020-06-04T13:55:39.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:04:08.189Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="spring-cloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200604221611065.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/","path":"2020/06/04/springcloud/记一次线上故障排查并解决/","title":"记一次线上故障排查并解决(Spring Cloud健康检查的坑)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>记一次线上故障排查并解决(Spring Cloud健康检查的坑) | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3-Spring-Cloud%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E7%9A%84%E5%9D%91"><span class="nav-number">1.</span> <span class="nav-text">记一次线上故障排查并解决(Spring Cloud健康检查的坑)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">问题原因</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E7%AB%AF%E7%82%B9%E4%BC%9A%E8%B6%85%E6%97%B6"><span class="nav-number">2.1.</span> <span class="nav-text">为什么健康检查端点会超时</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/06/04/springcloud/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B9%B6%E8%A7%A3%E5%86%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="记一次线上故障排查并解决(Spring Cloud健康检查的坑) | 帆的博客">
+      <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记一次线上故障排查并解决(Spring Cloud健康检查的坑)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：6月 4 2020 21:55:39" itemprop="dateCreated datePublished" datetime="2020-06-04T21:55:39+08:00">6月 4 2020</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:04:08" itemprop="dateModified" datetime="2026-03-21T00:04:08+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解相关技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="记一次线上故障排查并解决-Spring-Cloud健康检查的坑"><a href="#记一次线上故障排查并解决-Spring-Cloud健康检查的坑" class="headerlink" title="记一次线上故障排查并解决(Spring Cloud健康检查的坑)"></a>记一次线上故障排查并解决(Spring Cloud健康检查的坑)</h1><p>今天下班在回家路上的时候，同事反馈他们的生产环境项目不停的在输出错误日志，一时半会没有找到原因，让我帮忙看看。我到家后登录VPN，打开了kibana查看日志，确实一直在报错，错误日志如下：</p>
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.io.IOException: 断开的管道    </span><br><span class="line">at sun.nio.ch.FileDispatcherImpl.write0(Native Method)    </span><br><span class="line">at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:<span class="number">47</span>)    </span><br><span class="line">at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:<span class="number">93</span>)    </span><br><span class="line">at sun.nio.ch.IOUtil.write(IOUtil.java:<span class="number">65</span>)    </span><br><span class="line">at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:<span class="number">471</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:<span class="number">134</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioBlockingSelector.write(NioBlockingSelector.java:<span class="number">101</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioSelectorPool.write(NioSelectorPool.java:<span class="number">157</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:<span class="number">1276</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:<span class="number">670</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.flushBlocking(SocketWrapperBase.java:<span class="number">607</span>)    </span><br><span class="line">at org.apache.tomcat.util.net.SocketWrapperBase.flush(SocketWrapperBase.java:<span class="number">597</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.flush(Http11OutputBuffer.java:<span class="number">646</span>)    </span><br><span class="line">at org.apache.coyote.http11.filters.ChunkedOutputFilter.flush(ChunkedOutputFilter.java:<span class="number">169</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11OutputBuffer.flush(Http11OutputBuffer.java:<span class="number">252</span>)    </span><br><span class="line">at org.apache.coyote.http11.Http11Processor.flush(Http11Processor.java:<span class="number">1564</span>)    </span><br><span class="line">at org.apache.coyote.AbstractProcessor.action(AbstractProcessor.java:<span class="number">352</span>)    </span><br><span class="line">at org.apache.coyote.Response.action(Response.java:<span class="number">173</span>)    </span><br><span class="line">at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:<span class="number">317</span>)    </span><br><span class="line">... <span class="number">92</span> more </span><br></pre></td></tr></table></figure>
+
+<p>搜索<code>ERROR</code>级别日志，看到的全是这个日志，而且有两个项目都在输出这个错误日志，询问同事后确定了几个问题：</p>
+<ol>
+<li>项目近期没有升级</li>
+<li>这两个项目当前都没有人访问，也就是没有接口流量</li>
+<li>这个日志似乎是有周期性的输出，1分钟~3分钟不等</li>
+</ol>
+<p>记录一下我自己的排查思路，首先项目没有流量，也没有人访问，<strong>但是这个错明显是有接口请求，并且是因为客户端主动断开链接导致的，这一点可以确定</strong>。那么再结合周期性的错误日志输出，我首先想到的是不是采集监控的端点，或者是健康检查的端点出问题了，于是我登录堡垒机，测试了一下问题项目的采集监控数据的接口，没有问题，健康检查端点也没有问题，都是可以访问的。</p>
+<p>我们的项目是SpringCloud的，所以健康检查端点是：<code>/actuator/health</code>，但是我多刷新了几次，发现有的时候很慢，有的时候很快，慢的时候能达到十几二十秒，健康检查的结果才出来。因为我们的项目是接入了prometheus的，紧接着我又去看了下监控，没有发现问题（监控排除了健康检查端点的访问情况，因为如果是SLB的话每秒会检查10+次），于是我将Grafana中的条件做了调整，得到了健康检查端点的耗时情况。</p>
+<p><img src="/img/spring-cloud/image-20200604221611065.png" alt="image-20200604221611065"></p>
+<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>可以看得出来，健康检查端点的耗时确实很长，基本可以确定，上面异常产生的原因是因为consul在对服务进行心跳检查的时候，<strong>超时了</strong>。所以consul的agent主动断开了<code>/actuator/health</code>的请求，所以得到了 <code>java.io.IOException: Broken pipe</code>的错误。</p>
+<p><img src="/img/spring-cloud/image-20200604222132779.png" alt="image-20200604222132779"></p>
+<p>这一点从监控数据原文里也得到了确认，是健康检查的端点在输出异常日志。</p>
+<h2 id="为什么健康检查端点会超时"><a href="#为什么健康检查端点会超时" class="headerlink" title="为什么健康检查端点会超时"></a>为什么健康检查端点会超时</h2><p>现在知道了原因，但是这只是表面现象，为什么健康检查会超时？这不太正常，之前都是好好的，为什么突然开始就一直超时了，于是我开始观察健康检查里都有些什么内容，发现有一个可能会比较耗时的东西。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;UP&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;mail&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;UP&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;location&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xxx.com:-1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  ....</span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后我对比了这两个出问题的项目，他们都有邮件的健康检查，我问了下同事，是不是只有这两个项目会用到发邮件的功能，而其他项目没有，同事确认说是的。</p>
+<p>基本可以确认，就是因为邮件的健康检查导致的，可能因为网络或是什么原因，导致邮件服务器的健康检查比较慢，从而导致健康检查的端点也非常耗时。</p>
+<p>所以联系了运维的同事，加上了以下配置，关闭了邮件的健康检查。因为邮件并不是核心的功能，所以先关闭掉，验证一下是否能解决问题。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management.health.mail.enabled</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<p>在加入配置关闭邮件服务器的健康检查以后，重启服务，观察了5分钟日志，发现一切恢复如初，没有产生新的异常日志，健康检查的端点，也变得非常快了。</p>
+<p><img src="/img/spring-cloud/image-20200604223511793.png" alt="image-20200604223511793"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>本次故障是因为邮件服务器的健康检查很慢，导致consul对服务进行心跳检查的时候超时，主动断开连接，然后定期的输出了 <code>java.io.IOException: Broken pipe</code>的异常日志。</p>
+<p>关于SpringCloud提供的健康检查机制，其实大多数情况下，好多功能的检查都可以关闭，按需打开，举个例子，如果Redis挂掉了，这里整个服务的健康检查就会是<strong>DOWN</strong>了，会直接导致其他服务无法调用，但是实际上在业务中如果Redis挂掉的话，我们是会去做降级从数据库查询的，仍然可以为其他服务提供调用。</p>
+<p>所以我们在项目里，完全可以把这些第三方中间件的健康检查默认给关闭掉。按需打开必要的健康检查选项。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="attr">health:</span></span><br><span class="line">    <span class="attr">defaults:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 按需打开db或者redis等中间件健康检查</span></span><br><span class="line">    <span class="attr">db:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/17/springcloud/SpringCloud%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/" rel="prev" title="SpringCloud Netflix生产实践">
+                  <i class="fa fa-angle-left"></i> SpringCloud Netflix生产实践
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/13/jdk/jdk01/" rel="next" title="JDK集合源码-List">
+                  JDK集合源码-List <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

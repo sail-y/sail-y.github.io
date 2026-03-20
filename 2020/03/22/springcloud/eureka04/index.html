@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析">
+<meta property="og:url" content="http://www.saily.top/2020/03/22/springcloud/eureka04/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329171857177.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/image-20200329182748663.png">
+<meta property="article:published_time" content="2020-03-22T10:05:39.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:04:04.722Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="eureka">
+<meta property="article:tag" content="spring-cloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/spring-cloud/image-20200322230318802.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2020/03/22/springcloud/eureka04/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2020/03/22/springcloud/eureka04/","path":"2020/03/22/springcloud/eureka04/","title":"Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%BF%83%E8%B7%B3%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">服务心跳流程分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E4%B8%8B%E7%BA%BF%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">服务下线流程分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%95%85%E9%9A%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">服务故障流程分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E8%87%AA%E6%88%91%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">服务自我保护机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">4.2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#isLeaseExpirationEnabled%E6%96%B9%E6%B3%95%E5%88%A4%E6%96%AD%E8%87%AA%E6%88%91%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6%E5%BC%80%E5%90%AF"><span class="nav-number">4.2.1.</span> <span class="nav-text">isLeaseExpirationEnabled方法判断自我保护机制开启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E6%9C%9F%E6%9C%9B%E7%9A%84%E4%B8%80%E5%88%86%E9%92%9F%E5%BF%83%E8%B7%B3%E6%AC%A1%E6%95%B0"><span class="nav-number">4.2.2.</span> <span class="nav-text">如何计算期望的一分钟心跳次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E7%9A%84%E4%B8%8A%E4%B8%80%E5%88%86%E9%92%9F%E5%BF%83%E8%B7%B3%E6%AC%A1%E6%95%B0%E6%98%AF%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-number">4.2.3.</span> <span class="nav-text">实际的上一分钟心跳次数是如何计算的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">4.2.4.</span> <span class="nav-text">自我保护机制的触发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/03/22/springcloud/eureka04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析 | 帆的博客">
+      <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Eureka源码04-服务心跳、下线、故障和服务自我保护机制流程分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：3月 22 2020 18:05:39" itemprop="dateCreated datePublished" datetime="2020-03-22T18:05:39+08:00">3月 22 2020</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:04:04" itemprop="dateModified" datetime="2026-03-21T00:04:04+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解相关技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="服务心跳流程分析"><a href="#服务心跳流程分析" class="headerlink" title="服务心跳流程分析"></a>服务心跳流程分析</h1><p>eureka client每隔一定的时间，会给eureka server发送心跳，保持心跳，让eureka server认为自己还活着。</p>
+<p>心跳在代码里，叫做续约。</p>
+<ol>
+<li><p>还是在DiscoveryClient初始化的时候，有一个心跳的定时任务，由<code>HeartbeatThread</code>执行。</p>
+</li>
+<li><p>默认值是每隔30秒去发送一个心跳。DEFAULT_LEASE_RENEWAL_INTERVAL</p>
+</li>
+<li><p>接下来是用jersy去给eureka server发送心跳的http请求。<span id="more"></span></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpResponse = eurekaTransport.registrationClient.sendHeartBeat(instanceInfo.getAppName(), instanceInfo.getId(), instanceInfo, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>请求的地址是：<code>PUT apps/{appName}/{id}</code></p>
+</li>
+<li><p>我们根据这个接口去找下是什么类处理的请求，这个又是让我好一顿找：在ApplicationsResource里有个<code>@Path(&quot;{appId}&quot;)</code>，这里已经组成了路径<code>apps/{appId}</code>，然后在ApplicationsResource里边又有一个&#96;&#96;@Path(“{id}”)<code>方法，到这里就是</code>apps&#x2F;{appId}&#x2F;{id}&#96;，是不是刚好符合客户端的请求路径，但是还是没有定位到PUT方法在哪里，继续看InstanceResource里的renewLease方法，配合参数看下，终于才找到了server端处理心跳逻辑的代码。<em>不得不说这个隐藏的真是比较深，你看那个getInstanceInfo方法，你很难想到这个get方法只是一个路径的节点，具体的处理还得继续往里跟。应该是也因为我不熟悉jersy这个框架，不知道怎么快速定位一个mvc路径的执行代码。</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ApplicationsResource</span></span><br><span class="line"><span class="meta">@Path(&quot;&#123;appId&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ApplicationResource <span class="title function_">getApplicationResource</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@PathParam(&quot;version&quot;)</span> String version,</span></span><br><span class="line"><span class="params">        <span class="meta">@PathParam(&quot;appId&quot;)</span> String appId)</span> &#123;</span><br><span class="line">    CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApplicationResource</span>(appId, serverConfig, registry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ApplicationResource</span></span><br><span class="line"><span class="meta">@Path(&quot;&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> InstanceResource <span class="title function_">getInstanceInfo</span><span class="params">(<span class="meta">@PathParam(&quot;id&quot;)</span> String id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">InstanceResource</span>(<span class="built_in">this</span>, id, serverConfig, registry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// InstanceResource</span></span><br><span class="line"><span class="meta">@PUT</span></span><br><span class="line"><span class="keyword">public</span> Response <span class="title function_">renewLease</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication,</span></span><br><span class="line"><span class="params">        <span class="meta">@QueryParam(&quot;overriddenstatus&quot;)</span> String overriddenStatus,</span></span><br><span class="line"><span class="params">        <span class="meta">@QueryParam(&quot;status&quot;)</span> String status,</span></span><br><span class="line"><span class="params">        <span class="meta">@QueryParam(&quot;lastDirtyTimestamp&quot;)</span> String lastDirtyTimestamp)</span> &#123;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过注册表的renew方法，完成服务续约的逻辑。registry.renew，实际还是进入AbstractInstanceRegistry.renew这个方法里。</p>
+</li>
+<li><p>用appName获取服务注册表那个map，做了一些检查。最后执行续约的逻辑（leaseToRenew.renew();）其实就是更新了一下lastUpdateTimestamp的时间，加上了duration。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(appName);</span><br><span class="line"><span class="comment">// 一些代码</span></span><br><span class="line">leaseToRenew.renew();</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="服务下线流程分析"><a href="#服务下线流程分析" class="headerlink" title="服务下线流程分析"></a>服务下线流程分析</h1><p>下面看一下DiscoveryClient的shutdown方法的逻辑。</p>
+<ol>
+<li><p>在eureka client里，得自己调用一下eurekaClient.shutodwn()方法来进行服务下线。关注里边的unregister();方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EurekaHttpResponse&lt;Void&gt; httpResponse = eurekaTransport.registrationClient.cancel(instanceInfo.getAppName(), instanceInfo.getId());</span><br></pre></td></tr></table></figure>
+
+<p>对应的路径是，<code>DELETE apps/{appName}/{id}</code>，和上面一样，是在InstanceResource类里的cancelLease方法。</p>
+</li>
+<li><p>最后跟着源码里走，执行的的逻辑是AbstractInstanceRegistry.internalCancel方法。</p>
+</li>
+<li><p>取到注册表的map，直接调用remove从map里给移除了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; gMap = registry.get(appName);</span><br><span class="line">....</span><br><span class="line">gMap.remove(id);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后调用了leaseToCancel.cancel();，设置了evictionTimestamp时间。</p>
+</li>
+<li><p>在recentlyChangedQueue里新增了一条服务实例变更记录，保留3分钟。（用于在客户端进行增量更新的时候进行合并）</p>
+</li>
+<li><p>调用invalidateCache，让缓存失效，从readWriteCacheMap里全部清理掉。会有定时任务每隔30秒让readOnlyCacheMap和readWriteCacheMap进行同步。这部分逻辑在上一篇文章有分析到。</p>
+</li>
+<li><p><strong>下次所有的eureka client来拉取增量注册表的时候，就会返回recentlyChangedQueue里的数据，然后在本地进行合并，比对hash值，再决定是否重新拉取全量注册表的逻辑。</strong></p>
+</li>
+</ol>
+<p><img src="/img/spring-cloud/image-20200322230318802.png" alt="image-20200322230318802"></p>
+<p>这里再一次体现了，无论是服务注册、故障、还是下线了，都会将变更记录放进<strong>recentlyChangedQueue</strong>里，eureka client在30秒的增量更新定时任务里，去合并新的服务列表。readOnlyCacheMap从readWriteCacheMap同步的时间也是30秒。所以服务最长可能60秒才能感知到服务的下线。</p>
+<h1 id="服务故障流程分析"><a href="#服务故障流程分析" class="headerlink" title="服务故障流程分析"></a>服务故障流程分析</h1><p>如果客户端在故障后，没有通知eureka server服务下线。那么就需要用到eureka server自己的故障感应机制，以及服务实例摘除的机制。</p>
+<p>eureka server是靠心跳来感知服务是否存活，如果在一定时间内没有收到心跳，那么就认为服务已经宕机了，此时会修改服务状态，并进行摘除。</p>
+<p>可以判定，肯定是有一个定时任务，在定时的判断。就是EurekaBootStrap初始化方法里的这行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">registry.openForTraffic(applicationInfoManager, registryCount);</span><br><span class="line">AbstractInstanceRegistry.postInit()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">postInit</span><span class="params">()</span> &#123;</span><br><span class="line">    renewsLastMin.start();</span><br><span class="line">    <span class="keyword">if</span> (evictionTaskRef.get() != <span class="literal">null</span>) &#123;</span><br><span class="line">        evictionTaskRef.get().cancel();</span><br><span class="line">    &#125;</span><br><span class="line">    evictionTaskRef.set(<span class="keyword">new</span> <span class="title class_">EvictionTask</span>());</span><br><span class="line">    evictionTimer.schedule(evictionTaskRef.get(),</span><br><span class="line">            serverConfig.getEvictionIntervalTimerInMs(),</span><br><span class="line">            serverConfig.getEvictionIntervalTimerInMs());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每隔60秒，会执行一次任务，判断服务实例的租约是否已经过期了，虽然定时任务是60秒一次，这里有个getCompensationTimeMs();方法，计算上次心跳，到这次任务执行的时间差到底是多少，从而保证准确的计算过期时间，因为可能jvm gc原因或者时钟原因，并没有刚好60秒执行这次的任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">getCompensationTimeMs</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// 当前时间</span></span><br><span class="line">  <span class="type">long</span> <span class="variable">currNanos</span> <span class="operator">=</span> getCurrentTimeNano();</span><br><span class="line">  <span class="comment">// 上次任务的时间</span></span><br><span class="line">  <span class="type">long</span> <span class="variable">lastNanos</span> <span class="operator">=</span> lastExecutionNanosRef.getAndSet(currNanos);</span><br><span class="line">  <span class="keyword">if</span> (lastNanos == <span class="number">0l</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0l</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 间隔时间是和配置的时间间隔，getEvictionIntervalTimerInMs默认是60秒</span></span><br><span class="line">  <span class="type">long</span> <span class="variable">elapsedMs</span> <span class="operator">=</span> TimeUnit.NANOSECONDS.toMillis(currNanos - lastNanos);</span><br><span class="line">  <span class="type">long</span> <span class="variable">compensationTime</span> <span class="operator">=</span> elapsedMs - serverConfig.getEvictionIntervalTimerInMs();</span><br><span class="line">  <span class="keyword">return</span> compensationTime &lt;= <span class="number">0l</span> ? <span class="number">0l</span> : compensationTime;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//分割线。。。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// We collect first all expired items, to evict them in random order. For large eviction sets,</span></span><br><span class="line"><span class="comment">// if we do not that, we might wipe out whole apps before self preservation kicks in. By randomizing it,</span></span><br><span class="line"><span class="comment">// the impact should be evenly distributed across all applications.</span></span><br><span class="line">List&lt;Lease&lt;InstanceInfo&gt;&gt; expiredLeases = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (Entry&lt;String, Map&lt;String, Lease&lt;InstanceInfo&gt;&gt;&gt; groupEntry : registry.entrySet()) &#123;</span><br><span class="line">  Map&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseMap = groupEntry.getValue();</span><br><span class="line">  <span class="keyword">if</span> (leaseMap != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;String, Lease&lt;InstanceInfo&gt;&gt; leaseEntry : leaseMap.entrySet()) &#123;</span><br><span class="line">      Lease&lt;InstanceInfo&gt; lease = leaseEntry.getValue();</span><br><span class="line">      <span class="keyword">if</span> (lease.isExpired(additionalLeaseMs) &amp;&amp; lease.getHolder() != <span class="literal">null</span>) &#123;</span><br><span class="line">        expiredLeases.add(lease);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断是否过期</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Checks if the lease of a given &#123;<span class="doctag">@link</span> com.netflix.appinfo.InstanceInfo&#125; has expired or not.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Note that due to renew() doing the &#x27;wrong&quot; thing and setting lastUpdateTimestamp to +duration more than</span></span><br><span class="line"><span class="comment">     * what it should be, the expiry will actually be 2 * duration. This is a minor bug and should only affect</span></span><br><span class="line"><span class="comment">     * instances that ungracefully shutdown. Due to possible wide ranging impact to existing usage, this will</span></span><br><span class="line"><span class="comment">     * not be fixed.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> additionalLeaseMs any additional lease time to add to the lease evaluation in ms.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isExpired</span><span class="params">(<span class="type">long</span> additionalLeaseMs)</span> &#123;</span><br><span class="line">  <span class="comment">// lastUpdateTimestamp上次心跳时间+90秒+比预期的任务时间晚了多少秒。</span></span><br><span class="line">  <span class="comment">// 看似这里的逻辑是，在不计算预期任务执行的时间情况下，90s没有收到过心跳就认为已经过期</span></span><br><span class="line">  <span class="comment">// 但是看上面的注释，其实这里是有一个bug，因为在心跳的时候，时间就已经+了duration，比如上次心跳的时间 22:47:44，那么lastUpdateTimestamp就是22:49:14</span></span><br><span class="line">  <span class="comment">// 所以在这里判断的时候，真正判断的过期时间是22:50:44，相比上次心跳，已经是过去了180s的时间。</span></span><br><span class="line">  <span class="comment">// 并且这个bug不打算修复</span></span><br><span class="line">  <span class="keyword">return</span> (evictionTimestamp &gt; <span class="number">0</span> || System.currentTimeMillis() &gt; (lastUpdateTimestamp + duration + additionalLeaseMs));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上，要3分钟没有收到心跳，才会剔除一个服务的实例。</p>
+<p>接着后面就是拆除服务实例的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一次性不能摘除太多的实例，因为有可能是eureka server节点自己的网络故障原因，导致没有心跳</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// To compensate for GC pauses or drifting local time, we need to use current registry size as a base for</span></span><br><span class="line"><span class="comment">// triggering self-preservation. Without that we would wipe out full registry.</span></span><br><span class="line"><span class="comment">// 所以想下面计算了一个比例，比如当前注册表的大小是20，getRenewalPercentThreshold的默认值是0.85，</span></span><br><span class="line"><span class="type">int</span> <span class="variable">registrySize</span> <span class="operator">=</span> (<span class="type">int</span>) getLocalRegistrySize();</span><br><span class="line"><span class="comment">// 这里是17</span></span><br><span class="line"><span class="type">int</span> <span class="variable">registrySizeThreshold</span> <span class="operator">=</span> (<span class="type">int</span>) (registrySize * serverConfig.getRenewalPercentThreshold());</span><br><span class="line"><span class="comment">// 所以限制最多只能是3个</span></span><br><span class="line"><span class="type">int</span> <span class="variable">evictionLimit</span> <span class="operator">=</span> registrySize - registrySizeThreshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设expiredLeases过期了6个，和3个里选个最小值，这里是3，随机再从6个里选3个摘除，最后调用internalCancel（服务下线的方法）</span></span><br><span class="line"><span class="type">int</span> <span class="variable">toEvict</span> <span class="operator">=</span> Math.min(expiredLeases.size(), evictionLimit);</span><br><span class="line"><span class="keyword">if</span> (toEvict &gt; <span class="number">0</span>) &#123;</span><br><span class="line">  logger.info(<span class="string">&quot;Evicting &#123;&#125; items (expired=&#123;&#125;, evictionLimit=&#123;&#125;)&quot;</span>, toEvict, expiredLeases.size(), evictionLimit);</span><br><span class="line"></span><br><span class="line">  <span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>(System.currentTimeMillis());</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; toEvict; i++) &#123;</span><br><span class="line">    <span class="comment">// Pick a random item (Knuth shuffle algorithm)</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">next</span> <span class="operator">=</span> i + random.nextInt(expiredLeases.size() - i);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最后调用internalCancel（服务下线的方法）。所以说一个服务如果没有心跳了，可能需要定时任务60秒+心跳时间90秒+过期判断90s，也许要4分钟以上，才能感知一个服务下线了，再加上客户端同步的间隔时间，时间就会更长。</p>
+<h1 id="服务自我保护机制"><a href="#服务自我保护机制" class="headerlink" title="服务自我保护机制"></a>服务自我保护机制</h1><p>下面看一下eureka server自我保护机制。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a><strong>场景</strong></h2><p>如果有20个服务实例，在1分钟以内，只有8个服务保持了心跳，那么eureka server会将剩余的12个没有心跳的服务实例全部摘除吗？其实不是的，有可能是由于eureka server自己的机器所在的网络故障了，导致那些服务心跳发送不过来，导致eureka server一直没有更新心跳的时间。</p>
+<p>进入自我保护机制以后，就不会摘除任何实例了。</p>
+<p>还是看上面一节的evict方法，第一行就有一个判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否允许主动删除实例，和自我保护机制有关</span></span><br><span class="line"><span class="keyword">if</span> (!isLeaseExpirationEnabled()) &#123;</span><br><span class="line">  logger.debug(<span class="string">&quot;DS: lease expiration is currently disabled.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个代码命名其实也是非常奇怪的，你光看名字，永远也想不到isLeaseExpirationEnabled方法里会包含自我保护机制的触发代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isLeaseExpirationEnabled</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// 如果关闭自我保护机制，随时可以清理实例</span></span><br><span class="line">  <span class="keyword">if</span> (!isSelfPreservationModeEnabled()) &#123;</span><br><span class="line">    <span class="comment">// The self preservation mode is disabled, hence allowing the instances to expire.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 会触发自我保护机制</span></span><br><span class="line">  <span class="comment">// numberOfRenewsPerMinThreshold 期望所有服务实例1分钟要有发送多少次心跳过来</span></span><br><span class="line">  <span class="comment">// getNumOfRenewsInLastMin() 上1分钟所有服务实例一共发送多少次心跳</span></span><br><span class="line">  <span class="comment">// 如果上一分钟的心跳次数（假设是102次） &gt; 我所期望的心跳次数，那么返回true，就可以清理服务实例</span></span><br><span class="line">  <span class="comment">// 如果上次心跳次数（假设20次） &lt; 我期望的100次，此时返回false，表示不清理服务实例。</span></span><br><span class="line">  <span class="keyword">return</span> numberOfRenewsPerMinThreshold &gt; <span class="number">0</span> &amp;&amp; getNumOfRenewsInLastMin() &gt; numberOfRenewsPerMinThreshold;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="isLeaseExpirationEnabled方法判断自我保护机制开启"><a href="#isLeaseExpirationEnabled方法判断自我保护机制开启" class="headerlink" title="isLeaseExpirationEnabled方法判断自我保护机制开启"></a>isLeaseExpirationEnabled方法判断自我保护机制开启</h3><p>在evict服务故障的定时任务中，有个isLeaseExpirationEnabled方法会判断<strong>上一分钟的心跳次数</strong>是否小于<strong>期望的一分钟内心跳次数</strong>，如果小于，那么不会清理服务实例。</p>
+<h3 id="如何计算期望的一分钟心跳次数"><a href="#如何计算期望的一分钟心跳次数" class="headerlink" title="如何计算期望的一分钟心跳次数"></a>如何计算期望的一分钟心跳次数</h3><p><strong>numberOfRenewsPerMinThreshold的值是如何设定的？</strong></p>
+<ol>
+<li><p>EurekaBootStrap是启动初始化的类，有一行registry.openForTraffic（开启故障检查）的代码，完成了numberOfRenewsPerMinThreshold的初始化。<br>首先调用sync方法，从相邻的eureka server节点拷贝注册表（调用服务实例列表后注册到本地），拿到服务实例的数量。服务实例数量 * 2 * getRenewalPercentThreshold(0.85)。得到numberOfRenewsPerMinThreshold。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Renewals happen every 30 seconds and for a minute it should be a factor of 2.</span></span><br><span class="line"><span class="comment">// 如果心跳时间间隔修改了怎么办？这里不应该硬编码，应该用心跳间隔时间作来计算。</span></span><br><span class="line"><span class="built_in">this</span>.expectedNumberOfRenewsPerMin = count * <span class="number">2</span>;</span><br><span class="line"><span class="comment">// count * 2 * 0.85</span></span><br><span class="line"><span class="built_in">this</span>.numberOfRenewsPerMinThreshold =</span><br><span class="line">  (<span class="type">int</span>) (<span class="built_in">this</span>.expectedNumberOfRenewsPerMin * serverConfig.getRenewalPercentThreshold());</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实际上这里的*2的操作，是很迷的一种写法，首先他这个地方硬编码了。然后他想表达的意思是，如果有10个实例，那么就在1分钟以内，要收到20次心跳，因为30秒一次心跳嘛。可是如果用户自己修改了心跳的间隔2时间，那这个地方不就BUG了吗？</p>
+</blockquote>
+</li>
+<li><p>在注册、下线、故障的时候，肯定也会更新值，这里有个小技巧，我们要查找一个变量在哪些地方赋值过。可以在IDEA里按快捷 <code>ALT+F7</code>，在看源码的时候非常有用，如截图所示，在前边有红色一根笔的小图标，可以看得出来是写操作，绿色一本书是读操作。<br><img src="/img/spring-cloud/image-20200329171857177.png" alt="image-20200329171857177"><br>AbstractInstanceRegistry.register方法中，这里再一次做了硬编码，新注册一个实例后，每分钟期望的心跳次数就会 <code>+ 2</code>。一样的，下线就是<code>-2</code>。<strong>那么故障的时候有更新这个值吗？我反正是没有找到，直接调用internalCancel方法不会去更新这个值，所以这应该是一个BUG！！！因为如果都是因为故障下线的，这个期望的心跳值并没有更新，实际的心跳次数又变少。那么每次在清除实例的时候，可能导致快速的开启了自我保护机制，而不再去清理任何的实例了。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.expectedNumberOfRenewsPerMin = <span class="built_in">this</span>.expectedNumberOfRenewsPerMin + <span class="number">2</span>;</span><br><span class="line"><span class="built_in">this</span>.numberOfRenewsPerMinThreshold =</span><br><span class="line">(<span class="type">int</span>) (<span class="built_in">this</span>.expectedNumberOfRenewsPerMin * serverConfig.getRenewalPercentThreshold());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定时更新，根据<code>ALT+F7</code>的方式，PeerAwareInstanceRegistryImpl初始化的时候，启了定时调度任务，默认是15分钟执行一次。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scheduleRenewalThresholdUpdateTask</span><span class="params">()</span> &#123;</span><br><span class="line">  timer.schedule(<span class="keyword">new</span> <span class="title class_">TimerTask</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">      updateRenewalThreshold();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, serverConfig.getRenewalThresholdUpdateIntervalMs(),</span><br><span class="line">                 serverConfig.getRenewalThresholdUpdateIntervalMs());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在updateRenewalThreshold任务中，从别的服务同步并合并注册表。然后计算出一个服务实例的数量。如果拉取到的服务实例数量，大于本地的期望的服务实例数量*0.85。**我觉得这里是不是写错了，numberOfRenewsPerMinThreshold本来就是count*2*0.85，这里判断再*0.85？？？**接着再次计算了一下服务实例列表的count，count * 2 * 0.85。这个代码也是骚的很，刚计算了<code>expectedNumberOfRenewsPerMin=count * 2</code>，下面却不用这个变量，又写了一遍。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">  <span class="comment">// Update threshold only if the threshold is greater than the</span></span><br><span class="line">  <span class="comment">// current expected threshold of if the self preservation is disabled.</span></span><br><span class="line">  <span class="keyword">if</span> ((count * <span class="number">2</span>) &gt; (serverConfig.getRenewalPercentThreshold() * numberOfRenewsPerMinThreshold)</span><br><span class="line">      || (!<span class="built_in">this</span>.isSelfPreservationModeEnabled())) &#123;</span><br><span class="line">    <span class="built_in">this</span>.expectedNumberOfRenewsPerMin = count * <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">this</span>.numberOfRenewsPerMinThreshold = (<span class="type">int</span>) ((count * <span class="number">2</span>) * serverConfig.getRenewalPercentThreshold());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="实际的上一分钟心跳次数是如何计算的？"><a href="#实际的上一分钟心跳次数是如何计算的？" class="headerlink" title="实际的上一分钟心跳次数是如何计算的？"></a>实际的上一分钟心跳次数是如何计算的？</h3><p>回到前面判断是否开启自我保护的代码，实际的上一分钟心跳次数getNumOfRenewsInLastMin()，用到了MeasuredRate，我们可以用<code>ALT + F7</code>去找increment方法的调用处，直接定位到了renew(心跳)的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实际的上一分钟心跳次数 + 1</span></span><br><span class="line">renewsLastMin.increment();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 内部实现细节----如何计算并保持上1分钟的数据？</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 每分钟一次，设置到lastBucket中，currentBucket设置为0</span></span><br><span class="line"><span class="comment">// lastBucket是用来读的，currentBucket是用来写的</span></span><br><span class="line"><span class="comment">// Zero out the current bucket.</span></span><br><span class="line">lastBucket.set(currentBucket.getAndSet(<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="自我保护机制的触发"><a href="#自我保护机制的触发" class="headerlink" title="自我保护机制的触发"></a>自我保护机制的触发</h3><p>如果上一分钟，实际的心跳次数少于了期望的心跳次数，那么就会开启自我保护机制，不允许摘除任何服务实例。此时认为自己的eureka server出现网络故障，大量的服务实例无法发送心跳过来。</p>
+<p><img src="/img/spring-cloud/image-20200329182748663.png" alt="image-20200329182748663"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring-cloud/" rel="tag"># spring-cloud</a>
+              <a href="/tags/eureka/" rel="tag"># eureka</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/21/springcloud/eureka03/" rel="prev" title="Eureka源码03-服务列表同步分析">
+                  <i class="fa fa-angle-left"></i> Eureka源码03-服务列表同步分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/28/springcloud/eureka05/" rel="next" title="Eureka源码05-服务集群初始化和同步原理分析">
+                  Eureka源码05-服务集群初始化和同步原理分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

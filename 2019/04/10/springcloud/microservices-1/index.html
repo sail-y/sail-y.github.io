@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud微服务-1-什么是微服务">
+<meta property="og:url" content="http://www.saily.top/2019/04/10/springcloud/microservices-1/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解相关技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png">
+<meta property="og:image" content="http://www.saily.top/img/spring-cloud/sc01-1.jpg">
+<meta property="article:published_time" content="2019-04-10T10:56:58.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:04:06.180Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="Spring Cloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2019/04/10/springcloud/microservices-1/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2019/04/10/springcloud/microservices-1/","path":"2019/04/10/springcloud/microservices-1/","title":"Spring Cloud微服务-1-什么是微服务"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring Cloud微服务-1-什么是微服务 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">什么是微服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84%E5%AD%98%E5%9C%A8%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">单体架构存在的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1-1"><span class="nav-number">1.2.</span> <span class="nav-text">什么是微服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E4%B8%80%E7%A7%8D%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC"><span class="nav-number">1.3.</span> <span class="nav-text">微服务是一种架构风格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E6%8C%91%E6%88%98"><span class="nav-number">1.4.</span> <span class="nav-text">微服务的优点和挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%B7%E5%A4%87%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.4.1.</span> <span class="nav-text">微服务具备的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">微服务的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">1.4.3.</span> <span class="nav-text">微服务带来的挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.4.</span> <span class="nav-text">微服务的设计原则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOA"><span class="nav-number">2.</span> <span class="nav-text">SOA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.2.</span> <span class="nav-text">微服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOA%E5%92%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%B7%AE%E5%BC%82%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">SOA和微服务的差异性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A01"><span class="nav-number">3.1.</span> <span class="nav-text">文章1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A02"><span class="nav-number">3.2.</span> <span class="nav-text">文章2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2019/04/10/springcloud/microservices-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring Cloud微服务-1-什么是微服务 | 帆的博客">
+      <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Cloud微服务-1-什么是微服务
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：4月 10 2019 18:56:58" itemprop="dateCreated datePublished" datetime="2019-04-10T18:56:58+08:00">4月 10 2019</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:04:06" itemprop="dateModified" datetime="2026-03-21T00:04:06+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解相关技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>微服务学习笔记</p>
+<h1 id="什么是微服务"><a href="#什么是微服务" class="headerlink" title="什么是微服务"></a>什么是微服务</h1><p><a target="_blank" rel="noopener" href="https://martinfowler.com/articles/microservices.html">https://martinfowler.com/articles/microservices.html</a></p>
+<blockquote>
+<p>“Microservices” - yet another new term on the crowded streets of software architecture. Although our natural inclination is to pass such things by with a contemptuous glance, this bit of terminology describes a style of software systems that we are finding more and more appealing. We’ve seen many projects use this style in the last few years, and results so far have been positive, so much so that for many of our colleagues this is becoming the default style for building enterprise applications. Sadly, however, there’s not much information that outlines what the microservice style is and how to do it.</p>
+</blockquote>
+<span id="more"></span>
+
+<p>单体应用 -&gt; 微服务应用</p>
+<p><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/13882">从0开始学微服务-胡忠想</a></p>
+<h2 id="单体架构存在的缺点"><a href="#单体架构存在的缺点" class="headerlink" title="单体架构存在的缺点"></a>单体架构存在的缺点</h2><ul>
+<li>复杂性逐渐变高</li>
+<li>技术债务逐渐上升</li>
+<li>部署速度逐渐变慢</li>
+<li>阻碍技术创新</li>
+<li>无法按需伸缩</li>
+</ul>
+<h2 id="什么是微服务-1"><a href="#什么是微服务-1" class="headerlink" title="什么是微服务"></a>什么是微服务</h2><ul>
+<li>Martin Fowler：简而言之，微服务架构风格这种开发方法，是以开发一组小型服务的方式来开发一个独立的应用系统。**其中每个小型服务都运行在自己的进程中，并经常采用HTTP资源API这样轻量的机制来相互通信。**这些服务围绕这些功能进行构建，并能通过全自动的部署机制来进行独立部署。**这些微服务可以使用不同的语言来编写，并且可以使用不同的数据存储技术。**对这些微服务我们仅做最低限度的集中管理。</li>
+<li>微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、相互配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务于服务间采用轻量级的通信机制互相沟通（通常是基于HTTP的RESTful API）。每个服务都围绕着具体的业务进行构建，并且能够独立地被部署到生产环境、类生产环境等。另外，应尽量避免统一的、集中式的服务管理机制，对具体的一个服务而言，应根据业务上下文，选择合适的语言、工具对其进行构建。</li>
+<li>微服务是一种架构风格，一个大型复杂软件应用由一个或多个微服务组成。系统中的各个微服务可被独立部署，各个微服务之间是松耦合的。每个微服务仅关注完成一件任务并很好地完成该任务。在所有情况下，每个任务代表着一个小的业务能力。</li>
+</ul>
+<h2 id="微服务是一种架构风格"><a href="#微服务是一种架构风格" class="headerlink" title="微服务是一种架构风格"></a>微服务是一种架构风格</h2><ul>
+<li>服务组件化（Componentization via Services）</li>
+<li>服务围绕业务（Organized around Business Capabilities）</li>
+<li>产品开发模式（Products not Projects）</li>
+<li>轻量级通信机制（Smart endpoints and dumb pipes）</li>
+<li>去中心化治理（Decentralized Governance）</li>
+<li>去中心化数据设计（Decentralized Data Management）</li>
+<li>故障处理设计（Design for failure）</li>
+<li>演进式设计（Evolutionary Design）</li>
+<li>基础设施自动化（Infrastructure Automation）</li>
+</ul>
+<h2 id="微服务的优点和挑战"><a href="#微服务的优点和挑战" class="headerlink" title="微服务的优点和挑战"></a>微服务的优点和挑战</h2><ul>
+<li>开发简单</li>
+<li>技术栈灵活</li>
+<li>服务独立</li>
+<li>按需扩展</li>
+</ul>
+<hr>
+<ul>
+<li>运维复杂</li>
+<li>数据一致性问题</li>
+<li>集成测试复杂</li>
+<li>重复代码</li>
+<li>监控困难</li>
+</ul>
+<h3 id="微服务具备的特性"><a href="#微服务具备的特性" class="headerlink" title="微服务具备的特性"></a>微服务具备的特性</h3><ul>
+<li>每个微服务可独立运行在自己的进程里</li>
+<li>一系列独立运行的微服务共同构建起了整个系统</li>
+<li>每个服务为独立的业务开发，一个微服务一般完成某个特定的功能，比如：订单管理，用户管理等</li>
+<li>微服务之间通过一些轻量的通信机制进行通信，例如通过REST API或者RPC的方式进行调用</li>
+</ul>
+<h3 id="微服务的优点"><a href="#微服务的优点" class="headerlink" title="微服务的优点"></a>微服务的优点</h3><ul>
+<li>易于开发和维护</li>
+<li>启动较快</li>
+<li>局部修改容易部署</li>
+<li>技术栈不受限</li>
+<li>按需伸缩</li>
+<li>DevOps</li>
+</ul>
+<h3 id="微服务带来的挑战"><a href="#微服务带来的挑战" class="headerlink" title="微服务带来的挑战"></a>微服务带来的挑战</h3><ul>
+<li>运维要求较高</li>
+<li>分布式的复杂性</li>
+<li>接口调整成本高</li>
+<li>重复劳动</li>
+</ul>
+<h3 id="微服务的设计原则"><a href="#微服务的设计原则" class="headerlink" title="微服务的设计原则"></a>微服务的设计原则</h3><ul>
+<li>单一职责原则</li>
+<li>服务自治原则</li>
+<li>轻量级通信原则</li>
+<li>接口明确原则</li>
+</ul>
+<h1 id="SOA"><a href="#SOA" class="headerlink" title="SOA"></a>SOA</h1><p>很多人会把SOA和微服务搞混，甚至理解为同一个东西。实际上SOA已经面世20多年了，和微服务是不一样的，接下来去维基百科看看SOA到底是什么。</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Service-oriented_architecture">https://en.wikipedia.org/wiki/Service-oriented_architecture</a></p>
+<p>学技术，一定要去阅读原版的英文资料。</p>
+<blockquote>
+<p><strong>Service-oriented architecture (SOA)</strong> is a style of software design where services are provided to the other components by application components, through a communication protocol over a network. The basic principles of service-oriented architecture are independent of vendors, products and technologies.[1] A service is a discrete unit of functionality that can be accessed remotely and acted upon and updated independently, such as retrieving a credit card statement online.</p>
+</blockquote>
+<blockquote>
+<p>A service has four properties according to one of many definitions of SOA:[2]</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>It logically represents a business activity with a specified outcome.		</li>
+<li>It is self-contained.		</li>
+<li>It is a black box for its consumers.</li>
+<li>It may consist of other underlying services.[3]</li>
+</ol>
+<p>Different services can be used in conjunction to provide the functionality of a large software application,[5] a principle SOA shares with modular programming. Service-oriented architecture integrates distributed, separately-maintained and -deployed software components. It is enabled by technologies and standards that facilitate components’ communication and cooperation over a network, especially over an IP network.</p>
+</blockquote>
+<p>SOA是一种软件设计风格，SOA包含了一些服务，服务是通过应用组件的形式，通过网络上的一些通信协议像向其他应用提供服务。不同的服务可以联合起来构成一个大型的应用，SOA遵循模块化编程，它的这种架构集成了分布式的，独自维护的，独自部署的软件组件。也是通过网络来通信的。</p>
+<p>好像看起来SOA的和微服务的概念也没什么太大差别？</p>
+<blockquote>
+<p>In SOA, services use protocols that describe how they pass and parse messages using description metadata. This metadata describes both the functional characteristics of the service and quality-of-service characteristics. Service-oriented architecture aims to allow users to combine large chunks of functionality to form applications which are built purely from existing services and combining them in an ad hoc manner. A service presents a simple interface to the requester that abstracts away the underlying complexity acting as a black box. Further users can also access these independent services without any knowledge of their internal implementation.[6]</p>
+</blockquote>
+<p>在SOA里，服务是用元数据描述的服务的功能特性和质量特性。有没有想起wsdl实现的webservice？</p>
+<p>SOA里有3个角色</p>
+<ul>
+<li>Service provider</li>
+<li>Service broker, service registry or service repository</li>
+<li>Service requester&#x2F;consumer</li>
+</ul>
+<p>SOA可以借助webservice实现，通过标准的internet协议，通过网络来访问这些功能。比如SOAP，Jini，CORBA，Rest</p>
+<p>有很多技术都可以实现SOA，比如</p>
+<ul>
+<li>Web services based on WSDL and SOAP</li>
+<li>Messaging, e.g., with ActiveMQ, JMS, RabbitMQ</li>
+<li>RESTful HTTP, with Representational state transfer (REST) constituting its own constraints-based architectural style</li>
+<li>OPC-UA</li>
+<li>WCF (Microsoft’s implementation of Web services, forming a part of WCF)</li>
+<li>Apache Thrift</li>
+<li>SORCER</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>SOA已经被Web Service合并了，然而Web Service只是实现SOA的一种方式。在缺乏本地或二进制的数据传递调用的情况下，远程调用和效率都会变慢。XML是比较慢的，JSON相比XML会好一些。</p>
+<p>有状态的服务不利于管理。</p>
+<p>SOA主要的挑战是元数据的管理，服务于服务之间的通信会生成大量的消息。</p>
+<p>难以测试。</p>
+<h2 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h2><p>微服务是现代化的SOA架构，用于构建分布式的软件系统。在微服务架构中的服务都是一些进程，它们之间是通过网络来进行通信去完成一个目标。这些服务使用技术不可知的协议，在服务内部去封装语言和框架。微服务是一种SOA的一种新的实现方式，从2014年开始变得流行起来（在引入DevOps后）。它强调的是持续的部署和其他敏捷的实现。</p>
+<p>微服务没有统一的定义，但是有以下特征和原则</p>
+<ul>
+<li>fine-grained interfaces (to independently deployable services),</li>
+<li>business-driven development (e.g. domain-driven design),</li>
+<li>IDEAL cloud application architectures,</li>
+<li>polyglot programming and persistence,</li>
+<li>lightweight container deployment,</li>
+<li>decentralized continuous delivery, and</li>
+<li>DevOps with holistic service monitoring.</li>
+</ul>
+<h1 id="SOA和微服务的差异性"><a href="#SOA和微服务的差异性" class="headerlink" title="SOA和微服务的差异性"></a>SOA和微服务的差异性</h1><h2 id="文章1"><a href="#文章1" class="headerlink" title="文章1"></a>文章1</h2><p><a target="_blank" rel="noopener" href="https://www.ibm.com/blogs/cloud-computing/2018/09/06/soa-versus-microservices/">https://www.ibm.com/blogs/cloud-computing/2018/09/06/soa-versus-microservices/</a></p>
+<blockquote>
+<p>The main distinction comes down to scope. To put it simply, service-oriented architecture (SOA) has an enterprise scope, while the microservices architecture has an application scope.</p>
+</blockquote>
+<p>SOA着重点在企业范围，微服务着重点在应用范围。</p>
+<p><img src="https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png"></p>
+<p>从这个图可以看出来，SOA的范围更大，他关注的是应用与应用之间的关系。而微服务是应用内部的关联。</p>
+<h2 id="文章2"><a href="#文章2" class="headerlink" title="文章2"></a>文章2</h2><p><a target="_blank" rel="noopener" href="https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al">https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al</a></p>
+<blockquote>
+<p>Service Oriented Architecture is less about how to modularize an application, and more about how to compose an application by integration of distributed, separately-maintained and deployed software components. It is enabled by technologies and standards that make it easier for components to communicate and cooperate over a network, especially an IP network.</p>
+</blockquote>
+<p><img src="/img/spring-cloud/sc01-1.jpg"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
+              <a href="/tags/Spring-Cloud/" rel="tag"># Spring Cloud</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/02/28/springcloud/spring-cloud-nepxion-gray/" rel="prev" title="Spring Cloud基于用户和ip的灰度发布方案">
+                  <i class="fa fa-angle-left"></i> Spring Cloud基于用户和ip的灰度发布方案
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/04/12/springcloud/microservices-2/" rel="next" title="Spring Cloud微服务-2-SpringBoot起步">
+                  Spring Cloud微服务-2-SpringBoot起步 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文讲解ElasticSearch03-集群和架构讲解技术要点和实践经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch03-集群和架构讲解">
+<meta property="og:url" content="http://www.saily.top/2018/06/20/elasticsearch/elasticSearch03/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文讲解ElasticSearch03-集群和架构讲解技术要点和实践经验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.saily.top/img/es/03/ES%E7%9A%84%E5%9F%BA%E7%A1%80%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://www.saily.top/img/es/03/%E5%8D%95%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81.png">
+<meta property="og:image" content="http://www.saily.top/img/es/03/2%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E5%88%86%E7%89%87%E5%92%8C%E5%89%AF%E6%9C%AC%E5%88%86%E9%85%8D.png">
+<meta property="article:published_time" content="2018-06-20T00:57:00.000Z">
+<meta property="article:modified_time" content="2026-03-20T16:03:18.216Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="ElasticSearch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.saily.top/img/es/03/ES%E7%9A%84%E5%9F%BA%E7%A1%80%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84.png">
+
+
+<link rel="canonical" href="http://www.saily.top/2018/06/20/elasticsearch/elasticSearch03/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2018/06/20/elasticsearch/elasticSearch03/","path":"2018/06/20/elasticsearch/elasticSearch03/","title":"ElasticSearch03-集群和架构讲解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ElasticSearch03-集群和架构讲解 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES%E5%9F%BA%E7%A1%80%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">ES基础分布式架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch%E5%AF%B9%E5%A4%8D%E6%9D%82%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%8F%E6%98%8E%E9%9A%90%E8%97%8F%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">Elasticsearch对复杂分布式机制的透明隐藏特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch%E7%9A%84%E5%9E%82%E7%9B%B4%E6%89%A9%E5%AE%B9%E4%B8%8E%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%AE%B9"><span class="nav-number">1.2.</span> <span class="nav-text">Elasticsearch的垂直扩容与水平扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%87%8F%E6%88%96%E5%87%8F%E5%B0%91%E8%8A%82%E7%82%B9%E6%97%B6%E7%9A%84%E6%95%B0%E6%8D%AErebalance"><span class="nav-number">1.3.</span> <span class="nav-text">增减或减少节点时的数据rebalance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#master%E8%8A%82%E7%82%B9%E4%BD%9C%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">master节点作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%AF%B9%E7%AD%89%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">节点对等的分布式架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shard-replica%E6%9C%BA%E5%88%B6%E5%86%8D%E6%AC%A1%E6%A2%B3%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">shard&amp;replica机制再次梳理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95node%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%9B%E5%BB%BAindex%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E5%AD%90%E7%9A%84"><span class="nav-number">3.</span> <span class="nav-text">单node环境下创建index是什么样子的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E4%B8%AAnode%E7%8E%AF%E5%A2%83%E4%B8%8Breplica-shard%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%86%E9%85%8D%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text">2个node环境下replica shard是如何分配的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%AA%E5%90%91%E6%89%A9%E5%AE%B9%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%8C%E5%A6%82%E4%BD%95%E8%B6%85%E5%87%BA%E6%89%A9%E5%AE%B9%E6%9E%81%E9%99%90%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E6%8F%90%E5%8D%87%E5%AE%B9%E9%94%99%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">横向扩容的过程，如何超出扩容极限，以及如何提升容错性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticsearch%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6%EF%BC%9Amaster%E9%80%89%E4%B8%BE%EF%BC%8Creplica%E5%AE%B9%E9%94%99%EF%BC%8C%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D"><span class="nav-number">6.</span> <span class="nav-text">Elasticsearch容错机制：master选举，replica容错，数据恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="nav-number">7.1.</span> <span class="nav-text">关键要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.2.</span> <span class="nav-text">实践建议</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/06/20/elasticsearch/elasticSearch03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ElasticSearch03-集群和架构讲解 | 帆的博客">
+      <meta itemprop="description" content="本文讲解ElasticSearch03-集群和架构讲解技术要点和实践经验。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ElasticSearch03-集群和架构讲解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：6月 20 2018 8:57:00" itemprop="dateCreated datePublished" datetime="2018-06-20T08:57:00+08:00">6月 20 2018</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 0:03:18" itemprop="dateModified" datetime="2026-03-21T00:03:18+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解ElasticSearch03-集群和架构讲解技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>此为龙果学院课程学习笔记，记录以后翻看</p>
+<h2 id="ES基础分布式架构"><a href="#ES基础分布式架构" class="headerlink" title="ES基础分布式架构"></a>ES基础分布式架构</h2><h3 id="Elasticsearch对复杂分布式机制的透明隐藏特性"><a href="#Elasticsearch对复杂分布式机制的透明隐藏特性" class="headerlink" title="Elasticsearch对复杂分布式机制的透明隐藏特性"></a>Elasticsearch对复杂分布式机制的透明隐藏特性</h3><p>Elasticsearch是一套分布式的系统，分布式就是为了应对大数据量。它隐藏了复杂的分布式机制，其中有几个很重要的机制和概念。</p>
+<ul>
+<li>分片机制（之前将一些document插入到es集群中去，不用关心数据怎么进行分片的，数据到哪个shard中去，这是ES自动完成的）</li>
+</ul>
+<span id="more"></span>
+<ul>
+<li><p>cluster discovery（集群发现机制：在第一篇文章中做那个集群status从yellow转green的实验里，直接启动了第二个es进程，那个进程就作为一个node自动就发现了集群，并且加入了进去，还接受了部分数据）</p>
+</li>
+<li><p>shard负载均衡（举例，假设现在有3个节点，总共有25个shard要分配到3个节点上去，es会自动进行均匀分配，以保持每个节点的均衡的读写负载请求）</p>
+</li>
+</ul>
+<p>总结下来就是：分片副本，请求路由，集群扩容，分片重分配
+	</p>
+<h3 id="Elasticsearch的垂直扩容与水平扩容"><a href="#Elasticsearch的垂直扩容与水平扩容" class="headerlink" title="Elasticsearch的垂直扩容与水平扩容"></a>Elasticsearch的垂直扩容与水平扩容</h3><ul>
+<li><p>垂直扩容：采购更强大的服务器，成本非常高昂，而且会有瓶颈，假设世界上最强大的服务器容量就是10T，但是当你的总数据量达到5000T的时候，你要采购多少台最强大的服务器？</p>
+</li>
+<li><p>水平扩容：这是业界经常采用的方案，采购越来越多的普通服务器，虽然性能比较一般，但是很多普通服务器组织在一起，就能构成强大的计算和存储能力。</p>
+</li>
+</ul>
+<p>例如：</p>
+<p>普通服务器：1T，1万一台，需要100万<br>强大服务器：10T，50万一台，需要500万</p>
+<p>一般是采用水平扩容的方式</p>
+<h3 id="增减或减少节点时的数据rebalance"><a href="#增减或减少节点时的数据rebalance" class="headerlink" title="增减或减少节点时的数据rebalance"></a>增减或减少节点时的数据rebalance</h3><p>每当增加或者减少节点的时候，ES会自动的负载均衡保持每个节点的shard负载均衡，保证每台服务器的分片数量均衡。</p>
+<h3 id="master节点作用"><a href="#master节点作用" class="headerlink" title="master节点作用"></a>master节点作用</h3><p>ES集群都有一个master节点，用来管理ES集群的元数据：比如索引的创建和删除，维护索引的元数据；节点的增加和移除等等。</p>
+<p>默认情况下会自动的选出一台节点作为master节点，master不承载请求，所以没有单点瓶颈。</p>
+<h3 id="节点对等的分布式架构"><a href="#节点对等的分布式架构" class="headerlink" title="节点对等的分布式架构"></a>节点对等的分布式架构</h3><p>所有的节点都可以接受请求，也可以存储数据，如果数据不在自己的节点上，就去别的节点将数据找到然后返回给客户端。</p>
+<ol>
+<li>节点对等，每个节点都能接收所有的请求</li>
+<li>自动请求路由</li>
+<li>响应收集</li>
+</ol>
+<p><img src="/img/es/03/ES%E7%9A%84%E5%9F%BA%E7%A1%80%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84.png" alt="ES的基础分布式架构"></p>
+<h2 id="shard-replica机制再次梳理"><a href="#shard-replica机制再次梳理" class="headerlink" title="shard&amp;replica机制再次梳理"></a>shard&amp;replica机制再次梳理</h2><ol>
+<li>一个index包含一个或者多个shard</li>
+<li>每个shard都是一个最小工作单元，它承载部分数据，每一个都是lucene实例，具有完整的建立索引和处理请求的能力。</li>
+<li>增减节点时，shard会自动在nodes中负载均衡</li>
+<li>primary shard和replica shard，每个document肯定只存在于某一个primary shard以及其对应的replica shard中，不可能存在于多个primary shard。</li>
+<li>replica shard是primary shard的副本，负责容错，以及承担读请求负载。</li>
+<li>primary shard的数量在创建索引的时候就固定了，replica shard的数量可以随时修改。</li>
+<li>primary shard的默认数量是5，replica默认是1，默认有10个shard，5个primary shard，5个replica shard</li>
+<li>primary shard不能和自己的replica shard放在同一个节点上（否则节点宕机，primary shard和副本都丢失，起不到容错的作用），但是可以和其他primary shard的replica shard放在同一个节点上。</li>
+</ol>
+<h2 id="单node环境下创建index是什么样子的"><a href="#单node环境下创建index是什么样子的" class="headerlink" title="单node环境下创建index是什么样子的"></a>单node环境下创建index是什么样子的</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT /test_index</span><br><span class="line">&#123;</span><br><span class="line">   &quot;settings&quot; : &#123;</span><br><span class="line">      &quot;number_of_shards&quot; : 3,</span><br><span class="line">      &quot;number_of_replicas&quot; : 1</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>单node环境下，创建一个index，它有3个primary shard，3个replica shard</p>
+</li>
+<li><p>集群status是yellow</p>
+<p> <img src="/img/es/03/%E5%8D%95%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81.png" alt="单机集群状态"></p>
+</li>
+<li><p>这个时候，只会将3个primary shard分配到仅有的一个node上去，另外3个replica shard是无法分配的（primary shard不能和自己的replica shard放在同一个节点上，集群状态是yellow的原因）</p>
+</li>
+<li><p>集群可以正常工作，但是一旦出现节点宕机，数据全部丢失，而且集群不可用，无法承接任何请求</p>
+</li>
+</ol>
+<h2 id="2个node环境下replica-shard是如何分配的"><a href="#2个node环境下replica-shard是如何分配的" class="headerlink" title="2个node环境下replica shard是如何分配的"></a>2个node环境下replica shard是如何分配的</h2><ol>
+<li>replica shard分配：5个primary shard，5个replica shard，2个node</li>
+<li>primary和replica的数据是同步的</li>
+<li>primary&#x2F;replica都可能会收到读请求</li>
+</ol>
+<p><img src="/img/es/03/2%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E5%88%86%E7%89%87%E5%92%8C%E5%89%AF%E6%9C%AC%E5%88%86%E9%85%8D.png" alt="2个节点的分片和副本分配"></p>
+<p>上面有灰色边框的是primary shard</p>
+<h2 id="横向扩容的过程，如何超出扩容极限，以及如何提升容错性"><a href="#横向扩容的过程，如何超出扩容极限，以及如何提升容错性" class="headerlink" title="横向扩容的过程，如何超出扩容极限，以及如何提升容错性"></a>横向扩容的过程，如何超出扩容极限，以及如何提升容错性</h2><ol>
+<li>如果本身是2个节点，扩容1个节点后primary&amp;replica会自动负载均衡。6个shard，3 primary，3 replica会平均的被分配3个节点中。</li>
+<li>扩容后每个node有更少的shard，意味着IO&#x2F;CPU&#x2F;Memory资源给每个shard分配更多，每个shard性能更好。</li>
+<li>扩容的极限是什么？如果是6个shard（3 primary，3 replica），那么最多扩容到6台机器，每个shard可以占用单台服务器的所有资源，这个时候性能最好。</li>
+<li>如果要超出扩容极限，那就动态修改replica数量，9个shard（3primary，6 replica），扩容到9台机器，比3台机器时，拥有3倍的读吞吐量。</li>
+<li>在3台机器的情况下，9个shard（3 primary，6 replica），虽然资源更少，但是容错性更好，最多容纳2台机器宕机，如果是配置的6个shard那么只能容纳1台机器宕机。</li>
+<li>这里的这些知识点综合起来看，一方面是说扩容的原理，怎么扩容，怎么提升系统整体吞吐量；另一方面要考虑到系统的容错性，怎么保证提高容错性，让尽可能多的服务器宕机，保证数据不丢失。</li>
+</ol>
+<h2 id="Elasticsearch容错机制：master选举，replica容错，数据恢复"><a href="#Elasticsearch容错机制：master选举，replica容错，数据恢复" class="headerlink" title="Elasticsearch容错机制：master选举，replica容错，数据恢复"></a>Elasticsearch容错机制：master选举，replica容错，数据恢复</h2><p>假设我们一共有9 shard，3个node。</p>
+<ol>
+<li>如果master node宕机了，那么ES集群会自动进行master选举，自动选举另外一个node成为新的master，这个时候集群状态会变成red。</li>
+<li>replica容错：新的master将replica shard提升为primary shard，集群状态变成yellow。</li>
+<li>然后我们再重启宕机的node，master会将确实的副本复制到该node，会使用原有的shard并同步宕机后的修改，然后集群变成green。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li>理解核心技术原理</li>
+<li>掌握实际应用方法</li>
+<li>学习最佳实践和注意事项</li>
+</ul>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li>结合实际项目练习</li>
+<li>深入研究官方文档</li>
+<li>持续学习和实践</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ElasticSearch/" rel="tag"># ElasticSearch</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/12/cache/cache06/" rel="prev" title="高可用缓存架构实战6-缓存雪崩及解决方案">
+                  <i class="fa fa-angle-left"></i> 高可用缓存架构实战6-缓存雪崩及解决方案
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/07/19/linux/redis-install/" rel="next" title="centos7安装redis4.0.10并进行生产环境部署">
+                  centos7安装redis4.0.10并进行生产环境部署 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

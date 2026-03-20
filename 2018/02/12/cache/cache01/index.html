@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文详细介绍Redis的两种持久化机制RDB和AOF，分析各自的优缺点和适用场景，并给出生产环境的最佳实践配置方案。通过对比RDB的快照特性和AOF的日志特性，帮助读者理解如何根据业务需求选择合适的持久化策略，确保数据安全性和系统高可用性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高可用缓存架构实战1-Redis配置和持久化">
+<meta property="og:url" content="http://www.saily.top/2018/02/12/cache/cache01/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="本文详细介绍Redis的两种持久化机制RDB和AOF，分析各自的优缺点和适用场景，并给出生产环境的最佳实践配置方案。通过对比RDB的快照特性和AOF的日志特性，帮助读者理解如何根据业务需求选择合适的持久化策略，确保数据安全性和系统高可用性。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-02-12T02:02:35.000Z">
+<meta property="article:modified_time" content="2026-03-20T15:45:36.727Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.saily.top/2018/02/12/cache/cache01/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2018/02/12/cache/cache01/","path":"2018/02/12/cache/cache01/","title":"高可用缓存架构实战1-Redis配置和持久化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>高可用缓存架构实战1-Redis配置和持久化 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis"><span class="nav-number">2.</span> <span class="nav-text">Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">Redis持久化的意义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E5%92%8C%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.1.1.</span> <span class="nav-text">持久化和高可用的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9ARDB%E5%92%8CAOF%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.2.</span> <span class="nav-text">Redis持久化：RDB和AOF两种持久化机制的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">RDB持久化机制的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">RDB持久化机制的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">AOF持久化机制的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">AOF持久化机制的缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E5%92%8CAOF%E5%88%B0%E5%BA%95%E8%AF%A5%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9"><span class="nav-number">2.1.3.</span> <span class="nav-text">RDB和AOF到底该如何选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E9%85%8D%E7%BD%AE%E5%92%8C%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.4.</span> <span class="nav-text">持久化配置和数据恢复实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AERDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">如何配置RDB持久化机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.4.1.1.</span> <span class="nav-text">RDB持久化机制的工作流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ERDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.4.1.2.</span> <span class="nav-text">基于RDB持久化机制的数据恢复实验</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">AOF持久化的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.4.3.</span> <span class="nav-text">AOF持久化的数据恢复实验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF-rewrite"><span class="nav-number">2.1.4.4.</span> <span class="nav-text">AOF rewrite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E7%A0%B4%E6%8D%9F%E6%96%87%E4%BB%B6%E7%9A%84%E4%BF%AE%E5%A4%8D"><span class="nav-number">2.1.4.5.</span> <span class="nav-text">AOF破损文件的修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E5%92%8CRDB%E5%90%8C%E6%97%B6%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.4.6.</span> <span class="nav-text">AOF和RDB同时工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.4.7.</span> <span class="nav-text">小实验</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9"><span class="nav-number">2.2.1.</span> <span class="nav-text">核心要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.2.2.</span> <span class="nav-text">最佳实践建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.2.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2018/02/12/cache/cache01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="高可用缓存架构实战1-Redis配置和持久化 | 帆的博客">
+      <meta itemprop="description" content="本文详细介绍Redis的两种持久化机制RDB和AOF，分析各自的优缺点和适用场景，并给出生产环境的最佳实践配置方案。通过对比RDB的快照特性和AOF的日志特性，帮助读者理解如何根据业务需求选择合适的持久化策略，确保数据安全性和系统高可用性。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          高可用缓存架构实战1-Redis配置和持久化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2月 12 2018 10:02:35" itemprop="dateCreated datePublished" datetime="2018-02-12T10:02:35+08:00">2月 12 2018</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 20 2026 23:45:36" itemprop="dateModified" datetime="2026-03-20T23:45:36+08:00">3月 20 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">高可用缓存架构实战</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文详细介绍Redis的两种持久化机制RDB和AOF，分析各自的优缺点和适用场景，并给出生产环境的最佳实践配置方案。通过对比RDB的快照特性和AOF的日志特性，帮助读者理解如何根据业务需求选择合适的持久化策略，确保数据安全性和系统高可用性。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文为龙果学院课程笔记，记录Redis持久化机制的详细说明。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Redis作为内存数据库，持久化机制是保障数据安全的关键。本文将深入分析RDB和AOF两种持久化方式的工作原理、优缺点对比以及企业级应用的最佳实践。</p>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p>
+<p>Redis与其他key-value缓存产品有以下三个特点：</p>
+<ol>
+<li>Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载进行使用。</li>
+<li>Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储。</li>
+<li>Redis支持数据的备份，即master-slave模式的数据备份。</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="Redis持久化的意义"><a href="#Redis持久化的意义" class="headerlink" title="Redis持久化的意义"></a>Redis持久化的意义</h2><p>Redis的安装：<a href="http://www.saily.top/2018/07/19/redis-install/">centos7安装redis4.0.10并进行生产环境部署</a>。</p>
+<p>Redis支持数据持久化，但持久化的意义是什么？RDB和AOF两种持久化方式有何区别，各自的特点是什么，适合什么场景？企业级的持久化方案应该如何设计？</p>
+<blockquote>
+<p>Redis持久化的意义在于故障恢复，比如你部署了一个redis作为cache缓存，当然也可以保存一些较为重要的数据，如果没有持久化的话，redis遇到灾难性故障的时候，就会丢失所有的数据，如果通过持久化将数据存一份在磁盘上，然后定期同步和备份到云存储服务上去，那么就可以保证数据不丢失全部，可以恢复一部分数据回来。</p>
+</blockquote>
+<h3 id="持久化和高可用的关系"><a href="#持久化和高可用的关系" class="headerlink" title="持久化和高可用的关系"></a>持久化和高可用的关系</h3><p>企业级redis集群架构：海量数据、高并发、高可用。</p>
+<p>所以对于一个企业级的redis架构来说，持久化是必不可少的。持久化主要是做灾难恢复，数据恢复，也可以归类到高可用的一个环节里面去。</p>
+<p>如果Redis发生故障导致服务不可用，需要尽快恢复服务。如果没有数据备份，即使重启Redis也无法提供服务，因为数据已全部丢失。</p>
+<p>大量请求到达时，缓存无法命中，所有请求都会直接访问MySQL等数据源，导致MySQL承载过高并发而崩溃。如果MySQL也发生故障，将无法从数据源恢复Redis数据。</p>
+<p>如果你把redis的持久化做好，备份和恢复方案做到企业级的程度，那么即使你的redis故障了，也可以通过备份数据，快速恢复，一旦恢复立即对外提供服务。</p>
+<p><strong>所以说Redis的持久化跟高可用，是密切相关的。</strong></p>
+<h3 id="Redis持久化：RDB和AOF两种持久化机制的介绍"><a href="#Redis持久化：RDB和AOF两种持久化机制的介绍" class="headerlink" title="Redis持久化：RDB和AOF两种持久化机制的介绍"></a>Redis持久化：RDB和AOF两种持久化机制的介绍</h3><ul>
+<li><p>RDB持久化机制，对redis中的数据执行周期性的持久化。</p>
+</li>
+<li><p>AOF机制对每条写入命令作为日志，以append-only的模式写入一个日志文件中，在redis重启的时候，可以通过回放AOF日志中的写入指令来重新构建整个数据集。</p>
+</li>
+</ul>
+<blockquote>
+<p>如果我们想要redis仅仅作为纯内存的缓存来用，那么可以禁止RDB和AOF所有的持久化机制。</p>
+</blockquote>
+<p>通过RDB或AOF，都可以将redis内存中的数据给持久化到磁盘，然后可以将这些数据备份到别的地方去，比如阿里云或者其他云服务。</p>
+<p>如果redis挂了，服务器上的内存和磁盘上的数据都丢了，可以从云服务上拷贝回来之前的数据，放到指定的目录中，然后重新启动redis，redis就会自动根据持久化数据文件中的数据，去恢复内存中的数据，继续对外提供服务.</p>
+<p>如果同时使用RDB和AOF两种持久化机制，那么在redis重启的时候，会使用AOF来重新构建数据，因为AOF中的数据更加完整</p>
+<h4 id="RDB持久化机制的优点"><a href="#RDB持久化机制的优点" class="headerlink" title="RDB持久化机制的优点"></a>RDB持久化机制的优点</h4><p>1.RDB会生成多个数据文件，每个数据文件都代表了某一个时刻中redis的数据，这种多个数据文件的方式，非常适合做冷备，可以将这种完整的数据文件发送到一些远程的安全存储上去，比如说Amazon的S3云服务上去，在国内可以是阿里云的ODPS分布式存储上，以预定好的备份策略来定期备份redis中的数据。</p>
+<ul>
+<li>RDB可以做冷备，生成多个文件，每个文件都代表了某一个时刻的完整的数据快照。</li>
+<li>AOF也可以做冷备，只有一个文件，但是可以每隔一定时间复制一份这个文件出来。</li>
+</ul>
+<p>RDB做冷备，优势在哪儿呢？由redis去控制固定时长生成快照文件的事情，比较方便; AOF的话还需要自己写一些各种定时脚本去做这个事情。<br>RDB数据做冷备，在最坏的情况下，提供数据恢复的时候，速度比AOF快。</p>
+<p>2.RDB对redis对外提供的读写服务，影响非常小，可以让redis保持高性能，因为redis主进程只需要fork一个子进程，让子进程执行磁盘IO操作来进行RDB持久化即可</p>
+<ul>
+<li>RDB：每次写都是直接写redis内存，只是在一定的时候，才会将数据写入磁盘中。</li>
+<li>AOF：每次都是要写文件中，虽然可以快速写入<code>os cache</code>中，但是还是有一定的时间开销，速度肯定比RDB略慢一些。</li>
+</ul>
+<p>3.相对于AOF持久化机制来说，直接基于RDB数据文件来重启和恢复redis进程，更加快速		</p>
+<ul>
+<li>AOF：存放的指令日志，做数据恢复的时候，其实是要回放和执行所有的指令日志，来恢复出来内存中的所有数据。</li>
+<li>RDB：就是一份数据文件，恢复的时候，直接加载到内存中。</li>
+</ul>
+<p><strong>结合上述优点，RDB特别适合做冷备。</strong>
+	</p>
+<h4 id="RDB持久化机制的缺点"><a href="#RDB持久化机制的缺点" class="headerlink" title="RDB持久化机制的缺点"></a>RDB持久化机制的缺点</h4><ol>
+<li><p>如果想要在redis故障时，尽可能少的丢失数据，那么RDB没有AOF好。一般来说，RDB数据快照文件，都是每隔5分钟，或者更长时间生成一次，这个时候就得接受一旦redis进程宕机，那么会丢失最近5分钟的数据。</p>
+</li>
+<li><p>RDB每次在fork子进程来执行RDB快照数据文件生成的时候，如果数据文件特别大，可能会导致对客户端提供的服务暂停数毫秒，或者甚至数秒。</p>
+</li>
+</ol>
+<h4 id="AOF持久化机制的优点"><a href="#AOF持久化机制的优点" class="headerlink" title="AOF持久化机制的优点"></a>AOF持久化机制的优点</h4><ol>
+<li><p>AOF可以更好的保护数据不丢失，一般AOF会每隔1秒，通过一个后台线程执行一次fsync操作，最多丢失1秒钟的数据。</p>
+</li>
+<li><p>AOF日志文件以append-only模式写入，所以没有任何磁盘寻址的开销，写入性能非常高，而且文件不容易破损，即使文件尾部破损，也很容易修复。</p>
+</li>
+<li><p>AOF日志文件即使过大的时候，出现后台重写操作，也不会影响客户端的读写。因为在rewrite log的时候，会对其进行压缩，创建出一份需要恢复数据的最小日志出来。再创建新日志文件的时候，老的日志文件还是照常写入。当新的merge后的日志文件ready的时候，再交换新老日志文件即可。</p>
+</li>
+<li><p>AOF日志文件的命令通过非常可读的方式进行记录，这个特性非常适合做灾难性的误删除的紧急恢复。比如某人不小心用flushall命令清空了所有数据，只要这个时候后台rewrite还没有发生，那么就可以立即拷贝AOF文件，将最后一条flushall命令给删了，然后再将该AOF文件放回去，就可以通过恢复机制，自动恢复所有数据。</p>
+</li>
+</ol>
+<h4 id="AOF持久化机制的缺点"><a href="#AOF持久化机制的缺点" class="headerlink" title="AOF持久化机制的缺点"></a>AOF持久化机制的缺点</h4><ol>
+<li><p>对于同一份数据来说，AOF日志文件通常比RDB数据快照文件更大。</p>
+</li>
+<li><p>AOF开启后，支持的写QPS会比RDB支持的写QPS低，因为AOF一般会配置成每秒fsync一次日志文件。每秒一次fsync性能较高，如果要求每写入一条数据就fsync一次，会导致Redis的QPS大幅下降。</p>
+</li>
+<li><p>以前AOF发生过bug，就是通过AOF记录的日志，进行数据恢复的时候，没有恢复一模一样的数据出来。所以说，类似AOF这种较为复杂的基于命令日志&#x2F;merge&#x2F;回放的方式，比基于RDB每次持久化一份完整的数据快照文件的方式，更加脆弱一些，容易有bug。不过AOF就是为了避免rewrite过程导致的bug，因此每次rewrite并不是基于旧的指令日志进行merge的，而是基于当时内存中的数据进行指令的重新构建，这样健壮性会好很多。</p>
+</li>
+<li><p>唯一的比较大的缺点，其实就是做数据恢复的时候，会比较慢，还有做冷备，定期的备份，不太方便，可能要自己手写复杂的脚本去做，做冷备不太合适</p>
+</li>
+</ol>
+<h3 id="RDB和AOF到底该如何选择"><a href="#RDB和AOF到底该如何选择" class="headerlink" title="RDB和AOF到底该如何选择"></a>RDB和AOF到底该如何选择</h3><ol>
+<li><p>不要仅仅使用RDB，因为那样会导致你丢失很多数据。</p>
+</li>
+<li><p>也不要仅仅使用AOF，因为那样有两个问题，第一，通过AOF做冷备，没有RDB做冷备，来的恢复速度更快; 第二，RDB每次简单粗暴生成数据快照，更加健壮，可以避免AOF这种复杂的备份和恢复机制的bug。</p>
+</li>
+<li><p>综合使用AOF和RDB两种持久化机制，用AOF来保证数据不丢失，作为数据恢复的第一选择; 用RDB来做不同程度的冷备，在AOF文件都丢失或损坏不可用的时候，还可以使用RDB来进行快速的数据恢复。</p>
+</li>
+</ol>
+<h3 id="持久化配置和数据恢复实验"><a href="#持久化配置和数据恢复实验" class="headerlink" title="持久化配置和数据恢复实验"></a>持久化配置和数据恢复实验</h3><h4 id="如何配置RDB持久化机制"><a href="#如何配置RDB持久化机制" class="headerlink" title="如何配置RDB持久化机制"></a>如何配置RDB持久化机制</h4><p>在redis的配置文件里，save配置项用来配置RDB。</p>
+<p><code>redis.conf</code>文件，也就是<code>/etc/redis/6379.conf</code>，去配置持久化</p>
+<p>这是默认的配置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br></pre></td></tr></table></figure>
+
+<p>每隔60s，如果有超过10000个key发生了变更，那么就生成一个新的dump.rdb文件，就是当前redis内存中完整的数据快照，这个操作也被称之为snapshotting，快照。</p>
+<p>也可以手动调用save或者bgsave命令，同步或异步执行rdb快照生成。</p>
+<p>save可以设置多个，就是多个snapshotting检查点，每到一个检查点，就会去check一下，是否有指定的key数量发生了变更，如果有，就生成一个新的dump.rdb文件。</p>
+<h5 id="RDB持久化机制的工作流程"><a href="#RDB持久化机制的工作流程" class="headerlink" title="RDB持久化机制的工作流程"></a>RDB持久化机制的工作流程</h5><ol>
+<li>redis根据配置自己尝试去生成rdb快照文件		</li>
+<li>fork一个子进程出来		</li>
+<li>子进程尝试将数据dump到临时的rdb快照文件中	</li>
+<li>完成rdb快照文件的生成之后，就替换之前的旧的快照文件</li>
+</ol>
+<p>dump.rdb，每次生成一个新的快照，都会覆盖之前的老快照</p>
+<h5 id="基于RDB持久化机制的数据恢复实验"><a href="#基于RDB持久化机制的数据恢复实验" class="headerlink" title="基于RDB持久化机制的数据恢复实验"></a>基于RDB持久化机制的数据恢复实验</h5><ol>
+<li><p>在redis中保存几条数据，立即用命令停掉redis，然后重启redis，看看刚才插入的数据还在不在</p>
+<p> 经过测试发现数据还在，为什么？通过redis-cli SHUTDOWN这种方式去停掉redis，其实是一种安全退出的模式，redis在退出的时候会将内存中的数据立即生成一份完整的rdb快照。</p>
+</li>
+<li><p>在redis中再保存几条新的数据，用kill -9粗暴杀死redis进程，模拟redis故障异常退出，导致内存数据丢失的场景。		<br> 这次就发现，redis进程异常被杀掉，数据没有进dump文件，几条最新的数据就丢失了</p>
+</li>
+<li><p>手动设置一个save检查点，<code>save 5 1</code>，5秒检查一次，有一条数据就写入磁盘，写入几条数据，等待5秒钟，会发现自动进行了一次dump rdb快照，在dump.rdb中发现了数据。异常停掉redis进程，再重新启动redis，看刚才插入的数据还在.</p>
+</li>
+</ol>
+<h4 id="AOF持久化的配置"><a href="#AOF持久化的配置" class="headerlink" title="AOF持久化的配置"></a>AOF持久化的配置</h4><p>AOF持久化，默认是关闭的，默认是打开RDB持久化。</p>
+<p><code>appendonly yes</code>属性，可以打开AOF持久化机制，在生产环境里面，一般来说AOF都是要打开的，除非你说随便丢个几分钟的数据也无所谓，打开AOF持久化机制之后，redis每次接收到一条写命令，就会写入日志文件中，当然是先写入os cache的，然后每隔一定时间再fsync一下。</p>
+<p><strong>而且即使AOF和RDB都开启了，redis重启的时候，也是优先通过AOF进行数据恢复的，因为aof数据比较完整。</strong></p>
+<p>可以配置AOF的fsync策略，有三种策略可以选择:一种是每次写入一条数据就执行一次fsync; 一种是每隔一秒执行一次fsync; 一种是不主动执行fsync。</p>
+<ol>
+<li><p>always: 每次写入一条数据，立即将这个数据对应的写日志fsync到磁盘上去，性能非常非常差，吞吐量很低; 如果要确保redis里的数据一条都不丢，那就只能这样了。			</p>
+<p> 为什么说性能差，这里用mysql和redis比较：    </p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql -&gt; 内存策略，大量磁盘操作，QPS最多到1、2k。(QPS，每秒钟的请求数量)</span><br><span class="line">redis -&gt; 内存，磁盘持久化，QPS一般来说上万QPS没问题。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>everysec: 每秒将os cache中的数据fsync到磁盘，这个是最常用的，生产环境一般都这么配置，性能很高，QPS还是可以上万的。</p>
+</li>
+<li><p>no: 仅仅redis负责将数据写入os cache就撒手不管了，然后后面os自己会时不时有自己的策略将数据刷入磁盘，不可控。</p>
+</li>
+</ol>
+<h4 id="AOF持久化的数据恢复实验"><a href="#AOF持久化的数据恢复实验" class="headerlink" title="AOF持久化的数据恢复实验"></a>AOF持久化的数据恢复实验</h4><ol>
+<li><p>先仅仅打开RDB，写入一些数据，然后kill -9杀掉redis进程，接着重启redis，发现数据没了，因为RDB快照还没生成</p>
+</li>
+<li><p>打开AOF的开关，启用AOF持久化</p>
+</li>
+<li><p>写入一些数据，观察AOF文件中的日志内容</p>
+<p> 其实在<code>appendonly.aof</code>文件中，可以看到刚写的日志，它们其实就是先写入os cache的，然后1秒后才fsync到磁盘中，只有fsync到磁盘中了，才是安全的，要不然光是在os cache中，机器只要重启，就什么都没了。</p>
+</li>
+<li><p>kill -9杀掉redis进程，重新启动redis进程，发现数据被恢复回来了，就是从AOF文件中恢复回来的。</p>
+</li>
+</ol>
+<p><strong>Redis进程启动的时候，直接就会从appendonly.aof中加载所有的日志，把内存中的数据恢复回来。</strong></p>
+<h4 id="AOF-rewrite"><a href="#AOF-rewrite" class="headerlink" title="AOF rewrite"></a>AOF rewrite</h4><p>redis中的数据其实有限的，很多数据可能会自动过期，可能会被用户删除，可能会被redis用缓存清除的算法清理掉。redis中的数据会不断淘汰掉旧的，就一部分常用的数据会被自动保留在redis内存中。所以可能很多之前的已经被清理掉的数据，对应的写日志还停留在AOF中，AOF日志文件就一个，会不断的膨胀，到很大很大。</p>
+<p><strong>所以AOF会自动在后台每隔一定时间做rewrite操作，比如日志里已经存放了针对100w数据的写日志了; redis内存只剩下10万; 基于内存中当前的10万数据构建一套最新的日志，到AOF中; 覆盖之前的老日志; 确保AOF日志文件不会过大，保持跟redis内存数据量一致。</strong></p>
+<p>redis2.4之前，还需要手动开发一些脚本、crontab，通过BGREWRITEAOF命令去执行AOF rewrite，但是redis2.4之后，会自动进行rewrite操作。</p>
+<p>在<code>redis.conf</code>中，可以配置rewrite策略：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+<p>比如说上一次AOF<strong>rewrite</strong>之后，是128mb，然后就会接着128mb继续写AOF的日志，如果发现增长的比例超过了之前的100%，有256mb了，就可能会去触发一次rewrite。</p>
+<p>但是此时还要去跟<strong>auto-aof-rewrite-min-size</strong>，也就是64mb去比较，256mb &gt; 64mb，才会去触发rewrite。</p>
+<p>rewrite过程：</p>
+<ol>
+<li>redis fork一个子进程</li>
+<li>子进程基于当前内存中的数据，构建日志，开始往一个新的临时的AOF文件中写入日志</li>
+<li>redis主进程，接收到client新的写操作之后，在内存中写入日志，同时新的日志也继续写入旧的AOF文件</li>
+<li>子进程写完新的日志文件之后，redis主进程将内存中的新日志再次追加到新的AOF文件中</li>
+<li>用新的日志文件替换掉旧的日志文件</li>
+</ol>
+<h4 id="AOF破损文件的修复"><a href="#AOF破损文件的修复" class="headerlink" title="AOF破损文件的修复"></a>AOF破损文件的修复</h4><p>如果redis在append数据到AOF文件时，机器宕机了，可能会导致AOF文件破损</p>
+<p>用<code>redis-check-aof --fix</code>命令来修复破损的AOF文件</p>
+<h4 id="AOF和RDB同时工作"><a href="#AOF和RDB同时工作" class="headerlink" title="AOF和RDB同时工作"></a>AOF和RDB同时工作</h4><ol>
+<li>如果RDB在执行snapshotting操作，那么redis不会执行AOF rewrite; 如果redis再执行AOF rewrite，那么就不会执行RDB snapshotting</li>
+<li>如果RDB在执行snapshotting，此时用户执行BGREWRITEAOF命令，那么等RDB快照生成之后，才会去执行AOF rewrite</li>
+<li>同时有RDB snapshot文件和AOF日志文件，那么redis重启的时候，会优先使用AOF进行数据恢复，因为其中的日志更完整</li>
+</ol>
+<h4 id="小实验"><a href="#小实验" class="headerlink" title="小实验"></a>小实验</h4><ol>
+<li>在有rdb的dump和aof的appendonly的同时，rdb里也有部分数据，aof里也有部分数据，这个时候其实会发现，rdb的数据不会恢复到内存中</li>
+<li>我们模拟让aof破损，然后fix，有一条数据会被fix删除</li>
+<li>再次用fix的aof文件去重启redis，发现数据只剩下一条了</li>
+</ol>
+<p>数据恢复完全依赖于底层的磁盘持久化，如果RDB和AOF文件中都没有数据，数据将无法恢复。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文详细介绍了Redis的两种持久化机制，以下是关键要点：</p>
+<h3 id="核心要点"><a href="#核心要点" class="headerlink" title="核心要点"></a>核心要点</h3><ul>
+<li><strong>RDB持久化</strong>：生成数据快照文件，适合冷备份，恢复速度快，但可能丢失最近几分钟的数据</li>
+<li><strong>AOF持久化</strong>：记录写操作日志，数据安全性高（最多丢失1秒数据），但文件较大且恢复较慢</li>
+<li><strong>持久化与高可用</strong>：持久化是高可用架构的基础，确保故障后能快速恢复数据</li>
+</ul>
+<h3 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h3><ol>
+<li><p><strong>生产环境推荐</strong>：同时开启RDB和AOF两种持久化机制</p>
+<ul>
+<li>AOF保证数据不丢失，作为数据恢复的第一选择</li>
+<li>RDB做不同程度的冷备份，作为AOF损坏时的快速恢复方案</li>
+</ul>
+</li>
+<li><p><strong>配置建议</strong>：</p>
+<ul>
+<li>RDB：配置多个检查点（如save 900 1、save 300 10、save 60 10000）</li>
+<li>AOF：配置appendfsync everysec，平衡性能和数据安全</li>
+</ul>
+</li>
+<li><p><strong>监控要点</strong>：</p>
+<ul>
+<li>监控RDB快照生成时间和频率</li>
+<li>监控AOF文件大小和rewrite频率</li>
+<li>定期验证备份文件的有效性</li>
+</ul>
+</li>
+</ol>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li><strong>RDB优先</strong>：适合可以容忍几分钟数据丢失的场景，对性能影响较小</li>
+<li><strong>AOF优先</strong>：适合数据安全性要求高的场景，不能容忍数据丢失</li>
+<li><strong>组合使用</strong>：生产环境推荐组合使用，兼顾数据安全和恢复速度</li>
+</ul>
+<p>通过合理配置持久化策略，可以有效保障Redis数据安全，为系统高可用提供坚实基础。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"># redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/17/mongodb/mongo6/" rel="prev" title="MongoDB6-分片">
+                  <i class="fa fa-angle-left"></i> MongoDB6-分片
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/02/12/cache/cache02/" rel="next" title="高可用缓存架构实战2-Redis企业级应用实战">
+                  高可用缓存架构实战2-Redis企业级应用实战 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
