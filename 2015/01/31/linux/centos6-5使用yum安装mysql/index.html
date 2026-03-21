@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -18,17 +17,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="本文讲解centos6.5使用yum安装mysql技术要点和实践经验。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centos6.5使用yum安装mysql">
+<meta property="og:title" content="CentOS 6.5 MySQL YUM安装方法">
 <meta property="og:url" content="http://www.saily.top/2015/01/31/linux/centos6-5%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85mysql/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="本文讲解centos6.5使用yum安装mysql技术要点和实践经验。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-01-31T09:41:07.000Z">
-<meta property="article:modified_time" content="2026-03-20T16:03:17.621Z">
+<meta property="article:modified_time" content="2026-03-21T03:56:39.653Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="centos">
 <meta property="article:tag" content="mysql">
@@ -38,10 +37,10 @@
 <link rel="canonical" href="http://www.saily.top/2015/01/31/linux/centos6-5%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85mysql/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2015/01/31/linux/centos6-5%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85mysql/","path":"2015/01/31/linux/centos6-5使用yum安装mysql/","title":"centos6.5使用yum安装mysql"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2015/01/31/linux/centos6-5%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85mysql/","path":"2015/01/31/linux/centos6-5使用yum安装mysql/","title":"CentOS 6.5 MySQL YUM安装方法"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>centos6.5使用yum安装mysql | 帆的博客</title>
+<title>CentOS 6.5 MySQL YUM安装方法 | 帆的博客</title>
   
 
 
@@ -204,12 +203,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="centos6.5使用yum安装mysql | 帆的博客">
+      <meta itemprop="name" content="CentOS 6.5 MySQL YUM安装方法 | 帆的博客">
       <meta itemprop="description" content="本文讲解centos6.5使用yum安装mysql技术要点和实践经验。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          centos6.5使用yum安装mysql
+          CentOS 6.5 MySQL YUM安装方法
         </h1>
 
         <div class="post-meta-container">
@@ -227,7 +226,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：3月 21 2026 0:03:17" itemprop="dateModified" datetime="2026-03-21T00:03:17+08:00">3月 21 2026</time>
+      <time title="修改时间：3月 21 2026 11:56:39" itemprop="dateModified" datetime="2026-03-21T11:56:39+08:00">3月 21 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -298,13 +297,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2015/01/31/java/Spring-mvc-ResponseBody-%E8%BF%94%E5%9B%9E%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%9E%8B/" rel="prev" title="Spring mvc @ResponseBody 返回枚举类型">
-                  <i class="fa fa-angle-left"></i> Spring mvc @ResponseBody 返回枚举类型
+                <a href="/2015/01/31/java/Spring-mvc-ResponseBody-%E8%BF%94%E5%9B%9E%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%9E%8B/" rel="prev" title="Spring MVC @ResponseBody返回枚举类型">
+                  <i class="fa fa-angle-left"></i> Spring MVC @ResponseBody返回枚举类型
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2015/02/06/java/mybatis-memcached%E6%A1%86%E6%9E%B6%E9%85%8D%E7%BD%AE/" rel="next" title="mybatis-memcached框架配置">
-                  mybatis-memcached框架配置 <i class="fa fa-angle-right"></i>
+                <a href="/2015/02/06/java/mybatis-memcached%E6%A1%86%E6%9E%B6%E9%85%8D%E7%BD%AE/" rel="next" title="MyBatis Memcached缓存框架配置">
+                  MyBatis Memcached缓存框架配置 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

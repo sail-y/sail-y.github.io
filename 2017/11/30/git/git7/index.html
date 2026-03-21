@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -18,18 +17,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="本文讲解相关技术要点和实践经验。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git-cherry-pick、rebase">
+<meta property="og:title" content="Git教程 07：Cherry-pick与Rebase">
 <meta property="og:url" content="http://www.saily.top/2017/11/30/git/git7/index.html">
 <meta property="og:site_name" content="帆的博客">
 <meta property="og:description" content="本文讲解相关技术要点和实践经验。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.saily.top/img/git/git7-1.png">
 <meta property="article:published_time" content="2017-11-30T01:04:20.000Z">
-<meta property="article:modified_time" content="2026-03-20T16:03:59.013Z">
+<meta property="article:modified_time" content="2026-03-21T04:06:56.333Z">
 <meta property="article:author" content="帆">
 <meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
@@ -39,10 +38,10 @@
 <link rel="canonical" href="http://www.saily.top/2017/11/30/git/git7/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2017/11/30/git/git7/","path":"2017/11/30/git/git7/","title":"Git-cherry-pick、rebase"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2017/11/30/git/git7/","path":"2017/11/30/git/git7/","title":"Git教程 07：Cherry-pick与Rebase"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Git-cherry-pick、rebase | 帆的博客</title>
+<title>Git教程 07：Cherry-pick与Rebase | 帆的博客</title>
   
 
 
@@ -205,12 +204,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Git-cherry-pick、rebase | 帆的博客">
+      <meta itemprop="name" content="Git教程 07：Cherry-pick与Rebase | 帆的博客">
       <meta itemprop="description" content="本文讲解相关技术要点和实践经验。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Git-cherry-pick、rebase
+          Git教程 07：Cherry-pick与Rebase
         </h1>
 
         <div class="post-meta-container">
@@ -228,7 +227,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：3月 21 2026 0:03:59" itemprop="dateModified" datetime="2026-03-21T00:03:59+08:00">3月 21 2026</time>
+      <time title="修改时间：3月 21 2026 12:06:56" itemprop="dateModified" datetime="2026-03-21T12:06:56+08:00">3月 21 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -318,13 +317,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2017/11/21/git/git6/" rel="prev" title="Git-裸库和submodule、substree">
-                  <i class="fa fa-angle-left"></i> Git-裸库和submodule、substree
+                <a href="/2017/11/21/git/git6/" rel="prev" title="Git教程 06：裸库与Submodule">
+                  <i class="fa fa-angle-left"></i> Git教程 06：裸库与Submodule
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2017/12/08/mongodb/mongo1/" rel="next" title="MongoDB1-安装和增删改查">
-                  MongoDB1-安装和增删改查 <i class="fa fa-angle-right"></i>
+                <a href="/2017/12/08/mongodb/mongo1/" rel="next" title="MongoDB 01：快速入门指南">
+                  MongoDB 01：快速入门指南 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
