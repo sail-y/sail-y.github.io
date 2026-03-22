@@ -188,7 +188,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -206,7 +206,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/" class="post-title-link" itemprop="url">Java并发编程 02：同步机制</a>
+          <a href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/" class="post-title-link" itemprop="url">Java并发编程 04：线程池</a>
         </h2>
 
         <div class="post-meta-container">
@@ -239,7 +239,7 @@
   
 </div>
 
-            <div class="post-description">本文讲解并发源码-volatile技术要点和实践经验。</div>
+            <div class="post-description">本文讲解并发源码-Atomic技术要点和实践经验。</div>
         </div>
       </header>
 
@@ -247,10 +247,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h1><p>先说结论，volatile是非常常用的东西，他保证了可见性和有序性。这2个特性分别涉及了JVM的底层原理，最常用的场景，就是共享变量加volatile修饰，这样不同的线程来修改的时候，才能即时的识别到改变，比如标志位、开关等。</p>
+          <h1 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h1><p>AtomicInteger，可实现原子化的操作，不需要加锁，他底层是通过CAS实现的，看下使用方式</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9102/#more" rel="contents">
+              <a class="btn" href="/2020/10/22/jdk/%E5%B9%B6%E5%8F%9104/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
