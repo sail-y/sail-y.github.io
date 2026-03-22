@@ -52,6 +52,8 @@
 
   
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -216,7 +218,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：3月 22 2026 10:00:00 / 修改时间：6:59:08" itemprop="dateCreated datePublished" datetime="2026-03-22T10:00:00+08:00">3月 22 2026</time>
+      <time title="创建时间：3月 22 2026 10:00:00 / 修改时间：14:44:25" itemprop="dateCreated datePublished" datetime="2026-03-22T10:00:00+08:00">3月 22 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -414,7 +416,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：3月 22 2026 7:07:31" itemprop="dateModified" datetime="2026-03-22T07:07:31+08:00">3月 22 2026</time>
+      <time title="修改时间：3月 22 2026 14:45:23" itemprop="dateModified" datetime="2026-03-22T14:45:23+08:00">3月 22 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -610,7 +612,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：3月 22 2026 8:42:39" itemprop="dateModified" datetime="2026-03-22T08:42:39+08:00">3月 22 2026</time>
+      <time title="修改时间：3月 22 2026 14:25:51" itemprop="dateModified" datetime="2026-03-22T14:25:51+08:00">3月 22 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -634,7 +636,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h2 id="一、Agentic-Systems-架构概览"><a href="#一、Agentic-Systems-架构概览" class="headerlink" title="一、Agentic Systems 架构概览"></a>一、Agentic Systems 架构概览</h2><h3 id="1-1-Workflows-主导企业应用"><a href="#1-1-Workflows-主导企业应用" class="headerlink" title="1.1 Workflows 主导企业应用"></a>1.1 Workflows 主导企业应用</h3><p>根据 Anthropic 官方研究，Agentic Systems 分为两大类：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Agentic Systems（智能体系统）</span><br><span class="line">│</span><br><span class="line">├── Workflows（工作流 - 企业主流，80-90% 场景）</span><br><span class="line">│   ├── Prompt Chaining：链式处理</span><br><span class="line">│   ├── Routing：路由分类</span><br><span class="line">│   ├── Parallelization：并行执行</span><br><span class="line">│   ├── Orchestrator-Workers：编排-工作者模式</span><br><span class="line">│   └── Evaluator-Optimizer：评估-优化循环</span><br><span class="line">│</span><br><span class="line">└── Agents（智能体 - 动态自主，10-20% 场景）</span><br><span class="line">    └── Feedback Loop Agents：基于环境反馈的循环智能体</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[Agentic Systems&lt;br/&gt;智能体系统] --&gt; B[Workflows&lt;br/&gt;工作流 - 企业主流 80-90%场景]</span><br><span class="line">    A --&gt; C[Agents&lt;br/&gt;智能体 - 动态自主 10-20%场景]</span><br><span class="line"></span><br><span class="line">    B --&gt; B1[Prompt Chaining&lt;br/&gt;链式处理]</span><br><span class="line">    B --&gt; B2[Routing&lt;br/&gt;路由分类]</span><br><span class="line">    B --&gt; B3[Parallelization&lt;br/&gt;并行执行]</span><br><span class="line">    B --&gt; B4[Orchestrator-Workers&lt;br/&gt;编排-工作者模式]</span><br><span class="line">    B --&gt; B5[Evaluator-Optimizer&lt;br/&gt;评估-优化循环]</span><br><span class="line"></span><br><span class="line">    C --&gt; C1[Feedback Loop Agents&lt;br/&gt;基于环境反馈的循环智能体]</span><br></pre></td></tr></table></figure>
 
 <p><strong>Anthropic 的观点</strong>：</p>
 <blockquote>
@@ -714,7 +716,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：3月 22 2026 7:09:06" itemprop="dateModified" datetime="2026-03-22T07:09:06+08:00">3月 22 2026</time>
+      <time title="修改时间：3月 22 2026 14:26:06" itemprop="dateModified" datetime="2026-03-22T14:26:06+08:00">3月 22 2026</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
