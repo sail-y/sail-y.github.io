@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.saily.top","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="面向有其他技术栈经验的开发者，介绍LLM应用开发的主要概念和Agent开发框架对比。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM AI应用开发快速入门">
+<meta property="og:url" content="http://www.saily.top/2026/03/22/AI/llm-ai-app-development-quickstart/index.html">
+<meta property="og:site_name" content="帆的博客">
+<meta property="og:description" content="面向有其他技术栈经验的开发者，介绍LLM应用开发的主要概念和Agent开发框架对比。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-22T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-21T22:59:08.757Z">
+<meta property="article:author" content="帆">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="LangGraph">
+<meta property="article:tag" content="Pydantic AI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.saily.top/2026/03/22/AI/llm-ai-app-development-quickstart/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.saily.top/2026/03/22/AI/llm-ai-app-development-quickstart/","path":"2026/03/22/AI/llm-ai-app-development-quickstart/","title":"LLM AI应用开发快速入门"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LLM AI应用开发快速入门 | 帆的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="帆的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">帆的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扬帆起航</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81LLM%E5%BA%94%E7%94%A8%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">一、LLM应用基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E4%BB%8E%E4%BC%A0%E7%BB%9F%E5%BA%94%E7%94%A8%E5%88%B0LLM%E5%BA%94%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 从传统应用到LLM应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-LLM%E5%BA%94%E7%94%A8%E7%9A%84%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 LLM应用的分层架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E4%B8%BB%E8%A6%81%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 主要架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RAG%EF%BC%88%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">RAG（检索增强生成）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Function-Calling%EF%BC%88%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">Function Calling（工具调用）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81LLM%E8%83%BD%E5%8A%9B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">二、LLM能力详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Function-Calling-Tool-Use"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Function Calling &#x2F; Tool Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.1.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.1.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">2.1.3.</span> <span class="nav-text">可靠性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Structured-Output%EF%BC%88%E7%BB%93%E6%9E%84%E5%8C%96%E8%BE%93%E5%87%BA%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Structured Output（结构化输出）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-RAG%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 RAG架构演进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E4%B8%8E%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 多轮对话与状态管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81Agent%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">三、Agent开发框架对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81Agent%E6%A1%86%E6%9E%B6%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 为什么需要Agent框架？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-LangGraph-vs-Pydantic-AI"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 LangGraph vs Pydantic AI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E5%AF%B9%E6%AF%94"><span class="nav-number">3.2.1.</span> <span class="nav-text">核心能力对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6%E5%B7%AE%E5%BC%82"><span class="nav-number">3.2.2.</span> <span class="nav-text">设计哲学差异</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.3.</span> <span class="nav-text">适用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Memory%E6%94%AF%E6%8C%81"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Memory支持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LangGraph-Memory%E6%9E%B6%E6%9E%84"><span class="nav-number">3.3.1.</span> <span class="nav-text">LangGraph Memory架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pydantic-AI-Memory%E7%8E%B0%E7%8A%B6"><span class="nav-number">3.3.2.</span> <span class="nav-text">Pydantic AI Memory现状</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-Skill%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Skill系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LangGraph-Skills"><span class="nav-number">3.4.1.</span> <span class="nav-text">LangGraph Skills</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pydantic-AI%E7%8E%B0%E7%8A%B6"><span class="nav-number">3.4.2.</span> <span class="nav-text">Pydantic AI现状</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-%E7%94%9F%E4%BA%A7%E7%BA%A7%E8%83%BD%E5%8A%9B%E5%AF%B9%E6%AF%94"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 生产级能力对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%97%85%E8%A1%8C%E8%B0%83%E8%AF%95"><span class="nav-number">3.5.1.</span> <span class="nav-text">时间旅行调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">3.5.2.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E9%80%89%E9%A1%B9"><span class="nav-number">3.5.3.</span> <span class="nav-text">部署选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E8%B0%83%E8%AF%95"><span class="nav-number">3.5.4.</span> <span class="nav-text">可视化调试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BA%94%E7%94%A8%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A8%E8%8D%90LangGraph"><span class="nav-number">4.</span> <span class="nav-text">四、企业级应用：为什么推荐LangGraph</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E5%A4%8D%E6%9D%82%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 复杂工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-Memory%E9%9C%80%E6%B1%82"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Memory需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-%E7%94%9F%E4%BA%A7%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 生产可靠性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 实际案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 开发效率对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-6-%E4%BD%95%E6%97%B6%E9%80%89%E6%8B%A9Pydantic-AI"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 何时选择Pydantic AI</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.</span> <span class="nav-text">五、总结与建议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E5%86%B3%E7%AD%96%E6%A1%86%E6%9E%B6"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 决策框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 学习路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 实战建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 未来展望</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">帆</p>
+  <div class="site-description" itemprop="description">记录工作和学习中遇到的问题-工作笔记&学习笔记</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sail-y" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sail-y" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hyyangfan@gmail.com" title="E-Mail → mailto:hyyangfan@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2026/03/22/AI/llm-ai-app-development-quickstart/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LLM AI应用开发快速入门 | 帆的博客">
+      <meta itemprop="description" content="面向有其他技术栈经验的开发者，介绍LLM应用开发的主要概念和Agent开发框架对比。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LLM AI应用开发快速入门
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：3月 22 2026 10:00:00 / 修改时间：6:59:08" itemprop="dateCreated datePublished" datetime="2026-03-22T10:00:00+08:00">3月 22 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">AI应用开发</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">面向有其他技术栈经验的开发者，介绍LLM应用开发的主要概念和Agent开发框架对比。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>如果你有其他开发经验但不熟悉LLM应用，这篇文章会帮你理解这个领域的基础概念。</p>
+<p>传统应用遵循确定性逻辑：输入 → 处理 → 输出。LLM应用引入了概率性推理，模型基于上下文和提示词做决策。这需要新的架构模式。</p>
+<p>内容包括：</p>
+<ul>
+<li>LLM应用的基本架构</li>
+<li>Function Calling、RAG等能力</li>
+<li>LangGraph vs Pydantic AI框架对比</li>
+<li>技术选型建议</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="一、LLM应用基本架构"><a href="#一、LLM应用基本架构" class="headerlink" title="一、LLM应用基本架构"></a>一、LLM应用基本架构</h1><h2 id="1-1-从传统应用到LLM应用"><a href="#1-1-从传统应用到LLM应用" class="headerlink" title="1.1 从传统应用到LLM应用"></a>1.1 从传统应用到LLM应用</h2><p>传统应用：代码定义业务逻辑，数据驱动流程，输出是确定性的。LLM应用不同：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">传统应用: 代码逻辑 → 确定性执行</span><br><span class="line">LLM应用: 提示词 + 上下文 → 概率性推理</span><br></pre></td></tr></table></figure>
+
+<p>需要新的架构模式来管理这种不确定性。</p>
+<h2 id="1-2-LLM应用的分层架构"><a href="#1-2-LLM应用的分层架构" class="headerlink" title="1.2 LLM应用的分层架构"></a>1.2 LLM应用的分层架构</h2><p>LLM应用通常分为四层：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│  用户输入                            │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  ↓                                  │</span><br><span class="line">│  [预处理层] 提示词构建               │</span><br><span class="line">│  ├─ 系统提示词                      │</span><br><span class="line">│  ├─ 用户消息                        │</span><br><span class="line">│  └─ 上下文注入(RAG/历史)            │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  ↓                                  │</span><br><span class="line">│  [LLM推理] 模型决策                 │</span><br><span class="line">│  ├─ 理解意图                        │</span><br><span class="line">│  ├─ 工具调用决策                    │</span><br><span class="line">│  └─ 生成响应                        │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  ↓                                  │</span><br><span class="line">│  [后处理层] 结果验证 &amp; 执行          │</span><br><span class="line">│  ├─ 结构化输出验证                  │</span><br><span class="line">│  ├─ 工具执行                        │</span><br><span class="line">│  └─ 多轮迭代                        │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  ↓                                  │</span><br><span class="line">│  返回结果                           │</span><br><span class="line">└─────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>预处理层</strong>：将用户输入转换为模型可理解的提示词，包括系统提示词、用户消息、上下文注入。</p>
+<p><strong>LLM推理层</strong>：模型基于提示词推理，决定直接回答、调用工具或继续交互。</p>
+<p><strong>后处理层</strong>：验证输出格式、执行工具调用、决定是否继续对话。</p>
+<h2 id="1-3-主要架构模式"><a href="#1-3-主要架构模式" class="headerlink" title="1.3 主要架构模式"></a>1.3 主要架构模式</h2><h3 id="RAG（检索增强生成）"><a href="#RAG（检索增强生成）" class="headerlink" title="RAG（检索增强生成）"></a>RAG（检索增强生成）</h3><p>LLM的知识是静态的，无法访问私有数据或最新信息。RAG通过在推理时注入相关文档解决这个限制。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">知识库 → 切片 → 向量化 → 向量数据库</span><br><span class="line">                         ↓</span><br><span class="line">用户查询 → 向量化 → 相似检索 → 注入提示词 → LLM生成答案</span><br></pre></td></tr></table></figure>
+
+<p>生产级RAG需要考虑：</p>
+<ul>
+<li>切片策略：如何分割文档</li>
+<li>向量数据库：Pinecone、Weaviate、pgvector等</li>
+<li>检索优化：混合检索、重排序</li>
+<li>评估：检索准确率、答案质量</li>
+</ul>
+<h3 id="Function-Calling（工具调用）"><a href="#Function-Calling（工具调用）" class="headerlink" title="Function Calling（工具调用）"></a>Function Calling（工具调用）</h3><p>Function Calling让LLM调用外部工具。模型不直接执行函数，而是返回调用指令，应用层执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">用户: &quot;帮我查北京的天气&quot;</span><br><span class="line"></span><br><span class="line">传统LLM:</span><br><span class="line">  → &quot;今天北京天气晴朗，气温25度...&quot; (可能幻觉)</span><br><span class="line"></span><br><span class="line">Function Calling:</span><br><span class="line">  → 模型返回: &#123;&quot;name&quot;: &quot;get_weather&quot;, &quot;arguments&quot;: &#123;&quot;city&quot;: &quot;北京&quot;&#125;&#125;</span><br><span class="line">  → 应用执行: get_weather(&quot;北京&quot;)</span><br><span class="line">  → 返回结果: &#123;&quot;temp&quot;: 25, &quot;condition&quot;: &quot;晴&quot;&#125;</span><br><span class="line">  → 模型生成: &quot;根据查询结果，北京今天晴天，气温25°C&quot;</span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li>可靠性：GPT-4&#x2F;Claude达95%+，开源模型60-75%</li>
+<li>并行调用：降低2-3倍延迟</li>
+<li>成本：增加15-30% token开销</li>
+</ul>
+<h1 id="二、LLM能力详解"><a href="#二、LLM能力详解" class="headerlink" title="二、LLM能力详解"></a>二、LLM能力详解</h1><h2 id="2-1-Function-Calling-Tool-Use"><a href="#2-1-Function-Calling-Tool-Use" class="headerlink" title="2.1 Function Calling &#x2F; Tool Use"></a>2.1 Function Calling &#x2F; Tool Use</h2><p>Function Calling的本质：模型作为路由器，将自然语言转换为函数调用。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><ol>
+<li>定义工具：向模型描述工具名称、参数和用途</li>
+<li>模型决策：分析用户意图，决定是否调用工具</li>
+<li>返回调用指令：返回函数名和参数（不执行）</li>
+<li>应用执行：执行函数，返回结果</li>
+<li>生成答案：基于工具结果生成回复</li>
+</ol>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据查询</td>
+<td>“查用户123的订单” → 查询数据库</td>
+</tr>
+<tr>
+<td>API集成</td>
+<td>“发邮件给团队” → 调用邮件API</td>
+</tr>
+<tr>
+<td>计算</td>
+<td>“算CSV平均值” → 执行Python代码</td>
+</tr>
+<tr>
+<td>系统操作</td>
+<td>“部署到测试环境” → 调用CI&#x2F;CD</td>
+</tr>
+</tbody></table>
+<h3 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h3><p>不同模型差异显著：</p>
+<ul>
+<li>GPT-4 &#x2F; Claude：95%+准确率</li>
+<li>开源模型（Llama 3.1+, Mistral）：60-75%</li>
+</ul>
+<p>建议：</p>
+<ol>
+<li>使用Pydantic验证参数</li>
+<li>实现重试机制</li>
+<li>提供降级方案</li>
+</ol>
+<h2 id="2-2-Structured-Output（结构化输出）"><a href="#2-2-Structured-Output（结构化输出）" class="headerlink" title="2.2 Structured Output（结构化输出）"></a>2.2 Structured Output（结构化输出）</h2><p>强制模型返回符合Schema的JSON数据，适用于数据提取、分类、表单填充等场景。</p>
+<p>实现方式：</p>
+<ul>
+<li>OpenAI：<code>zodResponseFormat</code> + Zod schema</li>
+<li>Pydantic AI：原生Pydantic模型验证</li>
+<li>LangGraph：通过工具和状态管理实现</li>
+</ul>
+<h2 id="2-3-RAG架构演进"><a href="#2-3-RAG架构演进" class="headerlink" title="2.3 RAG架构演进"></a>2.3 RAG架构演进</h2><p><strong>Level 1: Naive RAG</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">文档 → 固定切片 → Embedding → 向量库</span><br><span class="line">查询 → Embedding → Top-K检索 → 生成答案</span><br></pre></td></tr></table></figure>
+
+<p>问题：检索质量不稳定，容易遗漏信息。</p>
+<p><strong>Level 2: Advanced RAG</strong></p>
+<ul>
+<li>查询重写：优化查询，提高检索准确率</li>
+<li>混合检索：向量 + BM25关键词</li>
+<li>重排序：Cross-Encoder重新排序</li>
+<li>多查询：生成多个查询变体</li>
+</ul>
+<p><strong>Level 3: Agentic RAG</strong><br>Agent动态决定检索策略：</p>
+<ul>
+<li>分析问题类型，选择数据源</li>
+<li>迭代检索，完善答案</li>
+<li>自我验证</li>
+</ul>
+<h2 id="2-4-多轮对话与状态管理"><a href="#2-4-多轮对话与状态管理" class="headerlink" title="2.4 多轮对话与状态管理"></a>2.4 多轮对话与状态管理</h2><p>LLM应用需要管理对话历史和中间状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">用户: &quot;分析这家公司的财报&quot;</span><br><span class="line">Agent: [检索财报] &quot;找到了腾讯2024年财报...&quot;</span><br><span class="line"></span><br><span class="line">用户: &quot;营收增长了多少？&quot;</span><br><span class="line">Agent: 基于上下文回答</span><br><span class="line"></span><br><span class="line">用户: &quot;和阿里对比呢？&quot;</span><br><span class="line">Agent: 检索阿里财报 → 对比分析</span><br></pre></td></tr></table></figure>
+
+<p>需要：</p>
+<ul>
+<li>会话管理：关联对话历史</li>
+<li>状态持久化：跨会话保存信息</li>
+<li>上下文窗口管理：压缩或总结历史</li>
+</ul>
+<h1 id="三、Agent开发框架对比"><a href="#三、Agent开发框架对比" class="headerlink" title="三、Agent开发框架对比"></a>三、Agent开发框架对比</h1><p>开发LLM应用时，需要决定是否使用框架，选择哪个框架。</p>
+<h2 id="3-1-为什么需要Agent框架？"><a href="#3-1-为什么需要Agent框架？" class="headerlink" title="3.1 为什么需要Agent框架？"></a>3.1 为什么需要Agent框架？</h2><p>直接使用LLM API可行，但会遇到这些问题：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>手动实现成本</th>
+<th>框架支持</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>工具调用循环</td>
+<td>高</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>对话历史管理</td>
+<td>中</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>错误处理</td>
+<td>高</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>状态持久化</td>
+<td>高</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>多Agent协作</td>
+<td>极高</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>中</td>
+<td>内置</td>
+</tr>
+</tbody></table>
+<p>框架封装了这些能力，让你聚焦业务逻辑。</p>
+<h2 id="3-2-LangGraph-vs-Pydantic-AI"><a href="#3-2-LangGraph-vs-Pydantic-AI" class="headerlink" title="3.2 LangGraph vs Pydantic AI"></a>3.2 LangGraph vs Pydantic AI</h2><p>主流Agent框架LangGraph和Pydantic AI，设计哲学不同。</p>
+<h3 id="核心能力对比"><a href="#核心能力对比" class="headerlink" title="核心能力对比"></a>核心能力对比</h3><table>
+<thead>
+<tr>
+<th>能力维度</th>
+<th>LangGraph</th>
+<th>Pydantic AI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心定位</td>
+<td>工作流编排平台</td>
+<td>类型安全Agent框架</td>
+</tr>
+<tr>
+<td>工作流编排</td>
+<td>✅ 核心，显式状态机</td>
+<td>🟡 pydantic-graph（基础）</td>
+</tr>
+<tr>
+<td>并行执行</td>
+<td>✅ 静态+动态</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td>条件路由</td>
+<td>✅ 条件edges</td>
+<td>❌ 需手动实现</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>✅ 短期+长期，多后端</td>
+<td>⚠️ 需集成外部工具</td>
+</tr>
+<tr>
+<td>时间旅行</td>
+<td>✅ 重放&#x2F;分支&#x2F;调试</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td>错误处理</td>
+<td>✅ 4层容错</td>
+<td>⚠️ 需手动实现</td>
+</tr>
+<tr>
+<td>人机协作</td>
+<td>✅ 原生支持</td>
+<td>❌ 需自行实现</td>
+</tr>
+<tr>
+<td>Skill系统</td>
+<td>✅ 官方11个skills</td>
+<td>❌ 无官方支持</td>
+</tr>
+<tr>
+<td>MCP支持</td>
+<td>✅ 通过适配器</td>
+<td>✅ 原生支持</td>
+</tr>
+<tr>
+<td>可视化调试</td>
+<td>✅ LangGraph Studio</td>
+<td>❌ 无官方工具</td>
+</tr>
+<tr>
+<td>部署选项</td>
+<td>✅ Cloud&#x2F;Hybrid&#x2F;Self-hosted</td>
+<td>⚠️ 需自行部署</td>
+</tr>
+<tr>
+<td>类型安全</td>
+<td>⚠️ TypedDict，无输出验证</td>
+<td>✅ Pydantic原生验证</td>
+</tr>
+<tr>
+<td>生态成熟度</td>
+<td>✅ 大型社区，生产验证</td>
+<td>🟡 新兴框架</td>
+</tr>
+</tbody></table>
+<h3 id="设计哲学差异"><a href="#设计哲学差异" class="headerlink" title="设计哲学差异"></a>设计哲学差异</h3><p><strong>LangGraph &#x3D; 工作流操作系统</strong></p>
+<p>设计灵感来自Google Pregel和Apache Beam，用显式图结构编排工作流。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LangGraph工作流示例:</span><br><span class="line"></span><br><span class="line">         [路由器]</span><br><span class="line">           ├─ 简单问题? → [快速响应]</span><br><span class="line">           ├─ 需要查询? → [搜索] → [验证]</span><br><span class="line">           ├─ 需要计算? → [计算器] → [格式化]</span><br><span class="line">           └─ 需要审批? → [人工审核] → [执行]</span><br></pre></td></tr></table></figure>
+
+<p>特性：</p>
+<ul>
+<li>状态机模型：清晰的节点和边</li>
+<li>Checkpoint机制：状态持久化，崩溃恢复</li>
+<li>循环支持：重试、自纠正</li>
+<li>并行执行：fan-out&#x2F;fan-in</li>
+<li>人机协作：暂停等待审批</li>
+</ul>
+<p><strong>Pydantic AI &#x3D; 类型安全Agent SDK</strong></p>
+<p>将FastAPI的理念带入AI：类型安全优先。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Pydantic AI示例</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyAgent</span>(Agent[DatabaseDeps, ResultType]):</span><br><span class="line"><span class="meta">    @tool</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">query_data</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        ctx: RunContext[DatabaseDeps]</span></span><br><span class="line"><span class="params">    </span>) -&gt; Result:</span><br><span class="line">        <span class="comment"># 编译时类型检查</span></span><br><span class="line">        <span class="comment"># 运行时Pydantic验证</span></span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+
+<p>特性：</p>
+<ul>
+<li>编译时类型检查：IDE自动补全</li>
+<li>运行时验证：Pydantic验证输入输出</li>
+<li>依赖注入：类似FastAPI</li>
+<li>代码量少：相同功能约160行 vs LangGraph 280行</li>
+</ul>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><p><strong>选择LangGraph：</strong></p>
+<ul>
+<li>复杂多步骤工作流</li>
+<li>状态持久化和崩溃恢复</li>
+<li>人工审批环节</li>
+<li>多Agent协作</li>
+<li>时间旅行调试</li>
+<li>企业级生产环境</li>
+</ul>
+<p><strong>选择Pydantic AI：</strong></p>
+<ul>
+<li>单Agent应用</li>
+<li>类型安全核心需求</li>
+<li>团队熟悉Pydantic和FastAPI</li>
+<li>快速原型开发</li>
+<li>数据质量要求高</li>
+</ul>
+<h2 id="3-3-Memory支持"><a href="#3-3-Memory支持" class="headerlink" title="3.3 Memory支持"></a>3.3 Memory支持</h2><p>Memory是LLM应用的需求，两个框架支持程度差异显著。</p>
+<h3 id="LangGraph-Memory架构"><a href="#LangGraph-Memory架构" class="headerlink" title="LangGraph Memory架构"></a>LangGraph Memory架构</h3><p>LangGraph提供三层Memory：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│  1. 短期记忆 (Checkpointer)          │</span><br><span class="line">│  • 线程内对话历史                    │</span><br><span class="line">│  • 自动保存每个节点后的状态          │</span><br><span class="line">│  • 支持: InMemory/SQLite/PostgreSQL │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  2. 长期记忆 (Store)                 │</span><br><span class="line">│  • 跨线程持久化                      │</span><br><span class="line">│  • Key-Value存储                     │</span><br><span class="line">│  • 用户偏好、学习到的知识            │</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  3. 上下文管理                       │</span><br><span class="line">│  • 自动压缩历史对话                  │</span><br><span class="line">│  • 控制token使用                     │</span><br><span class="line">└─────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">用户A (第1次对话): &quot;我是产品经理&quot;</span><br><span class="line">  → LangGraph自动保存到长期记忆</span><br><span class="line"></span><br><span class="line">用户A (第50次对话): &quot;推荐一些工具&quot;</span><br><span class="line">  → Agent从长期记忆读取用户职业</span><br><span class="line">  → 推荐产品经理相关工具</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pydantic-AI-Memory现状"><a href="#Pydantic-AI-Memory现状" class="headerlink" title="Pydantic AI Memory现状"></a>Pydantic AI Memory现状</h3><p>Pydantic AI提供基础的<code>message_history</code>，但仅限于单次会话。要实现跨会话记忆，需要：</p>
+<ol>
+<li>集成外部工具：Mem0、MongoDB等</li>
+<li>自行设计memory schema</li>
+<li>实现记忆读写逻辑</li>
+</ol>
+<p>开发成本和维护负担更高。</p>
+<h2 id="3-4-Skill系统"><a href="#3-4-Skill系统" class="headerlink" title="3.4 Skill系统"></a>3.4 Skill系统</h2><p>Skill系统决定了Agent能力的可扩展性。</p>
+<h3 id="LangGraph-Skills"><a href="#LangGraph-Skills" class="headerlink" title="LangGraph Skills"></a>LangGraph Skills</h3><p>LangGraph提供官方Skill生态系统，包含11个预构建skills：</p>
+<table>
+<thead>
+<tr>
+<th>Skill类别</th>
+<th>Skills</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LangChain</td>
+<td>fundamentals, middleware, RAG</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>fundamentals, persistence, human-in-the-loop</td>
+</tr>
+<tr>
+<td>Deep Agents</td>
+<td>core, memory, orchestration</td>
+</tr>
+</tbody></table>
+<p>工作原理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">传统方式:</span><br><span class="line">  提示词 = 系统指令 + 所有工具说明 + 所有知识</span><br><span class="line">  → Token浪费，性能下降</span><br><span class="line"></span><br><span class="line">Skill方式 (Progressive Disclosure):</span><br><span class="line">  1. Agent看到技能目录 (轻量级，约500 tokens)</span><br><span class="line">  2. 按需加载详细技能文档</span><br><span class="line">  3. 动态执行</span><br><span class="line"></span><br><span class="line">效果:</span><br><span class="line">  • 性能提升: 25% → 95%</span><br><span class="line">  • Token节省: 60-70%</span><br></pre></td></tr></table></figure>
+
+<p>Skill动态加载，不会一次性塞满系统提示词。</p>
+<h3 id="Pydantic-AI现状"><a href="#Pydantic-AI现状" class="headerlink" title="Pydantic AI现状"></a>Pydantic AI现状</h3><p>Pydantic AI没有官方Skill系统，需要开发者自行设计存储、加载、发现机制。</p>
+<h2 id="3-5-生产级能力对比"><a href="#3-5-生产级能力对比" class="headerlink" title="3.5 生产级能力对比"></a>3.5 生产级能力对比</h2><h3 id="时间旅行调试"><a href="#时间旅行调试" class="headerlink" title="时间旅行调试"></a>时间旅行调试</h3><p><strong>LangGraph</strong>提供时间旅行功能，基于checkpoint机制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">应用场景:</span><br><span class="line">━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span><br><span class="line"></span><br><span class="line">1. 生产调试:</span><br><span class="line">   用户报告第8步失败</span><br><span class="line">   → 加载第7步checkpoint</span><br><span class="line">   → 检查状态</span><br><span class="line">   → 从第7步重新执行</span><br><span class="line">   → 无需重跑1-7步</span><br><span class="line"></span><br><span class="line">2. What-If分析:</span><br><span class="line">   原始执行失败</span><br><span class="line">   → 修改工具返回值</span><br><span class="line">   → 从失败点分支继续</span><br><span class="line">   → 探索不同路径</span><br><span class="line"></span><br><span class="line">3. 审计和回溯:</span><br><span class="line">   可视化每一步的状态</span><br><span class="line">   → 定位问题根源</span><br></pre></td></tr></table></figure>
+
+<p><strong>Pydantic AI</strong>无此功能，需要开发者自己实现状态追踪。</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p><strong>LangGraph</strong>提供4层容错机制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Layer 1: Retry Policies</span><br><span class="line">  API返回503?</span><br><span class="line">  → 自动重试3次</span><br><span class="line">  → 指数退避 (1s → 4s → 10s)</span><br><span class="line">  → 成功率: 90%</span><br><span class="line"></span><br><span class="line">Layer 2: Fallback Edges</span><br><span class="line">  工具A失败?</span><br><span class="line">  → 条件路由到工具B</span><br><span class="line">  → 降级策略</span><br><span class="line"></span><br><span class="line">Layer 3: Error Classification</span><br><span class="line">  分类错误:</span><br><span class="line">  • 暂时性错误 → 重试</span><br><span class="line">  • LLM可恢复 → 换个提示词</span><br><span class="line">  • 需要人工 → human-in-the-loop</span><br><span class="line"></span><br><span class="line">Layer 4: Checkpoint Recovery</span><br><span class="line">  进程崩溃?</span><br><span class="line">  → 从最后checkpoint恢复</span><br><span class="line">  → 不丢失进度</span><br></pre></td></tr></table></figure>
+
+<p><strong>Pydantic AI</strong>需要开发者手动实现这些容错逻辑。</p>
+<h3 id="部署选项"><a href="#部署选项" class="headerlink" title="部署选项"></a>部署选项</h3><p><strong>LangGraph (LangSmith Deployment)</strong> 提供3种部署模式：</p>
+<ol>
+<li><strong>Cloud</strong>：完全托管，git push即部署</li>
+<li><strong>Hybrid</strong>：运行在你的云上，LangSmith控制平面管理</li>
+<li><strong>Self-hosted</strong>：完全自托管，Kubernetes部署</li>
+</ol>
+<p>所有模式都支持自动扩缩容、状态持久化、人机协作API、版本管理。</p>
+<p><strong>Pydantic AI</strong>需要开发者自己搭建部署方案，选择基础设施，实现扩容和监控。</p>
+<h3 id="可视化调试"><a href="#可视化调试" class="headerlink" title="可视化调试"></a>可视化调试</h3><p><strong>LangGraph Studio</strong>提供可视化IDE：实时可视化执行流程、点击节点查看状态、编辑中间状态、从任意节点重放、查看token消耗、性能分析。</p>
+<p><strong>Pydantic AI</strong>无官方可视化工具，需要依赖第三方或自己搭建。</p>
+<h1 id="四、企业级应用：为什么推荐LangGraph"><a href="#四、企业级应用：为什么推荐LangGraph" class="headerlink" title="四、企业级应用：为什么推荐LangGraph"></a>四、企业级应用：为什么推荐LangGraph</h1><h2 id="4-1-复杂工作流"><a href="#4-1-复杂工作流" class="headerlink" title="4.1 复杂工作流"></a>4.1 复杂工作流</h2><p>企业级应用往往涉及：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">多步骤任务:</span><br><span class="line">  用户请求 → 意图识别 → 数据检索 → 分析计算 → 结果验证 → 人工审批 → 执行</span><br><span class="line"></span><br><span class="line">失败处理:</span><br><span class="line">  步骤5验证失败?</span><br><span class="line">  → 重试3次</span><br><span class="line">  → 仍失败?</span><br><span class="line">  → 降级方案</span><br><span class="line">  → 记录日志</span><br><span class="line">  → 通知人工</span><br><span class="line"></span><br><span class="line">长时间运行:</span><br><span class="line">  任务可能持续数小时甚至数天</span><br><span class="line">  → 需要checkpoint机制</span><br><span class="line">  → 支持崩溃恢复</span><br></pre></td></tr></table></figure>
+
+<p>LangGraph的设计为这些场景而生：显式状态机、checkpoint持久化、条件路由、循环重试。</p>
+<h2 id="4-2-Memory需求"><a href="#4-2-Memory需求" class="headerlink" title="4.2 Memory需求"></a>4.2 Memory需求</h2><p>企业级应用需要跨会话记忆：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">客服机器人:</span><br><span class="line">  第1次对话: 用户反映产品问题</span><br><span class="line">  第3次对话: 询问问题解决进度</span><br><span class="line">  → 需要记住第1次的上下文</span><br><span class="line"></span><br><span class="line">研究助手:</span><br><span class="line">  第1次对话: &quot;分析腾讯财报&quot;</span><br><span class="line">  第5次对话: &quot;和阿里对比&quot;</span><br><span class="line">  → 需要记住之前分析的财报</span><br><span class="line"></span><br><span class="line">个性化推荐:</span><br><span class="line">  长期记忆用户的偏好、职业、兴趣</span><br><span class="line">  → 提供个性化服务</span><br></pre></td></tr></table></figure>
+
+<p>LangGraph内置Memory支持。Pydantic AI需要大量开发工作。</p>
+<h2 id="4-3-生产可靠性"><a href="#4-3-生产可靠性" class="headerlink" title="4.3 生产可靠性"></a>4.3 生产可靠性</h2><p>企业级应用对可靠性要求高：</p>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>LangGraph支持</th>
+<th>自建成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>状态持久化</td>
+<td>✅ 多后端支持</td>
+<td>中</td>
+</tr>
+<tr>
+<td>崩溃恢复</td>
+<td>✅ Checkpoint机制</td>
+<td>高</td>
+</tr>
+<tr>
+<td>人机协作</td>
+<td>✅ 原生支持</td>
+<td>中</td>
+</tr>
+<tr>
+<td>错误处理</td>
+<td>✅ 4层容错</td>
+<td>高</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>✅ LangSmith集成</td>
+<td>中</td>
+</tr>
+<tr>
+<td>部署扩容</td>
+<td>✅ LangSmith Deployment</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>使用LangGraph，这些能力开箱即用。使用Pydantic AI，需要投入开发资源。</p>
+<h2 id="4-4-实际案例"><a href="#4-4-实际案例" class="headerlink" title="4.4 实际案例"></a>4.4 实际案例</h2><p>LangGraph已被多家大公司采用：</p>
+<ul>
+<li><strong>Klarna</strong>：客服助手，每日处理百万级对话，多步骤意图识别，集成多个后端系统</li>
+<li><strong>Uber</strong>：复杂工作流编排</li>
+<li><strong>LinkedIn</strong>：多Agent协作场景</li>
+<li><strong>GitLab</strong>：AI辅助开发工具</li>
+</ul>
+<p>这些案例验证了LangGraph在生产环境的可靠性。</p>
+<h2 id="4-5-开发效率对比"><a href="#4-5-开发效率对比" class="headerlink" title="4.5 开发效率对比"></a>4.5 开发效率对比</h2><p>假设要构建一个需要以下能力的Agent应用：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>LangGraph</th>
+<th>Pydantic AI + 自建</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>工作流编排</td>
+<td>内置，1天</td>
+<td>需开发，3-5天</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>内置，0.5天</td>
+<td>需集成，2-3天</td>
+</tr>
+<tr>
+<td>错误处理</td>
+<td>内置，0.5天</td>
+<td>需开发，2-3天</td>
+</tr>
+<tr>
+<td>人机协作</td>
+<td>内置，0.5天</td>
+<td>需开发，1-2天</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>内置，0.5天</td>
+<td>需集成，1-2天</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td><strong>3天</strong></td>
+<td><strong>9-15天</strong></td>
+</tr>
+</tbody></table>
+<p>使用LangGraph，开发效率提升3-5倍。</p>
+<h2 id="4-6-何时选择Pydantic-AI"><a href="#4-6-何时选择Pydantic-AI" class="headerlink" title="4.6 何时选择Pydantic AI"></a>4.6 何时选择Pydantic AI</h2><p>LangGraph在企业级场景优势明显，但Pydantic AI在以下场景更合适：</p>
+<ul>
+<li><strong>单Agent应用</strong>：无需复杂编排</li>
+<li><strong>类型安全核心需求</strong>：数据验证至关重要</li>
+<li><strong>团队Pydantic经验</strong>：已有Pydantic&#x2F;FastAPI经验</li>
+<li><strong>快速原型</strong>：快速验证想法</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li>数据提取API：从文本中提取结构化数据</li>
+<li>内容分类服务：将文章分类到预定义类别</li>
+<li>表单填充助手：解析用户描述，生成结构化表单</li>
+</ul>
+<p>这些场景不需要复杂工作流，Pydantic AI的类型安全优势更突出。</p>
+<h1 id="五、总结与建议"><a href="#五、总结与建议" class="headerlink" title="五、总结与建议"></a>五、总结与建议</h1><h2 id="5-1-决策框架"><a href="#5-1-决策框架" class="headerlink" title="5.1 决策框架"></a>5.1 决策框架</h2><p>选择Agent框架时，问自己这些问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">1. 应用复杂度</span><br><span class="line">   ├─ 单Agent，简单流程 → Pydantic AI</span><br><span class="line">   └─ 多步骤，复杂工作流 → LangGraph</span><br><span class="line"></span><br><span class="line">2. 是否需要Memory？</span><br><span class="line">   ├─ 仅会话内记忆 → Pydantic AI够用</span><br><span class="line">   └─ 跨会话长期记忆 → LangGraph</span><br><span class="line"></span><br><span class="line">3. 是否需要人工审批？</span><br><span class="line">   ├─ 不需要 → Pydantic AI</span><br><span class="line">   └─ 需要 → LangGraph</span><br><span class="line"></span><br><span class="line">4. 是否需要多Agent协作？</span><br><span class="line">   ├─ 不需要 → Pydantic AI</span><br><span class="line">   └─ 需要 → LangGraph</span><br><span class="line"></span><br><span class="line">5. 生产环境要求？</span><br><span class="line">   ├─ 快速原型，容忍故障 → Pydantic AI</span><br><span class="line">   └─ 企业级，高可靠性 → LangGraph</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-学习路径"><a href="#5-2-学习路径" class="headerlink" title="5.2 学习路径"></a>5.2 学习路径</h2><p><strong>新手：</strong></p>
+<ol>
+<li>先用原生LLM API实现简单聊天机器人</li>
+<li>理解Function Calling</li>
+<li>尝试实现RAG（使用Pinecone或pgvector）</li>
+<li>根据项目需求选择框架</li>
+</ol>
+<p><strong>有经验开发者：</strong></p>
+<ol>
+<li>直接上手LangGraph或Pydantic AI</li>
+<li>构建中等复杂度的Agent应用</li>
+<li>深入理解状态管理和错误处理</li>
+<li>探索高级特性（时间旅行、并行执行等）</li>
+</ol>
+<h2 id="5-3-实战建议"><a href="#5-3-实战建议" class="headerlink" title="5.3 实战建议"></a>5.3 实战建议</h2><p><strong>不要过度设计</strong></p>
+<p>很多LLM应用不需要复杂的Agent框架。如果只是简单的问答或内容生成，直接调用API可能更合适。</p>
+<p><strong>从简单开始</strong></p>
+<p>先用最简单的方式实现功能，验证价值后再引入框架。过早使用框架可能增加不必要的复杂度。</p>
+<p><strong>重视可观测性</strong></p>
+<p>LLM应用的黑盒特性使得调试困难。从一开始就集成追踪工具（LangSmith、Langfuse等），记录每次LLM调用和工具执行。</p>
+<p><strong>测试驱动</strong></p>
+<p>LLM输出的不确定性要求更严格的测试：</p>
+<ul>
+<li>单元测试：测试各个工具函数</li>
+<li>集成测试：测试完整工作流</li>
+<li>回归测试：确保修改后输出质量不下降</li>
+<li>A&#x2F;B测试：比较不同提示词的效果</li>
+</ul>
+<h2 id="5-4-未来展望"><a href="#5-4-未来展望" class="headerlink" title="5.4 未来展望"></a>5.4 未来展望</h2><p>LLM应用开发还在快速演进：</p>
+<ul>
+<li>模型能力提升：更可靠的Function Calling，更长的上下文窗口</li>
+<li>框架成熟：更多生产级能力内置</li>
+<li>标准化：MCP等协议标准化工具集成</li>
+<li>多模态：图像、音频、视频处理能力</li>
+</ul>
+<p>保持学习，关注最新进展，但不要追逐每个新框架。理解核心原理比掌握具体工具更重要。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>LLM应用开发正在改变软件的构建方式。选择合适的框架是成功的一步。</p>
+<p>没有最好的框架，只有最适合的框架。根据项目需求、团队能力和业务目标做出选择。</p>
+<p>希望这篇文章能帮你快速入门LLM应用开发。有问题欢迎留言讨论。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LangGraph/" rel="tag"># LangGraph</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/Pydantic-AI/" rel="tag"># Pydantic AI</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_wechat"></a>
+      <a class="a2a_button_weibo"></a>
+      <a class="a2a_button_qq"></a>
+      <a class="a2a_button_qzone"></a>
+      <a class="a2a_button_twitter"></a>
+      <a class="a2a_button_facebook"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/21/AI/Claude_Code_%E5%8D%81%E4%B8%AA%E6%9C%80%E5%80%BC%E5%BE%97%E8%A3%85%E7%9A%84_Skills/" rel="prev" title="【转载】Claude Code 十个最值得装的 Skills：不是越多越能打，是这 10 个最能打！！">
+                  <i class="fa fa-angle-left"></i> 【转载】Claude Code 十个最值得装的 Skills：不是越多越能打，是这 10 个最能打！！
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">帆</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/sail-y" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -141,18 +141,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-count">62</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -177,6 +177,107 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.saily.top/2015/03/10/ci/%E5%8F%91%E7%8E%B0tomcat%E7%9A%84%E4%B8%80%E4%B8%AAbug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="帆">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="帆的博客">
+      <meta itemprop="description" content="记录工作和学习中遇到的问题-工作笔记&学习笔记">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 帆的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2015/03/10/ci/%E5%8F%91%E7%8E%B0tomcat%E7%9A%84%E4%B8%80%E4%B8%AAbug/" class="post-title-link" itemprop="url">Tomcat配置Bug分析与解决方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：3月 10 2015 14:01:15" itemprop="dateCreated datePublished" datetime="2015-03-10T14:01:15+08:00">3月 10 2015</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：3月 21 2026 11:56:39" itemprop="dateModified" datetime="2026-03-21T11:56:39+08:00">3月 21 2026</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文讲解发现tomcat的一个bug技术要点和实践经验。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在做项目的时候出现一个错误，看了半天没看出来是什么问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">root cause</span><br><span class="line">java.util.NoSuchElementException</span><br><span class="line">	java.util.ArrayList$Itr.next(ArrayList.java:834)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.getJspAttribute(Validator.java:1385)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:772)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:779)</span><br><span class="line">	org.apache.jasper.compiler.Node$UninterpretedTag.accept(Node.java:1251)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Validator$ValidateVisitor.visit(Validator.java:529)</span><br><span class="line">	org.apache.jasper.compiler.Node$JspRoot.accept(Node.java:564)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visitBody(Node.java:2429)</span><br><span class="line">	org.apache.jasper.compiler.Node$Visitor.visit(Node.java:2435)</span><br><span class="line">	org.apache.jasper.compiler.Node$Root.accept(Node.java:474)</span><br><span class="line">	org.apache.jasper.compiler.Node$Nodes.visit(Node.java:2377)</span><br><span class="line">	org.apache.jasper.compiler.Validator.validateExDirectives(Validator.java:1841)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.generateJava(Compiler.java:217)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:373)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:353)</span><br><span class="line">	org.apache.jasper.compiler.Compiler.compile(Compiler.java:340)</span><br><span class="line">	org.apache.jasper.JspCompilationContext.compile(JspCompilationContext.java:657)</span><br><span class="line">	org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:357)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:390)</span><br><span class="line">	org.apache.jasper.servlet.JspServlet.service(JspServlet.java:334)</span><br><span class="line">	javax.servlet.http.HttpServlet.service(HttpServlet.java:727)</span><br></pre></td></tr></table></figure>
+<p>找了半天才发现是tomcat的一个bug，换了一个tomcat版本就好了<br>导致这个错误的原因如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jsp:param name=&quot;test&quot; value=&quot;&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>如果是value是空值，在某些tomcat版本下就会出现这个情况，如果你遇见了，不妨换个版本试试。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li>理解核心技术原理</li>
+<li>掌握实际应用方法</li>
+<li>学习最佳实践和注意事项</li>
+</ul>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li>结合实际项目练习</li>
+<li>深入研究官方文档</li>
+<li>持续学习和实践</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
